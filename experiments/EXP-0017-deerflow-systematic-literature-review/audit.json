@@ -1,0 +1,37 @@
+{
+  "candidate": "bytedance/deer-flow/skills/public/systematic-literature-review",
+  "commit": "150f7740c703292a154762f3a71aa9e18d17bda3",
+  "commit_date": "2026-07-30T23:53:52+08:00",
+  "repository_license": "MIT",
+  "skill": {
+    "name": "systematic-literature-review",
+    "sha256": "9fe4891e86b29d0f0f192bddab4ff913b123ffd764a2af737a4d6bb334209b6a",
+    "line_count": 235,
+    "spec_subset_valid": true
+  },
+  "package": {
+    "tracked_files_in_skill": 7,
+    "python_scripts": 1,
+    "workflow_eval_definitions": 5,
+    "trigger_eval_cases": 20,
+    "executable_upstream_test_runner": false
+  },
+  "hard_blockers": [
+    "mandatory arXiv API search expands the supplied corpus",
+    "ARXIV_ENDPOINT uses unauthenticated http rather than https",
+    "mandatory DeerFlow task subagents and subagent_enabled=true",
+    "metadata extraction is performed from abstracts rather than full papers",
+    "top-N relevance results are called a systematic literature review without eligibility screening or risk-of-bias assessment",
+    "search results are explicitly not persisted, weakening reproducibility",
+    "claim-level source locators and quoted evidence spans are absent",
+    "templates generate gaps and open questions outside the allowed outputs",
+    "hard-coded /mnt input and output paths are not portable"
+  ],
+  "quality_risks": [
+    "subagents may infer limitations described as obviously missing",
+    "failed extraction batches are silently omitted while synthesis continues",
+    "eval expectations measure workflow mechanics but not factual support or locator accuracy",
+    "arXiv-only preprint coverage cannot support the systematic label"
+  ],
+  "verdict": "rejected_as_is"
+}

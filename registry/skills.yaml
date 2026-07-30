@@ -383,6 +383,28 @@ verdicts:
     experiment: EXP-0016
     next_action: retain_only_prisma_reporting_audit
 
+  - id: deerflow-systematic-literature-review
+    source: https://github.com/bytedance/deer-flow/tree/150f7740c703292a154762f3a71aa9e18d17bda3/skills/public/systematic-literature-review
+    commit: 150f7740c703292a154762f3a71aa9e18d17bda3
+    skill_sha256: 9fe4891e86b29d0f0f192bddab4ff913b123ffd764a2af737a4d6bb334209b6a
+    task: literature_review
+    license: MIT
+    spec_subset: pass
+    portability: deerflow_only
+    corpus_policy: rejected_as_is
+    reasons:
+      - mandatory_arxiv_api_corpus_expansion
+      - mandatory_deerflow_task_subagents
+      - abstract_only_metadata_extraction
+      - top_n_arxiv_results_mislabeled_as_systematic_review
+      - no_eligibility_screening_risk_of_bias_or_certainty_assessment
+      - no_claim_level_source_locators
+      - search_results_not_persisted
+      - unauthenticated_http_arxiv_endpoint
+      - hard_coded_mnt_paths
+    experiment: EXP-0017
+    next_action: none
+
 status_values:
   - pass
   - pass_with_offline_profile

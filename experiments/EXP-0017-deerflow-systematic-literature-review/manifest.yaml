@@ -1,0 +1,21 @@
+experiment_id: EXP-0017
+title: DeerFlow systematic-literature-review pre-corpus audit
+status: completed
+task: skill_audit
+date: 2026-07-30
+corpus_used: false
+network_use: source_code_only
+external_llm_api: forbidden
+runner: current_codex_agent
+candidate:
+  repository: https://github.com/bytedance/deer-flow
+  commit: 150f7740c703292a154762f3a71aa9e18d17bda3
+  path: skills/public/systematic-literature-review
+  skill_sha256: 9fe4891e86b29d0f0f192bddab4ff913b123ffd764a2af737a4d6bb334209b6a
+  license: MIT
+static_validator: tools/audit_skill.py
+functional_smoke: functional-smoke.json
+live_arxiv_test: skipped_by_policy
+subagent_test: skipped_incompatible_runtime_and_scope
+content_smoke: blocked_before_corpus
+verdict: rejected_as_is

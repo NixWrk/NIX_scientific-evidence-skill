@@ -141,8 +141,12 @@ repositories:
 
   - order: 12
     repository: bytedance/deer-flow
-    status: queued
-    candidates: [systematic-literature-review]
+    status: completed
+    candidates:
+      - id: systematic-literature-review
+        status: completed
+        experiment: EXP-0017
+        verdict: rejected_as_is
 
   - order: 13
     repository: lishix520/academic-paper-skills

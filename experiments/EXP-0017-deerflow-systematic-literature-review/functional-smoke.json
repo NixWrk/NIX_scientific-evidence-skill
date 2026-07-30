@@ -1,0 +1,43 @@
+{
+  "network_used": false,
+  "tests": [
+    {
+      "name": "python_compile",
+      "target": "scripts/arxiv_search.py",
+      "status": "pass"
+    },
+    {
+      "name": "zero_max_results_cli",
+      "command_behavior": "query with --max-results 0 returns [] before HTTP",
+      "status": "pass"
+    },
+    {
+      "name": "arxiv_id_normalization",
+      "cases": [
+        "1706.03762v5 -> 1706.03762",
+        "hep-th/9901001v1 -> hep-th/9901001"
+      ],
+      "status": "pass"
+    },
+    {
+      "name": "query_builder",
+      "expected_components": [
+        "quoted multi-word query",
+        "cat:cs.CV",
+        "submittedDate:[202401010000 TO 202412312359]"
+      ],
+      "status": "pass"
+    },
+    {
+      "name": "eval_json_parse",
+      "workflow_eval_definitions": 5,
+      "trigger_cases": 20,
+      "status": "pass"
+    }
+  ],
+  "not_run": [
+    "live arXiv API call",
+    "DeerFlow task-subagent extraction",
+    "corpus synthesis"
+  ]
+}
