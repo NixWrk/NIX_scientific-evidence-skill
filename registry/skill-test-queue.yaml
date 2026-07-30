@@ -132,8 +132,12 @@ repositories:
 
   - order: 11
     repository: keemanxp/slr-prisma
-    status: queued
-    candidates: [slr-prisma]
+    status: completed
+    candidates:
+      - id: slr-prisma
+        status: completed
+        experiment: EXP-0016
+        verdict: adapt_required
 
   - order: 12
     repository: bytedance/deer-flow

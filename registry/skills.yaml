@@ -362,6 +362,27 @@ verdicts:
     experiment: EXP-0015
     next_action: retain_only_prioritized_reviewer_checklist
 
+  - id: slr-prisma
+    source: https://github.com/keemanxp/slr-prisma/tree/0614d2f6d39f5d31d0ae63fdff39f9553c90449c
+    commit: 0614d2f6d39f5d31d0ae63fdff39f9553c90449c
+    skill_sha256: cd1531a696ddf29cc1cc621f73bcd0688be93e432ec6b00db037025dcfe358cf
+    task: literature_review
+    license: MIT_with_CC_BY_4_0_references
+    spec_subset: pass_when_installed_in_matching_directory
+    portability: adapt_required
+    corpus_policy: adapt_required
+    reasons:
+      - audit_only_profile_passes_on_existing_review_artifact
+      - distinguishes_prisma_reporting_from_review_conduct
+      - distinguishes_records_reports_and_studies
+      - web_reference_verification_enabled_by_default
+      - search_and_screening_workflow_out_of_scope_without_supplied_provenance
+      - absolute_mnt_paths_and_external_docx_apa_visualizer_dependencies
+      - placeholder_flow_counts_forbidden_by_profile
+      - checklist_references_require_cc_by_attribution
+    experiment: EXP-0016
+    next_action: retain_only_prisma_reporting_audit
+
 status_values:
   - pass
   - pass_with_offline_profile

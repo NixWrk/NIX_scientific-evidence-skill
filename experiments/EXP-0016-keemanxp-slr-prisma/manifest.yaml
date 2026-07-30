@@ -1,0 +1,26 @@
+experiment_id: EXP-0016
+title: keemanxp slr-prisma audit-only smoke test
+status: completed
+task: literature_review
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+candidate:
+  repository: https://github.com/keemanxp/slr-prisma
+  commit: 0614d2f6d39f5d31d0ae63fdff39f9553c90449c
+  path: .
+  skill_sha256: cd1531a696ddf29cc1cc621f73bcd0688be93e432ec6b00db037025dcfe358cf
+  license: MIT_with_CC_BY_4_0_references
+  profile: offline-profile.md
+references_loaded:
+  - references/prisma-2020-checklist.md
+input:
+  artifact: experiments/EXP-0003-literature-matrix-offline/literature_matrix.md
+  source_ids: [SRC-AAR-001, SRC-AAR-002, SRC-AAR-003]
+output: prisma-audit.md
+provenance_gap: provenance-gap.md
+validator: tools/validate_block_references.py
+validation: validation.json
+flow_diagram: skipped_missing_selection_provenance
+verdict: adapt_required
