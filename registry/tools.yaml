@@ -21,7 +21,7 @@ fixed_components:
 candidates:
   - id: direct-zotero-html
     category: baseline
-    status: not_started
+    status: environment_ready
     tasks: [qa, literature_review, manuscript]
     role: direct_context_processing
 

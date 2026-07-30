@@ -1,0 +1,28 @@
+experiment_id: EXP-0001
+title: Direct Q&A over Zotero source HTML
+status: gold_ready
+task: qa
+corpus_id: AAR-HE2FL89L-v1
+zotero_library:
+  type: user
+  id: "0"
+zotero_collection:
+  name: ААР
+  key: HE2FL89L
+  item_count: 8
+input_representation: source_html
+tool: direct-zotero-html
+tool_version: baseline-v1
+normalizer: tools/normalize_zotero_html.py
+normalizer_sha256: 264fe3599b74bb89f4884eb8c8cb4bb0166a3578c085840b7bf132a2761fdcbe
+model: null
+skill: null
+prompt_hash: 7403daec8b4fca9bf3eada0116af161ffb47e6b24ac095cce2df53ece207397e
+corpus_hash: cfb289c8e5ae56340dc3018b6785e1b1563492f5d2b3c6e74773382cf47bf45f
+gold_hash: 39313f27e9f43cac722a39d507c2bbfab08cb2532977163506f650a41b5811bf
+normalized_statistics:
+  documents: 8
+  words: 46777
+  blocks: 980
+started_at: 2026-07-30
+completed_at: null

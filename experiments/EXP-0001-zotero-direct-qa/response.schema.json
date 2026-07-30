@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["answers"],
+  "properties": {
+    "answers": {
+      "type": "array",
+      "minItems": 14,
+      "maxItems": 14,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["question_id", "answer", "claims", "insufficient_evidence"],
+        "properties": {
+          "question_id": { "type": "string", "pattern": "^Q[0-9]{3}$" },
+          "answer": { "type": "string" },
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["text", "evidence"],
+              "properties": {
+                "text": { "type": "string" },
+                "evidence": {
+                  "type": "array",
+                  "items": { "type": "string", "pattern": "^SRC-AAR-[0-9]{3}-B[0-9]{4}$" }
+                }
+              }
+            }
+          },
+          "insufficient_evidence": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

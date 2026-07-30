@@ -1,0 +1,19 @@
+[project]
+name = "paper-analyzer-writer-benchmarks"
+version = "0.1.0"
+description = "Reproducible benchmarks for processing an existing scientific corpus"
+requires-python = ">=3.11"
+dependencies = [
+  "beautifulsoup4>=4.13,<5",
+  "lxml>=6,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<9",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+asyncio_default_fixture_loop_scope = "function"

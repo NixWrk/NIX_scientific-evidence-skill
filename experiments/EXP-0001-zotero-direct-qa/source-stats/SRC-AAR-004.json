@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "source_id": "SRC-AAR-004",
+  "zotero_item_key": "8MR5LBCH",
+  "attachment_key": "6CS8BGDQ",
+  "representation": "html",
+  "content_sha256": "6da0e14f8ee0ebcb599309bb32b14c6bdeee200c17bfb8f585e81cfbd5f51e6e",
+  "title": null,
+  "statistics": {
+    "bytes": 717209,
+    "blocks": 86,
+    "headings": 17,
+    "tables": 2,
+    "characters": 19903,
+    "words": 3142
+  }
+}

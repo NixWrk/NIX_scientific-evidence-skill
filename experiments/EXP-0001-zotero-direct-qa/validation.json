@@ -1,0 +1,10 @@
+{
+  "experiment_id": "EXP-0001-zotero-direct-qa",
+  "corpus_records": 8,
+  "gold_questions": 14,
+  "evidence_references": 22,
+  "corpus_jsonl_sha256": "cfb289c8e5ae56340dc3018b6785e1b1563492f5d2b3c6e74773382cf47bf45f",
+  "gold_jsonl_sha256": "39313f27e9f43cac722a39d507c2bbfab08cb2532977163506f650a41b5811bf",
+  "valid": true,
+  "errors": []
+}

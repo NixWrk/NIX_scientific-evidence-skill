@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "source_id": "SRC-AAR-003",
+  "zotero_item_key": "6NRZTRQE",
+  "attachment_key": "6RZKU5S4",
+  "representation": "html",
+  "content_sha256": "84c23d450bec216cb2d675bb40acac7ea618caa32b7dbe55fed2fd6c6c64da1f",
+  "title": "Web Article",
+  "statistics": {
+    "bytes": 30373,
+    "blocks": 55,
+    "headings": 7,
+    "tables": 2,
+    "characters": 17485,
+    "words": 2597
+  }
+}
