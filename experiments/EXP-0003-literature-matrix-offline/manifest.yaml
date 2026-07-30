@@ -1,0 +1,20 @@
+experiment_id: EXP-0003
+title: Offline literature matrix over supplied Zotero HTML
+status: completed
+task: literature_review
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+skill:
+  id: literature-triage-matrix
+  source_commit: 3143d2d62f798960731cae5a2b4f91aeaca25e75
+  skill_sha256: a437f44253b5113e3f38fd649042d1e89d012b757304f41353de96e2df676366
+  profile: offline-profile.md
+corpus:
+  parent_corpus_id: AAR-HE2FL89L-v1
+  source_ids: [SRC-AAR-001, SRC-AAR-002, SRC-AAR-003]
+  representation: normalized_zotero_html_blocks
+output: literature_matrix.md
+validator: tools/validate_block_references.py
+verdict: conditional_pass

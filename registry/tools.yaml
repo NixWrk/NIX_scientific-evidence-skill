@@ -1,6 +1,14 @@
 schema_version: 1
 updated: 2026-07-30
 
+execution_policy:
+  corpus_external_llm_api: forbidden
+  allowed_runners:
+    - current_codex_agent
+    - local_llm
+  network_during_corpus_run: forbidden
+  portable_skill_format: SKILL.md
+
 fixed_components:
   - id: zotero-mcp
     role: corpus_access
@@ -31,47 +39,23 @@ candidates:
     tasks: [qa, literature_review, manuscript]
     role: structured_extraction_then_generation
 
-  - id: paperqa2
-    category: library
-    status: not_started
-    tasks: [qa, literature_review]
-    role: corpus_retrieval_and_evidence
-
   - id: grobid
     category: tool
     status: not_started
     tasks: [qa, literature_review, manuscript]
     role: pdf_fallback_parser
 
-  - id: llm-for-zotero
-    category: application
-    status: not_started
-    tasks: [qa, literature_review]
-    role: interactive_zotero_analysis
-
-  - id: academic-research-skills
-    category: skill_set
-    status: not_started
-    tasks: [qa, literature_review, manuscript]
-    role: workflow_orchestration
-
-  - id: scientific-agent-skills
-    category: skill_set
-    status: not_started
-    tasks: [qa, literature_review, manuscript]
-    role: modular_scientific_processing
-
   - id: academic-writing-skills
-    category: skill_set
-    status: not_started
-    tasks: [literature_review, manuscript]
+    category: portable_skill
+    status: smoke_tested
+    tasks: [manuscript]
     role: writing_and_audit
 
-  - id: claude-scientific-writer
-    category: application
-    status: not_started
-    tasks: [literature_review, manuscript]
-    role: evidence_bound_drafting
+  - id: literature-triage-matrix
+    category: portable_skill
+    status: smoke_tested
+    tasks: [literature_review]
+    role: cross_paper_evidence_matrix
 
   - id: sciwrite-lint
     category: tool

@@ -1,0 +1,101 @@
+schema_version: 1
+updated: 2026-07-30
+
+policy:
+  input_scope: supplied_corpus_only
+  allowed_model_runners: [current_codex_agent, local_llm]
+  external_llm_api: forbidden
+  network_during_corpus_processing: forbidden
+  preferred_format: agent-skills-skill-md
+  zotero_writes: forbidden_during_benchmark
+
+verdicts:
+  - id: literature-triage-matrix
+    source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix
+    commit: 3143d2d62f798960731cae5a2b4f91aeaca25e75
+    skill_sha256: a437f44253b5113e3f38fd649042d1e89d012b757304f41353de96e2df676366
+    task: literature_review
+    license: MIT
+    spec_subset: pass
+    portability: pass
+    corpus_policy: pass_with_offline_profile
+    reasons:
+      - permits_model_memory
+      - permits_doi_lookup
+      - assumes_nonstandard_workspace_paths
+    next_action: compare_against_direct_baseline
+
+  - id: academic-writing-skills
+    source: https://github.com/WenyuChiou/academic-writing-skills/tree/6524dd9e204660894dcdeefebfed94d8fcdef3fa/skills/academic-writing-skills
+    commit: 6524dd9e204660894dcdeefebfed94d8fcdef3fa
+    skill_sha256: a306070c8205a9d6c36b674c9d737c622e9f19c0ecf1fde29b2617cd573e07a9
+    task: manuscript
+    license: MIT
+    spec_subset: pass
+    portability: pass
+    corpus_policy: pass_with_offline_profile
+    reasons:
+      - main_workflow_uses_supplied_evidence
+      - no_required_external_model
+      - optional_reference_checks_must_be_disabled
+    next_action: benchmark_claim_evidence_audit
+
+  - id: paper-summarize
+    source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/paper-summarize
+    commit: 3143d2d62f798960731cae5a2b4f91aeaca25e75
+    skill_sha256: 385162d00efc94406fd41aacb30aecbb4ee219dabc4b5184c8573ac96af6b800
+    task: literature_review
+    license: MIT
+    spec_subset: pass
+    portability: partial
+    corpus_policy: rejected_as_is
+    reasons:
+      - invokes_llm_cli_per_paper
+      - writes_zotero_notes
+      - coupled_to_research_hub_workspace
+    next_action: none
+
+  - id: academic-paper-review
+    source: https://github.com/bytedance/deer-flow/blob/0d8e11ad492bfa1a15b4409cc744ee66d6d188c0/skills/public/academic-paper-review/SKILL.md
+    commit: 0d8e11ad492bfa1a15b4409cc744ee66d6d188c0
+    task: qa
+    spec_subset: pass_by_manual_inspection
+    portability: partial
+    corpus_policy: adapt_required
+    reasons:
+      - mandates_web_search_for_literature_positioning
+      - assumes_host_specific_output_tools
+    next_action: retain_only_paper_internal_review_phases
+
+  - id: academic-research-suite
+    source: https://github.com/Imbad0202/academic-research-skills-codex/tree/f8d6b061efe98564a3f554c917fce66dcef6ca54/skills/academic-research-suite
+    commit: f8d6b061efe98564a3f554c917fce66dcef6ca54
+    task: [literature_review, manuscript]
+    license: CC-BY-NC-4.0
+    spec_subset: pass
+    portability: codex_first
+    corpus_policy: rejected_as_is
+    reasons:
+      - monolithic_suite
+      - includes_search_workflows
+      - includes_optional_cross_model_routing
+      - large_context_surface
+    next_action: reconsider_only_if_small_workflows_are_extracted
+
+  - id: scientific-agent-skills-literature-review
+    source: https://github.com/K-Dense-AI/scientific-agent-skills/tree/main/scientific-skills/literature-review
+    task: literature_review
+    spec_subset: pass_by_manual_inspection
+    portability: partial
+    corpus_policy: rejected_as_is
+    reasons:
+      - primary_workflow_expands_corpus_through_external_search
+      - external_service_dependencies
+      - ai_figure_generation_dependency
+    next_action: none
+
+status_values:
+  - pass
+  - pass_with_offline_profile
+  - adapt_required
+  - rejected_as_is

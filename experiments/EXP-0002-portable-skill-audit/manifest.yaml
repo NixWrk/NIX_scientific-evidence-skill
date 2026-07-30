@@ -1,0 +1,14 @@
+experiment_id: EXP-0002
+title: Portable scientific skill static audit
+status: completed
+task: skill_audit
+date: 2026-07-30
+corpus_used: false
+network_use: source_code_and_documentation_only
+external_llm_api: forbidden
+runner: current_codex_agent
+validator: tools/audit_skill.py
+reference_spec:
+  repository: https://github.com/agentskills/agentskills
+  commit: 38a2ff82958afee88dadf4831509e6f7e9d8ef4e
+audited_registry: registry/skills.yaml

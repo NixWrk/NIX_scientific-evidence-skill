@@ -1,6 +1,8 @@
 experiment_id: EXP-0001
 title: Direct Q&A over Zotero source HTML
 status: gold_ready
+runner_policy: current_codex_agent_or_local_llm_only
+external_llm_api: forbidden
 task: qa
 corpus_id: AAR-HE2FL89L-v1
 zotero_library:
@@ -17,7 +19,7 @@ normalizer: tools/normalize_zotero_html.py
 normalizer_sha256: 264fe3599b74bb89f4884eb8c8cb4bb0166a3578c085840b7bf132a2761fdcbe
 model: null
 skill: null
-prompt_hash: 7403daec8b4fca9bf3eada0116af161ffb47e6b24ac095cce2df53ece207397e
+prompt_hash: 1aa43b682990703e766a75f9c503ef62f86befc0539e919f72bb0bddd44a6356
 corpus_hash: cfb289c8e5ae56340dc3018b6785e1b1563492f5d2b3c6e74773382cf47bf45f
 gold_hash: 39313f27e9f43cac722a39d507c2bbfab08cb2532977163506f650a41b5811bf
 normalized_statistics:
