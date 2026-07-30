@@ -1,0 +1,23 @@
+{
+  "normalized_dir": "runs\\EXP-0001\\normalized",
+  "artifacts": [
+    {
+      "artifact": "experiments\\EXP-0019-wenyuchiou-academic-writing-skills\\abstract-revision.md",
+      "references": 9,
+      "unique_references": 8,
+      "missing": [],
+      "valid": true
+    },
+    {
+      "artifact": "experiments\\EXP-0019-wenyuchiou-academic-writing-skills\\claim-evidence-audit.md",
+      "references": 15,
+      "unique_references": 12,
+      "missing": [],
+      "valid": true
+    }
+  ],
+  "references": 24,
+  "unique_references": 12,
+  "missing": [],
+  "valid": true
+}

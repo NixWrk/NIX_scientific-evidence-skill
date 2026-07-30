@@ -1,0 +1,13 @@
+{
+  "artifact": "abstract-revision.md",
+  "introduced_numeric_claims": 0,
+  "checks": [
+    {"claim": "30-day monitoring period", "locator": "SRC-AAR-002-B0011", "valid": true},
+    {"claim": "10 NYHA III-IV participants at two hospitals", "locator": "SRC-AAR-002-B0012", "valid": true},
+    {"claim": "7 participants completed the full period", "locator": "SRC-AAR-002-B0080", "valid": true},
+    {"claim": "262/300 (87%) impedance measurements", "locator": "SRC-AAR-002-B0080", "valid": true},
+    {"claim": "1332/1500 (89%) diary entries", "locator": "SRC-AAR-002-B0080", "valid": true},
+    {"claim": "self-care median 56 to 81, IQRs 22-75 and 72-98, P=.007", "locator": "SRC-AAR-002-B0097", "valid": true}
+  ],
+  "valid": true
+}

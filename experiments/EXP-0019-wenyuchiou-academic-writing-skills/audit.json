@@ -1,0 +1,47 @@
+{
+  "candidate": "WenyuChiou/academic-writing-skills",
+  "commit": "6524dd9e204660894dcdeefebfed94d8fcdef3fa",
+  "commit_date": "2026-07-27T14:15:20+08:00",
+  "repository_license": "MIT",
+  "skill": {
+    "name": "academic-writing-skills",
+    "sha256": "a306070c8205a9d6c36b674c9d737c622e9f19c0ecf1fde29b2617cd573e07a9",
+    "line_count": 301,
+    "description_length": 845,
+    "spec_subset_valid": true,
+    "warnings": []
+  },
+  "references_loaded": [
+    {"path": "references/writing_principles.md", "sha256": "46acafd7c49ae56310dc31e9926789c0816d98f6a5a09c8f0a2dcea8390fb98d", "line_count": 713},
+    {"path": "references/banned_words.md", "sha256": "d5d0d2fea6ab554cde5d40c290b0f1557056c979bde1f5d47404550758b0f9a2", "line_count": 279},
+    {"path": "references/section_checklists.md", "sha256": "0ee7f0303141418cb667b538b1d20031f477cc102c99691539fc4acfbf3cd908", "line_count": 346, "scope": "Abstract subsection"},
+    {"path": "references/claim_evidence_audit.md", "sha256": "9bcb19747a2db54a8b9442573f13412fca1fa8edd7c0bcc9fe3c90aff186da19", "line_count": 193}
+  ],
+  "package": {
+    "repository_tracked_files": 20,
+    "skill_files": 14,
+    "python_scripts": 0,
+    "eval_definitions": 11,
+    "upstream_tests": {"passed": 9, "failed": 0}
+  },
+  "native_strengths": [
+    "explicit claim to evidence to certainty to revision sequence",
+    "five mandatory dispositions for unverifiable claims",
+    "precise numbers must be reader-visible and rechecked",
+    "causal language is bounded by study design",
+    "prose revision follows evidence and structure repair"
+  ],
+  "profile_requirements": [
+    "replace .paper memory with normalized Zotero block locators",
+    "disable paper-memory-builder and external reference checks",
+    "skip journal compliance when no target journal is supplied",
+    "retain only manuscript processing branches"
+  ],
+  "content_smoke": {
+    "source": "SRC-AAR-002",
+    "claims_audited": 7,
+    "dispositions": {"drop": 2, "hedge": 3, "caveat": 1, "retain": 1},
+    "new_numeric_claims": 0
+  },
+  "verdict": "pass_with_offline_profile"
+}

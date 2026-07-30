@@ -159,7 +159,7 @@ repositories:
 
   - order: 14
     repository: WenyuChiou/research-hub
-    status: partially_tested
+    status: completed
     candidates:
       - id: literature-triage-matrix
         status: completed
@@ -172,11 +172,12 @@ repositories:
 
   - order: 15
     repository: WenyuChiou/academic-writing-skills
-    status: static_test_completed
+    status: completed
     candidates:
       - id: academic-writing-skills
-        status: content_smoke_queued
-        experiment: EXP-0002
+        status: completed
+        experiment: EXP-0019
+        verdict: pass_with_offline_profile
 
   - order: 16
     repository: Imbad0202/academic-research-skills-codex

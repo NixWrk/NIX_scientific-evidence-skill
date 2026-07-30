@@ -38,7 +38,10 @@ verdicts:
       - main_workflow_uses_supplied_evidence
       - no_required_external_model
       - optional_reference_checks_must_be_disabled
-    next_action: benchmark_claim_evidence_audit
+      - five_dispositions_for_unverifiable_claims
+      - paper_memory_layer_replaced_by_block_locators
+    experiment: EXP-0019
+    next_action: retain_as_claim_evidence_gate_alongside_yslab
 
   - id: paper-summarize
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/paper-summarize

@@ -47,7 +47,7 @@ candidates:
 
   - id: academic-writing-skills
     category: portable_skill
-    status: smoke_tested
+    status: benchmarked
     tasks: [manuscript]
     role: writing_and_audit
 

@@ -1,0 +1,8 @@
+{
+  "runner": "python -m pytest -q",
+  "collected": 9,
+  "passed": 9,
+  "failed": 0,
+  "duration_seconds": 0.04,
+  "note": "python -m unittest discover collected 0 because the upstream tests use pytest-style functions; the pytest result is authoritative"
+}

@@ -1,0 +1,31 @@
+experiment_id: EXP-0019
+title: WenyuChiou academic-writing-skills claim-evidence benchmark
+status: completed
+task: manuscript
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+candidate:
+  repository: https://github.com/WenyuChiou/academic-writing-skills
+  commit: 6524dd9e204660894dcdeefebfed94d8fcdef3fa
+  path: skills/academic-writing-skills
+  skill_sha256: a306070c8205a9d6c36b674c9d737c622e9f19c0ecf1fde29b2617cd573e07a9
+  license: MIT
+  profile: offline-profile.md
+input:
+  source_id: SRC-AAR-002
+  zotero_item_key: M4YTNHYL
+  attachment_key: K6UU8AGP
+  representation: normalized_zotero_html_blocks
+  content_sha256: 438d6e6638bb561316e2e28d38a933970d37442d5f008467efe06a8f67ef1fad
+outputs:
+  - claim-evidence-audit.md
+  - abstract-revision.md
+comparison:
+  - EXP-0010
+  - EXP-0011
+upstream_tests: upstream-tests.json
+numeric_audit: numeric-audit.json
+validation: validation.json
+verdict: pass_with_offline_profile
