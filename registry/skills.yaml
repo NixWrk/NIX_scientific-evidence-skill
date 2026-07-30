@@ -232,6 +232,25 @@ verdicts:
     experiment: EXP-0009
     next_action: fork_schema_and_algorithms_before_content_smoke
 
+  - id: research-paper-writing
+    source: https://github.com/Master-cai/Research-Paper-Writing-Skills/tree/77e7c2c1ba06f7d71844873147665437a03aac1b/research-paper-writing
+    commit: 77e7c2c1ba06f7d71844873147665437a03aac1b
+    skill_sha256: 32c01a68b0d739a4750fd0901c7f021e762fec6851cc7575f32277fe58ccc248
+    task: manuscript
+    license: MIT
+    spec_subset: pass
+    portability: pass_with_offline_profile
+    corpus_policy: pass_with_offline_profile
+    reasons:
+      - no_network_or_external_model_required
+      - claim_evidence_map_in_output_contract
+      - upstream_evidence_field_lacks_locator_schema
+      - add_evidence_and_new_experiment_branches_disabled
+      - novelty_and_performance_framing_requires_direct_support
+      - example_bank_is_structure_only
+    experiment: EXP-0010
+    next_action: compare_on_supplied_results_manuscript
+
 status_values:
   - pass
   - pass_with_offline_profile

@@ -1,0 +1,43 @@
+{
+  "candidate": "Master-cai/Research-Paper-Writing-Skills/research-paper-writing",
+  "commit": "77e7c2c1ba06f7d71844873147665437a03aac1b",
+  "commit_date": "2026-06-23T10:28:54+08:00",
+  "repository_license": "MIT",
+  "skill": {
+    "sha256": "32c01a68b0d739a4750fd0901c7f021e762fec6851cc7575f32277fe58ccc248",
+    "line_count": 99,
+    "spec_subset_valid": true,
+    "policy_signals": []
+  },
+  "loaded_references": {
+    "references/abstract.md": "4a5094d5621431ea1d24d7a0800eed292faa25bb03b787d90d60cb5dda3cecd1",
+    "references/paper-review.md": "cebc79c9063000c3bece1b27dc8f720d96c1345e9ea5c2052ca4c225dd057e6f",
+    "references/examples/abstract/template-a.md": "daf3dae0f50335abf90a7e9403d3688caf2d6fabc8fbd5105d8d992a27826671",
+    "references/examples/abstract/template-b.md": "0bfcb2a20d5c8939b509608358c6261752b28ebfd45caf96aba6c31d80876443",
+    "references/examples/abstract/template-c.md": "bd8b6fe04c516abe860fdc960fd579c5ae8c05994d46575e4c327a8a59943b03"
+  },
+  "package": {
+    "files": 39,
+    "scripts": 0,
+    "upstream_tests": "not_provided",
+    "network_required": false,
+    "external_model_required": false,
+    "subprocess_required": false,
+    "side_effects_required": false
+  },
+  "strengths": [
+    "section-specific progressive disclosure",
+    "major claim to evidence check is a hard constraint",
+    "unsupported claims may be weakened or removed",
+    "output contract includes a claim-evidence map and self-review"
+  ],
+  "profile_requirements": [
+    "upstream evidence field has no required source locator schema",
+    "add evidence is replaced with weaken, remove, or mark unsupported by supplied inputs",
+    "needs new experiment is disabled as outside repository scope",
+    "novelty and performance framing is accepted only when directly supported",
+    "example text is structure-only and cannot be copied into the manuscript",
+    "model memory cannot supply scientific facts"
+  ],
+  "provenance_caution": "The repository attributes much of its methodology to external study notes and contains excerpts from published papers; only the structural workflow was applied, and no upstream examples were copied into the output."
+}

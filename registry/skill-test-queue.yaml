@@ -74,8 +74,12 @@ repositories:
 
   - order: 5
     repository: Master-cai/Research-Paper-Writing-Skills
-    status: queued
-    candidates: [research-paper-writing]
+    status: completed
+    candidates:
+      - id: research-paper-writing
+        status: completed
+        experiment: EXP-0010
+        verdict: conditional_pass
 
   - order: 6
     repository: YSLAB-ai/manuscript-writing

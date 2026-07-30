@@ -1,0 +1,8 @@
+{
+  "artifact": "experiments\\EXP-0010-master-cai-abstract\\abstract-rewrite.md",
+  "normalized_dir": "runs\\EXP-0001\\normalized",
+  "references": 17,
+  "unique_references": 8,
+  "missing": [],
+  "valid": true
+}
