@@ -83,8 +83,12 @@ repositories:
 
   - order: 6
     repository: YSLAB-ai/manuscript-writing
-    status: queued
-    candidates: [manuscript-writing]
+    status: completed
+    candidates:
+      - id: manuscript-writing
+        status: completed
+        experiment: EXP-0011
+        verdict: conditional_pass
 
   - order: 7
     repository: WantongC/journal-adapt-writing-skill

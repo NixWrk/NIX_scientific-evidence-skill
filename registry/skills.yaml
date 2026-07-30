@@ -251,6 +251,25 @@ verdicts:
     experiment: EXP-0010
     next_action: compare_on_supplied_results_manuscript
 
+  - id: manuscript-writing
+    source: https://github.com/YSLAB-ai/manuscript-writing/tree/f83e99ff87c2dd4a76328e4f2d022685941c7246
+    commit: f83e99ff87c2dd4a76328e4f2d022685941c7246
+    skill_sha256: d56756860bc64910c4e14ec5ac285e3c442a504781ba1c3e26a206a43c4f5803
+    task: manuscript
+    license: MIT
+    spec_subset: pass_when_installed_in_matching_directory
+    portability: pass_with_offline_profile
+    corpus_policy: pass_with_offline_profile
+    reasons:
+      - native_verified_facts_only_contract
+      - native_no_fabricated_citations_data_numbers_or_context
+      - native_technical_meaning_preservation
+      - separate_revision_and_review_modes
+      - claim_locator_schema_added_by_profile
+      - citation_recency_check_limited_to_supplied_metadata
+    experiment: EXP-0011
+    next_action: use_as_default_revision_candidate_on_full_manuscript
+
 status_values:
   - pass
   - pass_with_offline_profile

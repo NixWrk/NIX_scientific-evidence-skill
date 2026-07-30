@@ -1,0 +1,45 @@
+{
+  "candidate": "YSLAB-ai/manuscript-writing",
+  "commit": "f83e99ff87c2dd4a76328e4f2d022685941c7246",
+  "commit_date": "2026-05-18T22:02:31-04:00",
+  "repository_license": "MIT",
+  "skill": {
+    "sha256": "d56756860bc64910c4e14ec5ac285e3c442a504781ba1c3e26a206a43c4f5803",
+    "line_count": 78,
+    "spec_subset_valid_when_installed_as_manuscript_writing": true,
+    "repository_root_is_skill_directory": true
+  },
+  "required_reference": {
+    "path": "references/revision-checklist.md",
+    "sha256": "70da6e8cce77b4d857de27bbb652de895d06797236569ac32298cbd3a6669461",
+    "line_count": 236
+  },
+  "package": {
+    "tracked_files": 13,
+    "scripts": 0,
+    "upstream_tests": "not_provided",
+    "network_required": false,
+    "external_model_required": false,
+    "subprocess_required": false
+  },
+  "native_safety_rules": [
+    "verified facts only",
+    "do not invent citations, data, mechanisms, numbers, novelty, or literature context",
+    "preserve scope, certainty, mechanism, causal relation, baseline, and numerical interpretation",
+    "examples are rewrite patterns only",
+    "flag unavailable verification material instead of fabricating support",
+    "do not overwrite original document",
+    "separate evidence, interpretation, limitations, and implications"
+  ],
+  "profile_requirements": [
+    "add exact HTML or PDF locators to major claims",
+    "treat unavailable evidence as Needs Verification without corpus expansion",
+    "disable research-design suggestions",
+    "write only inside the experiment directory"
+  ],
+  "manual_findings": [
+    "the static scanner's state-mutation signal is a false positive for writing a separate revised copy",
+    "a temporary directory name caused an initial name mismatch; the documented default clone directory matches the skill name",
+    "citation recency can only be checked against supplied metadata in offline mode"
+  ]
+}

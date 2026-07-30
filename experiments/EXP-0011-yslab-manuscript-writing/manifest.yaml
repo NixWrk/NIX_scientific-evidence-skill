@@ -1,0 +1,29 @@
+experiment_id: EXP-0011
+title: Paired Abstract revision with YSLAB manuscript-writing
+status: completed
+task: manuscript
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+candidate:
+  repository: https://github.com/YSLAB-ai/manuscript-writing
+  commit: f83e99ff87c2dd4a76328e4f2d022685941c7246
+  path: .
+  skill_sha256: d56756860bc64910c4e14ec5ac285e3c442a504781ba1c3e26a206a43c4f5803
+  license: MIT
+  profile: offline-profile.md
+references_loaded:
+  - references/revision-checklist.md
+input:
+  source_id: SRC-AAR-002
+  zotero_item_key: M4YTNHYL
+  attachment_key: K6UU8AGP
+  representation: normalized_zotero_html_blocks
+  content_sha256: 438d6e6638bb561316e2e28d38a933970d37442d5f008467efe06a8f67ef1fad
+output: abstract-revision.md
+validator: tools/validate_block_references.py
+validation: validation.json
+comparison: comparison-with-exp-0010.md
+upstream_tests: not_provided
+verdict: conditional_pass
