@@ -137,14 +137,18 @@ verdicts:
     license: MIT
     spec_subset: pass
     portability: partial_on_windows
-    corpus_policy: eligible_for_content_smoke
+    corpus_policy: pass_with_offline_profile
     reasons:
       - local_standard_library_scripts
       - strong_no_person_ranking_boundary
       - posix_cli_examples_need_windows_translation
       - quantitative_and_organizational_branches_out_of_scope
-    experiment: EXP-0006
-    next_action: compare_developmental_manuscript_qa
+      - qualitative_developmental_review_passed_on_supplied_abstract
+      - scoring_disabled_because_content_validity_not_established
+      - claim_locators_added_by_profile
+    experiment: EXP-0020
+    prior_static_experiment: EXP-0006
+    next_action: retain_qualitative_review_without_scores
 
   - id: skill-focus
     source: https://github.com/stephenturner/skill-focus/tree/84e521dcf0a44786500cce60bac6ddf00c63b3e8

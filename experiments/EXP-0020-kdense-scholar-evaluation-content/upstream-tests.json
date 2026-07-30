@@ -1,0 +1,8 @@
+{
+  "runner": "python -m pytest tests/scholar-evaluation -q",
+  "commit": "ab2f84ab10597c59fac186ecda6d5edd5dcc8b92",
+  "collected": 27,
+  "passed": 27,
+  "failed": 0,
+  "duration_seconds": 0.10
+}

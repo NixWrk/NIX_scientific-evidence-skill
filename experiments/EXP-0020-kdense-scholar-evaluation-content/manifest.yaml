@@ -1,0 +1,32 @@
+experiment_id: EXP-0020
+title: K-Dense scholar-evaluation qualitative content smoke
+status: completed
+task: qa
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+candidate:
+  repository: https://github.com/K-Dense-AI/scientific-agent-skills
+  commit: ab2f84ab10597c59fac186ecda6d5edd5dcc8b92
+  path: skills/scholar-evaluation
+  version: "2.1"
+  skill_sha256: 14da13ae10564125d953fe6ab82760932ca119f963c69225667fbc82ff060405
+  license: MIT
+  profile: offline-profile.md
+prior_static_audit: EXP-0006
+input:
+  source_id: SRC-AAR-002
+  zotero_item_key: M4YTNHYL
+  attachment_key: K6UU8AGP
+  representation: normalized_zotero_html_blocks
+  content_sha256: 438d6e6638bb561316e2e28d38a933970d37442d5f008467efe06a8f67ef1fad
+output: developmental-qa.md
+comparison:
+  - EXP-0011
+  - EXP-0015
+  - EXP-0019
+upstream_tests: upstream-tests.json
+validation: validation.json
+numeric_audit: numeric-audit.json
+verdict: pass_with_offline_profile

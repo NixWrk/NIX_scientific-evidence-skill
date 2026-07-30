@@ -1,0 +1,48 @@
+{
+  "candidate": "K-Dense-AI/scientific-agent-skills/skills/scholar-evaluation",
+  "commit": "ab2f84ab10597c59fac186ecda6d5edd5dcc8b92",
+  "commit_date": "2026-07-28T17:34:25-07:00",
+  "license": "MIT",
+  "skill": {
+    "version": "2.1",
+    "sha256": "14da13ae10564125d953fe6ab82760932ca119f963c69225667fbc82ff060405",
+    "line_count": 296,
+    "description_length": 229,
+    "spec_subset_valid": true,
+    "warnings": []
+  },
+  "package": {
+    "files": 19,
+    "python_scripts": 8,
+    "test_files": 1,
+    "upstream_tests": {"passed": 27, "failed": 0},
+    "network_required": false,
+    "external_model_required": false,
+    "source_text_processed_by_scripts": false
+  },
+  "content_smoke": {
+    "work": "original Abstract of SRC-AAR-002",
+    "purpose": "developmental_review_of_scholarly_work",
+    "data_classification": "public_scholarly_work",
+    "criteria_assessed": ["question_scope", "method_design", "analysis_claims", "transparency_integrity"],
+    "criteria_not_assessed": ["literature_contribution"],
+    "scores_emitted": false,
+    "publication_decision_emitted": false,
+    "person_assessment_emitted": false,
+    "new_numeric_claims": 0
+  },
+  "strengths": [
+    "qualitative evidence precedes any optional score",
+    "missing and not-applicable are not encoded as zero",
+    "hard prohibition on person ranking and consequential decisions",
+    "stable local evidence references are mandatory",
+    "publication readiness and accept reject judgments are forbidden"
+  ],
+  "profile_requirements": [
+    "disable ordinal and composite scoring",
+    "limit construct to support and calibration of supplied-work claims",
+    "replace opaque local references with normalized block identifiers",
+    "disable research idea and organizational assessment branches"
+  ],
+  "verdict": "pass_with_offline_profile"
+}

@@ -1,0 +1,8 @@
+{
+  "artifact": "experiments\\EXP-0020-kdense-scholar-evaluation-content\\developmental-qa.md",
+  "normalized_dir": "runs\\EXP-0001\\normalized",
+  "references": 20,
+  "unique_references": 11,
+  "missing": [],
+  "valid": true
+}

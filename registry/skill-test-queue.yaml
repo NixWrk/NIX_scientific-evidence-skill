@@ -17,7 +17,7 @@ stages:
 repositories:
   - order: 1
     repository: K-Dense-AI/scientific-agent-skills
-    status: initial_audit_completed
+    status: completed
     candidates:
       - id: hypothesis-generation
         status: completed
@@ -28,9 +28,10 @@ repositories:
         experiment: EXP-0005
         verdict: conditional_pass
       - id: scholar-evaluation
-        status: content_smoke_queued
-        experiment: EXP-0006
-        interim_verdict: eligible_for_content_smoke
+        status: completed
+        static_experiment: EXP-0006
+        experiment: EXP-0020
+        verdict: pass_with_offline_profile
       - id: literature-review
         status: rejected_as_is
         reason: mandatory_external_corpus_expansion
