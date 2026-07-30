@@ -101,8 +101,12 @@ repositories:
 
   - order: 8
     repository: jin-s13/paper-writing-suite
-    status: queued
-    candidates: [paper-writing-suite]
+    status: partially_tested
+    candidates:
+      - id: paper-writing-suite
+        status: content_smoke_queued
+        experiment: EXP-0013
+        interim_verdict: eligible_for_content_smoke
 
   - order: 9
     repository: ngtiendong/Academic-Research-Agent-Skill

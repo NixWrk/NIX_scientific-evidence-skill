@@ -1,0 +1,21 @@
+{
+  "command": "python -m unittest discover -s tests -v",
+  "platform": "windows",
+  "total": 28,
+  "passed": 27,
+  "failed": 1,
+  "failure": {
+    "test": "QualityGateTests.test_record_build_run_executes_command_and_records_log",
+    "observed": "Build executable does not exist: J:PCpythonpython.exe",
+    "cause": "record_build.py uses POSIX shlex.split on an unquoted Windows executable path, stripping backslashes"
+  },
+  "passed_areas": [
+    "citation lock normalization and fail-closed behavior",
+    "numeric evidence recomputation for JSON and CSV",
+    "unregistered and unreproducible numbers fail",
+    "research handoff schema and blocker enforcement",
+    "paper-state quality gates and stale build detection",
+    "unreadable UTF-8 input failure",
+    "template manifest checks and path-traversal rejection"
+  ]
+}

@@ -1,0 +1,24 @@
+experiment_id: EXP-0013
+title: jin-s13 paper-writing-suite offline-core audit
+status: completed
+task: skill_audit
+date: 2026-07-30
+corpus_used: false
+network_use: source_code_only
+external_llm_api: forbidden
+runner: current_codex_agent
+candidate:
+  repository: https://github.com/jin-s13/paper-writing-suite
+  commit: 5d6e4244e532189099ca5a9c5585b23febcae955
+  path: .
+  skill_name: ai-research-writing-skill
+  skill_sha256: 7c5fe169ac7b2c6ed14ff72338c0ac258b3cd80b61c4c2840ad878866b8e67cc
+  license: MIT
+  profile: offline-profile.md
+static_validator: tools/audit_skill.py
+upstream_tests:
+  command: python -m unittest discover -s tests -v
+  platform: windows
+  result: 27_passed_1_failed
+content_smoke: pending_supplied_research_results_project
+interim_verdict: eligible_for_content_smoke

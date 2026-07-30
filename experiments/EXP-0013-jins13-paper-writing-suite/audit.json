@@ -1,0 +1,50 @@
+{
+  "candidate": "jin-s13/paper-writing-suite",
+  "commit": "5d6e4244e532189099ca5a9c5585b23febcae955",
+  "commit_date": "2026-07-16T15:16:16+08:00",
+  "repository_license": "MIT",
+  "skill": {
+    "name": "ai-research-writing-skill",
+    "sha256": "7c5fe169ac7b2c6ed14ff72338c0ac258b3cd80b61c4c2840ad878866b8e67cc",
+    "line_count": 65,
+    "spec_subset_valid_in_arbitrary_clone_directory": false,
+    "spec_subset_valid_in_matching_install_directory": true
+  },
+  "contracts": {
+    "research_handoff_schema_sha256": "85f9a20d37f02a3c0a36f7270daa00ecd1261f5e81378ccdf3defa39f58a8313",
+    "numeric_evidence_schema_sha256": "b13ff533f89c8c0c4dcbc92182986756bc8d8c246d8e6292c0ba2a1d8a29c8b8",
+    "paper_state_schema_sha256": "b204c78eb86e72cb337d8d59e00231e615ebf497db9e4ea754ac3bf88bbafa56"
+  },
+  "scripts": {
+    "count": 15,
+    "standard_library_only": true,
+    "compileall": "pass",
+    "network_scripts_disabled": ["verify_citations.py", "fetch_template.py"],
+    "subprocess_script_restricted": ["record_build.py"],
+    "local_core": [
+      "check_citations.py",
+      "check_citation_lock.py",
+      "check_numeric_evidence.py",
+      "check_research_handoff.py",
+      "check_todos.py",
+      "parse_build_log.py",
+      "research_quality_gate.py"
+    ]
+  },
+  "upstream_tests": {"passed": 27, "failed": 1},
+  "strengths": [
+    "strict schemas for handoff, numeric provenance, citation state, and paper state",
+    "numeric claims can be recomputed from JSON, JSONL, CSV, or TSV",
+    "terminal gates fail on unresolved evidence, citations, blockers, or stale builds",
+    "network citation failures are recorded rather than treated as empty evidence",
+    "claims are explicitly weakened when evidence is missing"
+  ],
+  "profile_blockers": [
+    "default workflow includes external citation verification",
+    "default workflow includes image generation",
+    "review and story references include new-experiment planning",
+    "venue and submission packaging are outside scope",
+    "handoff schemas do not by themselves require HTML/PDF block locators",
+    "record_build executable parsing fails on unquoted Windows paths"
+  ]
+}

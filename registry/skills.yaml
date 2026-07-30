@@ -288,6 +288,25 @@ verdicts:
     experiment: EXP-0012
     next_action: none
 
+  - id: ai-research-writing-skill
+    source: https://github.com/jin-s13/paper-writing-suite/tree/5d6e4244e532189099ca5a9c5585b23febcae955
+    commit: 5d6e4244e532189099ca5a9c5585b23febcae955
+    skill_sha256: 7c5fe169ac7b2c6ed14ff72338c0ac258b3cd80b61c4c2840ad878866b8e67cc
+    task: manuscript
+    license: MIT
+    spec_subset: pass_when_installed_in_matching_directory
+    portability: partial_on_windows
+    corpus_policy: eligible_for_content_smoke
+    reasons:
+      - strict_research_handoff_and_numeric_evidence_contracts
+      - local_fail_closed_quality_gates
+      - network_citation_and_template_scripts_disabled
+      - image_generation_and_submission_branches_disabled
+      - claim_locators_added_by_profile
+      - record_build_windows_path_test_fails
+    experiment: EXP-0013
+    next_action: test_on_supplied_research_results_project
+
 status_values:
   - pass
   - pass_with_offline_profile
