@@ -1,0 +1,31 @@
+experiment_id: EXP-0014
+title: ngtiendong source grounding and claim verification
+status: completed
+task: qa
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+candidate:
+  repository: https://github.com/ngtiendong/Academic-Research-Agent-Skill
+  commit: b96e3a135a1e707704da81809ddf78ea24455883
+  path: .
+  skill_sha256: aa3ac74ba2309a466b8d0b2595e29c6fdb2cbd9b663a438f24818137b35cb729
+  license: MIT
+  profile: offline-profile.md
+references_loaded:
+  - references/source_grounding.md
+  - _agents/rules/source_ingestion.md
+  - _agents/rules/claim_verification.md
+input:
+  source_ids: [SRC-AAR-001, SRC-AAR-002, SRC-AAR-003]
+  representation: normalized_zotero_html_blocks
+outputs:
+  - grounding-matrix.md
+  - claim-verification.md
+validator: tools/validate_block_references.py
+validations:
+  claim_verification: validation.json
+  grounding_matrix: grounding-validation.json
+novelty_gate: skipped_out_of_scope
+verdict: pass_with_offline_profile

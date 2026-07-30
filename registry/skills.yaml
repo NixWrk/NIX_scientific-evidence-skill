@@ -307,6 +307,41 @@ verdicts:
     experiment: EXP-0013
     next_action: test_on_supplied_research_results_project
 
+  - id: research-agent-source-grounding
+    source: https://github.com/ngtiendong/Academic-Research-Agent-Skill/tree/b96e3a135a1e707704da81809ddf78ea24455883/references/source_grounding.md
+    commit: b96e3a135a1e707704da81809ddf78ea24455883
+    skill_sha256: aa3ac74ba2309a466b8d0b2595e29c6fdb2cbd9b663a438f24818137b35cb729
+    task: [qa, literature_review, manuscript]
+    license: MIT
+    spec_subset: parent_skill_passes_when_installed_in_matching_directory
+    portability: pass_with_offline_profile
+    corpus_policy: pass_with_offline_profile
+    reasons:
+      - inspected_sources_required_before_evidential_use
+      - native_evidence_interpretation_hypothesis_separation
+      - native_claim_stronger_than_evidence_blocker
+      - claim_level_locator_schema_added_by_profile
+      - discovery_closest_prior_work_and_tool_downloads_disabled
+      - full_research_workflow_not_adopted
+    experiment: EXP-0014
+    next_action: fold_compact_claim_gate_into_evidence_first_baseline
+
+  - id: research-agent-novelty-gate
+    source: https://github.com/ngtiendong/Academic-Research-Agent-Skill/tree/b96e3a135a1e707704da81809ddf78ea24455883/references/novelty_gate.md
+    commit: b96e3a135a1e707704da81809ddf78ea24455883
+    skill_sha256: aa3ac74ba2309a466b8d0b2595e29c6fdb2cbd9b663a438f24818137b35cb729
+    task: research_planning
+    license: MIT
+    spec_subset: parent_skill_passes_when_installed_in_matching_directory
+    portability: partial
+    corpus_policy: out_of_scope
+    reasons:
+      - evaluates_and_strengthens_research_novelty
+      - requires_closest_prior_work_and_baseline_selection
+      - output_is_research_direction_not_qa_review_or_manuscript
+    experiment: EXP-0014
+    next_action: none
+
 status_values:
   - pass
   - pass_with_offline_profile

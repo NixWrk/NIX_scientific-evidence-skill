@@ -1,0 +1,37 @@
+{
+  "candidate": "ngtiendong/Academic-Research-Agent-Skill",
+  "commit": "b96e3a135a1e707704da81809ddf78ea24455883",
+  "commit_date": "2026-06-13T11:24:54+07:00",
+  "repository_license": "MIT",
+  "skill": {
+    "name": "research-agent",
+    "sha256": "aa3ac74ba2309a466b8d0b2595e29c6fdb2cbd9b663a438f24818137b35cb729",
+    "line_count": 52,
+    "spec_subset_valid_in_arbitrary_clone_directory": false,
+    "spec_error": "Skill name must match the parent directory name",
+    "spec_subset_valid_after_install_to_research_agent": true
+  },
+  "package": {
+    "tracked_files": 84,
+    "executable_scripts": 0,
+    "upstream_tests": "not_provided"
+  },
+  "native_strengths": [
+    "sources must be inspected before use as evidence",
+    "evidence, interpretation, and hypothesis are separated",
+    "unsupported claims are removed, grounded, or labeled",
+    "fabricated citations, datasets, baselines, and results are forbidden",
+    "claim stronger than evidence is a blocker"
+  ],
+  "adaptation_required": [
+    "upstream matrices and claim table do not require claim-level source locators",
+    "full default workflow includes literature discovery and closest-prior-work search",
+    "novelty, experiment planning, pilot, implementation, and research-direction branches are out of scope",
+    "tool layer suggests downloaders and external URLs although local Zotero HTML is already supplied"
+  ],
+  "candidate_verdicts": {
+    "source_grounding_and_claim_verification": "pass_with_offline_profile",
+    "novelty_gate": "out_of_scope",
+    "full_research_agent": "adapt_required"
+  }
+}

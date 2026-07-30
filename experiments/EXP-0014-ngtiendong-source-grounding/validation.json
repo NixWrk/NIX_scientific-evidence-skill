@@ -1,0 +1,8 @@
+{
+  "artifact": "experiments\\EXP-0014-ngtiendong-source-grounding\\claim-verification.md",
+  "normalized_dir": "runs\\EXP-0001\\normalized",
+  "references": 14,
+  "unique_references": 12,
+  "missing": [],
+  "valid": true
+}

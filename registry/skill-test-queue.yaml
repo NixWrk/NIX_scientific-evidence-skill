@@ -110,8 +110,16 @@ repositories:
 
   - order: 9
     repository: ngtiendong/Academic-Research-Agent-Skill
-    status: queued
-    candidates: [source-grounding, novelty-gate]
+    status: completed
+    candidates:
+      - id: source-grounding
+        status: completed
+        experiment: EXP-0014
+        verdict: pass_with_offline_profile
+      - id: novelty-gate
+        status: completed
+        experiment: EXP-0014
+        verdict: out_of_scope
 
   - order: 10
     repository: HaoYangJin/Research-workflow-Skill
