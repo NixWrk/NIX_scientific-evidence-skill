@@ -47,7 +47,7 @@ repositories:
 
   - order: 3
     repository: mjkmain/paper_skills
-    status: partially_tested
+    status: completed
     candidates:
       - id: paper-reader
         status: completed
@@ -102,12 +102,13 @@ repositories:
 
   - order: 8
     repository: jin-s13/paper-writing-suite
-    status: partially_tested
+    status: blocked_waiting_for_supplied_results
     candidates:
       - id: paper-writing-suite
-        status: content_smoke_queued
+        status: blocked_waiting_for_supplied_results
         experiment: EXP-0013
         interim_verdict: eligible_for_content_smoke
+        reason: requires_author_provided_raw_results_and_manuscript_state
 
   - order: 9
     repository: ngtiendong/Academic-Research-Agent-Skill

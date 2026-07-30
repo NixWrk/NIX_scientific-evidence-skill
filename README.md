@@ -70,6 +70,7 @@ tools/          локальные нормализаторы, валидато�
 - [x] `academic-paper-strategist` исключён (`EXP-0018`): выходы относятся к research/publication planning, а scoring-скрипты не выдержали adversarial audit.
 - [x] `academic-writing-skills` прошёл парный content smoke (`EXP-0019`): принят как независимый claim–evidence gate; YSLAB остаётся основным revision/review skill.
 - [x] Завершён qualitative content smoke `scholar-evaluation` (`EXP-0020`): developmental review принят без ordinal/composite scoring и без person/publication decisions.
+- [x] Все найденные skill-репозитории получили воспроизводимый verdict; content smoke `paper-writing-suite` отдельно заблокирован до предоставления raw research results и manuscript state.
 - [ ] Создан baseline прямого вопрос/ответ по Zotero HTML.
 - [ ] Создан evidence-first baseline.
 
