@@ -1,0 +1,36 @@
+{
+  "repository": "mjkmain/paper_skills",
+  "commit": "9b9c4a57138501d17992fa639ff44d469b3a9f3e",
+  "repository_license": "not_found",
+  "upstream_tests": "not_provided",
+  "skills": [
+    {
+      "id": "paper-reader",
+      "sha256": "1f6f784cec30f5fd9116e584cc16338237deb212e721b715f5510ef8ce032694",
+      "line_count": 294,
+      "spec_subset_valid": true,
+      "findings": ["Agent allowed", "abstract-only fallback", "fixed mutable workspace paths", "no source locators"]
+    },
+    {
+      "id": "paper-wiki",
+      "sha256": "685f3c1f59132fe08d6113d31523e62ad2898adc571caa9a6b6a1e8724f6a46c",
+      "line_count": 462,
+      "spec_subset_valid": true,
+      "findings": ["Agent allowed", "derived graph declared source of truth for relationships", "destructive rebuild path", "wikilinks without source locators"]
+    },
+    {
+      "id": "topic-literature",
+      "sha256": "346647a628ee983547ba1fbaab9c529012eb7db584f4c9bd2023bb0ffd824bfc",
+      "line_count": 552,
+      "spec_subset_valid": true,
+      "findings": ["Agent allowed", "wiki preferred over paper evidence", "corpus-expansion loop", "out-of-scope gaps and reading-list branches"]
+    },
+    {
+      "id": "paper-collector",
+      "sha256": "ef919f35a39fb948316f49691066c4f236e42ae76ce95dab01442c0b035e7b23",
+      "line_count": 301,
+      "spec_subset_valid": true,
+      "verdict": "out_of_scope"
+    }
+  ]
+}

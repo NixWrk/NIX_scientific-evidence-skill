@@ -16,6 +16,7 @@ import ast
 import hashlib
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +26,10 @@ TOP_LEVEL_FIELD = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(?:\s*(.*))?$")
 POLICY_PATTERNS: dict[str, re.Pattern[str]] = {
     "external_model": re.compile(
         r"\b(?:openai|anthropic|claude|gemini|perplexity|cross[- ]model|llm cli)\b",
+        re.IGNORECASE,
+    ),
+    "agent_delegation": re.compile(
+        r"\ballowed[- ]tools?\b.{0,100}\bagent\b|\bsubagents?\b|\bdelegate\b.{0,40}\bagent\b",
         re.IGNORECASE,
     ),
     "network_access": re.compile(
@@ -174,6 +179,8 @@ def audit_skill(skill_dir: Path) -> dict[str, Any]:
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("skill_dir", type=Path, help="Directory containing SKILL.md")
     parser.add_argument(

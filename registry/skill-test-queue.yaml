@@ -46,8 +46,21 @@ repositories:
 
   - order: 3
     repository: mjkmain/paper_skills
-    status: queued
-    candidates: [paper-reader, paper-wiki, topic-literature]
+    status: partially_tested
+    candidates:
+      - id: paper-reader
+        status: completed
+        experiment: EXP-0008
+        verdict: adapt_required
+      - id: paper-wiki
+        status: blocked_before_content_smoke
+        reason: upstream_notes_lack_claim_level_locators
+      - id: topic-literature
+        status: blocked_before_content_smoke
+        reason: wiki_evidence_chain_not_traceable
+      - id: paper-collector
+        status: completed
+        verdict: out_of_scope
 
   - order: 4
     repository: borghei/Claude-Skills

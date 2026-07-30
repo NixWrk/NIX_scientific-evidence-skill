@@ -1,0 +1,27 @@
+experiment_id: EXP-0008
+title: Adapted paper-reader note over one Zotero HTML article
+status: completed
+task: qa
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+candidate:
+  repository: https://github.com/mjkmain/paper_skills
+  commit: 9b9c4a57138501d17992fa639ff44d469b3a9f3e
+  path: skills/paper-reader
+  skill_sha256: 1f6f784cec30f5fd9116e584cc16338237deb212e721b715f5510ef8ce032694
+  license: not_found_in_repository
+  profile: offline-profile.md
+input:
+  source_id: SRC-AAR-002
+  zotero_item_key: M4YTNHYL
+  attachment_key: K6UU8AGP
+  representation: normalized_zotero_html_blocks
+  content_sha256: 438d6e6638bb561316e2e28d38a933970d37442d5f008467efe06a8f67ef1fad
+  normalized_sha256: f82d2ce8c587cf0cc7a3d114d1cf19d7d89c6108bae8549f53b80e12da6a5e40
+output: note.md
+validator: tools/validate_block_references.py
+validation: validation.json
+comparison: comparison-with-focus.md
+verdict: adapt_required

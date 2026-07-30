@@ -160,8 +160,62 @@ verdicts:
     experiment: EXP-0007
     next_action: retain_only_as_local_fork_profile
 
+  - id: paper-reader
+    source: https://github.com/mjkmain/paper_skills/tree/9b9c4a57138501d17992fa639ff44d469b3a9f3e/skills/paper-reader
+    commit: 9b9c4a57138501d17992fa639ff44d469b3a9f3e
+    skill_sha256: 1f6f784cec30f5fd9116e584cc16338237deb212e721b715f5510ef8ce032694
+    task: qa
+    license: not_found
+    spec_subset: pass
+    portability: adapt_required
+    corpus_policy: adapt_required
+    reasons:
+      - agent_allowed
+      - metadata_only_fallback
+      - no_claim_level_locators
+      - mutates_shared_notes_and_index
+    experiment: EXP-0008
+    next_action: none_until_license_and_traceability_are_fixed
+
+  - id: paper-wiki
+    source: https://github.com/mjkmain/paper_skills/tree/9b9c4a57138501d17992fa639ff44d469b3a9f3e/skills/paper-wiki
+    commit: 9b9c4a57138501d17992fa639ff44d469b3a9f3e
+    skill_sha256: 685f3c1f59132fe08d6113d31523e62ad2898adc571caa9a6b6a1e8724f6a46c
+    task: literature_review
+    license: not_found
+    spec_subset: pass
+    portability: adapt_required
+    corpus_policy: blocked_before_content_smoke
+    reasons:
+      - agent_allowed
+      - derived_graph_is_relationship_source_of_truth
+      - source_locators_not_propagated
+      - destructive_rebuild_path
+    experiment: EXP-0008
+    next_action: require_traceable_note_schema_first
+
+  - id: topic-literature
+    source: https://github.com/mjkmain/paper_skills/tree/9b9c4a57138501d17992fa639ff44d469b3a9f3e/skills/topic-literature
+    commit: 9b9c4a57138501d17992fa639ff44d469b3a9f3e
+    skill_sha256: 346647a628ee983547ba1fbaab9c529012eb7db584f4c9bd2023bb0ffd824bfc
+    task: [qa, literature_review, manuscript]
+    license: not_found
+    spec_subset: pass_with_length_warning
+    portability: adapt_required
+    corpus_policy: blocked_before_content_smoke
+    reasons:
+      - agent_allowed
+      - treats_derived_wiki_as_primary_source
+      - corpus_expansion_loop
+      - out_of_scope_gap_and_reading_list_branches
+    experiment: EXP-0008
+    next_action: require_end_to_end_locator_propagation
+
 status_values:
   - pass
   - pass_with_offline_profile
   - adapt_required
   - rejected_as_is
+  - out_of_scope
+  - eligible_for_content_smoke
+  - blocked_before_content_smoke

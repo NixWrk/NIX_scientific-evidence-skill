@@ -74,6 +74,28 @@ Search before making literature-dependent statements.
     assert "corpus_expansion" in report["policy_signals"]
 
 
+def test_reports_agent_in_allowed_tools(tmp_path: Path) -> None:
+    skill_dir = tmp_path / "paper-reader"
+    write_skill(
+        skill_dir,
+        """---
+name: paper-reader
+description: Read a supplied paper and write a local note.
+allowed-tools: Read, Write, Agent
+---
+
+# Paper reader
+
+Read the supplied paper.
+""",
+    )
+
+    report = audit_skill(skill_dir)
+
+    assert report["spec_subset_valid"] is True
+    assert "agent_delegation" in report["policy_signals"]
+
+
 def test_validates_block_references(tmp_path: Path) -> None:
     normalized_dir = tmp_path / "normalized"
     normalized_dir.mkdir()
