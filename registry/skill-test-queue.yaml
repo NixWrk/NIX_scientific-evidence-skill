@@ -150,8 +150,12 @@ repositories:
 
   - order: 13
     repository: lishix520/academic-paper-skills
-    status: queued
-    candidates: [strategist]
+    status: completed
+    candidates:
+      - id: strategist
+        status: completed
+        experiment: EXP-0018
+        verdict: out_of_scope
 
   - order: 14
     repository: WenyuChiou/research-hub

@@ -1,0 +1,19 @@
+experiment_id: EXP-0018
+title: lishix520 academic-paper-strategist scope and script audit
+status: completed
+task: skill_audit
+date: 2026-07-30
+corpus_used: false
+network_use: source_code_only
+external_llm_api: forbidden
+runner: current_codex_agent
+candidate:
+  repository: https://github.com/lishix520/academic-paper-skills
+  commit: c325557646e9418939ccc7b99171b149ad6314f1
+  path: strategist
+  skill_sha256: 55164ac3fb2b7b4f60d43f2d2637242550fab85252d793e6885b67c2fe818f15
+  license: MIT
+static_validator: tools/audit_skill.py
+functional_smoke: functional-smoke.json
+content_smoke: skipped_out_of_scope
+verdict: out_of_scope

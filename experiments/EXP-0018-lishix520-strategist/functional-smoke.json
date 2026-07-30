@@ -1,0 +1,35 @@
+{
+  "python_version": "3.11.0",
+  "network_used": false,
+  "tests": [
+    {
+      "name": "evaluate_samples_compile",
+      "status": "pass"
+    },
+    {
+      "name": "gap_analysis_compile",
+      "status": "fail",
+      "location": "strategist/scripts/gap_analysis.py:334",
+      "reason": "nested same-quote f-string syntax is incompatible with Python 3.11"
+    },
+    {
+      "name": "empty_metadata_adversarial_gate",
+      "fixture": {
+        "papers": 8,
+        "titles": "empty",
+        "doi_or_url": "empty",
+        "quality_indicators": "all false",
+        "self_assigned_relevance": 10,
+        "date_buckets": [3, 3, 2],
+        "unique_authors": 5
+      },
+      "observed_gate_passes": true,
+      "status": "fail"
+    },
+    {
+      "name": "windows_console_encoding",
+      "status": "fail",
+      "reason": "recommendation strings contain checkmark symbols that cannot be printed by the active cp1251 Python stdout"
+    }
+  ]
+}

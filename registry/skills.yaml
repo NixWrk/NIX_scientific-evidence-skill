@@ -405,6 +405,27 @@ verdicts:
     experiment: EXP-0017
     next_action: none
 
+  - id: academic-paper-strategist
+    source: https://github.com/lishix520/academic-paper-skills/tree/c325557646e9418939ccc7b99171b149ad6314f1/strategist
+    commit: c325557646e9418939ccc7b99171b149ad6314f1
+    skill_sha256: 55164ac3fb2b7b4f60d43f2d2637242550fab85252d793e6885b67c2fe818f15
+    task: [research_planning, publication_strategy]
+    license: MIT
+    spec_subset: fail_name_and_description_length
+    portability: fail_on_python_3_11_and_windows_cp1251
+    corpus_policy: out_of_scope
+    reasons:
+      - mandatory_exa_tavily_and_platform_search
+      - generates_research_gaps_originality_and_impact_scores
+      - selects_preprint_platform_and_submission_strategy
+      - pivots_research_direction_on_quality_gate_failure
+      - gap_analysis_syntax_error_on_python_3_11
+      - sample_gate_ignores_quality_indicators
+      - evidence_strings_checked_only_for_non_emptiness
+      - uncalibrated_similarity_relevance_and_impact_thresholds
+    experiment: EXP-0018
+    next_action: none
+
 status_values:
   - pass
   - pass_with_offline_profile

@@ -1,0 +1,40 @@
+{
+  "candidate": "lishix520/academic-paper-skills/strategist",
+  "commit": "c325557646e9418939ccc7b99171b149ad6314f1",
+  "commit_date": "2026-01-04T10:42:04+08:00",
+  "repository_license": "MIT",
+  "skill": {
+    "name": "academic-paper-strategist",
+    "sha256": "55164ac3fb2b7b4f60d43f2d2637242550fab85252d793e6885b67c2fe818f15",
+    "line_count": 670,
+    "spec_subset_valid": false,
+    "spec_errors": [
+      "skill name does not match source parent directory strategist",
+      "frontmatter description is 1050 characters and exceeds the 1024-character limit"
+    ],
+    "warnings": [
+      "SKILL.md exceeds the recommended 500 lines"
+    ]
+  },
+  "package": {
+    "tracked_files_in_strategist": 5,
+    "python_scripts": 2,
+    "upstream_tests": "not_provided",
+    "undeclared_runtime_dependency": "python-dateutil"
+  },
+  "scope_blockers": [
+    "mandatory Exa MCP, Tavily MCP, and platform search",
+    "primary outputs are platform choice, research gaps, originality score, impact prediction, and future paper outline",
+    "workflow pivots research direction when thresholds fail",
+    "preprint submission strategy is a primary phase",
+    "automatic originality percentage and impact score are unsupported by a calibrated model"
+  ],
+  "mechanical_failures": [
+    "gap_analysis.py does not parse on Python 3.11",
+    "sample quality gate ignores all quality_indicators",
+    "self-assigned relevance scores determine pass/fail without evidence validation",
+    "citation strings and quotes are checked only for non-emptiness",
+    "Unicode status output fails under the active Windows cp1251 console"
+  ],
+  "verdict": "out_of_scope"
+}
