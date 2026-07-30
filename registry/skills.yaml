@@ -342,6 +342,26 @@ verdicts:
     experiment: EXP-0014
     next_action: none
 
+  - id: research-mentor
+    source: https://github.com/HaoYangJin/Research-workflow-Skill/tree/b089a37bfd9143426bf00f5cdf7eeff78db73568
+    commit: b089a37bfd9143426bf00f5cdf7eeff78db73568
+    skill_sha256: c3bbac1724e5ee238f34631f2b924b2a03c730ee4afae018f6a7cc00c0bd51d0
+    task: [qa, literature_review, manuscript, research_planning, publication_strategy]
+    license: MIT
+    spec_subset: pass_when_installed_in_matching_directory
+    portability: adapt_required
+    corpus_policy: adapt_required
+    reasons:
+      - isolated_reviewer_checklist_passes_with_offline_profile
+      - feedback_is_natively_tied_to_supplied_artifact
+      - native_no_invented_data_citations_venues_opinions_or_claims
+      - claim_locator_schema_added_by_profile
+      - default_mentor_and_mixed_modes_plan_research
+      - literature_hypothesis_experiment_and_ablation_branches_out_of_scope
+      - venue_acceptance_rebuttal_and_submission_branches_out_of_scope
+    experiment: EXP-0015
+    next_action: retain_only_prioritized_reviewer_checklist
+
 status_values:
   - pass
   - pass_with_offline_profile

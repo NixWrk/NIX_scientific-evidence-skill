@@ -1,0 +1,38 @@
+{
+  "candidate": "HaoYangJin/Research-workflow-Skill",
+  "commit": "b089a37bfd9143426bf00f5cdf7eeff78db73568",
+  "commit_date": "2026-05-17T15:51:37+08:00",
+  "repository_license": "MIT",
+  "skill": {
+    "name": "research-mentor",
+    "sha256": "c3bbac1724e5ee238f34631f2b924b2a03c730ee4afae018f6a7cc00c0bd51d0",
+    "line_count": 73,
+    "spec_subset_valid_in_arbitrary_clone_directory": false,
+    "spec_error": "Skill name must match the parent directory name",
+    "spec_subset_valid_after_install_to_research_mentor": true
+  },
+  "package": {
+    "tracked_files": 22,
+    "executable_scripts": 0,
+    "upstream_tests": "not_provided"
+  },
+  "native_strengths": [
+    "loads only the reference for the detected phase",
+    "reviewer mode leads with major concerns",
+    "feedback must stay tied to the supplied artifact",
+    "invented data, citations, venues, opinions, and claims are forbidden",
+    "technical intent should be preserved during revision"
+  ],
+  "scope_blockers": [
+    "default mentor mode plans research directions and next steps",
+    "literature phase requests searches and recent closest work",
+    "method and results phases design experiments and ablations",
+    "self-review is tied to venue standards and acceptance risk",
+    "submission strategy and venue selection are first-class phases",
+    "claim-level source locators are absent"
+  ],
+  "verdict": {
+    "isolated_reviewer_checklist": "pass_with_offline_profile",
+    "full_research_mentor": "adapt_required"
+  }
+}

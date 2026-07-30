@@ -1,0 +1,29 @@
+experiment_id: EXP-0015
+title: HaoYangJin research-mentor reviewer-mode smoke test
+status: completed
+task: qa
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+candidate:
+  repository: https://github.com/HaoYangJin/Research-workflow-Skill
+  commit: b089a37bfd9143426bf00f5cdf7eeff78db73568
+  path: .
+  skill_sha256: c3bbac1724e5ee238f34631f2b924b2a03c730ee4afae018f6a7cc00c0bd51d0
+  license: MIT
+  profile: offline-profile.md
+references_loaded:
+  - references/06-paper-drafting.md
+  - references/07-self-review-peer-review.md
+input:
+  source_id: SRC-AAR-002
+  zotero_item_key: M4YTNHYL
+  attachment_key: K6UU8AGP
+  representation: normalized_zotero_html_blocks
+  section: original_abstract
+output: review.md
+comparison: comparison.md
+validator: tools/validate_block_references.py
+validation: validation.json
+verdict: adapt_required

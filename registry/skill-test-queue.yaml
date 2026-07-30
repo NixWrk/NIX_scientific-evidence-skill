@@ -123,8 +123,12 @@ repositories:
 
   - order: 10
     repository: HaoYangJin/Research-workflow-Skill
-    status: queued
-    candidates: [research-mentor]
+    status: completed
+    candidates:
+      - id: research-mentor
+        status: completed
+        experiment: EXP-0015
+        verdict: adapt_required
 
   - order: 11
     repository: keemanxp/slr-prisma
