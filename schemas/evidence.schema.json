@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paper-analyzer-writer.local/schemas/evidence.schema.json",
+  "title": "Evidence record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_id",
+    "source_id",
+    "claim",
+    "verbatim_fragment",
+    "locator",
+    "review_status"
+  ],
+  "properties": {
+    "evidence_id": { "type": "string", "minLength": 1 },
+    "source_id": { "type": "string", "minLength": 1 },
+    "zotero_item_key": { "type": ["string", "null"] },
+    "claim": { "type": "string", "minLength": 1 },
+    "verbatim_fragment": { "type": "string", "minLength": 1 },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "representation": { "enum": ["html", "pdf", "note", "annotation", "research_data"] },
+        "section": { "type": ["string", "null"] },
+        "selector": { "type": ["string", "null"] },
+        "page": { "type": ["integer", "null"], "minimum": 1 },
+        "table": { "type": ["string", "null"] },
+        "figure": { "type": ["string", "null"] }
+      },
+      "required": ["representation"]
+    },
+    "study_context": { "type": ["string", "null"] },
+    "value": { "type": ["number", "string", "null"] },
+    "unit": { "type": ["string", "null"] },
+    "limitations": { "type": ["string", "null"] },
+    "review_status": { "enum": ["machine_extracted", "human_verified", "rejected"] }
+  }
+}

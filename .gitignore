@@ -1,0 +1,39 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Python and notebook caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Private or copyrighted local corpora
+corpus/private/
+datasets/private/
+source_snapshots/private/
+
+# Raw generated runs and local caches
+runs/
+.cache/
+tmp/
+*.log
+
+# Local model/index data
+indexes/
+vector_store/
+*.sqlite
+*.sqlite3
