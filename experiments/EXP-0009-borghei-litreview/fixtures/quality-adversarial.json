@@ -1,0 +1,57 @@
+{
+  "as_of": "2026-07-30",
+  "research_question": "Can metadata-based scoring preserve methodological ordering?",
+  "sources": [
+    {
+      "id": "S-RIGOR",
+      "title": "Older rigorous study in a low-tier venue",
+      "authors": ["Test Author"],
+      "year": 2010,
+      "venue": "Test Venue",
+      "venue_tier": "tier5",
+      "peer_reviewed": true,
+      "method_described": true,
+      "sample_size_adequate": true,
+      "data_or_code_available": true,
+      "study_type": "RCT",
+      "citation_count": 0,
+      "preprint": false,
+      "retracted": false,
+      "relevance_to_question": "high"
+    },
+    {
+      "id": "S-PRESTIGE",
+      "title": "Recent weak study in a high-tier venue",
+      "authors": ["Test Author"],
+      "year": 2026,
+      "venue": "Test Venue",
+      "venue_tier": "tier1",
+      "peer_reviewed": true,
+      "method_described": false,
+      "sample_size_adequate": false,
+      "data_or_code_available": false,
+      "study_type": "theoretical",
+      "citation_count": 300,
+      "preprint": false,
+      "retracted": false,
+      "relevance_to_question": "high"
+    },
+    {
+      "id": "S-FUTURE",
+      "title": "Impossible future-dated record",
+      "authors": ["Test Author"],
+      "year": 2099,
+      "venue": "Test Venue",
+      "venue_tier": "tier1",
+      "peer_reviewed": true,
+      "method_described": false,
+      "sample_size_adequate": false,
+      "data_or_code_available": false,
+      "study_type": "theoretical",
+      "citation_count": 300,
+      "preprint": false,
+      "retracted": false,
+      "relevance_to_question": "high"
+    }
+  ]
+}

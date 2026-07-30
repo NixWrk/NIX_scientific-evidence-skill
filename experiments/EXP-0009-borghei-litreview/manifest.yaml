@@ -1,0 +1,30 @@
+experiment_id: EXP-0009
+title: Borghei litreview scope, algorithm, and traceability audit
+status: completed
+task: skill_audit
+date: 2026-07-30
+corpus_used: false
+network_use: source_code_only
+external_llm_api: forbidden
+runner: current_codex_agent
+candidate:
+  repository: https://github.com/borghei/Claude-Skills
+  commit: da5a8626632f08c5513b0f73add1bf8075ef83bd
+  path: research/litreview
+  version: "1.0.0"
+  skill_sha256: debc8707bdc8d55c5ef240601742fc6ac7454c85ead8a7194e88f077fd237caa
+  license: MIT_with_Commons_Clause_1.0
+static_validator: tools/audit_skill.py
+upstream_tests:
+  command: python scripts/integration_test_runner.py --skill research/litreview --format json
+  platform: windows
+  result: 3_passed
+adversarial_tests:
+  fixtures:
+    - fixtures/quality-adversarial.json
+    - fixtures/thematic-adversarial.json
+  result: algorithmic_and_traceability_gate_failed
+scope_gate: failed_as_is
+offline_profile: offline-profile.md
+content_smoke: blocked_before_corpus
+verdict: adapt_required

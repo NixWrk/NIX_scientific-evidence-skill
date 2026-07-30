@@ -211,6 +211,27 @@ verdicts:
     experiment: EXP-0008
     next_action: require_end_to_end_locator_propagation
 
+  - id: borghei-litreview
+    source: https://github.com/borghei/Claude-Skills/tree/da5a8626632f08c5513b0f73add1bf8075ef83bd/research/litreview
+    commit: da5a8626632f08c5513b0f73add1bf8075ef83bd
+    skill_sha256: debc8707bdc8d55c5ef240601742fc6ac7454c85ead8a7194e88f077fd237caa
+    task: literature_review
+    license: MIT_with_Commons_Clause_1.0
+    spec_subset: pass
+    portability: partial_on_windows
+    corpus_policy: adapt_required
+    reasons:
+      - search_and_prisma_execution_out_of_scope
+      - metadata_score_can_overrule_methodological_quality
+      - duplicate_findings_inflate_evidence_strength
+      - independent_medium_sources_mislabeled_as_single_source
+      - claim_ids_and_locators_are_not_propagated
+      - current_date_ignores_supplied_as_of
+      - powershell_utf8_bom_not_supported
+      - commons_clause_restricts_sale
+    experiment: EXP-0009
+    next_action: fork_schema_and_algorithms_before_content_smoke
+
 status_values:
   - pass
   - pass_with_offline_profile

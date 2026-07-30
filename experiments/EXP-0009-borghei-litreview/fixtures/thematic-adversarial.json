@@ -1,0 +1,95 @@
+{
+  "as_of": "2026-07-30",
+  "review_name": "Adversarial aggregation fixture",
+  "themes": [
+    "duplicate inflation",
+    "medium-quality convergence",
+    "locator retention"
+  ],
+  "sources": [
+    {
+      "id": "S-001",
+      "citation": "Source One (2026)",
+      "quality": "high",
+      "theme_findings": [
+        {
+          "theme": "duplicate inflation",
+          "stance": "supports",
+          "claim_id": "C-001",
+          "locators": ["SRC-TEST-001-B0001"],
+          "note": "First extraction of the same source claim."
+        },
+        {
+          "theme": "duplicate inflation",
+          "stance": "supports",
+          "claim_id": "C-001",
+          "locators": ["SRC-TEST-001-B0001"],
+          "note": "Duplicate extraction of the same source claim."
+        },
+        {
+          "theme": "duplicate inflation",
+          "stance": "supports",
+          "claim_id": "C-001",
+          "locators": ["SRC-TEST-001-B0001"],
+          "note": "Second duplicate of the same source claim."
+        }
+      ]
+    },
+    {
+      "id": "S-002",
+      "citation": "Source Two (2026)",
+      "quality": "medium",
+      "theme_findings": [
+        {
+          "theme": "medium-quality convergence",
+          "stance": "supports",
+          "claim_id": "C-002",
+          "locators": ["SRC-TEST-002-B0001"],
+          "note": "First independent source."
+        }
+      ]
+    },
+    {
+      "id": "S-003",
+      "citation": "Source Three (2026)",
+      "quality": "medium",
+      "theme_findings": [
+        {
+          "theme": "medium-quality convergence",
+          "stance": "supports",
+          "claim_id": "C-003",
+          "locators": ["SRC-TEST-003-B0001"],
+          "note": "Second independent source."
+        }
+      ]
+    },
+    {
+      "id": "S-004",
+      "citation": "Source Four (2026)",
+      "quality": "medium",
+      "theme_findings": [
+        {
+          "theme": "medium-quality convergence",
+          "stance": "supports",
+          "claim_id": "C-004",
+          "locators": ["SRC-TEST-004-B0001"],
+          "note": "Third independent source."
+        }
+      ]
+    },
+    {
+      "id": "S-005",
+      "citation": "Source Five (2026)",
+      "quality": "high",
+      "theme_findings": [
+        {
+          "theme": "locator retention",
+          "stance": "supports",
+          "claim_id": "C-005",
+          "locators": ["SRC-TEST-005-B0001"],
+          "note": "The output must retain claim identity and evidence locators."
+        }
+      ]
+    }
+  ]
+}

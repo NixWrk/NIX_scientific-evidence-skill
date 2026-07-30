@@ -1,0 +1,87 @@
+{
+  "fixtures_are_synthetic": true,
+  "corpus_used": false,
+  "quality_scorer": {
+    "exit_code": 0,
+    "observations": [
+      {
+        "id": "S-PRESTIGE",
+        "quality_score": 58,
+        "total_score": 75,
+        "decision": "include (read in full)",
+        "method_described": false,
+        "sample_size_adequate": false,
+        "data_or_code_available": false
+      },
+      {
+        "id": "S-RIGOR",
+        "quality_score": 55,
+        "total_score": 73,
+        "decision": "candidate (read in full to decide)",
+        "method_described": true,
+        "sample_size_adequate": true,
+        "data_or_code_available": true
+      },
+      {
+        "id": "S-FUTURE",
+        "year": 2099,
+        "quality_score": 58,
+        "total_score": 75,
+        "decision": "include (read in full)"
+      }
+    ],
+    "failed_assertions": [
+      "methodological quality must not be outranked by venue, recency, and raw citation metadata",
+      "future-dated records must be rejected or flagged"
+    ],
+    "code_inspection_findings": [
+      "the current system year is used instead of the supplied as_of date",
+      "venue tier contributes up to 20 quality points and citation rate up to 10"
+    ]
+  },
+  "thematic_builder": {
+    "exit_code": 0,
+    "observations": [
+      {
+        "theme": "duplicate inflation",
+        "unique_sources": 1,
+        "repeated_findings": 3,
+        "reported_sources_addressing": 3,
+        "reported_strength": "strong",
+        "reported_classification": "well-supported (multiple high-quality sources)"
+      },
+      {
+        "theme": "medium-quality convergence",
+        "unique_sources": 3,
+        "reported_sources_addressing": 3,
+        "reported_strength": "anecdotal",
+        "reported_classification": "anecdotal (single source) — needs replication"
+      },
+      {
+        "theme": "locator retention",
+        "input_claim_id": "C-005",
+        "input_locator": "SRC-TEST-005-B0001",
+        "claim_id_in_output": false,
+        "locator_in_output": false
+      }
+    ],
+    "failed_assertions": [
+      "evidence counts must use unique sources or studies",
+      "classification text must agree with the number of independent sources",
+      "claim identifiers and source locators must survive synthesis"
+    ]
+  },
+  "input_validation": {
+    "empty_object_exit_codes": {
+      "search_strategy_builder.py": 0,
+      "source_quality_scorer.py": 0,
+      "thematic_synthesis_builder.py": 0
+    },
+    "powershell_utf8_bom_exit_codes": {
+      "search_strategy_builder.py": 2,
+      "source_quality_scorer.py": 2,
+      "thematic_synthesis_builder.py": 2
+    }
+  },
+  "content_smoke": "blocked_before_corpus"
+}

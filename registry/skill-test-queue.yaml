@@ -64,8 +64,13 @@ repositories:
 
   - order: 4
     repository: borghei/Claude-Skills
-    status: queued
-    candidates: [research-litreview]
+    status: completed
+    candidates:
+      - id: research-litreview
+        status: blocked_before_content_smoke
+        experiment: EXP-0009
+        verdict: adapt_required
+        reason: algorithmic_and_traceability_gate_failed
 
   - order: 5
     repository: Master-cai/Research-Paper-Writing-Skills

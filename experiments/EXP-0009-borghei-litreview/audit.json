@@ -1,0 +1,60 @@
+{
+  "candidate": "borghei/Claude-Skills/research/litreview",
+  "commit": "da5a8626632f08c5513b0f73add1bf8075ef83bd",
+  "commit_date": "2026-07-21T13:25:20Z",
+  "version": "1.0.0",
+  "license": {
+    "identifier": "MIT_with_Commons_Clause_1.0",
+    "internal_use_permitted": true,
+    "sale_restricted": true,
+    "vendored_into_benchmark_repository": false
+  },
+  "files": {
+    "SKILL.md": {
+      "sha256": "debc8707bdc8d55c5ef240601742fc6ac7454c85ead8a7194e88f077fd237caa",
+      "line_count": 181
+    },
+    "scripts/search_strategy_builder.py": {
+      "sha256": "e3cb531537e1fb9b7a29b0b79e51698f342067a3facf38bcf00f7c19e74d5e3c",
+      "line_count": 234
+    },
+    "scripts/source_quality_scorer.py": {
+      "sha256": "054a129e5279869f365581b2d6d7c56ee2aa9d65868f511e1e54c20cd7808ef8",
+      "line_count": 265
+    },
+    "scripts/thematic_synthesis_builder.py": {
+      "sha256": "3a27e47cd96e94a0ff7ee340f898b829f13e737711728afed717cf6b5543190d",
+      "line_count": 245
+    }
+  },
+  "spec_subset_valid": true,
+  "static_policy_signals": {
+    "corpus_expansion": 6,
+    "manual_policy_review_required": true
+  },
+  "script_scan": {
+    "standard_library_only": true,
+    "network_calls": false,
+    "external_model_calls": false,
+    "subprocess_calls": false,
+    "local_json_read_write_only": true
+  },
+  "upstream_tests": {
+    "runner": "scripts/integration_test_runner.py",
+    "scripts_total": 3,
+    "passed": 3,
+    "failed": 0,
+    "checks_per_script": ["compile", "help", "imports", "argparse", "format_flag"],
+    "behavioral_assertions": false
+  },
+  "scope_findings": [
+    "search strategy, database selection, bibliography building, and PRISMA execution are outside the benchmark scope",
+    "the search workflow is separable, but the remaining scripts fail algorithmic and traceability gates",
+    "gap generation and research-contribution planning must be disabled"
+  ],
+  "portability_findings": [
+    "all three scripts run on Windows with BOM-free UTF-8 JSON",
+    "all three scripts reject a normal Windows PowerShell UTF-8 BOM input",
+    "all three scripts accept an empty JSON object as a successful run"
+  ]
+}

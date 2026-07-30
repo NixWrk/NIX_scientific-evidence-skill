@@ -1,0 +1,22 @@
+{
+  "command": "python scripts/integration_test_runner.py --skill research/litreview --format json",
+  "platform": "windows",
+  "summary": {
+    "total_scripts": 3,
+    "passed": 3,
+    "failed": 0
+  },
+  "check_summary": {
+    "compile": {"passed": 3, "total": 3},
+    "help": {"passed": 3, "total": 3},
+    "imports": {"passed": 3, "total": 3},
+    "argparse": {"passed": 3, "total": 3},
+    "format_flag": {"passed": 3, "total": 3}
+  },
+  "tested_scripts": [
+    "research/litreview/scripts/search_strategy_builder.py",
+    "research/litreview/scripts/source_quality_scorer.py",
+    "research/litreview/scripts/thematic_synthesis_builder.py"
+  ],
+  "limitation": "The runner checks packaging and CLI properties; it has no behavioral or scientific-validity assertions."
+}
