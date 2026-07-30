@@ -1,0 +1,9 @@
+{
+  "artifact": "experiments\\EXP-0005-kdense-critical-thinking\\critical_qa.md",
+  "source_artifact": "experiments\\EXP-0003-literature-matrix-offline\\literature_matrix.md",
+  "references": 34,
+  "unique_references": 21,
+  "source_references": 30,
+  "missing": [],
+  "valid": true
+}

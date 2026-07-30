@@ -1,0 +1,23 @@
+experiment_id: EXP-0005
+title: Offline critical Q&A over a frozen literature matrix
+status: completed
+task: qa
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+skill:
+  id: scientific-critical-thinking
+  repository: https://github.com/K-Dense-AI/scientific-agent-skills
+  source_commit: ab2f84ab10597c59fac186ecda6d5edd5dcc8b92
+  version: "1.2"
+  skill_sha256: 48a3b32aa9273343dacae7532546a2fee375b148bb467305905b0ca169c1d3b0
+  profile: offline-profile.md
+input:
+  artifact: experiments/EXP-0003-literature-matrix-offline/literature_matrix.md
+  sha256: 7e725bba7566efd606bc143570e89f98109c666525541a78dd7505629c109d37
+  source_ids: [SRC-AAR-001, SRC-AAR-002, SRC-AAR-003]
+output: critical_qa.md
+validator: tools/validate_reference_subset.py
+validation: validation.json
+verdict: conditional_pass

@@ -1,0 +1,33 @@
+{
+  "candidate": "K-Dense-AI/scientific-agent-skills/skills/hypothesis-generation",
+  "commit": "ab2f84ab10597c59fac186ecda6d5edd5dcc8b92",
+  "version": "2.1",
+  "skill_sha256": "e18e00ed9bd98939f57254b627b6db52c276f7c2f0ae2eac52da89fdd896ad49",
+  "line_count": 264,
+  "spec_subset_valid": true,
+  "declared_runtime": "Python 3.11+ standard library",
+  "declared_network_requirement": false,
+  "manual_policy_findings": [
+    {
+      "kind": "corpus_expansion",
+      "line": 97,
+      "finding": "Workflow step 4 requires searching before literature-dependent statements."
+    }
+  ],
+  "script_scan": {
+    "network_imports_found": false,
+    "external_model_calls_found": false,
+    "subprocess_calls_found": false
+  },
+  "upstream_tests": {
+    "passed": 26,
+    "failed": 1,
+    "failure": "POSIX mode 0600 assertion produced mode 0666 on Windows",
+    "classification": "platform_portability"
+  },
+  "scope_gate": {
+    "passed": false,
+    "reason": "The primary output is a hypothesis/research plan, not Q&A, a literature review, or a final manuscript."
+  },
+  "content_smoke": "skipped_by_scope_gate"
+}

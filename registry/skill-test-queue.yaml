@@ -1,0 +1,126 @@
+schema_version: 1
+updated: 2026-07-30
+source_report: docs/skill-search-report-2026-07-30.md
+policy: supplied_corpus_to_qa_review_or_manuscript_only
+
+stages:
+  - source_snapshot
+  - inventory
+  - policy_audit
+  - upstream_tests
+  - scope_gate
+  - offline_profile
+  - content_smoke
+  - comparison
+  - verdict
+
+repositories:
+  - order: 1
+    repository: K-Dense-AI/scientific-agent-skills
+    status: initial_audit_completed
+    candidates:
+      - id: hypothesis-generation
+        status: completed
+        experiment: EXP-0004
+        verdict: out_of_scope
+      - id: scientific-critical-thinking
+        status: completed
+        experiment: EXP-0005
+        verdict: conditional_pass
+      - id: scholar-evaluation
+        status: content_smoke_queued
+        experiment: EXP-0006
+        interim_verdict: eligible_for_content_smoke
+      - id: literature-review
+        status: rejected_as_is
+        reason: mandatory_external_corpus_expansion
+
+  - order: 2
+    repository: stephenturner/skill-focus
+    status: queued
+    candidates: [skill-focus]
+
+  - order: 3
+    repository: mjkmain/paper_skills
+    status: queued
+    candidates: [paper-reader, paper-wiki, topic-literature]
+
+  - order: 4
+    repository: borghei/Claude-Skills
+    status: queued
+    candidates: [research-litreview]
+
+  - order: 5
+    repository: Master-cai/Research-Paper-Writing-Skills
+    status: queued
+    candidates: [research-paper-writing]
+
+  - order: 6
+    repository: YSLAB-ai/manuscript-writing
+    status: queued
+    candidates: [manuscript-writing]
+
+  - order: 7
+    repository: WantongC/journal-adapt-writing-skill
+    status: queued
+    candidates: [journal-adapt]
+
+  - order: 8
+    repository: jin-s13/paper-writing-suite
+    status: queued
+    candidates: [paper-writing-suite]
+
+  - order: 9
+    repository: ngtiendong/Academic-Research-Agent-Skill
+    status: queued
+    candidates: [source-grounding, novelty-gate]
+
+  - order: 10
+    repository: HaoYangJin/Research-workflow-Skill
+    status: queued
+    candidates: [research-mentor]
+
+  - order: 11
+    repository: keemanxp/slr-prisma
+    status: queued
+    candidates: [slr-prisma]
+
+  - order: 12
+    repository: bytedance/deer-flow
+    status: queued
+    candidates: [systematic-literature-review]
+
+  - order: 13
+    repository: lishix520/academic-paper-skills
+    status: queued
+    candidates: [strategist]
+
+  - order: 14
+    repository: WenyuChiou/research-hub
+    status: partially_tested
+    candidates:
+      - id: literature-triage-matrix
+        status: completed
+        experiment: EXP-0003
+        verdict: conditional_pass
+      - id: paper-summarize
+        status: completed
+        experiment: EXP-0002
+        verdict: rejected_as_is
+
+  - order: 15
+    repository: WenyuChiou/academic-writing-skills
+    status: static_test_completed
+    candidates:
+      - id: academic-writing-skills
+        status: content_smoke_queued
+        experiment: EXP-0002
+
+  - order: 16
+    repository: Imbad0202/academic-research-skills-codex
+    status: completed
+    candidates:
+      - id: academic-research-suite
+        status: completed
+        experiment: EXP-0002
+        verdict: rejected_as_is

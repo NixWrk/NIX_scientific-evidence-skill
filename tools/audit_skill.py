@@ -32,7 +32,7 @@ POLICY_PATTERNS: dict[str, re.Pattern[str]] = {
         re.IGNORECASE,
     ),
     "corpus_expansion": re.compile(
-        r"\b(?:discover literature|literature search|search strategy|additional literature|external sources?|new papers?)\b",
+        r"\b(?:discover literature|literature search|search strategy|search before|additional literature|external sources?|new papers?)\b",
         re.IGNORECASE,
     ),
     "state_mutation": re.compile(

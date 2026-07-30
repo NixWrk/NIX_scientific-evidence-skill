@@ -52,10 +52,14 @@ tools/          локальные нормализаторы, валидато�
 - [x] Подготовлен контрольный корпус Zotero (`EXP-0001`, коллекция `ААР`, 8 публикаций).
 - [x] Выполнен статический аудит переносимых skills (`EXP-0002`).
 - [x] Выполнен первый offline-прогон `literature-triage-matrix` (`EXP-0003`, 3 публикации).
+- [x] Сохранён поисковый отчёт и начата поэтапная очередь репозиториев со skills.
+- [x] Выполнен scope- и portability-аудит `hypothesis-generation` (`EXP-0004`).
+- [x] Выполнен offline critical Q&A с `scientific-critical-thinking` (`EXP-0005`).
+- [x] Завершён предварительный аудит `scholar-evaluation` (`EXP-0006`, 27/27 тестов).
 - [ ] Создан baseline прямого вопрос/ответ по Zotero HTML.
 - [ ] Создан evidence-first baseline.
 
-Текущие эксперименты: [EXP-0001 — Direct Q&A over Zotero source HTML](experiments/EXP-0001-zotero-direct-qa/task.md), [EXP-0002 — аудит переносимых skills](experiments/EXP-0002-portable-skill-audit/task.md) и [EXP-0003 — offline literature matrix](experiments/EXP-0003-literature-matrix-offline/task.md). Корпус EXP-0001 нормализован, gold-набор готов; следующий Q&A-запуск должен выполняться без доступа runner к `gold.jsonl`.
+Текущие эксперименты: [EXP-0001 — Direct Q&A over Zotero source HTML](experiments/EXP-0001-zotero-direct-qa/task.md), [EXP-0002 — аудит переносимых skills](experiments/EXP-0002-portable-skill-audit/task.md), [EXP-0003 — offline literature matrix](experiments/EXP-0003-literature-matrix-offline/task.md), [EXP-0004 — аудит K-Dense hypothesis-generation](experiments/EXP-0004-kdense-hypothesis-generation/task.md), [EXP-0005 — critical Q&A](experiments/EXP-0005-kdense-critical-thinking/task.md) и [EXP-0006 — аудит scholar-evaluation](experiments/EXP-0006-kdense-scholar-evaluation/task.md). Корпус EXP-0001 нормализован, gold-набор готов; следующий Q&A-запуск должен выполняться без доступа runner к `gold.jsonl`. Очередь кандидатов описана в [дорожной карте](docs/skill-testing-roadmap.md).
 
 ## Первый milestone
 

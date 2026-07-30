@@ -94,6 +94,55 @@ verdicts:
       - ai_figure_generation_dependency
     next_action: none
 
+  - id: hypothesis-generation
+    source: https://github.com/K-Dense-AI/scientific-agent-skills/tree/ab2f84ab10597c59fac186ecda6d5edd5dcc8b92/skills/hypothesis-generation
+    commit: ab2f84ab10597c59fac186ecda6d5edd5dcc8b92
+    skill_sha256: e18e00ed9bd98939f57254b627b6db52c276f7c2f0ae2eac52da89fdd896ad49
+    task: research_planning
+    license: MIT
+    spec_subset: pass
+    portability: partial_on_windows
+    corpus_policy: out_of_scope
+    reasons:
+      - mandatory_literature_search_step
+      - output_is_hypothesis_and_research_plan
+      - posix_private_mode_test_fails_on_windows
+    experiment: EXP-0004
+    next_action: none
+
+  - id: scientific-critical-thinking
+    source: https://github.com/K-Dense-AI/scientific-agent-skills/tree/ab2f84ab10597c59fac186ecda6d5edd5dcc8b92/skills/scientific-critical-thinking
+    commit: ab2f84ab10597c59fac186ecda6d5edd5dcc8b92
+    skill_sha256: 48a3b32aa9273343dacae7532546a2fee375b148bb467305905b0ca169c1d3b0
+    task: qa
+    license: MIT
+    spec_subset: pass
+    portability: pass_with_offline_profile
+    corpus_policy: pass_with_offline_profile
+    reasons:
+      - optional_openrouter_figure_branch_disabled
+      - source_locators_added_by_profile
+      - research_design_guidance_disabled_as_out_of_scope
+    experiment: EXP-0005
+    next_action: compare_on_full_html_after_qa_baseline
+
+  - id: scholar-evaluation
+    source: https://github.com/K-Dense-AI/scientific-agent-skills/tree/ab2f84ab10597c59fac186ecda6d5edd5dcc8b92/skills/scholar-evaluation
+    commit: ab2f84ab10597c59fac186ecda6d5edd5dcc8b92
+    skill_sha256: 14da13ae10564125d953fe6ab82760932ca119f963c69225667fbc82ff060405
+    task: qa
+    license: MIT
+    spec_subset: pass
+    portability: partial_on_windows
+    corpus_policy: eligible_for_content_smoke
+    reasons:
+      - local_standard_library_scripts
+      - strong_no_person_ranking_boundary
+      - posix_cli_examples_need_windows_translation
+      - quantitative_and_organizational_branches_out_of_scope
+    experiment: EXP-0006
+    next_action: compare_developmental_manuscript_qa
+
 status_values:
   - pass
   - pass_with_offline_profile

@@ -1,0 +1,34 @@
+{
+  "candidate": "K-Dense-AI/scientific-agent-skills/skills/scholar-evaluation",
+  "commit": "ab2f84ab10597c59fac186ecda6d5edd5dcc8b92",
+  "version": "2.1",
+  "skill_sha256": "14da13ae10564125d953fe6ab82760932ca119f963c69225667fbc82ff060405",
+  "line_count": 296,
+  "spec_subset_valid": true,
+  "policy_signals": [],
+  "script_scan": {
+    "network_required": false,
+    "external_model_required": false,
+    "subprocess_required": false,
+    "raw_source_text_processed_by_scripts": false
+  },
+  "upstream_tests": {
+    "passed": 27,
+    "failed": 0
+  },
+  "portability_findings": [
+    "Documented CLI examples use POSIX environment assignment and /tmp paths; commands need Windows translation.",
+    "The Python standard-library scripts themselves passed under Windows."
+  ],
+  "scope_gate": {
+    "passed": true,
+    "allowed_use": "developmental Q&A about a supplied scholarly work",
+    "excluded_uses": [
+      "person ranking",
+      "publication or funding decisions",
+      "research-idea evaluation",
+      "organizational scoring workflow"
+    ]
+  },
+  "content_smoke": "pending_suitable_manuscript_input"
+}

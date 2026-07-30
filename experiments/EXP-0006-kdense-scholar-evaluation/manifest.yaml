@@ -1,0 +1,24 @@
+experiment_id: EXP-0006
+title: K-Dense scholar-evaluation static and upstream test gate
+status: completed
+task: skill_audit
+date: 2026-07-30
+corpus_used: false
+network_use: source_code_only
+external_llm_api: forbidden
+runner: current_codex_agent
+candidate:
+  repository: https://github.com/K-Dense-AI/scientific-agent-skills
+  commit: ab2f84ab10597c59fac186ecda6d5edd5dcc8b92
+  path: skills/scholar-evaluation
+  version: "2.1"
+  skill_sha256: 14da13ae10564125d953fe6ab82760932ca119f963c69225667fbc82ff060405
+  license: MIT
+static_validator: tools/audit_skill.py
+upstream_tests:
+  command: python -m pytest tests/scholar-evaluation -q
+  platform: windows
+  result: 27_passed
+scope_gate: passed_for_developmental_manuscript_qa
+content_smoke: pending_suitable_manuscript_input
+interim_verdict: eligible_for_content_smoke

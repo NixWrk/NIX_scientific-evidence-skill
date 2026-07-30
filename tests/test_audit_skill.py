@@ -53,6 +53,27 @@ Use web search before writing the review.
     assert "corpus_expansion" in report["policy_signals"]
 
 
+def test_reports_mandatory_search_before_claims_as_corpus_expansion(tmp_path: Path) -> None:
+    skill_dir = tmp_path / "hypothesis-generation"
+    write_skill(
+        skill_dir,
+        """---
+name: hypothesis-generation
+description: Turn supplied observations into candidate hypotheses.
+---
+
+# Evidence boundary
+
+Search before making literature-dependent statements.
+""",
+    )
+
+    report = audit_skill(skill_dir)
+
+    assert report["spec_subset_valid"] is True
+    assert "corpus_expansion" in report["policy_signals"]
+
+
 def test_validates_block_references(tmp_path: Path) -> None:
     normalized_dir = tmp_path / "normalized"
     normalized_dir.mkdir()

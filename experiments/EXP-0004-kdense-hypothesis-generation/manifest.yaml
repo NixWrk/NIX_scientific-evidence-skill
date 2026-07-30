@@ -1,0 +1,24 @@
+experiment_id: EXP-0004
+title: K-Dense hypothesis-generation scope and portability audit
+status: completed
+task: skill_audit
+date: 2026-07-30
+corpus_used: false
+network_use: source_code_only
+external_llm_api: forbidden
+runner: current_codex_agent
+candidate:
+  repository: https://github.com/K-Dense-AI/scientific-agent-skills
+  commit: ab2f84ab10597c59fac186ecda6d5edd5dcc8b92
+  path: skills/hypothesis-generation
+  version: "2.1"
+  skill_sha256: e18e00ed9bd98939f57254b627b6db52c276f7c2f0ae2eac52da89fdd896ad49
+  license: MIT
+static_validator: tools/audit_skill.py
+upstream_tests:
+  command: python -m pytest tests/hypothesis-generation -q
+  platform: windows
+  result: 26_passed_1_failed
+scope_gate: failed
+content_smoke: skipped
+verdict: out_of_scope
