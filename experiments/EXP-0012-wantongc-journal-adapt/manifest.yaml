@@ -1,0 +1,20 @@
+experiment_id: EXP-0012
+title: WantongC journal-adapt scope and portability audit
+status: completed
+task: skill_audit
+date: 2026-07-30
+corpus_used: false
+network_use: source_code_only
+external_llm_api: forbidden
+runner: current_codex_agent
+candidate:
+  repository: https://github.com/WantongC/journal-adapt-writing-skill
+  commit: cc79265b0acc21bc488c4c3004d89113cf19335a
+  path: skill
+  skill_sha256: 719ad1f535775ef6d59af6fdc881d0fe63aa9fa3c18cf036aa95242d6a1a2e46
+  license: MIT
+static_validator: tools/audit_skill.py
+upstream_tests: not_provided
+scope_gate: failed
+content_smoke: skipped
+verdict: out_of_scope

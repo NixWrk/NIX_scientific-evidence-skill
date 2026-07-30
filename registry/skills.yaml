@@ -270,6 +270,24 @@ verdicts:
     experiment: EXP-0011
     next_action: use_as_default_revision_candidate_on_full_manuscript
 
+  - id: journal-adapt
+    source: https://github.com/WantongC/journal-adapt-writing-skill/tree/cc79265b0acc21bc488c4c3004d89113cf19335a/skill
+    commit: cc79265b0acc21bc488c4c3004d89113cf19335a
+    skill_sha256: 719ad1f535775ef6d59af6fdc881d0fe63aa9fa3c18cf036aa95242d6a1a2e46
+    task: publication_adaptation
+    license: MIT
+    spec_subset: pass_after_install_to_matching_directory
+    portability: partial
+    corpus_policy: out_of_scope
+    reasons:
+      - mandatory_dynamic_style_skill_generation
+      - mandatory_target_journal_corpus
+      - journal_match_and_acceptance_risk_scoring
+      - no_standalone_neutral_revision_mode
+      - publication_fit_is_not_an_allowed_output
+    experiment: EXP-0012
+    next_action: none
+
 status_values:
   - pass
   - pass_with_offline_profile

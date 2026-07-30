@@ -92,8 +92,12 @@ repositories:
 
   - order: 7
     repository: WantongC/journal-adapt-writing-skill
-    status: queued
-    candidates: [journal-adapt]
+    status: completed
+    candidates:
+      - id: journal-adapt
+        status: completed
+        experiment: EXP-0012
+        verdict: out_of_scope
 
   - order: 8
     repository: jin-s13/paper-writing-suite

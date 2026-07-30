@@ -1,0 +1,41 @@
+{
+  "candidate": "WantongC/journal-adapt-writing-skill/skill",
+  "commit": "cc79265b0acc21bc488c4c3004d89113cf19335a",
+  "commit_date": "2026-05-15T11:18:22+08:00",
+  "repository_license": "MIT",
+  "skill": {
+    "name": "journal-adapt",
+    "sha256": "719ad1f535775ef6d59af6fdc881d0fe63aa9fa3c18cf036aa95242d6a1a2e46",
+    "line_count": 490,
+    "spec_subset_valid_in_source_path": false,
+    "source_parent_directory": "skill",
+    "spec_subset_valid_after_documented_install_to_journal_adapt": true
+  },
+  "package": {
+    "tracked_files": 43,
+    "scripts": 0,
+    "upstream_tests": "not_provided",
+    "external_model_required": false,
+    "automatic_external_skill_install": false,
+    "pdf_converter": "MinerU optional for PDF; not required for Markdown or text"
+  },
+  "native_strengths": [
+    "never add facts, empirical claims, citations, or data",
+    "preserve equations, citation keys, variables, numbers, propositions, and footnotes",
+    "do not quote or paraphrase corpus-paper content during style extraction",
+    "human confirmation gate before manuscript revision",
+    "external writing skills are optional and are not downloaded automatically"
+  ],
+  "scope_blockers": [
+    "mandatory Phase 1 output is a dynamic writing skill and journal style profile",
+    "primary input is a target-journal corpus and writing destination",
+    "Phase 2 scores journal match and labels issues by acceptance severity",
+    "the workflow optimizes publication fit rather than producing a neutral evidence-bounded manuscript",
+    "no standalone revision mode bypasses journal-style generation"
+  ],
+  "additional_risks": [
+    "journal norms inferred from small corpora are not statistically calibrated",
+    "hard verbatim preservation can retain an incorrect citation or technical statement",
+    "outputs are written beside the manuscript unless the workflow is modified"
+  ]
+}
