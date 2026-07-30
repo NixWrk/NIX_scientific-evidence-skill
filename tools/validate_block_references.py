@@ -35,10 +35,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifact", type=Path, required=True)
     parser.add_argument("--normalized-dir", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
     report = validate_references(args.artifact, args.normalized_dir)
-    print(json.dumps(report, ensure_ascii=False, indent=2))
+    rendered = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(rendered, encoding="utf-8")
+    print(rendered, end="")
     return 0 if report["valid"] else 1
 
 

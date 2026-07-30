@@ -1,0 +1,29 @@
+experiment_id: EXP-0007
+title: Adapted FOCUS detailed Q&A over one Zotero HTML article
+status: completed
+task: qa
+date: 2026-07-30
+runner: current_codex_agent
+external_llm_api: forbidden
+network_during_run: forbidden
+candidate:
+  repository: https://github.com/stephenturner/skill-focus
+  commit: 84e521dcf0a44786500cce60bac6ddf00c63b3e8
+  path: SKILL.md
+  declared_name: focus
+  skill_sha256: 4ae85fe0e51267ab2c402fc5b1b4e689595291d1c9699de331d6820aefca79a5
+  license: MIT
+  profile: offline-profile.md
+input:
+  source_id: SRC-AAR-002
+  zotero_item_key: M4YTNHYL
+  attachment_key: K6UU8AGP
+  representation: normalized_zotero_html_blocks
+  content_sha256: 438d6e6638bb561316e2e28d38a933970d37442d5f008467efe06a8f67ef1fad
+  normalized_sha256: f82d2ce8c587cf0cc7a3d114d1cf19d7d89c6108bae8549f53b80e12da6a5e40
+  blocks: 185
+  words: 9149
+output: answer.md
+validator: tools/validate_block_references.py
+validation: validation.json
+verdict: adapt_required

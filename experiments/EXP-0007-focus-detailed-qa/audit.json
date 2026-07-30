@@ -1,0 +1,27 @@
+{
+  "candidate": "stephenturner/skill-focus",
+  "commit": "84e521dcf0a44786500cce60bac6ddf00c63b3e8",
+  "skill_sha256": "4ae85fe0e51267ab2c402fc5b1b4e689595291d1c9699de331d6820aefca79a5",
+  "line_count": 85,
+  "declared_name": "focus",
+  "canonical_repository_directory": "skill-focus",
+  "spec_subset_valid_at_repository_root": false,
+  "spec_errors": [
+    "Skill name does not match the repository root directory name."
+  ],
+  "license": "MIT",
+  "bundled_scripts": 0,
+  "upstream_tests": "not_provided",
+  "policy_findings": [
+    "Step 2 requires removing all citation markers and reference links.",
+    "Direct quotes are required throughout the extraction.",
+    "No claim-to-locator schema is defined."
+  ],
+  "content_run": {
+    "profile": "offline-profile.md",
+    "references": 41,
+    "unique_references": 30,
+    "missing_references": 0
+  },
+  "verdict": "adapt_required"
+}

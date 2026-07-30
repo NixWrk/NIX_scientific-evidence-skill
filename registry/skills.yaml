@@ -143,6 +143,23 @@ verdicts:
     experiment: EXP-0006
     next_action: compare_developmental_manuscript_qa
 
+  - id: skill-focus
+    source: https://github.com/stephenturner/skill-focus/tree/84e521dcf0a44786500cce60bac6ddf00c63b3e8
+    commit: 84e521dcf0a44786500cce60bac6ddf00c63b3e8
+    skill_sha256: 4ae85fe0e51267ab2c402fc5b1b4e689595291d1c9699de331d6820aefca79a5
+    task: qa
+    license: MIT
+    spec_subset: fail_parent_directory_name
+    portability: adapt_required
+    corpus_policy: adapt_required
+    reasons:
+      - removes_all_citation_markers_and_reference_links
+      - requires_direct_quotes_throughout
+      - lacks_claim_locator_schema
+      - mixes_source_content_and_interpretation
+    experiment: EXP-0007
+    next_action: retain_only_as_local_fork_profile
+
 status_values:
   - pass
   - pass_with_offline_profile

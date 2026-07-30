@@ -37,8 +37,12 @@ repositories:
 
   - order: 2
     repository: stephenturner/skill-focus
-    status: queued
-    candidates: [skill-focus]
+    status: completed
+    candidates:
+      - id: skill-focus
+        status: completed
+        experiment: EXP-0007
+        verdict: adapt_required
 
   - order: 3
     repository: mjkmain/paper_skills

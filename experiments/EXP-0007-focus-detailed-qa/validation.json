@@ -1,0 +1,8 @@
+{
+  "artifact": "experiments\\EXP-0007-focus-detailed-qa\\answer.md",
+  "normalized_dir": "runs\\EXP-0007-focus",
+  "references": 41,
+  "unique_references": 30,
+  "missing": [],
+  "valid": true
+}
