@@ -1,0 +1,13 @@
+{
+  "artifact": "skill-review-russian-v2.md",
+  "artifact_sha256": "7c8be91fe07271fbd1d289a88da61c2043e59f4c583af35ff189c90b4dd9f937",
+  "command": "python skills/scientific-evidence-workflow/scripts/audit_russian_style.py experiments/EXP-0023-russian-scientific-style/skill-review-russian-v2.md --json --fail-on warning",
+  "valid": true,
+  "counts": {
+    "errors": 0,
+    "warnings": 0,
+    "issues": 0
+  },
+  "by_code": {},
+  "limitations": "A clean surface-pattern audit does not establish correct terminology, syntax, cohesion, scientific meaning, or factual accuracy."
+}

@@ -9,11 +9,19 @@ from tools.audit_skill import audit_skill
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIR = ROOT / "skills" / "scientific-evidence-workflow"
 VALIDATOR_PATH = SKILL_DIR / "scripts" / "validate_bundle.py"
+STYLE_AUDITOR_PATH = SKILL_DIR / "scripts" / "audit_russian_style.py"
 
 SPEC = importlib.util.spec_from_file_location("scientific_evidence_validate_bundle", VALIDATOR_PATH)
 assert SPEC and SPEC.loader
 VALIDATOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(VALIDATOR)
+
+STYLE_SPEC = importlib.util.spec_from_file_location(
+    "scientific_evidence_audit_russian_style", STYLE_AUDITOR_PATH
+)
+assert STYLE_SPEC and STYLE_SPEC.loader
+STYLE_AUDITOR = importlib.util.module_from_spec(STYLE_SPEC)
+STYLE_SPEC.loader.exec_module(STYLE_AUDITOR)
 
 
 def load_template() -> dict:
@@ -41,12 +49,14 @@ def test_skill_references_and_assets_exist() -> None:
         "references/literature-review-workflow.md",
         "references/manuscript-workflow.md",
         "references/local-model-compatibility.md",
+        "references/russian-scientific-style.md",
         "assets/evidence-bundle.schema.json",
         "assets/evidence-bundle.template.json",
         "assets/qa-output.template.md",
         "assets/literature-review-output.template.md",
         "assets/manuscript-output.template.md",
         "scripts/validate_bundle.py",
+        "scripts/audit_russian_style.py",
         "agents/openai.yaml",
     ]
 
@@ -219,3 +229,75 @@ def test_unknown_fields_fail_closed() -> None:
 
     assert report["valid"] is False
     assert "unexpected field 'external_url'" in error_text(report)
+
+
+def test_russian_style_reference_is_required_for_russian_output() -> None:
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    reference = (SKILL_DIR / "references" / "russian-scientific-style.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "references/russian-scientific-style.md" in skill
+    assert "Не добавляй и не удаляй научные утверждения" in reference
+    assert "отсутствие срабатываний не подтверждает" in reference
+
+
+def test_russian_style_auditor_accepts_normative_prose() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Измерения выполнены на выдохе. Толщина мышцы составила 2,4 мм."
+    )
+
+    assert report["valid"] is True
+    assert report["counts"] == {"errors": 0, "warnings": 0, "issues": 0}
+
+
+def test_russian_style_auditor_flags_mixed_english_and_hybrid_verbs() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Это narrative review. Затем данные нужно парсить и выполнить workflow."
+    )
+
+    assert report["valid"] is False
+    assert report["counts"]["errors"] == 3
+    assert {issue["code"] for issue in report["issues"]} == {
+        "mixed_english",
+        "hybrid_verb",
+    }
+
+
+def test_russian_style_auditor_reports_cliches_as_warnings() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Важно отметить, что метод играет ключевую роль."
+    )
+
+    assert report["valid"] is True
+    assert report["counts"] == {"errors": 0, "warnings": 2, "issues": 2}
+
+
+def test_russian_style_auditor_warns_about_unlisted_latin_prose() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Метод оценивает respiratory drive при вдохе."
+    )
+
+    assert report["valid"] is True
+    assert report["counts"] == {"errors": 0, "warnings": 2, "issues": 2}
+    assert {issue["match"] for issue in report["issues"]} == {"respiratory", "drive"}
+
+
+def test_russian_style_auditor_flags_mixed_script_word_formation() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Использована Zotero-подколлекция и создана skill-ветка."
+    )
+
+    assert report["valid"] is False
+    assert report["counts"] == {"errors": 2, "warnings": 0, "issues": 2}
+    assert {issue["code"] for issue in report["issues"]} == {"mixed_script_word"}
+
+
+def test_russian_style_auditor_ignores_code_and_machine_values() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Статус — `bounded`.\n```text\nworkflow fallback retry\n```\n"
+        "Функция `append()` сохраняет запись."
+    )
+
+    assert report["valid"] is True
+    assert report["counts"]["issues"] == 0

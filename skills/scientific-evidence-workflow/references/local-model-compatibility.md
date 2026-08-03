@@ -22,6 +22,11 @@ Give a local model one task packet at a time:
 5. the current evidence and claim ledgers;
 6. the requested output template.
 
+For Russian scientific prose, also include
+`references/russian-scientific-style.md` in the drafting and revision packets.
+Keep evidence checking and language revision as separate passes so that a small
+model does not silently change scientific content while improving style.
+
 Do not load every reference file for every task. For long corpora, run extraction
 per source, validate records, then provide only the relevant evidence matrix for
 synthesis.
@@ -36,6 +41,9 @@ synthesis.
   and audit into independent passes.
 - If no Python runtime is available, apply the evidence gate manually. Do not
   report deterministic validation as completed.
+- If the host can run Python, use `scripts/audit_russian_style.py` after Russian
+  language revision. The script has no third-party dependencies and its clean
+  result does not replace manual language review.
 
 ## Portable invocation
 

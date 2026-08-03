@@ -39,10 +39,24 @@ candidates:
     tasks: [qa, literature_review, manuscript]
     role: structured_extraction_then_generation
     implementation: skills/scientific-evidence-workflow
-    experiments: [EXP-0021, EXP-0022]
+    experiments: [EXP-0021, EXP-0022, EXP-0023]
     current_agent_smoke: passed
     paired_literature_review: pass_for_auditability_no_demonstrated_accuracy_gain_nonblind
+    russian_scientific_style_regression: passed_without_evidence_drift
     local_model_execution: pending
+
+  - id: russian-scientific-style-audit
+    category: tool
+    status: smoke_tested
+    tasks: [qa, literature_review, manuscript]
+    role: heuristic_russian_output_language_gate
+    implementation: skills/scientific-evidence-workflow/scripts/audit_russian_style.py
+    dependencies: python_standard_library_only
+    experiment: EXP-0023
+    limitations:
+      - surface_patterns_only
+      - clean_result_does_not_establish_linguistic_or_scientific_quality
+      - generalization_and_local_model_run_pending
 
   - id: grobid
     category: tool

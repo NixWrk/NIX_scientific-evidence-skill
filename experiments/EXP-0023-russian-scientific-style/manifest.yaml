@@ -1,0 +1,36 @@
+experiment_id: EXP-0023
+title: Russian scientific-language revision without evidence drift
+status: completed
+task: literature_review_revision
+date: 2026-08-03
+runner: current_codex_agent
+comparison: paired_nonblind_before_after
+external_model_api: forbidden
+network_during_corpus_processing: forbidden
+zotero_writes: false
+local_model_execution: pending
+user_instruction_inputs:
+  - label: russian_scientific_technical_language_requirements
+    sha256: dd0d7e1fc4887f1db0a283ca4288dfa1755674ee89543a14451d7d2edc1d13d2
+  - label: russian_scientific_syntax_and_mixed_language_requirements
+    sha256: f81e8225d4cf22e30e4e338bc3487d4d6289a6f334806c9ec14e5d8384688116
+scientific_inputs:
+  source_review: ../EXP-0022-intercostal-ultrasound-review/skill-review.md
+  source_review_sha256: dccb9d97204f414e83a2652c82b3fef04e91e17da5c0f7e9c709708790ce8000
+  evidence_bundle: ../EXP-0022-intercostal-ultrasound-review/evidence-bundle.json
+  evidence_bundle_sha256: e880582fd302e2fd8ea03c79c16c5542a03743b6568b3e22e934583b5cd22c07
+style_layer:
+  reference: ../../skills/scientific-evidence-workflow/references/russian-scientific-style.md
+  reference_sha256: 2d6c81f7bfc2878b19fc537a1fdb403d29f80e7e1e2a54cc2698add847bec6c3
+  auditor: ../../skills/scientific-evidence-workflow/scripts/audit_russian_style.py
+  auditor_sha256: af8f5132dcbbe0b3e3360465f262d0e5da7ee54da1e3d46f1e1210615fd10c11
+output:
+  artifact: skill-review-russian-v2.md
+  sha256: 7c8be91fe07271fbd1d289a88da61c2043e59f4c583af35ff189c90b4dd9f937
+audits:
+  before: style-audit-before.json
+  after: style-audit-after.json
+  content_preservation: validation.json
+  numeric_preservation: numeric-preservation.json
+report: report.md
+verdict: pass_target_regression_generalization_and_local_model_run_pending

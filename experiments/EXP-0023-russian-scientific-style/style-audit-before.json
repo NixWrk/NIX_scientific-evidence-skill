@@ -1,0 +1,22 @@
+{
+  "artifact": "../EXP-0022-intercostal-ultrasound-review/skill-review.md",
+  "artifact_sha256": "dccb9d97204f414e83a2652c82b3fef04e91e17da5c0f7e9c709708790ce8000",
+  "command": "python skills/scientific-evidence-workflow/scripts/audit_russian_style.py experiments/EXP-0022-intercostal-ultrasound-review/skill-review.md --json",
+  "valid": false,
+  "counts": {
+    "errors": 69,
+    "warnings": 167,
+    "issues": 236
+  },
+  "by_code": {
+    "mixed_english": 68,
+    "mixed_script_word": 1,
+    "latin_prose": 167,
+    "hybrid_verb": 0,
+    "empty_metaphrase": 0,
+    "unsupported_booster": 0,
+    "vague_calque": 0
+  },
+  "note": "Counts are occurrences, not independent linguistic errors. General Latin warnings exclude inline code and capitalized names or abbreviations.",
+  "limitations": "Surface-pattern audit only; full issue list is reproducible with the recorded command."
+}

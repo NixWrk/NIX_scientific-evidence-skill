@@ -1,0 +1,49 @@
+{
+  "valid": true,
+  "artifacts": {
+    "before": {
+      "sha256": "dccb9d97204f414e83a2652c82b3fef04e91e17da5c0f7e9c709708790ce8000",
+      "word_count": 1600
+    },
+    "after": {
+      "sha256": "7c8be91fe07271fbd1d289a88da61c2043e59f4c583af35ff189c90b4dd9f937",
+      "word_count": 1834
+    }
+  },
+  "style_audit": {
+    "before": {"errors": 69, "warnings": 167, "issues": 236},
+    "after": {"errors": 0, "warnings": 0, "issues": 0}
+  },
+  "content_preservation": {
+    "claim_identifiers_before": 12,
+    "claim_identifiers_after": 12,
+    "claim_identifier_sets_identical": true,
+    "referenced_evidence_identifiers_before": 28,
+    "referenced_evidence_identifiers_after": 28,
+    "evidence_identifier_sets_identical": true,
+    "referenced_corpus_publications_before": 8,
+    "referenced_corpus_publications_after": 8,
+    "new_scientific_sources": 0,
+    "numeric_groups_preserved": 12,
+    "numeric_groups_expected": 12,
+    "retraction_classification_preserved": true,
+    "unsupported_threshold_claim_still_dropped": true,
+    "causal_strength_increased": false,
+    "applicability_scope_increased": false,
+    "evidence_bundle_changed": false,
+    "evidence_bundle_sha256": "e880582fd302e2fd8ea03c79c16c5542a03743b6568b3e22e934583b5cd22c07"
+  },
+  "manual_language_checks": {
+    "unnecessary_mixed_russian_english_removed": true,
+    "terms_and_abbreviations_introduced_or_standardized": true,
+    "machine_identifiers_preserved_in_code_style": true,
+    "paragraphs_have_explicit_thesis_evidence_boundary_order": true,
+    "unsupported_emphasis_added": false
+  },
+  "limitations": [
+    "nonblind revision by the same agent",
+    "heuristic auditor lexicon partially derived from the source artifact",
+    "manual semantic preservation check was not independently replicated",
+    "separate local-model execution remains pending"
+  ]
+}

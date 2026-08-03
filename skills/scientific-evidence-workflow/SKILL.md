@@ -34,6 +34,10 @@ Always read `references/evidence-contract.md` first. Then load exactly one mode:
 Read `references/local-model-compatibility.md` when preparing context or a run
 for a local model.
 
+When the requested output is Russian scientific or technical prose, also read
+`references/russian-scientific-style.md`. Apply it to user-facing prose, not to
+machine-readable field names, identifiers, code, or exact source fragments.
+
 ## Required workflow
 
 ### 1. Fix the task boundary
@@ -111,7 +115,24 @@ python scripts/validate_bundle.py evidence-bundle.json
 The validator checks structural integrity, not scientific truth. Inspect the
 source behind every high-impact claim even when validation passes.
 
-### 7. Return a transparent result
+### 7. Run the language gate
+
+When writing in Russian, revise the evidence-checked draft using
+`references/russian-scientific-style.md`. Lock claims, numbers, units,
+citations, locators, uncertainty, and causal strength before revising. Improve
+only terminology, syntax, cohesion, and concision.
+
+When Python is available, run:
+
+```text
+python scripts/audit_russian_style.py output.md --json
+```
+
+The script detects selected surface patterns only. Resolve its findings, then
+perform the manual checks in the reference. Do not report a clean automated
+audit as proof of linguistic or scientific quality.
+
+### 8. Return a transparent result
 
 Lead with the requested answer, review, or manuscript text. Follow it with a
 compact claim–evidence ledger when the output format permits. Always report:
@@ -141,3 +162,5 @@ Stop and request input instead of guessing when:
 - `assets/literature-review-output.template.md`: review scaffold.
 - `assets/manuscript-output.template.md`: manuscript scaffold.
 - `scripts/validate_bundle.py`: dependency-free structural validator.
+- `references/russian-scientific-style.md`: Russian scientific-language rules.
+- `scripts/audit_russian_style.py`: dependency-free heuristic style audit.

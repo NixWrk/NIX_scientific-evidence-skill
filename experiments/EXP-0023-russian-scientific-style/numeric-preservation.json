@@ -1,0 +1,82 @@
+{
+  "source_audit": "../EXP-0022-intercostal-ultrasound-review/numeric-audit.json",
+  "artifact": "skill-review-russian-v2.md",
+  "checks": [
+    {
+      "claim": "Cala: смещение 0,42 ± 0,06 мм; отсутствие изменения толщины и межрёберного расстояния при p > 0,19",
+      "locator": "zotero:W7JWCZEM#Abstract",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Yoshida: в третьем переднем промежутке 2,65 ± 1,13 и 3,19 ± 1,24 мм",
+      "locator": "zotero:DYJJ8RHT#Table-2",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Wallbridge: ICC 0,87–0,97 для одного исследователя и 0,601–0,803 для разных исследователей",
+      "locator": "zotero:JRF5NK55#Table-3",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Wallbridge: корреляции толщины и эхогенности с FEV1%; r=0,33 и r=-0,32",
+      "locator": "zotero:JRF5NK55#Results-Parasternal-ultrasound-and-airflow-obstruction",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Dres: rho=-0,61 для связи поддержки давлением с TFic и rho=-0,79 для связи способности диафрагмы создавать давление с TFic",
+      "locator": "zotero:5TPXALZ4#Abstract-and-Figure-3",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Dres: TFic 17% и 5% в зависимости от дисфункции диафрагмы; 18% и 7% в зависимости от исхода SBT",
+      "locator": "zotero:5TPXALZ4#Tables-3-4",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Dres: AUC 0,88 для TFic и 0,92 для TFic/TFdi",
+      "locator": "zotero:5TPXALZ4#Table-5",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Valera-Calero: кожа–плевра 23,1 ± 5,4 и 24,6 ± 5,7 мм; ромбовидная мышца–плевра 9,5 ± 2,6 и 10,1 ± 2,5 мм",
+      "locator": "zotero:LPAQLUIH#Table-1",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Valera-Calero: модель объясняла 69,7% вариации глубины плевры",
+      "locator": "zotero:LPAQLUIH#Table-3",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Huang: ICC не менее 0,97 для ширины и расстояния до капсулы печени",
+      "locator": "zotero:U5QJJ7Q6#Results-Reliability",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Hoermann: rho=-0,040, rho=-0,025 и rho=0,419 для трёх заявленных связей",
+      "locator": "zotero:HMHLMZ5X#Results-Correlation-between-parameters",
+      "before_valid": true,
+      "after_valid": true
+    },
+    {
+      "claim": "Ramaswamy: 15,38%, 75% и 87,8% сохранены только в описании причины исключения",
+      "locator": "zotero:RTFW8WB5#Stored-Metadata-Abstract",
+      "classification": "retracted_metadata_disclosed_but_not_used_as_positive_evidence",
+      "before_valid": true,
+      "after_valid": true
+    }
+  ],
+  "passed": 12,
+  "expected": 12,
+  "valid": true
+}
