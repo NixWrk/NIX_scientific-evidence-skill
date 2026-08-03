@@ -5,3 +5,6 @@
 *.yml text eol=lf
 *.json text eol=lf
 *.py text eol=lf
+
+# Preserve exact upstream bytes in vendored source snapshots.
+third_party/** -text

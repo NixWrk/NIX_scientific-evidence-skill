@@ -1,0 +1,3 @@
+[submodule "paper-skills"]
+	path = third_party/paper-skills
+	url = https://github.com/mjkmain/paper_skills.git

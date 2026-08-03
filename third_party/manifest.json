@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-03",
+  "policy": {
+    "snapshot_content": "unmodified files from the recorded git commit",
+    "selection": "tested skill paths, referenced support files, tests where used, and upstream license",
+    "license_rule": "each upstream license remains authoritative for its local_path",
+    "presence_is_endorsement": false,
+    "unlicensed_source_rule": "gitlink only; source files are not redistributed"
+  },
+  "entries": [
+    {
+      "id": "research-hub",
+      "repository": "https://github.com/WenyuChiou/research-hub.git",
+      "commit": "3143d2d62f798960731cae5a2b4f91aeaca25e75",
+      "local_path": "third_party/research-hub",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "skills/literature-triage-matrix", "skills/paper-summarize"],
+      "tested_components": ["literature-triage-matrix", "paper-summarize"],
+      "experiments": ["EXP-0002", "EXP-0003"]
+    },
+    {
+      "id": "academic-writing-skills",
+      "repository": "https://github.com/WenyuChiou/academic-writing-skills.git",
+      "commit": "6524dd9e204660894dcdeefebfed94d8fcdef3fa",
+      "local_path": "third_party/academic-writing-skills",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "README.md", "skills", "tests"],
+      "tested_components": ["academic-writing-skills"],
+      "experiments": ["EXP-0002", "EXP-0019"]
+    },
+    {
+      "id": "deer-flow-academic-paper-review",
+      "repository": "https://github.com/bytedance/deer-flow.git",
+      "commit": "0d8e11ad492bfa1a15b4409cc744ee66d6d188c0",
+      "local_path": "third_party/deer-flow-academic-paper-review",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "skills/public/academic-paper-review"],
+      "tested_components": ["academic-paper-review"],
+      "experiments": ["EXP-0002"]
+    },
+    {
+      "id": "deer-flow-systematic-literature-review",
+      "repository": "https://github.com/bytedance/deer-flow.git",
+      "commit": "150f7740c703292a154762f3a71aa9e18d17bda3",
+      "local_path": "third_party/deer-flow-systematic-literature-review",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "skills/public/systematic-literature-review"],
+      "tested_components": ["systematic-literature-review"],
+      "experiments": ["EXP-0017"]
+    },
+    {
+      "id": "academic-research-suite",
+      "repository": "https://github.com/Imbad0202/academic-research-skills-codex.git",
+      "commit": "f8d6b061efe98564a3f554c917fce66dcef6ca54",
+      "local_path": "third_party/academic-research-suite",
+      "inclusion_mode": "source_snapshot",
+      "license": "CC-BY-NC-4.0",
+      "included_paths": ["LICENSE", "skills/academic-research-suite"],
+      "tested_components": ["academic-research-suite"],
+      "experiments": ["EXP-0002"],
+      "redistribution_note": "Attribution required; commercial use is restricted."
+    },
+    {
+      "id": "scientific-agent-skills",
+      "repository": "https://github.com/K-Dense-AI/scientific-agent-skills.git",
+      "commit": "ab2f84ab10597c59fac186ecda6d5edd5dcc8b92",
+      "local_path": "third_party/scientific-agent-skills",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": [
+        "LICENSE.md",
+        "skills/hypothesis-generation",
+        "skills/scientific-critical-thinking",
+        "skills/scholar-evaluation",
+        "skills/literature-review",
+        "tests/hypothesis-generation",
+        "tests/scholar-evaluation",
+        "tests/literature-review"
+      ],
+      "tested_components": [
+        "hypothesis-generation",
+        "scientific-critical-thinking",
+        "scholar-evaluation",
+        "literature-review"
+      ],
+      "experiments": ["EXP-0002", "EXP-0004", "EXP-0005", "EXP-0006", "EXP-0020"]
+    },
+    {
+      "id": "skill-focus",
+      "repository": "https://github.com/stephenturner/skill-focus.git",
+      "commit": "84e521dcf0a44786500cce60bac6ddf00c63b3e8",
+      "local_path": "third_party/skill-focus",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["entire tracked repository"],
+      "tested_components": ["skill-focus"],
+      "experiments": ["EXP-0007"]
+    },
+    {
+      "id": "paper-skills",
+      "repository": "https://github.com/mjkmain/paper_skills.git",
+      "commit": "9b9c4a57138501d17992fa639ff44d469b3a9f3e",
+      "local_path": "third_party/paper-skills",
+      "inclusion_mode": "git_submodule",
+      "license": "not_found",
+      "included_paths": ["gitlink only"],
+      "tested_components": ["paper-reader", "paper-wiki", "topic-literature"],
+      "experiments": ["EXP-0008"],
+      "redistribution_note": "No source files are copied into this repository because no license was found."
+    },
+    {
+      "id": "claude-skills-litreview",
+      "repository": "https://github.com/borghei/Claude-Skills.git",
+      "commit": "da5a8626632f08c5513b0f73add1bf8075ef83bd",
+      "local_path": "third_party/claude-skills-litreview",
+      "inclusion_mode": "source_snapshot",
+      "license": "Commons-Clause-1.0-plus-MIT",
+      "included_paths": ["LICENSE", "research/litreview"],
+      "tested_components": ["litreview"],
+      "experiments": ["EXP-0009"],
+      "redistribution_note": "Sale of the software is restricted by Commons Clause 1.0."
+    },
+    {
+      "id": "research-paper-writing",
+      "repository": "https://github.com/Master-cai/Research-Paper-Writing-Skills.git",
+      "commit": "77e7c2c1ba06f7d71844873147665437a03aac1b",
+      "local_path": "third_party/research-paper-writing",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "research-paper-writing"],
+      "tested_components": ["research-paper-writing"],
+      "experiments": ["EXP-0010"]
+    },
+    {
+      "id": "yslab-manuscript-writing",
+      "repository": "https://github.com/YSLAB-ai/manuscript-writing.git",
+      "commit": "f83e99ff87c2dd4a76328e4f2d022685941c7246",
+      "local_path": "third_party/yslab-manuscript-writing",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "README.md", "SKILL.md", "agents", "references"],
+      "tested_components": ["manuscript-writing"],
+      "experiments": ["EXP-0011"]
+    },
+    {
+      "id": "journal-adapt-writing-skill",
+      "repository": "https://github.com/WantongC/journal-adapt-writing-skill.git",
+      "commit": "cc79265b0acc21bc488c4c3004d89113cf19335a",
+      "local_path": "third_party/journal-adapt-writing-skill",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "README.md", "skill"],
+      "tested_components": ["journal-adapt"],
+      "experiments": ["EXP-0012"]
+    },
+    {
+      "id": "paper-writing-suite",
+      "repository": "https://github.com/jin-s13/paper-writing-suite.git",
+      "commit": "5d6e4244e532189099ca5a9c5585b23febcae955",
+      "local_path": "third_party/paper-writing-suite",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": [
+        "LICENSE",
+        "README.md",
+        "README.zh-CN.md",
+        "SKILL.md",
+        "references",
+        "scripts",
+        "templates",
+        "tests"
+      ],
+      "tested_components": ["ai-research-writing-skill"],
+      "experiments": ["EXP-0013"]
+    },
+    {
+      "id": "academic-research-agent-skill",
+      "repository": "https://github.com/ngtiendong/Academic-Research-Agent-Skill.git",
+      "commit": "b96e3a135a1e707704da81809ddf78ea24455883",
+      "local_path": "third_party/academic-research-agent-skill",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "README.md", "SKILL.md", "agents", "config", "references"],
+      "tested_components": ["source_grounding", "novelty_gate"],
+      "experiments": ["EXP-0014"]
+    },
+    {
+      "id": "research-workflow-skill",
+      "repository": "https://github.com/HaoYangJin/Research-workflow-Skill.git",
+      "commit": "b089a37bfd9143426bf00f5cdf7eeff78db73568",
+      "local_path": "third_party/research-workflow-skill",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "README.md", "SKILL.md", "USAGE.md", "examples", "references"],
+      "tested_components": ["research-mentor"],
+      "experiments": ["EXP-0015"]
+    },
+    {
+      "id": "slr-prisma",
+      "repository": "https://github.com/keemanxp/slr-prisma.git",
+      "commit": "0614d2f6d39f5d31d0ae63fdff39f9553c90449c",
+      "local_path": "third_party/slr-prisma",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT-with-CC-BY-4.0-reference-materials",
+      "included_paths": ["entire tracked repository"],
+      "tested_components": ["slr-prisma"],
+      "experiments": ["EXP-0016"]
+    },
+    {
+      "id": "academic-paper-strategist",
+      "repository": "https://github.com/lishix520/academic-paper-skills.git",
+      "commit": "c325557646e9418939ccc7b99171b149ad6314f1",
+      "local_path": "third_party/academic-paper-strategist",
+      "inclusion_mode": "source_snapshot",
+      "license": "MIT",
+      "included_paths": ["LICENSE", "README.md", "strategist"],
+      "tested_components": ["academic-paper-strategist"],
+      "experiments": ["EXP-0018"]
+    }
+  ]
+}

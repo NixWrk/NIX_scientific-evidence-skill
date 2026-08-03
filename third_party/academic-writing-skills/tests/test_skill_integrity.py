@@ -1,0 +1,164 @@
+import json
+import re
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SKILL_DIR = ROOT / "skills" / "academic-writing-skills"
+
+
+def read(path: str) -> str:
+    return (ROOT / path).read_text(encoding="utf-8")
+
+
+def test_skill_frontmatter_is_valid():
+    # SKILL.md lives under skills/<name>/ since the 2026-04-26 marketplace
+    # auto-discovery migration (commit fca3dc7).
+    content = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    assert content.startswith("---\n")
+    frontmatter = content.split("---", 2)[1]
+    assert re.search(r"^name:\s*academic-writing-skills$", frontmatter, re.M)
+    description = re.search(r"^description:\s*(.+)$", frontmatter, re.M)
+    assert description
+    assert "reviewer response" in description.group(1).lower()
+    assert "claim-evidence" in description.group(1).lower()
+
+
+def test_referenced_files_exist():
+    required = [
+        "references/writing_principles.md",
+        "references/banned_words.md",
+        "references/section_checklists.md",
+        "references/results_writing.md",
+        "references/figure_conventions.md",
+        "references/claim_evidence_audit.md",
+        "references/reviewer_response_workflow.md",
+        "references/submission_checklist.md",
+        "references/paper_context_packet.md",
+        "references/journal_format_template.md",
+        "references/style_overrides_example.md",
+        "references/style_overrides_customization.md",
+        "references/comprehensive_manuscript_review.md",
+    ]
+    for relative_path in required:
+        # Same migration: references/ moved under skills/<name>/.
+        assert (SKILL_DIR / relative_path).exists(), relative_path
+
+
+def test_eval_file_has_realistic_prompts():
+    data = json.loads(read("evals/evals.json"))
+    assert data["skill_name"] == "academic-writing-skills"
+    evals = data["evals"]
+    assert len(evals) >= 5
+    ids = [item["id"] for item in evals]
+    assert len(ids) == len(set(ids))
+    for item in evals:
+        assert item["prompt"].strip()
+        assert item["expected_output"].strip()
+        assert isinstance(item["files"], list)
+
+
+def test_no_common_mojibake_markers_in_markdown():
+    markers = [
+        "\uFFFD",
+        "\uE73F",
+        "\uEC27",
+        "\uE4C7",
+        "\u875C\u875C"[0],
+        "\u929D",
+        "\u5697",
+        "\u79AE",
+        "?" + "?",
+    ]
+    for path in ROOT.rglob("*.md"):
+        text = path.read_text(encoding="utf-8")
+        for marker in markers:
+            assert marker not in text, f"{marker!r} found in {path.relative_to(ROOT)}"
+
+
+def test_readmes_describe_public_positioning():
+    english = read("README.md")
+    traditional_chinese = read("README.zh-TW.md")
+    for text in [english, traditional_chinese]:
+        assert "Zotero" in text
+        assert "NotebookLM" in text
+        assert ".paper/" in text
+    assert "Traditional Chinese README" in english
+    assert "English README" in traditional_chinese
+
+
+def test_results_guardrails_are_registered():
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    results = (SKILL_DIR / "references/results_writing.md").read_text(
+        encoding="utf-8"
+    )
+    assert "references/results_writing.md" in skill
+    assert "current authoritative" in results
+    assert "source that actually" in results
+    assert "between-group" in results
+
+
+def test_summary_section_guardrails_are_registered():
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    principles = (SKILL_DIR / "references/writing_principles.md").read_text(
+        encoding="utf-8"
+    )
+    checklists = (SKILL_DIR / "references/section_checklists.md").read_text(
+        encoding="utf-8"
+    )
+    assert "frequency and readability" in skill
+    assert "Avoid Gerund Or Participial Openings" in principles
+    assert "Abbreviations In Summary Sections" in principles
+    assert "background or importance" in checklists
+    assert "does not require it" in checklists
+
+
+def test_cross_section_and_artifact_integrity_rules_are_registered():
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    principles = (SKILL_DIR / "references/writing_principles.md").read_text(
+        encoding="utf-8"
+    )
+    results = (SKILL_DIR / "references/results_writing.md").read_text(
+        encoding="utf-8"
+    )
+    methods = (SKILL_DIR / "references/section_checklists.md").read_text(
+        encoding="utf-8"
+    )
+    figures = (SKILL_DIR / "references/figure_conventions.md").read_text(
+        encoding="utf-8"
+    )
+    submission = (SKILL_DIR / "references/submission_checklist.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Reader Encounter Order And Explicit Scope" in principles
+    assert "Match Claims To Estimands And Tests" in results
+    assert "measurement model" in methods
+    assert "first substantive interpretation" in figures
+    assert "Cross-Artifact Integrity" in submission
+    assert "Cross-artifact integrity" in skill
+
+
+def test_comprehensive_review_gate_is_registered():
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    review = (
+        SKILL_DIR / "references/comprehensive_manuscript_review.md"
+    ).read_text(encoding="utf-8")
+    submission = (
+        SKILL_DIR / "references/submission_checklist.md"
+    ).read_text(encoding="utf-8")
+    checklists = (
+        SKILL_DIR / "references/section_checklists.md"
+    ).read_text(encoding="utf-8")
+
+    assert "ordered forward pass" in skill
+    assert "reverse pass" in skill
+    assert "Heading And Orphan-Text Gate" in review
+    assert "Sentence-Necessity Gate" in review
+    assert "Abbreviation Ledger" in review
+    assert "Model Or Treatment Identity Ledger" in review
+    assert "Display And Page-Break Semantics" in review
+    assert "Workload And Reproducibility Provenance" in review
+    assert "technical paper-ready" in review
+    assert "continued data table repeats" in submission
+    assert "no orphan paragraph" in checklists

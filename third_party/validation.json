@@ -1,0 +1,49 @@
+{
+  "valid": true,
+  "date": "2026-08-03",
+  "source_snapshots": 16,
+  "git_submodules": 1,
+  "snapshot_files": 1417,
+  "snapshot_bytes": 14288192,
+  "git_blob_comparison": {
+    "files_checked": 1417,
+    "content_mismatches": 0,
+    "method": "relative path and raw git blob SHA-1 compared with each recorded upstream commit",
+    "line_ending_conversion": "disabled during final git archive export"
+  },
+  "staged_index_comparison": {
+    "files_checked": 1417,
+    "content_mismatches": 0,
+    "mode_mismatches": 0,
+    "executable_files": 24,
+    "method": "staged blob SHA-1 and Git file mode compared with the exact upstream archives"
+  },
+  "submodules": [
+    {
+      "id": "paper-skills",
+      "expected_commit": "9b9c4a57138501d17992fa639ff44d469b3a9f3e",
+      "actual_commit": "9b9c4a57138501d17992fa639ff44d469b3a9f3e",
+      "match": true
+    }
+  ],
+  "license_files": {
+    "source_snapshots_with_upstream_license": 16,
+    "source_snapshots_missing_upstream_license": 0,
+    "unlicensed_projects_redistributed_as_source": 0
+  },
+  "secret_scan": {
+    "high_confidence_matches": 0,
+    "patterns": [
+      "OpenAI-style live keys",
+      "GitHub personal access tokens",
+      "AWS access key identifiers",
+      "PEM and OpenSSH private-key headers"
+    ]
+  },
+  "maximum_file_size_bytes": 365582,
+  "limitations": [
+    "Only selected skill paths and their support files were copied from large upstream repositories.",
+    "The validation establishes identity with recorded git blobs, not safety or fitness for use.",
+    "The paper-skills project is referenced as a git submodule because no redistribution license was found."
+  ]
+}
