@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "bundle_id": "BUNDLE-EXAMPLE-001",
+  "task": {
+    "mode": "qa",
+    "request": "Answer the supplied scientific question.",
+    "input_scope": ["SRC-EXAMPLE-001"],
+    "language": "en",
+    "audience": "researcher"
+  },
+  "sources": [
+    {
+      "source_id": "SRC-EXAMPLE-001",
+      "title": "Supplied source",
+      "content_hash": null,
+      "representation": "text",
+      "local_ref": "local/source-001.txt",
+      "version": "v1"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EV-001",
+      "source_id": "SRC-EXAMPLE-001",
+      "locator": "section:results/paragraph:1",
+      "claim": "The supplied source reports the stated observation.",
+      "support_type": "direct",
+      "fragment": null,
+      "value": null,
+      "unit": null,
+      "study_context": "Use the supplied design and sample description.",
+      "limitations": "Do not generalize beyond the supplied context.",
+      "verification_status": "verified"
+    }
+  ],
+  "results": [],
+  "claims": [
+    {
+      "claim_id": "CL-001",
+      "text": "The supplied source reports the observation.",
+      "output_section": "Answer",
+      "claim_type": "factual",
+      "certainty": "direct",
+      "evidence_ids": ["EV-001"],
+      "result_ids": [],
+      "status": "supported",
+      "disposition": "keep",
+      "boundary": null,
+      "causal_basis": null
+    }
+  ]
+}

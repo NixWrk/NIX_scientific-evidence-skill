@@ -1,0 +1,70 @@
+{
+  "candidate": "local/scientific-evidence-workflow",
+  "version": "0.1",
+  "repository_license": "not_declared",
+  "skill": {
+    "path": "skills/scientific-evidence-workflow",
+    "sha256": "68b68283692e3f930afbecfecec444e79d7f4d08043e1021f37601a2ea90769d",
+    "line_count": 143,
+    "spec_subset_valid": true,
+    "warnings": []
+  },
+  "package": {
+    "files": 13,
+    "validator_lines": 309,
+    "validator_sha256": "aaf8b3986fc3b37959d6fcda89c0c90350e246843892c446335b1fa172a731f1",
+    "schema_sha256": "06ccb7c6c043bbd5e40700a5246a87256aa3ec43a7a1760965f8ec355e992666",
+    "python_dependencies": "standard_library_only",
+    "network_dependency": false,
+    "mcp_dependency": false,
+    "function_calling_dependency": false
+  },
+  "automated_validation": {
+    "skill_creator_quick_validate": "passed",
+    "project_pytest": {
+      "passed": 23,
+      "failed": 0
+    },
+    "template_bundle": "passed",
+    "python_compile": "passed"
+  },
+  "content_smoke": {
+    "experiment": "EXP-0021",
+    "runner": "current_codex_agent",
+    "source": "SRC-AAR-002",
+    "evidence_records": 8,
+    "claims": 5,
+    "supported": 3,
+    "bounded": 1,
+    "unsupported": 1,
+    "new_sources": 0,
+    "new_numeric_claims": 0,
+    "answer_locator_references": 12,
+    "missing_locators": 0
+  },
+  "issues_found_and_fixed": [
+    {
+      "issue": "supported limitation claims were rejected when their evidence records used support_type=limitation",
+      "effect": "false positive on a valid statement that the study did not establish predictive utility",
+      "fix": "allow verified limitation evidence for claims whose claim_type is limitation",
+      "regression_tests_added": 2,
+      "status": "fixed"
+    }
+  ],
+  "local_model_portability": {
+    "static_contract": "passed",
+    "plain_text_instruction_contract": true,
+    "tool_calls_required": false,
+    "available_cli_runners_checked": [
+      "ollama",
+      "llama-cli",
+      "llama-server",
+      "lms",
+      "lmstudio",
+      "koboldcpp"
+    ],
+    "available_cli_runner_found": false,
+    "actual_local_model_run": "pending"
+  },
+  "verdict": "pass_current_agent_smoke_local_model_execution_pending"
+}

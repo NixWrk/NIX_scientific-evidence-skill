@@ -1,0 +1,25 @@
+experiment_id: EXP-0021
+title: Scientific evidence workflow v0.1 Q&A content smoke
+status: completed
+task: qa
+date: 2026-08-03
+runner: current_codex_agent
+external_model_api: forbidden
+network_during_run: forbidden
+blind_benchmark: false
+skill:
+  id: scientific-evidence-workflow
+  path: skills/scientific-evidence-workflow
+  version: "0.1"
+input:
+  source_id: SRC-AAR-002
+  zotero_item_key: M4YTNHYL
+  attachment_key: K6UU8AGP
+  representation: normalized_zotero_html_blocks
+  content_sha256: 438d6e6638bb561316e2e28d38a933970d37442d5f008467efe06a8f67ef1fad
+bundle: evidence-bundle.json
+output: answer.md
+bundle_validator: skills/scientific-evidence-workflow/scripts/validate_bundle.py
+locator_validator: tools/validate_block_references.py
+validation: validation.json
+verdict: pass_current_agent_smoke_local_model_execution_pending

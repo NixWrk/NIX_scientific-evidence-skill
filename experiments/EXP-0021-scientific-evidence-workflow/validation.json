@@ -1,0 +1,38 @@
+{
+  "bundle": {
+    "artifact": "evidence-bundle.json",
+    "valid": true,
+    "sources": 1,
+    "evidence": 8,
+    "results": 0,
+    "claims": 5,
+    "claim_statuses": {
+      "supported": 3,
+      "bounded": 1,
+      "unsupported": 1,
+      "conflicted": 0
+    }
+  },
+  "locators": {
+    "normalized_dir": "runs\\EXP-0001\\normalized",
+    "artifacts": [
+      {
+        "artifact": "answer.md",
+        "references": 12,
+        "unique_references": 6,
+        "missing": [],
+        "valid": true
+      },
+      {
+        "artifact": "evidence-bundle.json",
+        "references": 8,
+        "unique_references": 6,
+        "missing": [],
+        "valid": true
+      }
+    ],
+    "missing": [],
+    "valid": true
+  },
+  "valid": true
+}

@@ -1,0 +1,221 @@
+import copy
+import importlib.util
+import json
+from pathlib import Path
+
+from tools.audit_skill import audit_skill
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SKILL_DIR = ROOT / "skills" / "scientific-evidence-workflow"
+VALIDATOR_PATH = SKILL_DIR / "scripts" / "validate_bundle.py"
+
+SPEC = importlib.util.spec_from_file_location("scientific_evidence_validate_bundle", VALIDATOR_PATH)
+assert SPEC and SPEC.loader
+VALIDATOR = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(VALIDATOR)
+
+
+def load_template() -> dict:
+    return json.loads(
+        (SKILL_DIR / "assets" / "evidence-bundle.template.json").read_text(encoding="utf-8")
+    )
+
+
+def error_text(report: dict) -> str:
+    return "\n".join(report["errors"])
+
+
+def test_skill_is_portable_and_has_no_policy_signals() -> None:
+    report = audit_skill(SKILL_DIR)
+
+    assert report["spec_subset_valid"] is True
+    assert report["policy_signals"] == {}
+    assert report["line_count"] < 500
+
+
+def test_skill_references_and_assets_exist() -> None:
+    required = [
+        "references/evidence-contract.md",
+        "references/qa-workflow.md",
+        "references/literature-review-workflow.md",
+        "references/manuscript-workflow.md",
+        "references/local-model-compatibility.md",
+        "assets/evidence-bundle.schema.json",
+        "assets/evidence-bundle.template.json",
+        "assets/qa-output.template.md",
+        "assets/literature-review-output.template.md",
+        "assets/manuscript-output.template.md",
+        "scripts/validate_bundle.py",
+        "agents/openai.yaml",
+    ]
+
+    assert all((SKILL_DIR / path).is_file() for path in required)
+    json.loads((SKILL_DIR / "assets" / "evidence-bundle.schema.json").read_text(encoding="utf-8"))
+
+
+def test_product_metadata_is_optional_and_has_no_tool_dependency() -> None:
+    metadata = (SKILL_DIR / "agents" / "openai.yaml").read_text(encoding="utf-8")
+
+    assert "$scientific-evidence-workflow" in metadata
+    assert "dependencies:" not in metadata
+    assert "mcp" not in metadata.lower()
+
+
+def test_valid_qa_template_passes() -> None:
+    report = VALIDATOR.validate_bundle(load_template())
+
+    assert report["valid"] is True
+    assert report["errors"] == []
+    assert report["counts"] == {
+        "sources": 1,
+        "evidence": 1,
+        "results": 0,
+        "claims": 1,
+        "supported_claims": 1,
+        "bounded_claims": 0,
+        "unsupported_claims": 0,
+        "conflicted_claims": 0,
+    }
+
+
+def test_unknown_source_and_duplicate_evidence_fail() -> None:
+    bundle = load_template()
+    duplicate = copy.deepcopy(bundle["evidence"][0])
+    duplicate["source_id"] = "SRC-MISSING"
+    bundle["evidence"].append(duplicate)
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "duplicate identifier 'EV-001'" in error_text(report)
+
+
+def test_supported_claim_without_reference_fails() -> None:
+    bundle = load_template()
+    bundle["claims"][0]["evidence_ids"] = []
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "supported claim requires evidence or result references" in error_text(report)
+
+
+def test_bounded_claim_requires_boundary_and_allowed_disposition() -> None:
+    bundle = load_template()
+    claim = bundle["claims"][0]
+    claim["status"] = "bounded"
+    claim["disposition"] = "keep"
+    claim["boundary"] = None
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "bounded claim must use 'hedge' or 'keep_with_boundary'" in error_text(report)
+    assert "boundary: required for bounded claim" in error_text(report)
+
+
+def test_conflicted_claim_requires_two_references_and_disclosure() -> None:
+    bundle = load_template()
+    claim = bundle["claims"][0]
+    claim["status"] = "conflicted"
+    claim["certainty"] = "conflicted"
+    claim["disposition"] = "keep"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires at least two distinct references" in error_text(report)
+    assert "must use 'disclose_conflict'" in error_text(report)
+
+
+def test_numeric_qa_claim_can_use_evidence_value() -> None:
+    bundle = load_template()
+    bundle["evidence"][0]["value"] = "7/10"
+    bundle["evidence"][0]["unit"] = "participants"
+    bundle["claims"][0]["claim_type"] = "numeric"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is True
+
+
+def test_manuscript_results_number_requires_frozen_result() -> None:
+    bundle = load_template()
+    bundle["task"]["mode"] = "manuscript"
+    claim = bundle["claims"][0]
+    claim["claim_type"] = "numeric"
+    claim["output_section"] = "Results"
+    bundle["evidence"][0]["value"] = 7
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "manuscript Results numeric claim requires result_ids" in error_text(report)
+
+
+def test_manuscript_results_number_passes_with_frozen_result() -> None:
+    bundle = load_template()
+    bundle["task"]["mode"] = "manuscript"
+    bundle["sources"][0]["representation"] = "data"
+    bundle["results"] = [
+        {
+            "result_id": "RES-001",
+            "source_id": "SRC-EXAMPLE-001",
+            "locator": "results.csv:row=2:column=value",
+            "value": 7,
+            "unit": "participants",
+            "version": "sha256:example",
+            "analysis": "supplied count",
+        }
+    ]
+    claim = bundle["claims"][0]
+    claim["claim_type"] = "numeric"
+    claim["output_section"] = "Results"
+    claim["result_ids"] = ["RES-001"]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is True
+    assert report["counts"]["results"] == 1
+
+
+def test_rejected_evidence_cannot_support_claim() -> None:
+    bundle = load_template()
+    bundle["evidence"][0]["verification_status"] = "rejected"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "rejected evidence cannot support a claim" in error_text(report)
+
+
+def test_supported_limitation_can_use_limitation_evidence() -> None:
+    bundle = load_template()
+    bundle["evidence"][0]["support_type"] = "limitation"
+    bundle["claims"][0]["claim_type"] = "limitation"
+    bundle["claims"][0]["text"] = "The supplied source does not establish the stronger claim."
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is True
+
+
+def test_non_limitation_claim_cannot_use_only_limitation_evidence() -> None:
+    bundle = load_template()
+    bundle["evidence"][0]["support_type"] = "limitation"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "cannot rely only on contrary or limitation evidence" in error_text(report)
+
+
+def test_unknown_fields_fail_closed() -> None:
+    bundle = load_template()
+    bundle["sources"][0]["external_url"] = "not-allowed"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "unexpected field 'external_url'" in error_text(report)

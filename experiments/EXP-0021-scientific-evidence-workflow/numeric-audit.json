@@ -1,0 +1,37 @@
+{
+  "artifact": "answer.md",
+  "introduced_numeric_claims": 0,
+  "checks": [
+    {
+      "claim": "30-day home assessment",
+      "locator": "SRC-AAR-002-B0080",
+      "valid": true
+    },
+    {
+      "claim": "10 participants",
+      "locator": "SRC-AAR-002-B0012",
+      "valid": true
+    },
+    {
+      "claim": "7 participants provided the full period",
+      "locator": "SRC-AAR-002-B0080",
+      "valid": true
+    },
+    {
+      "claim": "262/300 impedance measurements (87%)",
+      "locator": "SRC-AAR-002-B0080",
+      "valid": true
+    },
+    {
+      "claim": "1332/1500 diary entries (89%)",
+      "locator": "SRC-AAR-002-B0080",
+      "valid": true
+    },
+    {
+      "claim": "self-care median 56 to 81, P=.007",
+      "locator": "SRC-AAR-002-B0097",
+      "valid": true
+    }
+  ],
+  "valid": true
+}

@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-07-30
+updated: 2026-08-03
 
 policy:
   input_scope: supplied_corpus_only
@@ -10,6 +10,25 @@ policy:
   zotero_writes: forbidden_during_benchmark
 
 verdicts:
+  - id: scientific-evidence-workflow
+    source: local:skills/scientific-evidence-workflow
+    version: "0.1"
+    skill_sha256: 68b68283692e3f930afbecfecec444e79d7f4d08043e1021f37601a2ea90769d
+    task: [qa, literature_review, manuscript]
+    license: not_declared
+    spec_subset: pass
+    portability: current_agent_pass_local_llm_execution_pending
+    corpus_policy: pass
+    reasons:
+      - supplied_corpus_only
+      - no_external_llm_api
+      - no_network_or_mcp_dependency
+      - plain_text_contract_without_function_calling
+      - deterministic_bundle_validator
+      - actual_local_model_run_pending
+    experiment: EXP-0021
+    next_action: blind_direct_vs_evidence_first_then_local_model_run
+
   - id: literature-triage-matrix
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix
     commit: 3143d2d62f798960731cae5a2b4f91aeaca25e75

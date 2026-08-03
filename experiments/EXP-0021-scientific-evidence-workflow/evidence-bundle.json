@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.0",
+  "bundle_id": "EXP-0021-QA-001",
+  "task": {
+    "mode": "qa",
+    "request": "Что исследование установило о выполнимости домашнего мониторинга и какие более сильные выводы оно не установило?",
+    "input_scope": ["SRC-AAR-002"],
+    "language": "ru",
+    "audience": "researcher"
+  },
+  "sources": [
+    {
+      "source_id": "SRC-AAR-002",
+      "title": "Self-Care Monitoring of Heart Failure Symptoms and Lung Impedance at Home Following Hospital Discharge: Longitudinal Study",
+      "content_hash": "438d6e6638bb561316e2e28d38a933970d37442d5f008467efe06a8f67ef1fad",
+      "representation": "html",
+      "local_ref": "zotero:M4YTNHYL/attachment:K6UU8AGP",
+      "version": "EXP-0001-normalized"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EV-001",
+      "source_id": "SRC-AAR-002",
+      "locator": "SRC-AAR-002-B0012",
+      "claim": "The prospective longitudinal study included 10 participants with NYHA class III or IV heart failure and used caregiver-assisted measurements.",
+      "support_type": "method",
+      "fragment": null,
+      "value": 10,
+      "unit": "participants",
+      "study_context": "Two university hospitals in Norway and Lithuania; severe heart failure; informal caregivers aided measurements.",
+      "limitations": "Small uncontrolled pilot sample.",
+      "verification_status": "verified"
+    },
+    {
+      "evidence_id": "EV-002",
+      "source_id": "SRC-AAR-002",
+      "locator": "SRC-AAR-002-B0080",
+      "claim": "Seven participants provided data for the full 30-day assessment period.",
+      "support_type": "direct",
+      "fragment": null,
+      "value": 7,
+      "unit": "participants",
+      "study_context": "Thirty-day home assessment.",
+      "limitations": "Three participants did not provide the full planned period.",
+      "verification_status": "verified"
+    },
+    {
+      "evidence_id": "EV-003",
+      "source_id": "SRC-AAR-002",
+      "locator": "SRC-AAR-002-B0080",
+      "claim": "The study received 262 of 300 planned impedance measurements, or 87 percent.",
+      "support_type": "direct",
+      "fragment": null,
+      "value": "262/300 (87%)",
+      "unit": "impedance measurements",
+      "study_context": "Daily measurements during the 30-day assessment.",
+      "limitations": "Measurements were caregiver-assisted and technical support was available.",
+      "verification_status": "verified"
+    },
+    {
+      "evidence_id": "EV-004",
+      "source_id": "SRC-AAR-002",
+      "locator": "SRC-AAR-002-B0080",
+      "claim": "The study received 1332 of 1500 planned symptom-diary entries, or 89 percent.",
+      "support_type": "direct",
+      "fragment": null,
+      "value": "1332/1500 (89%)",
+      "unit": "diary entries",
+      "study_context": "Daily symptom diary during the 30-day assessment.",
+      "limitations": "Completion was observed in a small supported pilot.",
+      "verification_status": "verified"
+    },
+    {
+      "evidence_id": "EV-005",
+      "source_id": "SRC-AAR-002",
+      "locator": "SRC-AAR-002-B0102",
+      "claim": "All participants had daily contact with the heart-failure study nurse, a level of access not included in routine follow-up in the two countries.",
+      "support_type": "context",
+      "fragment": null,
+      "value": null,
+      "unit": null,
+      "study_context": "SMS or phone contact and technical feedback were available.",
+      "limitations": "The support condition limits transfer to routine care.",
+      "verification_status": "verified"
+    },
+    {
+      "evidence_id": "EV-006",
+      "source_id": "SRC-AAR-002",
+      "locator": "SRC-AAR-002-B0097",
+      "claim": "The median standardized self-care score increased from 56 to 81 over 30 days, with P=.007.",
+      "support_type": "direct",
+      "fragment": null,
+      "value": "56 to 81; P=.007",
+      "unit": "standardized EHFScBS score",
+      "study_context": "Discharge compared with 30-day follow-up.",
+      "limitations": "The longitudinal design does not isolate the effect of the monitoring tools.",
+      "verification_status": "verified"
+    },
+    {
+      "evidence_id": "EV-007",
+      "source_id": "SRC-AAR-002",
+      "locator": "SRC-AAR-002-B0108",
+      "claim": "The small sample and variability precluded analysis of symptom-impedance associations, and the daily symptom instrument was not validated for this use.",
+      "support_type": "limitation",
+      "fragment": null,
+      "value": null,
+      "unit": null,
+      "study_context": "Limitations stated by the authors.",
+      "limitations": "Predictive and association claims are not supported.",
+      "verification_status": "verified"
+    },
+    {
+      "evidence_id": "EV-008",
+      "source_id": "SRC-AAR-002",
+      "locator": "SRC-AAR-002-B0110",
+      "claim": "A larger future study was needed to determine predictive utility; reduced readmissions were presented as a possibility rather than an established effect.",
+      "support_type": "limitation",
+      "fragment": null,
+      "value": null,
+      "unit": null,
+      "study_context": "Future-research statement in the full text.",
+      "limitations": "Do not report prediction or readmission reduction as a study result.",
+      "verification_status": "verified"
+    }
+  ],
+  "results": [],
+  "claims": [
+    {
+      "claim_id": "CL-001",
+      "text": "The study was a small prospective longitudinal pilot of 10 participants with caregiver-assisted measurements.",
+      "output_section": "Answer",
+      "claim_type": "numeric",
+      "certainty": "direct",
+      "evidence_ids": ["EV-001"],
+      "result_ids": [],
+      "status": "supported",
+      "disposition": "keep",
+      "boundary": null,
+      "causal_basis": null
+    },
+    {
+      "claim_id": "CL-002",
+      "text": "The observed completion rates support 30-day process feasibility under the study support conditions.",
+      "output_section": "Answer",
+      "claim_type": "interpretive",
+      "certainty": "inferred",
+      "evidence_ids": ["EV-002", "EV-003", "EV-004", "EV-005"],
+      "result_ids": [],
+      "status": "bounded",
+      "disposition": "keep_with_boundary",
+      "boundary": "Applies to the 10-participant pilot with caregiver assistance and daily nurse access, not routine-care effectiveness.",
+      "causal_basis": null
+    },
+    {
+      "claim_id": "CL-003",
+      "text": "The median self-care score increased from 56 to 81 during the 30-day follow-up, with P=.007.",
+      "output_section": "Answer",
+      "claim_type": "numeric",
+      "certainty": "direct",
+      "evidence_ids": ["EV-006"],
+      "result_ids": [],
+      "status": "supported",
+      "disposition": "keep",
+      "boundary": null,
+      "causal_basis": null
+    },
+    {
+      "claim_id": "CL-004",
+      "text": "The monitoring tools caused the increase in self-care score.",
+      "output_section": "Cannot conclude",
+      "claim_type": "causal",
+      "certainty": "uncertain",
+      "evidence_ids": ["EV-001", "EV-005", "EV-006"],
+      "result_ids": [],
+      "status": "unsupported",
+      "disposition": "drop",
+      "boundary": "No control group separated monitoring from time, caregiver assistance, or nurse contact.",
+      "causal_basis": null
+    },
+    {
+      "claim_id": "CL-005",
+      "text": "The study did not establish predictive utility or reduced readmissions.",
+      "output_section": "Answer",
+      "claim_type": "limitation",
+      "certainty": "direct",
+      "evidence_ids": ["EV-007", "EV-008"],
+      "result_ids": [],
+      "status": "supported",
+      "disposition": "keep",
+      "boundary": null,
+      "causal_basis": null
+    }
+  ]
+}

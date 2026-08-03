@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-07-30
+updated: 2026-08-03
 
 execution_policy:
   corpus_external_llm_api: forbidden
@@ -35,9 +35,13 @@ candidates:
 
   - id: evidence-first-agent
     category: baseline
-    status: not_started
+    status: smoke_tested
     tasks: [qa, literature_review, manuscript]
     role: structured_extraction_then_generation
+    implementation: skills/scientific-evidence-workflow
+    experiment: EXP-0021
+    current_agent_smoke: passed
+    local_model_execution: pending
 
   - id: grobid
     category: tool

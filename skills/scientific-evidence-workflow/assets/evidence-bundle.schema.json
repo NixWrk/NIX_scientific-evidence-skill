@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paper-analyzer-writer.local/scientific-evidence-workflow/evidence-bundle.schema.json",
+  "title": "Scientific evidence workflow bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "bundle_id", "task", "sources", "evidence", "results", "claims"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "bundle_id": {"type": "string", "minLength": 1},
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "request", "input_scope"],
+      "properties": {
+        "mode": {"enum": ["qa", "literature_review", "manuscript"]},
+        "request": {"type": "string", "minLength": 1},
+        "input_scope": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "language": {"type": "string"},
+        "audience": {"type": "string"}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "title", "content_hash", "representation", "local_ref"],
+        "properties": {
+          "source_id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "content_hash": {"type": ["string", "null"]},
+          "representation": {"enum": ["html", "pdf", "markdown", "text", "table", "figure", "data", "protocol", "note"]},
+          "local_ref": {"type": "string", "minLength": 1},
+          "version": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidence_id", "source_id", "locator", "claim", "support_type", "verification_status"],
+        "properties": {
+          "evidence_id": {"type": "string", "minLength": 1},
+          "source_id": {"type": "string", "minLength": 1},
+          "locator": {"type": "string", "minLength": 1},
+          "claim": {"type": "string", "minLength": 1},
+          "support_type": {"enum": ["direct", "inferential", "method", "context", "limitation", "contrary"]},
+          "fragment": {"type": ["string", "null"]},
+          "value": {},
+          "unit": {"type": ["string", "null"]},
+          "study_context": {"type": ["string", "null"]},
+          "limitations": {"type": ["string", "null"]},
+          "verification_status": {"enum": ["extracted", "verified", "rejected"]}
+        }
+      }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["result_id", "source_id", "locator", "value", "unit", "version"],
+        "properties": {
+          "result_id": {"type": "string", "minLength": 1},
+          "source_id": {"type": "string", "minLength": 1},
+          "locator": {"type": "string", "minLength": 1},
+          "value": {},
+          "unit": {"type": ["string", "null"]},
+          "version": {"type": "string", "minLength": 1},
+          "analysis": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "text", "output_section", "claim_type", "certainty", "evidence_ids", "result_ids", "status", "disposition"],
+        "properties": {
+          "claim_id": {"type": "string", "minLength": 1},
+          "text": {"type": "string", "minLength": 1},
+          "output_section": {"type": "string", "minLength": 1},
+          "claim_type": {"enum": ["factual", "numeric", "causal", "interpretive", "synthesis", "method", "limitation"]},
+          "certainty": {"enum": ["direct", "inferred", "uncertain", "conflicted"]},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "result_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "status": {"enum": ["supported", "bounded", "unsupported", "conflicted"]},
+          "disposition": {"enum": ["keep", "hedge", "keep_with_boundary", "drop", "request_input", "disclose_conflict"]},
+          "boundary": {"type": ["string", "null"]},
+          "causal_basis": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}

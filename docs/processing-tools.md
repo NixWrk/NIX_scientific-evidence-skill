@@ -46,6 +46,14 @@ Zotero MCP
 
 Это основной эталонный workflow репозитория.
 
+Первая переносимая реализация —
+[`scientific-evidence-workflow`](../skills/scientific-evidence-workflow/SKILL.md).
+В `EXP-0021` она прошла структурные тесты и неслепой Q&A smoke на текущем
+Codex-агенте. Контракт не требует MCP, function calling или внешнего model API;
+фактический прогон на отдельной локальной LLM остаётся следующим portability
+test. До слепого сравнения с direct Q&A этот результат не считается готовым
+baseline.
+
 ### 2.3. Корпусный RAG
 
 ```text
