@@ -87,3 +87,5 @@ tools/          локальные нормализаторы, валидато�
 5. затем сравнить прямой проход с локальным индексом и переносимыми skills.
 
 Подробности: [методика](docs/scope-and-methodology.md) и [реестр направлений тестирования](docs/processing-tools.md).
+
+Сводный подробный отчёт по всем 16 проверенным репозиториям: [repository-skill-testing-report-2026-08-03.md](docs/repository-skill-testing-report-2026-08-03.md).

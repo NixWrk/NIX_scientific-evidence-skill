@@ -1,0 +1,21 @@
+document: repository-skill-testing-report-2026-08-03.md
+generated_at: 2026-08-03
+repository_base_commit: 5343cd8
+report_sha256: fc31b4ad4113b5e9967e8dbe5d1c48f17ea0908b74bda213a7e2aafb24569342
+scope:
+  repositories: 16
+  queue: registry/skill-test-queue.yaml
+  registry: registry/skills.yaml
+  experiments: EXP-0002..EXP-0020
+source_policy:
+  scientific_corpus_external_llm_api: forbidden
+  network_during_corpus_processing: forbidden
+  user_search_report_is_input_not_verdict: true
+validation:
+  repository_sections: 16
+  markdown_links: 43
+  missing_links: 0
+  commit_and_hash_tokens: 40
+  unmatched_commit_and_hash_tokens: 0
+  project_tests_passed: 8
+status: verified_against_repository_artifacts
