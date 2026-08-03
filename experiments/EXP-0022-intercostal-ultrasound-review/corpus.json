@@ -1,0 +1,97 @@
+{
+  "snapshot_date": "2026-08-03",
+  "library": {
+    "type": "user",
+    "id": "0",
+    "resolved_local_user_id": "19686658"
+  },
+  "collection": {
+    "key": "TE9MV9FY",
+    "name": "УЗИ межрёберных мышц и расстояния плевра-кожа",
+    "parent_key": "HV6A6BTH",
+    "parent_name": "Изменение анатомии во время дыхания"
+  },
+  "included_items": [
+    {
+      "item_key": "W7JWCZEM",
+      "citation_key": "calaRespiratoryUltrasonographyHuman1998",
+      "year": 1998,
+      "doi": "10.1016/S0301-5629(97)00271-8",
+      "version": 297395,
+      "fulltext_read": true,
+      "evidence_eligibility": "included"
+    },
+    {
+      "item_key": "JRF5NK55",
+      "citation_key": "wallbridgeParasternalIntercostalMuscle2018",
+      "year": 2018,
+      "doi": "10.1038/s41598-018-33666-7",
+      "version": 297431,
+      "fulltext_read": true,
+      "evidence_eligibility": "included"
+    },
+    {
+      "item_key": "DYJJ8RHT",
+      "citation_key": "yoshidaMeasurementIntercostalMuscle2019",
+      "year": 2019,
+      "doi": "10.1589/jpts.31.340",
+      "version": 297403,
+      "fulltext_read": true,
+      "evidence_eligibility": "included"
+    },
+    {
+      "item_key": "5TPXALZ4",
+      "citation_key": "dresUsefulnessParasternalIntercostal2020",
+      "year": 2020,
+      "doi": "10.1097/ALN.0000000000003191",
+      "version": 297408,
+      "fulltext_read": true,
+      "evidence_eligibility": "included"
+    },
+    {
+      "item_key": "LPAQLUIH",
+      "citation_key": "valera-caleroPredictionModelRhomboid2021",
+      "year": 2021,
+      "doi": "10.1111/ijcp.14176",
+      "version": 297417,
+      "fulltext_read": true,
+      "evidence_eligibility": "included_as_adjacent_anatomical_evidence"
+    },
+    {
+      "item_key": "RTFW8WB5",
+      "citation_key": "ramaswamyPredictionWeaningOutcome2023",
+      "year": 2023,
+      "doi": "10.5005/jp-journals-10071-24548",
+      "version": 297413,
+      "fulltext_read": true,
+      "evidence_eligibility": "excluded_retracted",
+      "reason": "Attached full text is a retraction notice dated 2025-01-23 stating that the data were completely plagiarized."
+    },
+    {
+      "item_key": "U5QJJ7Q6",
+      "citation_key": "huangDeterminingIdealMeasurement2024",
+      "year": 2024,
+      "doi": "10.1186/s13244-024-01692-x",
+      "version": 297423,
+      "fulltext_read": true,
+      "evidence_eligibility": "included_as_adjacent_anatomical_evidence"
+    },
+    {
+      "item_key": "HMHLMZ5X",
+      "citation_key": "hoermannIntercostalThickeningFraction2026",
+      "year": 2026,
+      "doi": "10.1038/s41598-026-40192-4",
+      "version": 297423,
+      "fulltext_read": true,
+      "evidence_eligibility": "included"
+    }
+  ],
+  "excluded_non_publications": [
+    {
+      "item_key": "AK6G7KIC",
+      "title": "00. анализ",
+      "item_type": "document",
+      "reason": "Pre-existing synthesis excluded to avoid contamination."
+    }
+  ]
+}

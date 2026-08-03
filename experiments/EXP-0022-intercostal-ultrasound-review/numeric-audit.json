@@ -1,0 +1,83 @@
+{
+  "artifacts": ["direct-review.md", "skill-review.md"],
+  "introduced_numeric_claims": {
+    "direct": 0,
+    "skill": 0
+  },
+  "checks": [
+    {
+      "claim": "Cala: ventral displacement 0.42 ± 0.06 mm and no thickness/inter-rib change at p > 0.19",
+      "locator": "zotero:W7JWCZEM#Abstract",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Yoshida: third anterior interspace 2.65 ± 1.13 to 3.19 ± 1.24 mm",
+      "locator": "zotero:DYJJ8RHT#Table-2",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Wallbridge thickness ICC 0.87–0.97 and inter-rater ICC 0.601–0.803",
+      "locator": "zotero:JRF5NK55#Table-3",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Wallbridge FEV1 correlations: thickness r=0.33 and echogenicity r=-0.32",
+      "locator": "zotero:JRF5NK55#Results-Parasternal-ultrasound-and-airflow-obstruction",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Dres support-TFic rho=-0.61 and diaphragm-capacity-TFic rho=-0.79",
+      "locator": "zotero:5TPXALZ4#Abstract-and-Figure-3",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Dres TFic 17% vs 5% by diaphragm dysfunction and 18% vs 7% by SBT outcome",
+      "locator": "zotero:5TPXALZ4#Tables-3-4",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Dres AUC 0.88 for TFic and 0.92 for TFic/TFdi",
+      "locator": "zotero:5TPXALZ4#Table-5",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Valera-Calero skin-pleura 23.1 ± 5.4 vs 24.6 ± 5.7 mm and rhomboid-pleura 9.5 ± 2.6 vs 10.1 ± 2.5 mm",
+      "locator": "zotero:LPAQLUIH#Table-1",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Valera-Calero adjusted R2=0.697",
+      "locator": "zotero:LPAQLUIH#Table-3",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Huang width/SCD ICC >= 0.97",
+      "locator": "zotero:U5QJJ7Q6#Results-Reliability",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Hoermann ITF-Poes rho=-0.040, ITF-DTF rho=-0.025, DTF-Poes rho=0.419",
+      "locator": "zotero:HMHLMZ5X#Results-Correlation-between-parameters",
+      "direct_valid": true,
+      "skill_valid": true
+    },
+    {
+      "claim": "Ramaswamy 15.38%, sensitivity 75%, specificity 87.8%",
+      "locator": "zotero:RTFW8WB5#Stored-Metadata-Abstract",
+      "classification": "retracted_metadata_disclosed_but_not_used_as_positive_evidence",
+      "direct_valid": true,
+      "skill_valid": true
+    }
+  ],
+  "valid": true
+}

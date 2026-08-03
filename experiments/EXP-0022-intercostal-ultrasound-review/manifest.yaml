@@ -1,0 +1,34 @@
+experiment_id: EXP-0022
+title: Direct versus scientific-evidence-workflow literature review
+status: completed
+task: literature_review
+date: 2026-08-03
+runner: current_codex_agent
+comparison: paired_nonblind_ablation
+external_model_api: forbidden
+network_during_corpus_processing: forbidden
+zotero_writes: false
+collection:
+  key: TE9MV9FY
+  name: УЗИ межрёберных мышц и расстояния плевра-кожа
+corpus: corpus.json
+included_publications: 8
+eligible_positive_evidence_publications: 7
+excluded_non_publications: 1
+branches:
+  direct:
+    skill_files_loaded_during_branch: false
+    output: direct-review.md
+    status: completed
+  scientific_evidence_workflow:
+    skill: skills/scientific-evidence-workflow
+    output: skill-review.md
+    evidence_bundle: evidence-bundle.json
+    study_cards: study-cards.md
+    cross_study_matrix: cross-study-matrix.md
+    status: completed
+comparison_output: comparison.md
+validation: validation.json
+numeric_audit: numeric-audit.json
+report: report.md
+verdict: pass_for_auditability_no_demonstrated_accuracy_gain_nonblind

@@ -1,0 +1,49 @@
+{
+  "corpus": {
+    "collection_key": "TE9MV9FY",
+    "collection_items": 9,
+    "journal_articles": 8,
+    "non_publication_excluded_before_review": 1,
+    "eligible_positive_evidence_articles": 7,
+    "retracted_articles": 1
+  },
+  "direct": {
+    "artifact": "direct-review.md",
+    "sha256": "27d49c7553fe419459178fa5e13e9edcb63a3d908458ae05f9a5b7ac1d4e5942",
+    "word_count": 1234,
+    "referenced_corpus_items": 8,
+    "unique_referenced_corpus_items": 8,
+    "new_scientific_sources": 0,
+    "introduced_numeric_claims": 0,
+    "retraction_handled": true,
+    "claim_ledger": false,
+    "deterministic_evidence_validation": false
+  },
+  "skill": {
+    "artifact": "skill-review.md",
+    "sha256": "dccb9d97204f414e83a2652c82b3fef04e91e17da5c0f7e9c709708790ce8000",
+    "word_count": 1600,
+    "referenced_corpus_items": 8,
+    "unique_referenced_corpus_items": 8,
+    "new_scientific_sources": 0,
+    "introduced_numeric_claims": 0,
+    "retraction_handled": true,
+    "claim_ledger": true,
+    "evidence_bundle": {
+      "sha256": "e880582fd302e2fd8ea03c79c16c5542a03743b6568b3e22e934583b5cd22c07",
+      "sources": 8,
+      "evidence": 31,
+      "claims": 12,
+      "supported": 2,
+      "bounded": 9,
+      "unsupported": 1,
+      "conflicted": 0,
+      "locator_source_mismatches": 0,
+      "validator_errors": 0,
+      "validator_warnings": 0,
+      "valid": true
+    }
+  },
+  "paired_numeric_audit": "passed",
+  "valid": true
+}

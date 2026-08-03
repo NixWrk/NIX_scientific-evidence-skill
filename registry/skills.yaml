@@ -17,7 +17,7 @@ verdicts:
     task: [qa, literature_review, manuscript]
     license: not_declared
     spec_subset: pass
-    portability: current_agent_pass_local_llm_execution_pending
+    portability: current_agent_qa_and_literature_review_pass_local_llm_execution_pending
     corpus_policy: pass
     reasons:
       - supplied_corpus_only
@@ -25,9 +25,11 @@ verdicts:
       - no_network_or_mcp_dependency
       - plain_text_contract_without_function_calling
       - deterministic_bundle_validator
+      - paired_nonblind_literature_review_pass
+      - retracted_metadata_rejected_by_evidence_gate
       - actual_local_model_run_pending
-    experiment: EXP-0021
-    next_action: blind_direct_vs_evidence_first_then_local_model_run
+    experiments: [EXP-0021, EXP-0022]
+    next_action: blind_new_corpus_review_then_local_model_run
 
   - id: literature-triage-matrix
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix
