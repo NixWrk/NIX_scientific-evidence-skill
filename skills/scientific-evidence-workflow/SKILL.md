@@ -50,6 +50,20 @@ For a manuscript, separate literature sources from research records. Literature
 may support context and interpretation. Only approved protocol and result
 records may support Methods and Results.
 
+For every manuscript, require two explicit choices before drafting:
+
+- `figure_mode`: `with_figures` or `without_figures`;
+- `formatting_mode`: `journal_example` or `section_only`.
+
+If `journal_example` is selected, require a user-supplied example from the
+named journal. Analyze only that example and save the observed formatting
+patterns as a versioned skill-memory record according to
+`references/journal-pattern-memory.md`. Do not infer unobserved journal rules.
+If `section_only` is selected, use scientific sections without inventing a
+journal style. If figures are requested, record their supplied or reproducibly
+derivable inputs in `figure_source_ids`; never fabricate scientific images or
+missing data.
+
 ### 2. Inventory and freeze inputs
 
 Assign every source a stable `source_id`. Preserve an existing content hash or
@@ -161,6 +175,9 @@ Stop and request input instead of guessing when:
 - `assets/qa-output.template.md`: Q&A output scaffold.
 - `assets/literature-review-output.template.md`: review scaffold.
 - `assets/manuscript-output.template.md`: manuscript scaffold.
+- `assets/journal-pattern.template.json`: journal-pattern memory scaffold.
 - `scripts/validate_bundle.py`: dependency-free structural validator.
+- `references/journal-pattern-memory.md`: rules for extracting and retaining
+  formatting patterns from a user-supplied journal example.
 - `references/russian-scientific-style.md`: Russian scientific-language rules.
 - `scripts/audit_russian_style.py`: dependency-free heuristic style audit.

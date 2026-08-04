@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "created_on": "2026-08-04",
+  "source": {
+    "source_id": "SRC-JOURNAL-BMRE-BRIKO-001",
+    "title": "БМРЭ - Брико А.Н..docx",
+    "path": "C:/Users/ПАВЛУША/Downloads/Telegram Desktop/БМРЭ - Брико А.Н..docx",
+    "sha256": "1917db55f740bdd9109ed8e985ef783b21803fce35ee362db07c3ad93872d270",
+    "bytes": 1316648,
+    "last_write_time": "2026-07-28T16:58:25.9369457+03:00"
+  },
+  "role": "formatting_and_narrative_example_only",
+  "scientific_evidence": false,
+  "target_pattern_id": "JOURNAL-PATTERN-BMRE-001"
+}

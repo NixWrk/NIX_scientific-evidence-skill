@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "pattern_id": "JOURNAL-PATTERN-EXAMPLE-001",
+  "record_version": "v1",
+  "journal_name": "User-specified journal",
+  "provenance": {
+    "source_id": "SRC-JOURNAL-EXAMPLE-001",
+    "local_ref": "local/journal-example.pdf",
+    "content_hash": "sha256:replace-with-real-hash",
+    "analyzed_on": "YYYY-MM-DD",
+    "available_parts": ["full_text"]
+  },
+  "patterns": {
+    "page_layout": {"status": "not_observed", "observations": []},
+    "body_typography": {"status": "not_observed", "observations": []},
+    "front_matter": {"status": "not_observed", "observations": []},
+    "abstract": {"status": "not_observed", "observations": []},
+    "keywords": {"status": "not_observed", "observations": []},
+    "section_order": {"status": "not_observed", "observations": []},
+    "heading_hierarchy": {"status": "not_observed", "observations": []},
+    "narrative_structure_and_language": {"status": "not_observed", "observations": []},
+    "citations": {"status": "not_observed", "observations": []},
+    "references": {"status": "not_observed", "observations": []},
+    "tables": {"status": "not_observed", "observations": []},
+    "figures": {"status": "not_observed", "observations": []},
+    "equations_units_abbreviations": {"status": "not_observed", "observations": []},
+    "declarations_and_supplements": {"status": "not_observed", "observations": []},
+    "explicit_constraints": {"status": "not_observed", "observations": []}
+  },
+  "conflicts_and_uncertainties": [],
+  "application_notes": []
+}

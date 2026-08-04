@@ -18,7 +18,10 @@
 
 ## Discussion
 
-<!-- Separate results, interpretation, literature comparison, and limitations. -->
+<!-- Optional heading. Keep it when requested by the user or journal pattern;
+otherwise integrate its functions into adjacent sections and remove the
+heading. Always separate results, interpretation, literature comparison, and
+limitations. -->
 
 ## Conclusion
 

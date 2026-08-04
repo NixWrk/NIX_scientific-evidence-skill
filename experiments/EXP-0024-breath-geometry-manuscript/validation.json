@@ -1,0 +1,17 @@
+{
+  "valid": true,
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "sources": 27,
+    "evidence": 14,
+    "results": 18,
+    "claims": 18,
+    "supported_claims": 14,
+    "bounded_claims": 4,
+    "unsupported_claims": 0,
+    "conflicted_claims": 0
+  },
+  "validator": "skills/scientific-evidence-workflow/scripts/validate_bundle.py",
+  "validated_on": "2026-08-04"
+}

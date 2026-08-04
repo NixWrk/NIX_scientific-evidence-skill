@@ -17,8 +17,27 @@
         "request": {"type": "string", "minLength": 1},
         "input_scope": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
         "language": {"type": "string"},
-        "audience": {"type": "string"}
-      }
+        "audience": {"type": "string"},
+        "figure_mode": {"enum": ["with_figures", "without_figures"]},
+        "figure_source_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "formatting_mode": {"enum": ["journal_example", "section_only"]},
+        "journal_pattern_id": {"type": "string", "minLength": 1},
+        "journal_example_source_id": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"mode": {"const": "manuscript"}}, "required": ["mode"]},
+          "then": {"required": ["figure_mode", "formatting_mode"]}
+        },
+        {
+          "if": {"properties": {"formatting_mode": {"const": "journal_example"}}, "required": ["formatting_mode"]},
+          "then": {"required": ["journal_pattern_id", "journal_example_source_id"]}
+        },
+        {
+          "if": {"properties": {"figure_mode": {"const": "with_figures"}}, "required": ["figure_mode"]},
+          "then": {"required": ["figure_source_ids"]}
+        }
+      ]
     },
     "sources": {
       "type": "array",

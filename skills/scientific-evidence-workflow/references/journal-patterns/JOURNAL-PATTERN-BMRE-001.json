@@ -1,0 +1,346 @@
+{
+  "schema_version": "1.0",
+  "pattern_id": "JOURNAL-PATTERN-BMRE-001",
+  "record_version": "v2",
+  "journal_name": "Биомедицинская радиоэлектроника",
+  "journal_aliases": ["БМРЭ"],
+  "evidence_scope": "single_user_supplied_example",
+  "provenance": {
+    "source_id": "SRC-JOURNAL-BMRE-BRIKO-001",
+    "source_label": "БМРЭ - Брико А.Н..docx",
+    "local_ref": "C:/Users/ПАВЛУША/Downloads/Telegram Desktop/БМРЭ - Брико А.Н..docx",
+    "content_hash": "sha256:1917db55f740bdd9109ed8e985ef783b21803fce35ee362db07c3ad93872d270",
+    "file_size_bytes": 1316648,
+    "file_last_write_time": "2026-07-28T16:58:25.9369457+03:00",
+    "analyzed_on": "2026-08-04",
+    "available_parts": [
+      "full_docx_package",
+      "russian_article_text",
+      "brief_english_back_matter",
+      "ooxml_styles",
+      "page_and_section_properties",
+      "headers_and_footers",
+      "three_embedded_raster_images"
+    ],
+    "inspection_methods": [
+      "direct OOXML inspection",
+      "Pandoc structural extraction"
+    ],
+    "user_clarifications": [
+      {
+        "recorded_on": "2026-08-04",
+        "statement": "A separate Discussion section occurs in some BMRE articles and is absent in others; the narrative sequence and transition functions extracted from the example are approved as good output examples."
+      }
+    ]
+  },
+  "patterns": {
+    "page_layout": {
+      "status": "observed",
+      "observations": [
+        {
+          "feature": "page_size",
+          "value": "A4 portrait, 210 × 297 mm",
+          "basis": "OOXML pgSz 11906 × 16838 twips"
+        },
+        {
+          "feature": "margins",
+          "value": {
+            "top_mm": 28.0,
+            "bottom_mm": 20.0,
+            "left_mm": 17.5,
+            "right_mm": 17.5,
+            "header_mm": 12.5,
+            "footer_mm": 12.5
+          },
+          "basis": "OOXML pgMar"
+        },
+        {
+          "feature": "columns",
+          "value": "single column"
+        },
+        {
+          "feature": "first_page",
+          "value": "different first page; first-page header and footer are blank"
+        },
+        {
+          "feature": "running_matter",
+          "value": "subsequent headers contain the English article title; subsequent footers contain a transliterated journal title and issue metadata",
+          "certainty": "uncertain",
+          "guard": "Do not copy the issue metadata: the supplied file contains conflicting highlighted values."
+        }
+      ]
+    },
+    "body_typography": {
+      "status": "observed",
+      "observations": [
+        {
+          "element": "main_title_ru",
+          "value": "left aligned, bold, approximately 18 pt, Times New Roman inherited through OOXML defaults; 6 pt before and 12 pt after"
+        },
+        {
+          "element": "authors",
+          "value": "left aligned, bold, approximately 10 pt; affiliation and email on separate left-aligned lines at approximately 9 pt"
+        },
+        {
+          "element": "abstract_and_front_matter",
+          "value": "compact Tahoma-based style at approximately 8 pt; abstract paragraphs have no first-line indent"
+        },
+        {
+          "element": "main_body",
+          "value": "Times New Roman, 11 pt, justified, single line spacing, first-line indent approximately 7.5–8.0 mm, normally no extra paragraph spacing"
+        },
+        {
+          "element": "main_section_headings",
+          "value": "centered, bold, 11 pt, unnumbered; typically 12 pt before and 3 pt after"
+        },
+        {
+          "element": "reference_entries",
+          "value": "Times New Roman, approximately 9 pt, compact numbered list with hanging indent and slightly condensed character spacing"
+        },
+        {
+          "element": "figure_captions",
+          "value": "approximately 9 pt, no first-line indent; caption labels are bold"
+        },
+        {
+          "element": "theme_resolution",
+          "value": "font families are partly inherited from document defaults and themes",
+          "certainty": "uncertain",
+          "guard": "Verify appearance in the target DOCX renderer before treating the resolved font family as exact."
+        }
+      ]
+    },
+    "front_matter": {
+      "status": "observed",
+      "observations": [
+        "The document begins with article type, UDC and DOI on separate lines.",
+        "The Russian title is followed by authors, one institutional affiliation line and a contact email.",
+        "A Russian abstract, keywords and a bordered 'Для цитирования' block precede the main text.",
+        "An italic note states that a brief English version is placed at the end.",
+        "The front matter is predominantly left aligned."
+      ]
+    },
+    "abstract": {
+      "status": "observed",
+      "observations": [
+        {
+          "language": "ru",
+          "form": "four separate paragraphs with inline bold labels",
+          "labels": [
+            "Постановка проблемы.",
+            "Цель работы.",
+            "Результаты.",
+            "Практическая значимость."
+          ],
+          "observed_size": {
+            "characters": 1453,
+            "whitespace_tokens": 154
+          },
+          "guard": "Observed size is not a journal word limit."
+        },
+        {
+          "language": "en",
+          "form": "brief three-paragraph English back-matter abstract without the same visible inline labels",
+          "observed_size": {
+            "characters": 1464,
+            "whitespace_tokens": 193
+          }
+        }
+      ]
+    },
+    "keywords": {
+      "status": "observed",
+      "observations": [
+        "A bold heading is placed on its own line.",
+        "Five Russian keywords are comma-separated in an italic compact paragraph.",
+        "The English back matter repeats a five-item keyword line."
+      ]
+    },
+    "section_order": {
+      "status": "observed",
+      "observations": [
+        "Russian front matter",
+        "Введение",
+        "Материалы и методы",
+        "Результаты",
+        "optional separate Discussion according to the user clarification",
+        "Заключение",
+        "Список источников",
+        "Информация об авторах",
+        "submission, review and acceptance dates",
+        "brief English block: article type, title, authors, affiliation, abstract, keywords, citation, references, author information and dates"
+      ]
+    },
+    "heading_hierarchy": {
+      "status": "observed",
+      "observations": [
+        "The Russian main text uses one visible heading level.",
+        "Main headings are centered, bold and unnumbered.",
+        "No separate Discussion heading is present in this example; the user clarified that BMRE articles may include or omit it.",
+        "The Discussion heading is therefore variable rather than required or forbidden; its interpretive and limitation functions must still be represented.",
+        "No numbered subsections are present in this example.",
+        "The goal is repeated at the end of the Introduction as an inline bold, letter-spaced label followed by a dash."
+      ]
+    },
+    "narrative_structure_and_language": {
+      "status": "observed",
+      "observations": [
+        {
+          "scope": "abstract",
+          "pattern": "problem and unmet need → explicit aim → performed work and principal result → practical significance",
+          "application_guard": "Each block must contain only claims supported in the manuscript body."
+        },
+        {
+          "scope": "introduction",
+          "pattern": "broad biomedical context → limitations of established measurements → advantages of the proposed methodological bridge → specific physiological or modelling factor → separate explicit aim paragraph"
+        },
+        {
+          "scope": "methods",
+          "pattern": "device and instrumentation → analytical and numerical models → participants, measurement site, protocol and ethics"
+        },
+        {
+          "scope": "results",
+          "pattern": "comparison of model variants → callout to a composite figure → quantitative participant results → interpretation of the selected model"
+        },
+        {
+          "scope": "conclusion",
+          "pattern": "one compact paragraph: restate the method → name implemented components → summarize experimental support → state bounded practical meaning"
+        },
+        {
+          "scope": "paragraph_design",
+          "pattern": "short functional paragraphs; Methods commonly use impersonal or passive procedure descriptions, while Results name the observed data or model comparison directly"
+        },
+        {
+          "scope": "reusable_transition_functions",
+          "forms": [
+            "Для решения поставленной задачи ...",
+            "Для описания модели ...",
+            "Экспериментальные исследования проводили ...",
+            "Результаты исследования показали ...",
+            "Как видно из рис. N, ...",
+            "Полученные результаты ...",
+            "В работе представлен ..."
+          ],
+          "guard": "Adapt the grammatical form and use only when the following statement is supported."
+        },
+        {
+          "scope": "connectors",
+          "forms": ["В свою очередь, ...", "Таким образом, ..."],
+          "guard": "Use sparingly and only for an explicit logical relation."
+        },
+        {
+          "scope": "forms_not_to_copy_without_evidence",
+          "forms": [
+            "значительные различия",
+            "наилучший компромисс",
+            "позволило точно",
+            "подтверждают перспективность",
+            "обеспечивает минимальное влияние"
+          ],
+          "guard": "Replace with a measured criterion, uncertainty and comparison, or omit."
+        }
+      ]
+    },
+    "citations": {
+      "status": "observed",
+      "observations": [
+        "In-text references use Arabic numbers in square brackets.",
+        "The observed citations appear in order of first mention.",
+        "Only single-number examples were present; range and multiple-citation punctuation were not observed."
+      ]
+    },
+    "references": {
+      "status": "observed",
+      "observations": [
+        "The Russian section is titled 'Список источников'.",
+        "Entries are numbered with Arabic numerals followed by periods.",
+        "The nine observed entries are written in English and use initials before surnames, quoted article titles, journal or proceedings data, volume, issue, pages, year and DOI when available.",
+        "The same nine-entry list is repeated under 'References' in the English back matter.",
+        "Completeness varies between entries, so the example does not establish every mandatory bibliographic field."
+      ]
+    },
+    "tables": {
+      "status": "not_observed",
+      "observations": [
+        "The only OOXML table is a borderless 2 × 3 layout container for three figure panels and their panel labels.",
+        "No scientific data table, table number, table title or table note convention is present."
+      ]
+    },
+    "figures": {
+      "status": "observed",
+      "observations": [
+        "One composite scientific figure is assembled from three inline raster images in a single row.",
+        "Panel labels are centered in a second row beneath the images.",
+        "The figure is called out in the preceding Results paragraph.",
+        "A detailed Russian caption is followed immediately by an English caption.",
+        "The labels 'Рис. 1.' and 'Fig. 1.' are bold; the remaining caption text is regular.",
+        "The panel labels and one caption callout are internally inconsistent in the supplied file and must be verified rather than copied."
+      ]
+    },
+    "equations_units_abbreviations": {
+      "status": "observed",
+      "observations": [
+        "No displayed or inline OOXML equation object is present.",
+        "Russian decimal values use a comma; variables use Latin and Greek symbols where needed.",
+        "Units are placed after values with a space; multiplication uses × or a centered dot and square units use superscript ².",
+        "Abbreviations are introduced in the main text, but the example does not contain a separate abbreviation list.",
+        "Range punctuation is inconsistent between en dashes and hyphens and must be normalized when applying the pattern."
+      ]
+    },
+    "declarations_and_supplements": {
+      "status": "observed",
+      "observations": [
+        "Ethical compliance is stated inside Materials and Methods.",
+        "A separate author-information block gives full names, degrees or positions.",
+        "Submission, review and acceptance dates are listed before the English block and repeated in English.",
+        "Funding, conflicts of interest, author contributions, data availability, acknowledgements and supplementary materials are not observed in this example."
+      ]
+    },
+    "explicit_constraints": {
+      "status": "not_observed",
+      "observations": [
+        "The example contains no explicit author guideline, word limit, figure limit, table limit or reference limit.",
+        "Observed counts and dimensions are descriptive and must not be converted into journal requirements."
+      ]
+    }
+  },
+  "conflicts_and_uncertainties": [
+    {
+      "field": "DOI",
+      "observed_values": [
+        "10.18127/j15604136-202504-01",
+        "10.18127/j15604136-202505-01",
+        "10.18127/j15604136-202502-01"
+      ],
+      "handling": "Do not copy. Obtain the authoritative DOI for each new article."
+    },
+    {
+      "field": "volume_issue_pages",
+      "observation": "Russian citation, English citation and footer show different volume, issue, year and page combinations.",
+      "handling": "Treat them as highlighted editorial placeholders, not a formatting rule or publication fact."
+    },
+    {
+      "field": "dates",
+      "observation": "The Russian and English acceptance dates differ; dates are highlighted editorial fields.",
+      "handling": "Do not prefill editorial dates in a manuscript."
+    },
+    {
+      "field": "literal_text_quality",
+      "observation": "The file contains typographical or editorial remnants such as 'Работка', 'Abstact' and 'DAY' in place of DOI.",
+      "handling": "Use the structural pattern only; apply independent Russian and English proofreading."
+    },
+    {
+      "field": "journal_wide_status",
+      "observation": "Only one DOCX example was analyzed; the user additionally clarified that a separate Discussion section is variable across BMRE articles.",
+      "handling": "Keep other extracted features example-based. Treat Discussion as optional and choose its presence from the current user instruction or a supplied article pattern."
+    }
+  ],
+  "application_notes": [
+    "Apply only when formatting_mode is journal_example and journal_pattern_id is JOURNAL-PATTERN-BMRE-001.",
+    "Recalculate the SHA-256 of the supplied DOCX before relying on this record.",
+    "Use the abstract labels, unnumbered section order, bilingual front/back matter, compact typography, narrative sequence and transition functions as approved examples of a good result.",
+    "Treat a separate Discussion section as optional for BMRE: the supplied example omits it, while the user confirms that other BMRE articles include it.",
+    "Do not transfer scientific claims, study-specific wording, numerical values, citations or conclusions from the example.",
+    "Evidence and Russian-language rules override any rhetorical form observed here.",
+    "This record does not authorize rewriting EXP-0024; the user explicitly requested analysis and storage only."
+  ]
+}

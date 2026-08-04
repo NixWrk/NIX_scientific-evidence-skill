@@ -49,12 +49,14 @@ def test_skill_references_and_assets_exist() -> None:
         "references/literature-review-workflow.md",
         "references/manuscript-workflow.md",
         "references/local-model-compatibility.md",
+        "references/journal-pattern-memory.md",
         "references/russian-scientific-style.md",
         "assets/evidence-bundle.schema.json",
         "assets/evidence-bundle.template.json",
         "assets/qa-output.template.md",
         "assets/literature-review-output.template.md",
         "assets/manuscript-output.template.md",
+        "assets/journal-pattern.template.json",
         "scripts/validate_bundle.py",
         "scripts/audit_russian_style.py",
         "agents/openai.yaml",
@@ -62,6 +64,29 @@ def test_skill_references_and_assets_exist() -> None:
 
     assert all((SKILL_DIR / path).is_file() for path in required)
     json.loads((SKILL_DIR / "assets" / "evidence-bundle.schema.json").read_text(encoding="utf-8"))
+
+
+def test_stored_journal_patterns_are_versioned_and_provenanced() -> None:
+    pattern_dir = SKILL_DIR / "references" / "journal-patterns"
+    patterns = [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in sorted(pattern_dir.glob("*.json"))
+    ]
+
+    assert patterns
+    bmre = next(
+        pattern for pattern in patterns if pattern["pattern_id"] == "JOURNAL-PATTERN-BMRE-001"
+    )
+    assert bmre["record_version"] == "v2"
+    assert any(
+        "Treat a separate Discussion section as optional" in note
+        for note in bmre["application_notes"]
+    )
+    for pattern in patterns:
+        assert pattern["schema_version"] == "1.0"
+        assert pattern["record_version"]
+        assert pattern["provenance"]["content_hash"].startswith("sha256:")
+        assert "narrative_structure_and_language" in pattern["patterns"]
 
 
 def test_product_metadata_is_optional_and_has_no_tool_dependency() -> None:
@@ -153,6 +178,8 @@ def test_numeric_qa_claim_can_use_evidence_value() -> None:
 def test_manuscript_results_number_requires_frozen_result() -> None:
     bundle = load_template()
     bundle["task"]["mode"] = "manuscript"
+    bundle["task"]["figure_mode"] = "without_figures"
+    bundle["task"]["formatting_mode"] = "section_only"
     claim = bundle["claims"][0]
     claim["claim_type"] = "numeric"
     claim["output_section"] = "Results"
@@ -167,6 +194,8 @@ def test_manuscript_results_number_requires_frozen_result() -> None:
 def test_manuscript_results_number_passes_with_frozen_result() -> None:
     bundle = load_template()
     bundle["task"]["mode"] = "manuscript"
+    bundle["task"]["figure_mode"] = "without_figures"
+    bundle["task"]["formatting_mode"] = "section_only"
     bundle["sources"][0]["representation"] = "data"
     bundle["results"] = [
         {
@@ -188,6 +217,70 @@ def test_manuscript_results_number_passes_with_frozen_result() -> None:
 
     assert report["valid"] is True
     assert report["counts"]["results"] == 1
+
+
+def test_manuscript_requires_figure_and_formatting_modes() -> None:
+    bundle = load_template()
+    bundle["task"]["mode"] = "manuscript"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "figure_mode" in error_text(report)
+    assert "formatting_mode" in error_text(report)
+
+
+def test_journal_formatting_requires_stored_pattern_and_example_source() -> None:
+    bundle = load_template()
+    bundle["task"].update(
+        {
+            "mode": "manuscript",
+            "figure_mode": "without_figures",
+            "formatting_mode": "journal_example",
+        }
+    )
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "journal_pattern_id" in error_text(report)
+    assert "journal_example_source_id" in error_text(report)
+
+
+def test_manuscript_with_figures_requires_in_scope_figure_sources() -> None:
+    bundle = load_template()
+    bundle["task"].update(
+        {
+            "mode": "manuscript",
+            "figure_mode": "with_figures",
+            "formatting_mode": "section_only",
+        }
+    )
+
+    missing_report = VALIDATOR.validate_bundle(bundle)
+    assert missing_report["valid"] is False
+    assert "with_figures requires a non-empty list" in error_text(missing_report)
+
+    bundle["task"]["figure_source_ids"] = ["SRC-EXAMPLE-001"]
+    present_report = VALIDATOR.validate_bundle(bundle)
+    assert present_report["valid"] is True
+
+
+def test_manuscript_without_figures_rejects_figure_sources() -> None:
+    bundle = load_template()
+    bundle["task"].update(
+        {
+            "mode": "manuscript",
+            "figure_mode": "without_figures",
+            "figure_source_ids": ["SRC-EXAMPLE-001"],
+            "formatting_mode": "section_only",
+        }
+    )
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "must be omitted" in error_text(report)
 
 
 def test_rejected_evidence_cannot_support_claim() -> None:

@@ -12,6 +12,8 @@ from typing import Any, Iterable
 
 ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]*$")
 MODES = {"qa", "literature_review", "manuscript"}
+FIGURE_MODES = {"with_figures", "without_figures"}
+FORMATTING_MODES = {"journal_example", "section_only"}
 REPRESENTATIONS = {
     "html",
     "pdf",
@@ -93,11 +95,62 @@ def validate_bundle(data: Any) -> dict[str, Any]:
         errors.append("bundle.task: expected an object")
         task = {}
     else:
-        _check_allowed_keys(task, {"mode", "request", "input_scope", "language", "audience"}, "bundle.task", errors)
+        _check_allowed_keys(
+            task,
+            {
+                "mode",
+                "request",
+                "input_scope",
+                "language",
+                "audience",
+                "figure_mode",
+                "figure_source_ids",
+                "formatting_mode",
+                "journal_pattern_id",
+                "journal_example_source_id",
+            },
+            "bundle.task",
+            errors,
+        )
         _check_required_strings(task, ["mode", "request"], "bundle.task", errors)
     mode = task.get("mode")
     if mode not in MODES:
         errors.append(f"bundle.task.mode: expected one of {sorted(MODES)}")
+    if mode == "manuscript":
+        figure_mode = task.get("figure_mode")
+        formatting_mode = task.get("formatting_mode")
+        if figure_mode not in FIGURE_MODES:
+            errors.append(
+                f"bundle.task.figure_mode: manuscript requires one of {sorted(FIGURE_MODES)}"
+            )
+        if formatting_mode not in FORMATTING_MODES:
+            errors.append(
+                "bundle.task.formatting_mode: manuscript requires one of "
+                f"{sorted(FORMATTING_MODES)}"
+            )
+        if formatting_mode == "journal_example":
+            _check_required_strings(
+                task,
+                ["journal_pattern_id", "journal_example_source_id"],
+                "bundle.task",
+                errors,
+            )
+        figure_source_ids = task.get("figure_source_ids")
+        if figure_mode == "with_figures":
+            if (
+                not isinstance(figure_source_ids, list)
+                or not figure_source_ids
+                or not all(_nonempty_string(value) for value in figure_source_ids)
+            ):
+                errors.append(
+                    "bundle.task.figure_source_ids: with_figures requires a non-empty "
+                    "list of source identifiers"
+                )
+        elif figure_mode == "without_figures" and "figure_source_ids" in task:
+            errors.append(
+                "bundle.task.figure_source_ids: must be omitted when figure_mode is "
+                "'without_figures'"
+            )
     input_scope = task.get("input_scope", [])
     if not isinstance(input_scope, list) or not all(_nonempty_string(item) for item in input_scope):
         errors.append("bundle.task.input_scope: expected a list of source identifiers")
@@ -129,6 +182,26 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     for source_id in input_scope:
         if source_id not in sources:
             errors.append(f"bundle.task.input_scope: unknown source {source_id!r}")
+    if mode == "manuscript" and task.get("figure_mode") == "with_figures":
+        for source_id in task.get("figure_source_ids", []):
+            if source_id not in sources:
+                errors.append(f"bundle.task.figure_source_ids: unknown source {source_id!r}")
+            elif source_id not in input_scope:
+                errors.append(
+                    f"bundle.task.figure_source_ids: source {source_id!r} is outside input_scope"
+                )
+    journal_example_source_id = task.get("journal_example_source_id")
+    if mode == "manuscript" and task.get("formatting_mode") == "journal_example":
+        if _nonempty_string(journal_example_source_id) and journal_example_source_id not in sources:
+            errors.append(
+                "bundle.task.journal_example_source_id: unknown source "
+                f"{journal_example_source_id!r}"
+            )
+        elif _nonempty_string(journal_example_source_id) and journal_example_source_id not in input_scope:
+            errors.append(
+                "bundle.task.journal_example_source_id: source "
+                f"{journal_example_source_id!r} is outside input_scope"
+            )
 
     evidence_allowed = {
         "evidence_id",
