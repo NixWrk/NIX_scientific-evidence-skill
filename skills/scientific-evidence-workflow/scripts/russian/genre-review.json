@@ -1,0 +1,31 @@
+{
+  "profile_id": "genre-review",
+  "description": "Micro review, literature review, dissertation review chapter. The characteristic failures are an uncounted body of support, prestige used in place of method, and silence reported as agreement.",
+  "latin_allow": [],
+  "rules": [
+    {
+      "code": "unquantified_support",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:ряд (?:исследован\\w+|работ|авторов)|многочисленн\\w+ (?:исследован\\w+|работ\\w*)|большинство (?:авторов|исследован\\w+|работ)|мног(?:ие|их) (?:исследован\\w+|работ\\w*|авторов)|во многих (?:работах|исследованиях))(?![а-яё])",
+      "message": "Name the number of independent studies and their designs."
+    },
+    {
+      "code": "prestige_as_evidence",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:авторитетн\\w+ (?:журнал\\w*|издани\\w+|источник\\w*)|высокоцитируем\\w+|общепризнан\\w+|широко известно|классическ\\w+ работа|золотой стандарт)(?![а-яё])",
+      "message": "Replace the reputation claim with the methodological relevance to this claim."
+    },
+    {
+      "code": "absence_as_agreement",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:противоречий не (?:выявлено|обнаружено|найдено)|расхождений не (?:выявлено|обнаружено|найдено)|данные не противоречат)(?![а-яё])",
+      "message": "Distinguish absence of evidence from agreement between studies."
+    },
+    {
+      "code": "undifferentiated_summary",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:в (?:данной|этой) (?:работе|статье) (?:авторы )?(?:рассматрива\\w+|описыва\\w+|представл\\w+)|как показано в (?:работе|статье))(?![а-яё])",
+      "message": "Synthesize by theme instead of retelling one source at a time."
+    }
+  ]
+}

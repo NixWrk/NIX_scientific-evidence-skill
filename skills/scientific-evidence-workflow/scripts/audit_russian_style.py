@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Heuristic audit for recurrent problems in Russian scientific prose."""
+"""Heuristic audit for recurrent problems in Russian scientific prose.
+
+Rules are data, not code. `russian/core.json` always applies; genre and domain
+profiles layer on top of it. Genre and subject area are independent axes: a
+review written about ultrasound needs `genre-review` and a domain profile, and
+neither one implies the other. Keeping them apart is what lets the audit move
+to another topic without carrying someone else's vocabulary along.
+"""
 
 from __future__ import annotations
 
@@ -7,82 +14,66 @@ import argparse
 import json
 import re
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, NamedTuple, Sequence
 
 
-RULES = (
-    (
-        "mixed_english",
-        "error",
-        re.compile(
-            r"(?i)(?<![\w-])(?:narrative review|journal articles?|full texts?|"
-            r"evidence|endpoints?|respiratory effort|pressure support|"
-            r"ventilatory settings?|prospective substudies?|derivation cohorts?|"
-            r"accessory muscles?|load/capacity balance|diaphragm dysfunction|"
-            r"skin-to-(?:pleura|liver|rhomboid)(?: distance| depth)?|"
-            r"mid-axillary(?: line)?|breathing phase|respiratory phase|"
-            r"procedural acoustic window|treatment decisions?|consensus guidelines?|"
-            r"meta-analysis|cut-?offs?|thresholds?|reproducibility|"
-            r"workflow|fallback|retries|production-ready|performance|"
-            r"claims?|sites?|tasks?|populations?|eligible|supported|bounded|"
-            r"unsupported)(?![\w-])"
-        ),
-        "Use a precise Russian equivalent or introduce the foreign term once.",
-    ),
-    (
-        "hybrid_verb",
-        "error",
-        re.compile(
-            r"(?i)(?<![а-яё])(?:ретра(?:ить|ится|ил[аи]?|ено)|"
-            r"фетч(?:ить|ится|ил[аи]?|ено)|кэшировать|"
-            r"мерж(?:ить|ится|ил[аи]?|ено)|пуш(?:ить|ится|ил[аи]?|ено)|"
-            r"парс(?:ить|ится|ил[аи]?|ено)|логировать|"
-            r"депло(?:ить|ится|ил[аи]?|ено))(?![а-яё])"
-        ),
-        "Replace the hybrid verb with a Russian description of the action.",
-    ),
-    (
-        "mixed_script_word",
-        "error",
-        re.compile(
-            r"(?<![A-Za-zА-Яа-яЁё])(?:"
-            r"(?:[A-Z][a-z]+|[a-z]+)-[А-Яа-яЁё]+|"
-            r"[А-Яа-яЁё]+-(?:[A-Z][a-z]+|[a-z]+)"
-            r")(?![A-Za-zА-Яа-яЁё])"
-        ),
-        "Replace mixed-script word formation with a normative Russian phrase.",
-    ),
-    (
-        "empty_metaphrase",
-        "warning",
-        re.compile(
-            r"(?i)(?<![а-яё])(?:важно отметить|следует отметить|"
-            r"нельзя не отметить|очевидно|в целом)(?![а-яё])"
-        ),
-        "Remove the metaphrase if the sentence keeps its meaning.",
-    ),
-    (
-        "unsupported_booster",
-        "warning",
-        re.compile(
-            r"(?i)(?<![а-яё])(?:критически важно|ключев(?:ая роль|ую роль)|"
-            r"значительно улучшает|оптимальн(?:ый|ая|ое|ые)|"
-            r"высокоэффективн(?:ый|ая|ое|ые))(?![а-яё])"
-        ),
-        "Give a criterion or replace the evaluation with an exact observation.",
-    ),
-    (
-        "vague_calque",
-        "warning",
-        re.compile(
-            r"(?i)(?<![а-яё])(?:это про|в части|на уровне|в рамках)(?![а-яё])"
-        ),
-        "Name the exact action, object, relation, or condition.",
-    ),
-)
+PROFILE_DIR = Path(__file__).resolve().parent / "russian"
+CORE_PROFILE = "core"
 
 LATIN_WORD = re.compile(r"(?<![\w-])[A-Za-z][A-Za-z/-]*(?![\w-])")
-LATIN_PROSE_ALLOW = {"p", "r", "rho"}
+SEVERITIES = {"error", "warning"}
+
+
+class Rule(NamedTuple):
+    code: str
+    severity: str
+    pattern: re.Pattern[str]
+    message: str
+    profile: str
+
+
+class Ruleset(NamedTuple):
+    profiles: list[str]
+    rules: list[Rule]
+    latin_allow: frozenset[str]
+
+
+def load_profile(profile_id: str, directory: Path = PROFILE_DIR) -> dict:
+    path = directory / f"{profile_id}.json"
+    if not path.is_file():
+        available = sorted(item.stem for item in directory.glob("*.json"))
+        raise FileNotFoundError(f"unknown profile {profile_id!r}; available: {available}")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def build_ruleset(profile_ids: Sequence[str] = (), directory: Path = PROFILE_DIR) -> Ruleset:
+    """Compile the core profile plus any requested genre or domain profiles."""
+
+    applied: list[str] = [CORE_PROFILE]
+    for profile_id in profile_ids:
+        if profile_id not in applied:
+            applied.append(profile_id)
+
+    rules: list[Rule] = []
+    latin_allow: set[str] = set()
+    for profile_id in applied:
+        profile = load_profile(profile_id, directory)
+        if profile.get("profile_id") != profile_id:
+            raise ValueError(f"{profile_id}: profile_id field does not match the file name")
+        latin_allow.update(profile.get("latin_allow", []))
+        for entry in profile["rules"]:
+            if entry["severity"] not in SEVERITIES:
+                raise ValueError(f"{profile_id}/{entry['code']}: unknown severity")
+            rules.append(
+                Rule(
+                    code=entry["code"],
+                    severity=entry["severity"],
+                    pattern=re.compile(entry["pattern"]),
+                    message=entry["message"],
+                    profile=profile_id,
+                )
+            )
+    return Ruleset(profiles=applied, rules=rules, latin_allow=frozenset(latin_allow))
 
 
 def visible_lines(text: str) -> Iterable[tuple[int, str]]:
@@ -102,20 +93,22 @@ def visible_lines(text: str) -> Iterable[tuple[int, str]]:
         yield number, line
 
 
-def audit_text(text: str) -> dict:
+def audit_text(text: str, profile_ids: Sequence[str] = (), directory: Path = PROFILE_DIR) -> dict:
+    ruleset = build_ruleset(profile_ids, directory)
     issues = []
     for line_number, line in visible_lines(text):
         covered_spans = []
-        for code, severity, pattern, message in RULES:
-            for match in pattern.finditer(line):
+        for rule in ruleset.rules:
+            for match in rule.pattern.finditer(line):
                 covered_spans.append(match.span())
                 issues.append(
                     {
-                        "code": code,
-                        "severity": severity,
+                        "code": rule.code,
+                        "severity": rule.severity,
+                        "profile": rule.profile,
                         "line": line_number,
                         "match": match.group(0),
-                        "message": message,
+                        "message": rule.message,
                     }
                 )
 
@@ -124,12 +117,13 @@ def audit_text(text: str) -> dict:
                 token = match.group(0)
                 if any(start <= match.start() < end for start, end in covered_spans):
                     continue
-                if token in LATIN_PROSE_ALLOW or token[0].isupper():
+                if token.lower() in ruleset.latin_allow or token[0].isupper():
                     continue
                 issues.append(
                     {
                         "code": "latin_prose",
                         "severity": "warning",
+                        "profile": CORE_PROFILE,
                         "line": line_number,
                         "match": token,
                         "message": (
@@ -143,6 +137,7 @@ def audit_text(text: str) -> dict:
     warnings = sum(issue["severity"] == "warning" for issue in issues)
     return {
         "valid": errors == 0,
+        "profiles": ruleset.profiles,
         "counts": {"errors": errors, "warnings": warnings, "issues": len(issues)},
         "issues": issues,
         "limitations": (
@@ -157,6 +152,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("path", type=Path, help="UTF-8 Markdown or text file")
     parser.add_argument("--json", action="store_true", help="emit JSON")
     parser.add_argument(
+        "--profile",
+        action="append",
+        default=[],
+        metavar="PROFILE_ID",
+        help="additional profile, repeatable; genre-* and domain-* ids are resolved "
+        "under scripts/russian/ (the core profile always applies)",
+    )
+    parser.add_argument(
+        "--list-profiles",
+        action="store_true",
+        help="list available profiles and exit",
+    )
+    parser.add_argument(
         "--fail-on",
         choices=("never", "error", "warning"),
         default="never",
@@ -167,7 +175,13 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    report = audit_text(args.path.read_text(encoding="utf-8"))
+    if args.list_profiles:
+        for path in sorted(PROFILE_DIR.glob("*.json")):
+            profile = json.loads(path.read_text(encoding="utf-8"))
+            print(f"{profile['profile_id']}: {profile['description']}")
+        return 0
+
+    report = audit_text(args.path.read_text(encoding="utf-8"), args.profile)
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
@@ -178,8 +192,8 @@ def main() -> int:
             )
         counts = report["counts"]
         print(
-            f"errors={counts['errors']} warnings={counts['warnings']} "
-            f"issues={counts['issues']}"
+            f"profiles={','.join(report['profiles'])} errors={counts['errors']} "
+            f"warnings={counts['warnings']} issues={counts['issues']}"
         )
 
     if args.fail_on == "error" and report["counts"]["errors"]:
