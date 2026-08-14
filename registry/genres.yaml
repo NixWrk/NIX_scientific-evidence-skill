@@ -1,0 +1,652 @@
+schema_version: 1
+updated: 2026-08-14
+status: draft
+specialty: "2.2.12"
+design_document: docs/genre-taxonomy.md
+
+# Identifiers and enumerations are Latin and match the style of skills.yaml.
+# required_components stay in Russian where the component is a normative Russian
+# term: translating it would lose precision.
+
+axes:
+  bundle_mode: [qa, literature_review, manuscript, record, null]
+  normativity: [free, conventional, mandated]
+  depth: [paragraph, section, chapter, document]
+  purpose: [report_result, systematize_prior_work, obtain_qualification, record_procedure, acquire_corpus, record_format]
+  audience: [self, supervisor, coauthors, reviewer, editor, council, opponent, conference]
+  evidence_dimensions: [literature, own_results, internal_crossref, organizational]
+  evidence_permission: [required, allowed, forbidden]
+  render_target: [obsidian, ipynb, docx, plain]
+  status: [existing, new, reserved]
+
+families:
+  working: Рабочие и процессные жанры
+  review: Обзорно-аналитические жанры
+  publication: Публикационные жанры
+  qualification: Квалификационные жанры
+  presentation: Устные и визуальные жанры
+  computational: Код и вычисления
+  format: Оформительские жанры
+  acquisition: Приобретение корпуса
+
+invariants:
+  INV-AIM-SINGLE: цель одна и не является перечислением
+  INV-TASK-CONCLUSION-COVERAGE: каждая задача имеет вывод, каждый вывод отвечает задаче
+  INV-PROPOSITION-ANCHOR: каждое положение привязано к разделу и к результату
+  INV-PROPOSITION-NOT-TOPIC: положение сформулировано как утверждение, а не как тема
+  INV-NOVELTY-BOUNDED: новизна заявлена только с указанием границы корпуса
+  INV-CONCLUSION-NO-NEW: заключение не вводит результата, отсутствующего в главах
+  INV-TERM-CONSISTENCY: термины темы, цели, задач и выводов согласованы
+  INV-CROSSREF-RESOLVABLE: каждая внутренняя ссылка разрешается в существующую единицу
+  INV-FIGURE-SOURCE: каждый рисунок и график привязан к результату или к разрешённому входу
+  INV-NUMBER-RESULT: каждое число раздела результатов привязано к записи результата
+  INV-DERIVED-NOTE-MARKED: производная запись помечена и не подменяет публикацию
+  INV-HYPOTHESIS-ATTRIBUTED: у гипотезы указан автор формулировки
+
+genres:
+
+  # --- A. working ------------------------------------------------------------
+
+  - id: qa-corpus
+    family: working
+    status: existing
+    normativity: free
+    depth: section
+    purpose: report_result
+    audience: [self, supervisor]
+    evidence_regime: {literature: required, own_results: allowed, internal_crossref: forbidden, organizational: forbidden}
+    required_components: [прямой ответ, доказательства по подвопросам, противоречия, что установить нельзя]
+    invariants: [INV-NUMBER-RESULT]
+    render_targets: [obsidian, plain]
+    language_profile: genre-qa
+
+  - id: source-card
+    family: working
+    status: existing
+    normativity: free
+    depth: section
+    purpose: systematize_prior_work
+    audience: [self]
+    evidence_regime: {literature: required, own_results: forbidden, internal_crossref: forbidden, organizational: forbidden}
+    required_components: [вопрос, дизайн, выборка, метод, результаты, ограничения, применимость]
+    invariants: [INV-NUMBER-RESULT]
+    render_targets: [obsidian]
+    language_profile: genre-qa
+
+  - id: stage-report
+    family: working
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: record
+    source_count: {min: 1, max: null}
+    normativity: free
+    depth: section
+    purpose: record_procedure
+    audience: [self, supervisor]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: allowed, organizational: allowed}
+    required_components:
+      - выполненные работы за этап
+      - полученные результаты со ссылкой на записи
+      - открытые вопросы
+      - проблемы и препятствия с условием снятия
+      - рабочие гипотезы с указанием автора формулировки
+      - следующий шаг
+    invariants: [INV-NUMBER-RESULT, INV-HYPOTHESIS-ATTRIBUTED, INV-CROSSREF-RESOLVABLE]
+    render_targets: [obsidian, ipynb]
+    language_profile: genre-micro-report
+    notes: Фиксирует уже имеющуюся гипотезу. Порождение новых направлений вне области.
+
+  - id: experiment-description
+    family: working
+    status: new
+    normativity: conventional
+    depth: section
+    purpose: record_procedure
+    audience: [self, supervisor, coauthors]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: allowed, organizational: allowed}
+    required_components:
+      - объект и материалы
+      - приборы, версии и настройки
+      - выполненная процедура
+      - условия и контролируемые факторы
+      - измеряемые величины и единицы
+      - выборка, отбраковка и контроль качества
+      - этические условия, если применимо
+    invariants: [INV-NUMBER-RESULT, INV-CROSSREF-RESOLVABLE]
+    render_targets: [obsidian, ipynb, docx]
+    language_profile: genre-experiment
+    notes: Обязательный этап. Служит единственным входом для методов статьи и главы методов.
+
+  - id: procedure-record
+    family: working
+    status: new
+    normativity: free
+    depth: paragraph
+    purpose: record_procedure
+    audience: [self]
+    evidence_regime: {literature: forbidden, own_results: required, internal_crossref: allowed, organizational: forbidden}
+    required_components: [дата, что выполнено, отклонения от протокола, полученные файлы и версии]
+    invariants: [INV-CROSSREF-RESOLVABLE]
+    render_targets: [obsidian]
+    language_profile: genre-micro-report
+
+  - id: decision-log
+    family: working
+    status: new
+    normativity: free
+    depth: paragraph
+    purpose: record_procedure
+    audience: [self, supervisor]
+    evidence_regime: {literature: allowed, own_results: allowed, internal_crossref: allowed, organizational: forbidden}
+    required_components: [решение, рассмотренные варианты, основание выбора, дата, обратимость]
+    invariants: [INV-CROSSREF-RESOLVABLE]
+    render_targets: [obsidian]
+    language_profile: genre-micro-report
+
+  - id: reproducibility-note
+    family: working
+    status: new
+    normativity: conventional
+    depth: section
+    purpose: record_procedure
+    audience: [self, coauthors, reviewer]
+    evidence_regime: {literature: forbidden, own_results: required, internal_crossref: required, organizational: forbidden}
+    required_components: [входные данные и версии, окружение, порядок запуска, ожидаемый выход, известные расхождения]
+    invariants: [INV-CROSSREF-RESOLVABLE, INV-NUMBER-RESULT]
+    render_targets: [obsidian, ipynb]
+    language_profile: genre-notebook
+
+  # --- B. review -------------------------------------------------------------
+
+  - id: micro-review
+    family: review
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: literature_review
+    source_count: {min: 2, max: 5}
+    normativity: free
+    depth: section
+    purpose: systematize_prior_work
+    audience: [self, supervisor]
+    evidence_regime: {literature: required, own_results: forbidden, internal_crossref: allowed, organizational: forbidden}
+    required_components: [вопрос обзора, граница корпуса, сопоставление, расхождения, что не установлено]
+    invariants: [INV-NUMBER-RESULT]
+    render_targets: [obsidian, ipynb]
+    language_profile: genre-review
+
+  - id: literature-review
+    family: review
+    status: existing
+    normativity: conventional
+    depth: chapter
+    purpose: systematize_prior_work
+    audience: [supervisor, reviewer]
+    evidence_regime: {literature: required, own_results: forbidden, internal_crossref: allowed, organizational: forbidden}
+    required_components: [граница корпуса, тематический синтез, области согласия, противоречия, ограничения доказательств]
+    invariants: [INV-NUMBER-RESULT, INV-CROSSREF-RESOLVABLE]
+    render_targets: [obsidian, docx]
+    language_profile: genre-review
+
+  - id: dissertation-review-chapter
+    family: review
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: chapter
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: required, own_results: forbidden, internal_crossref: required, organizational: forbidden}
+    required_components:
+      - состояние проблемы
+      - сопоставление подходов
+      - выявленный пробел
+      - обоснование постановки задач работы
+      - выводы по главе
+    invariants: [INV-TERM-CONSISTENCY, INV-CROSSREF-RESOLVABLE, INV-NOVELTY-BOUNDED]
+    render_targets: [obsidian, docx]
+    language_profile: genre-dissertation
+    notes: Отличается от literature-review функцией — обосновывает задачи собственной работы.
+
+  - id: systematic-review
+    family: review
+    status: existing
+    normativity: mandated
+    depth: chapter
+    purpose: systematize_prior_work
+    audience: [reviewer, editor]
+    evidence_regime: {literature: required, own_results: forbidden, internal_crossref: allowed, organizational: allowed}
+    required_components: [записи поиска, критерии отбора, схема отбора, оценка риска систематической ошибки, синтез]
+    invariants: [INV-NUMBER-RESULT, INV-CROSSREF-RESOLVABLE]
+    render_targets: [docx]
+    language_profile: genre-review
+    notes: Допускается только при предоставленных записях поиска и отбора.
+
+  - id: method-comparison-matrix
+    family: review
+    status: existing
+    normativity: free
+    depth: section
+    purpose: systematize_prior_work
+    audience: [self, supervisor]
+    evidence_regime: {literature: required, own_results: allowed, internal_crossref: allowed, organizational: forbidden}
+    required_components: [одинаковый набор полей для каждого метода, условия применимости, ограничения]
+    invariants: [INV-NUMBER-RESULT]
+    render_targets: [obsidian, ipynb]
+    language_profile: genre-review
+    notes: Существует внутри literature-review как перекрёстная матрица, отдельным жанром не оформлен.
+
+  # --- C. publication --------------------------------------------------------
+
+  - id: journal-article
+    family: publication
+    status: existing
+    normativity: conventional
+    depth: document
+    purpose: report_result
+    audience: [reviewer, editor]
+    evidence_regime: {literature: required, own_results: required, internal_crossref: required, organizational: allowed}
+    required_components: [аннотация, введение, методы, результаты, обсуждение, заключение, источники]
+    invariants: [INV-NUMBER-RESULT, INV-CONCLUSION-NO-NEW, INV-FIGURE-SOURCE, INV-CROSSREF-RESOLVABLE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-article
+
+  - id: short-communication
+    family: publication
+    status: new
+    normativity: conventional
+    depth: document
+    purpose: report_result
+    audience: [reviewer, editor]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: allowed, organizational: allowed}
+    required_components: [постановка, выполненное, главный результат, ограничение]
+    invariants: [INV-NUMBER-RESULT, INV-CONCLUSION-NO-NEW, INV-FIGURE-SOURCE]
+    render_targets: [docx]
+    language_profile: genre-article
+
+  - id: conference-abstract
+    family: publication
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: report_result
+    audience: [conference]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: forbidden, organizational: allowed}
+    required_components: [цель, метод, главный результат с числом, значение]
+    invariants: [INV-NUMBER-RESULT, INV-CONCLUSION-NO-NEW]
+    render_targets: [docx, plain]
+    language_profile: genre-abstract
+    notes: Жёсткий предел объёма из требований сборника. Одна мысль на текст.
+
+  - id: article-annotation
+    family: publication
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: qa
+    source_count: {min: 1, max: 1}
+    normativity: free
+    depth: paragraph
+    purpose: systematize_prior_work
+    audience: [self]
+    evidence_regime: {literature: required, own_results: forbidden, internal_crossref: forbidden, organizational: forbidden}
+    required_components:
+      - что выполнено в работе
+      - чем работа полезна для текущего исследования
+      - границы применимости
+      - отметка производности с идентификатором и версией источника
+    invariants: [INV-DERIVED-NOTE-MARKED, INV-NUMBER-RESULT]
+    render_targets: [obsidian, plain]
+    language_profile: genre-micro-report
+    notes: >-
+      Предназначена для заметки в Zotero. Скилл готовит текст; запись в Zotero
+      выполняет человек или адаптер. Производная запись не подменяет публикацию.
+
+  - id: reviewer-response
+    family: publication
+    status: new
+    normativity: mandated
+    depth: document
+    purpose: report_result
+    audience: [reviewer, editor]
+    evidence_regime: {literature: allowed, own_results: allowed, internal_crossref: required, organizational: forbidden}
+    required_components:
+      - замечание дословно
+      - ответ по существу
+      - внесённая правка
+      - локатор правки в рукописи
+      - обоснование при отказе от правки
+    invariants: [INV-CROSSREF-RESOLVABLE, INV-NUMBER-RESULT]
+    render_targets: [docx, obsidian]
+    language_profile: genre-article
+
+  - id: poster
+    family: publication
+    status: new
+    normativity: conventional
+    depth: document
+    purpose: report_result
+    audience: [conference]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: forbidden, organizational: allowed}
+    required_components: [постановка, метод, результаты в виде иллюстраций, вывод, контакты]
+    invariants: [INV-FIGURE-SOURCE, INV-NUMBER-RESULT]
+    render_targets: [plain]
+    language_profile: genre-abstract
+
+  # --- D. qualification ------------------------------------------------------
+
+  - id: dissertation
+    family: qualification
+    status: new
+    normativity: mandated
+    depth: document
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: required, own_results: required, internal_crossref: required, organizational: required}
+    required_components: [оглавление, введение, главы, заключение, список литературы, приложения]
+    invariants:
+      - INV-AIM-SINGLE
+      - INV-TASK-CONCLUSION-COVERAGE
+      - INV-TERM-CONSISTENCY
+      - INV-CROSSREF-RESOLVABLE
+      - INV-CONCLUSION-NO-NEW
+      - INV-NUMBER-RESULT
+      - INV-FIGURE-SOURCE
+      - INV-NOVELTY-BOUNDED
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+    notes: Состав частей уточняется карточкой нормативного документа, пока не построенной.
+
+  - id: dissertation-introduction
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: chapter
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: required, own_results: allowed, internal_crossref: required, organizational: required}
+    required_components:
+      - актуальность темы
+      - степень разработанности
+      - цель и задачи
+      - научная новизна
+      - теоретическая и практическая значимость
+      - методология и методы
+      - положения, выносимые на защиту
+      - степень достоверности и апробация
+    invariants: [INV-AIM-SINGLE, INV-NOVELTY-BOUNDED, INV-PROPOSITION-ANCHOR, INV-TERM-CONSISTENCY, INV-CROSSREF-RESOLVABLE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+    notes: Состав подразделов подлежит подтверждению карточкой нормативного документа.
+
+  - id: dissertation-methods-chapter
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: chapter
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: required, organizational: allowed}
+    required_components: [объекты и материалы, приборы и модели, выполненные процедуры, обработка данных, выводы по главе]
+    invariants: [INV-CROSSREF-RESOLVABLE, INV-NUMBER-RESULT, INV-TERM-CONSISTENCY]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+    notes: Единственный допустимый вход — записи experiment-description и procedure-record.
+
+  - id: dissertation-results-chapter
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: chapter
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: forbidden, own_results: required, internal_crossref: required, organizational: forbidden}
+    required_components: [результаты в порядке задач, отрицательные результаты с установленной причиной, выводы по главе]
+    invariants: [INV-NUMBER-RESULT, INV-FIGURE-SOURCE, INV-CROSSREF-RESOLVABLE, INV-TASK-CONCLUSION-COVERAGE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+
+  - id: dissertation-synthesis-chapter
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: chapter
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: required, own_results: required, internal_crossref: required, organizational: forbidden}
+    required_components: [интерпретация, сопоставление с литературой, ограничения, выводы по главе]
+    invariants: [INV-CROSSREF-RESOLVABLE, INV-NUMBER-RESULT, INV-TERM-CONSISTENCY]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+
+  - id: dissertation-conclusion
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: chapter
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: forbidden, own_results: required, internal_crossref: required, organizational: forbidden}
+    required_components: [нумерованные выводы по задачам, практические рекомендации, направления дальнейшей работы]
+    invariants: [INV-TASK-CONCLUSION-COVERAGE, INV-CONCLUSION-NO-NEW, INV-TERM-CONSISTENCY, INV-CROSSREF-RESOLVABLE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+
+  - id: defense-propositions
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: paragraph
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: forbidden, own_results: required, internal_crossref: required, organizational: forbidden}
+    required_components: [нумерованные утверждения, привязка каждого к разделу и результату]
+    invariants: [INV-PROPOSITION-ANCHOR, INV-PROPOSITION-NOT-TOPIC, INV-TERM-CONSISTENCY, INV-CROSSREF-RESOLVABLE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+    notes: Положение обязано быть опровержимым и не повторять вывод дословно.
+
+  - id: novelty-statement
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: paragraph
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: required, own_results: required, internal_crossref: required, organizational: forbidden}
+    required_components: [новизна с границей корпуса, теоретическая значимость, практическая значимость]
+    invariants: [INV-NOVELTY-BOUNDED, INV-PROPOSITION-ANCHOR, INV-CROSSREF-RESOLVABLE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+
+  - id: thesis-synopsis
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: document
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: required, organizational: required}
+    required_components: [общая характеристика работы, основное содержание, заключение, список работ автора]
+    invariants: [INV-TERM-CONSISTENCY, INV-CONCLUSION-NO-NEW, INV-CROSSREF-RESOLVABLE, INV-NUMBER-RESULT]
+    render_targets: [docx]
+    language_profile: genre-dissertation
+    notes: Не может содержать утверждения, отсутствующего в диссертации.
+
+  - id: approbation-record
+    family: qualification
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: obtain_qualification
+    audience: [council]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: allowed, organizational: required}
+    required_components: [доклады на конференциях, публикации, свидетельства о регистрации, акты внедрения]
+    invariants: [INV-CROSSREF-RESOLVABLE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+    notes: Организационная запись не подкрепляет научное утверждение.
+
+  # --- E. presentation -------------------------------------------------------
+
+  - id: stage-presentation
+    family: presentation
+    status: new
+    normativity: free
+    depth: document
+    purpose: report_result
+    audience: [supervisor, coauthors]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: allowed, organizational: allowed}
+    required_components:
+      - задача этапа
+      - выполненное
+      - результаты в виде иллюстраций и графиков
+      - препятствия и открытые вопросы
+      - следующий шаг
+    invariants: [INV-FIGURE-SOURCE, INV-NUMBER-RESULT, INV-CROSSREF-RESOLVABLE]
+    render_targets: [obsidian, plain]
+    language_profile: genre-presentation
+    notes: График строится только из записи результата. Иллюстрация без входа не создаётся.
+
+  - id: defense-presentation
+    family: presentation
+    parent: dissertation
+    status: new
+    normativity: mandated
+    depth: document
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: required, organizational: required}
+    required_components: [актуальность, цель и задачи, методы, результаты, положения на защиту, выводы, апробация]
+    invariants: [INV-TASK-CONCLUSION-COVERAGE, INV-PROPOSITION-ANCHOR, INV-FIGURE-SOURCE, INV-CONCLUSION-NO-NEW]
+    render_targets: [plain]
+    language_profile: genre-presentation
+
+  - id: speaker-notes
+    family: presentation
+    status: new
+    normativity: free
+    depth: paragraph
+    purpose: report_result
+    audience: [self]
+    evidence_regime: {literature: forbidden, own_results: allowed, internal_crossref: required, organizational: forbidden}
+    required_components: [текст на слайд, отметка времени, переход к следующему слайду]
+    invariants: [INV-CROSSREF-RESOLVABLE]
+    render_targets: [obsidian, plain]
+    language_profile: genre-presentation
+
+  # --- F. computational ------------------------------------------------------
+
+  - id: notebook-narrative
+    family: computational
+    status: new
+    normativity: free
+    depth: section
+    purpose: record_procedure
+    audience: [self, coauthors]
+    evidence_regime: {literature: allowed, own_results: required, internal_crossref: required, organizational: forbidden}
+    required_components: [задача ячейки, вход, выполняемое действие, наблюдаемый выход, вывод]
+    invariants: [INV-NUMBER-RESULT, INV-CROSSREF-RESOLVABLE, INV-FIGURE-SOURCE]
+    render_targets: [ipynb, obsidian]
+    language_profile: genre-notebook
+    notes: Двойные квадратные скобки в тетради не разрешаются, ссылка выводится обычной.
+
+  - id: code-commentary
+    family: computational
+    status: new
+    normativity: free
+    depth: paragraph
+    purpose: record_procedure
+    audience: [self, coauthors]
+    evidence_regime: {literature: forbidden, own_results: allowed, internal_crossref: allowed, organizational: forbidden}
+    required_components: [назначение, вход и выход с единицами, допущения, известные ограничения]
+    invariants: [INV-CROSSREF-RESOLVABLE]
+    render_targets: [ipynb, plain]
+    language_profile: genre-notebook
+    notes: >-
+      Правила применяются только к прозаическим областям — текстовым ячейкам,
+      строкам документации и комментариям. Исполняемый код не редактируется.
+
+  # --- G. format -------------------------------------------------------------
+
+  - id: journal-format-analysis
+    family: format
+    status: existing
+    normativity: mandated
+    depth: document
+    purpose: record_format
+    audience: [self]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: forbidden, organizational: forbidden}
+    required_components: [происхождение образца с хешем, наблюдённые особенности, явно ненаблюдённые элементы, версия записи]
+    invariants: [INV-DERIVED-NOTE-MARKED]
+    render_targets: [plain]
+    language_profile: genre-micro-report
+    notes: Образец журнала — свидетельство об оформлении, но не научный источник.
+
+  - id: format-requirement-update
+    family: format
+    parent: journal-format-analysis
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: record_format
+    audience: [self, editor]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: forbidden, organizational: required}
+    required_components:
+      - источник требования — письмо редакции или замечание рецензента
+      - дословная формулировка требования
+      - затронутая особенность карточки
+      - новая версия записи
+      - конфликт с ранее наблюдённым, если он есть
+    invariants: [INV-DERIVED-NOTE-MARKED]
+    render_targets: [plain]
+    language_profile: genre-micro-report
+    notes: Прежняя версия карточки сохраняется, конфликт раскрывается, а не затирается.
+
+  - id: normative-pattern-analysis
+    family: format
+    status: reserved
+    normativity: mandated
+    depth: document
+    purpose: record_format
+    audience: [self, council]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: forbidden, organizational: required}
+    required_components: [происхождение документа с хешем, наблюдённые требования, ненаблюдённое, версия]
+    invariants: [INV-DERIVED-NOTE-MARKED]
+    render_targets: [plain]
+    language_profile: genre-micro-report
+    notes: Отложено. До построения карточки требования совета и стандартов не считаются установленными.
+
+  # --- H. acquisition --------------------------------------------------------
+
+  - id: similar-work-search
+    family: acquisition
+    status: new
+    normativity: free
+    depth: section
+    purpose: acquire_corpus
+    audience: [self]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: forbidden, organizational: required}
+    required_components:
+      - запрос и его основание
+      - использованные источники поиска и дата
+      - найденные кандидаты с идентификаторами
+      - доступность полного текста и её проверка
+      - что осталось ненайденным
+    invariants: [INV-DERIVED-NOTE-MARKED]
+    render_targets: [obsidian, plain]
+    language_profile: genre-micro-report
+    policy:
+      network: allowed_outside_corpus_processing
+      runs_inside_processing_task: forbidden
+      output: candidate_set_with_provenance
+    notes: >-
+      Приобретение корпуса, а не обработка. Выполняется до задачи обработки и
+      никогда изнутри неё. Форма результата не определена.
