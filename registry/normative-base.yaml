@@ -1,0 +1,390 @@
+schema_version: 1
+updated: 2026-08-14
+design_document: docs/normative-base.md
+
+target:
+  specialty: "2.2.12"
+  specialty_title: Приборы, системы и изделия медицинского назначения
+  organization: МГТУ им. Н. Э. Баумана
+  council: "24.2.331.09"
+
+# Designations, editions, and current status were established by the user on
+# 2026-08-14 against the official registries named in each `source`. This file
+# records pointers and priority, not requirements: a rule is established only
+# after a normative-pattern-analysis card is built from the file itself, with
+# its hash and its explicitly unobserved parts. Nothing here may be treated as
+# an extracted requirement.
+provenance:
+  designations_verified_by: user
+  designations_verified_on: 2026-08-14
+  requirements_extracted: false
+  blocking_gap: normative-pattern-analysis genre is reserved, not implemented
+
+# Lower tier wins. The order is the point of this file: it is what lets a
+# conflict be resolved without argument.
+priority_tiers:
+  1: federal_law
+  2: specialty_passport
+  3: council_local
+  4: dissertation_structure_standard
+  5: formatting_standard
+  6: medical_device_standard
+  7: defended_example
+
+conflict_resolution:
+  - Меньший номер уровня побеждает.
+  - Образец защищённой работы никогда не переопределяет действующий норматив.
+  - Один образец показывает практику этого образца, а не правило совета.
+  - ГОСТ 7.32-2017 применяется только там, где на него ссылается документ совета.
+  - Область ГОСТ Р 7.0.5-2008 и область ГОСТ Р 7.0.100-2018 различны и не сливаются в один набор правил.
+  - Объём автореферата берётся из требований совета, а не из числа страниц в образце.
+
+acquisition_states: [needed, located, obtained, carded]
+
+documents:
+
+  # --- tier 1: federal law -------------------------------------------------
+
+  - id: PP-842
+    title: Положение о присуждении учёных степеней
+    authority: Постановление Правительства РФ от 24.09.2013 № 842
+    tier: 1
+    edition: "18.07.2026"
+    status: in_force
+    source: https://www.consultant.ru/document/cons_doc_LAW_152458/
+    scope: [требования к диссертации, требования к публикациям, процедура защиты, состав совета]
+    rules_to_extract:
+      - критерии, которым должна отвечать диссертация
+      - минимальное число публикаций с основными результатами
+      - условия приравнивания результатов интеллектуальной деятельности к публикациям
+    notes: >-
+      По вопросам самой диссертации и процедуры защиты имеет приоритет над
+      оформительскими стандартами. Для технических наук минимум публикаций —
+      не менее двух; повышенный минимум в три установлен для перечисленных
+      гуманитарных и общественных отраслей и к 2.2.12 не относится. Проверка
+      числа публикаций недостаточна: издание должно удовлетворять требованиям
+      к рецензируемым научным изданиям.
+    acquisition: located
+
+  # --- tier 2: specialty passport ------------------------------------------
+
+  - id: PASSPORT-2.2.12
+    title: Паспорт научной специальности 2.2.12
+    authority: ВАК
+    tier: 2
+    edition: null
+    status: in_force
+    source: https://vak.gisnauka.ru/search-analytical-system/reference-materials
+    scope: [области исследований, соответствие темы, соответствие цели и задач, новизна, положения на защиту]
+    rules_to_extract:
+      - перечень областей исследований специальности
+      - формулировки, по которым проверяется соответствие темы и положений
+    acquisition: located
+
+  - id: VAK-EDITIONS
+    title: Перечень рецензируемых научных изданий
+    authority: ВАК
+    tier: 2
+    edition: null
+    status: in_force
+    source: https://vak.gisnauka.ru/documents/editions
+    scope: [проверка публикаций, категории изданий]
+    rules_to_extract:
+      - действующий состав перечня и категории изданий на дату проверки
+    notes: Состав и категории изменяются; дата обращения фиксируется в карточке.
+    acquisition: located
+
+  # --- tier 3: council and organization ------------------------------------
+
+  - id: BMSTU-DS-24.2.331.09
+    title: Состав диссертационного совета 24.2.331.09
+    authority: Учёный совет МГТУ им. Н. Э. Баумана
+    tier: 3
+    edition: null
+    status: in_force
+    source: https://uchsov.bmstu.ru/uhstsostav.htm
+    scope: [идентификация совета, соответствие специальности]
+    rules_to_extract: [состав совета, закреплённые специальности]
+    acquisition: located
+
+  - id: BMSTU-DISS-REQ
+    title: Требования к оформлению диссертаций Учёного совета МГТУ
+    authority: Учёный совет МГТУ им. Н. Э. Баумана
+    tier: 3
+    edition: null
+    status: in_force
+    source: https://uchsov.bmstu.ru/uhstnorm_tr.htm
+    scope: [нумерация страниц, оформление текста, библиографический аппарат, объём автореферата]
+    rules_to_extract:
+      - локальные обязательные правила оформления
+      - отсылки к внешним стандартам и их границы
+    notes: >-
+      Основной локальный оформительский документ. Для списка литературы и
+      списка опубликованных работ отсылает к ГОСТ Р 7.0.5-2008. Машиночитаемая
+      версия требований опубликована отдельным файлом DOCX
+      (https://mf.bmstu.ru/assets/info/dissovet/requirements/docs/diss_bmstu_requirements.docx).
+    acquisition: located
+
+  - id: BMSTU-LIB-DISS
+    title: Требования научно-технической библиотеки к сдаче диссертационных материалов
+    authority: НТБ МГТУ им. Н. Э. Баумана
+    tier: 3
+    edition: null
+    status: in_force
+    source: https://library.bmstu.ru/Pages/About/Dissertations
+    scope: [число экземпляров, переплёт, подписи на титульных листах, сроки сдачи]
+    rules_to_extract: [физические требования к экземплярам, срок сдачи до защиты]
+    notes: >-
+      По объёму автореферата отсылает к конкретному совету. Жёсткое число
+      страниц из этого документа не выводится.
+    acquisition: located
+
+  - id: BMSTU-TITLE
+    title: Титульный лист диссертации, образец
+    authority: МГТУ им. Н. Э. Баумана
+    tier: 3
+    edition: null
+    status: institutional_example
+    council_specific: false
+    source: https://mf.bmstu.ru/assets/info/dissovet/applicant/docs/2022.12.20/dissertation_title_page.docx
+    scope: [состав реквизитов титульного листа]
+    rules_to_extract: [наблюдаемые реквизиты и их порядок]
+    notes: >-
+      Опубликован разделом Мытищинского филиала. Институциональный образец, а не
+      подтверждённая форма совета 24.2.331.09. Более надёжный эталон титульного
+      листа берётся из принятой работы этого совета.
+    acquisition: located
+
+  - id: BMSTU-REVIEW-TEMPLATES
+    title: Схемы отзывов, заключений и сопроводительных документов
+    authority: МГТУ им. Н. Э. Баумана
+    tier: 3
+    edition: null
+    status: institutional_example
+    council_specific: false
+    source: https://mf.bmstu.ru/info/dissovet/applicant/
+    scope: [отзыв ведущей организации, отзыв руководителя, сведения об оппонентах, проект заключения, стенограмма]
+    rules_to_extract: [состав и порядок разделов сопроводительных документов]
+    acquisition: located
+
+  - id: BMSTU-ETHICS
+    title: Положение об этическом комитете и форма информированного согласия
+    authority: МГТУ им. Н. Э. Баумана
+    tier: 3
+    edition: null
+    status: not_located
+    source: null
+    scope: [исследования с участием человека]
+    rules_to_extract: [условия одобрения, состав пакета документов]
+    notes: >-
+      Публично индексируемое положение не найдено. Правило для скилла: при
+      исследовании с участием людей нельзя автоматически требовать заключение
+      этического комитета МГТУ. Необходимо установить организацию, на базе
+      которой фактически выполнялся эксперимент, и её локальный комитет. Для
+      2.2.12 экспериментальная часть часто выполняется совместно с клиникой.
+    acquisition: needed
+
+  # --- tier 4: dissertation structure --------------------------------------
+
+  - id: GOST-R-7.0.11-2011
+    title: Диссертация и автореферат диссертации. Структура и правила оформления
+    authority: Росстандарт
+    tier: 4
+    edition: "2011"
+    status: in_force
+    source: https://protect.gost.ru/gost/details/80cb3ff3-6f82-4267-9122-0873213d8d53
+    scope: [структура диссертации, структура автореферата, состав обязательных частей введения]
+    rules_to_extract:
+      - перечень структурных частей работы и их порядок
+      - обязательные подразделы введения
+      - структура автореферата
+    notes: Основной источник состава частей. До построения карточки состав частей не считается установленным.
+    acquisition: located
+
+  # --- tier 5: formatting standards ----------------------------------------
+
+  - id: GOST-R-7.0.5-2008
+    title: Библиографическая ссылка
+    authority: Росстандарт
+    tier: 5
+    edition: "2008"
+    status: in_force
+    source: https://protect.gost.ru/gost/details/2eef7820-44bc-49a4-bf1f-fe51c54039dc
+    scope: [внутритекстовые ссылки, подстрочные ссылки, затекстовые ссылки]
+    rules_to_extract: [формы ссылок и правила их размещения]
+    notes: Область не совпадает с ГОСТ Р 7.0.100-2018; наборы правил не объединяются.
+    acquisition: located
+
+  - id: GOST-R-7.0.100-2018
+    title: Библиографическая запись. Библиографическое описание
+    authority: Росстандарт
+    tier: 5
+    edition: "2018"
+    status: in_force
+    amendments: ИУС 3-2020
+    source: https://protect.gost.ru/gost/details/389dfd5a-535a-458a-81c3-14b729b1cee1
+    scope: [библиографическое описание источников]
+    rules_to_extract: [структура описания по видам документов]
+    acquisition: located
+
+  - id: GOST-7.32-2017
+    title: Отчёт о научно-исследовательской работе. Структура и правила оформления
+    authority: Росстандарт
+    tier: 5
+    edition: "2017"
+    status: in_force
+    replaces: ГОСТ 7.32-2001
+    source: https://protect.gost.ru/gost/details/7d280e43-7036-4a69-8e6e-d15867028343
+    scope: [таблицы, рисунки, формулы, приложения]
+    rules_to_extract: [правила оформления таблиц, рисунков, формул и приложений]
+    conditional: Применяется только там, где на него ссылается документ совета.
+    acquisition: located
+
+  - id: GOST-8.417-2024
+    title: Государственная система обеспечения единства измерений. Единицы величин
+    authority: Росстандарт
+    tier: 5
+    edition: "2024"
+    status: in_force
+    in_force_since: "2024-09-30"
+    replaces: ГОСТ 8.417-2002
+    amendments: опубликованы
+    source: https://protect.gost.ru/gost/details/fa1165d5-0547-429a-9c3e-f16f4bdb101f
+    scope: [единицы СИ, обозначения единиц, написание единиц]
+    rules_to_extract: [допустимые обозначения и правила написания единиц]
+    notes: >-
+      Фиксируется конкретное обозначение, а не формула «в актуальной редакции».
+      Статус перепроверяется при обновлении нормативной базы: поправки уже есть.
+    acquisition: located
+
+  # --- tier 6: medical device standards ------------------------------------
+
+  - id: GOST-R-ISO-14155-2022
+    title: Клинические исследования медицинских изделий с участием человека. Надлежащая клиническая практика
+    authority: Росстандарт
+    tier: 6
+    edition: "2022"
+    status: in_force
+    in_force_since: "2023-09-01"
+    source: https://protect.gost.ru/gost/details/b8cd9a61-5f63-443b-a69e-3ac82313d10b
+    scope: [клинические исследования медицинских изделий с участием человека]
+    rules_to_extract: [требования к протоколу и к описанию проведённого исследования]
+    applicability: Только при клиническом исследовании с участием человека.
+    acquisition: located
+
+  - id: GOST-ISO-14971-2021
+    title: Изделия медицинские. Применение менеджмента риска к медицинским изделиям
+    authority: Росстандарт
+    tier: 6
+    edition: "2021"
+    status: in_force
+    source: https://protect.gost.ru/gost/details/fc5f8123-88dd-4608-b1d0-aa23526a3b8e
+    scope: [менеджмент риска медицинского изделия]
+    rules_to_extract: [состав документации менеджмента риска]
+    notes: Действующее обозначение — ГОСТ ISO, не ГОСТ Р ИСО.
+    applicability: Только если предмет работы — медицинское изделие.
+    acquisition: located
+
+  - id: GOST-IEC-60601-1-2024
+    title: Изделия медицинские электрические. Общие требования безопасности с учётом основных функциональных характеристик
+    authority: Росстандарт
+    tier: 6
+    edition: "2024"
+    status: in_force
+    in_force_since: "2025-10-01"
+    replaces: ГОСТ Р МЭК 60601-1-2022
+    source: https://protect.gost.ru/gost/details/590e2759-7777-45ca-923a-d39f5296ab37
+    scope: [электробезопасность медицинских электрических изделий]
+    rules_to_extract: [общие требования и точки ветвления на частные стандарты]
+    applicability: >-
+      Дерево применимости, а не единственная проверка. Общий стандарт задаёт
+      базу, после чего по виду изделия определяются дополнительные и частные
+      стандарты серий IEC 60601 и 80601: электромагнитная совместимость,
+      программируемые системы, конкретное диагностическое или терапевтическое
+      оборудование.
+    acquisition: located
+
+  # --- tier 7: defended examples -------------------------------------------
+
+  - id: EXAMPLE-SATANENKO-2026
+    title: Разработка метода и средств контроля биопсии новообразования молочной железы на основе измерения электрического импеданса
+    authority: А. А. Сатаненко, совет 24.2.331.09
+    tier: 7
+    edition: "2026"
+    status: defended_example
+    council_specific: true
+    role: primary
+    source: https://library.bmstu.ru/
+    scope: [структура автореферата, последовательность разделов, практика совета]
+    rules_to_extract:
+      - последовательность блоков автореферата
+      - формулировки новизны, значимости и положений на защиту
+      - практика оформления титульного листа принятой работы
+    notes: >-
+      Основной современный эталон: 2.2.12, МГТУ, совет 24.2.331.09, защита
+      назначена на 25.03.2026, предметно близок к медицинским измерениям.
+      Указаны шесть публикаций, три из них в изданиях перечня ВАК — это
+      наблюдение практики, а не норматив.
+    acquisition: located
+
+  - id: EXAMPLE-SEMCHUK-2022
+    title: Биотехническая система видеоплетизмографического мониторинга сердечного ритма
+    authority: И. П. Семчук, совет 24.2.331.09
+    tier: 7
+    edition: "2022"
+    status: defended_example
+    council_specific: true
+    role: control
+    source: https://library.bmstu.ru/Authors/Details/f161f544-afa1-4cce-b54b-70a49fbfbb49
+    scope: [полная диссертация и автореферат]
+    rules_to_extract: [устойчивые локальные шаблоны совета в отличие от особенностей одной работы]
+    acquisition: located
+
+  - id: EXAMPLE-MANSUROV-2023
+    title: Разработка системы аппланационной тонометрии
+    authority: Г. К. Мансуров, совет 24.2.331.09
+    tier: 7
+    edition: "2023"
+    status: defended_example
+    council_specific: true
+    role: control
+    source: https://library.bmstu.ru/DigitalResources/Download/84965
+    scope: [приборно-медицинский образец, патенты в апробации]
+    rules_to_extract: [разделы новизны, положений, практической значимости, публикаций и патентов]
+    notes: Содержит три патента РФ — полезен для проверки правил приравнивания результатов к публикациям.
+    acquisition: located
+
+  - id: ZOTERO-HERT-LUNG-GENERATIONS
+    title: Кандидатские диссертации направления, коллекция Zotero
+    authority: Тихомиров, Кирпиченко, Малахов, Морозов, Тимохин
+    tier: 7
+    edition: null
+    status: defended_example
+    council_specific: true
+    role: control
+    source: "zotero://hert_lung/знания прошлых поколений"
+    scope: [образцы диссертаций направления и совета]
+    rules_to_extract: [устойчивые шаблоны совета на большей выборке]
+    notes: >-
+      Zotero MCP не подключён к рабочей сессии Claude Code, поэтому коллекция
+      пока не прочитана.
+    acquisition: needed
+
+# --- separate module: intellectual property ---------------------------------
+# Kept apart from dissertation formatting on purpose: these are registration
+# procedures, not text rules, and they feed the publication count as well as
+# the approbation record.
+intellectual_property:
+  - id: ROSPATENT-SOFTWARE
+    title: Государственная регистрация программы для ЭВМ или базы данных
+    authority: Роспатент, ФИПС
+    regulation: Приказ Минэкономразвития России от 05.04.2016 № 211
+    source: https://rospatent.gov.ru/ru/stateservices/gosudarstvennaya-registraciya-programmy-dlya-elektronnyh-vychislitelnyh-mashin-ili-bazy-dannyh-i-vydacha-svidetelstv-o-gosudarstvennoy-registracii-programmy-dlya-elektronnyh-vychislitelnyh-mashin-ili-bazy-dannyh-ih-dublikatov
+    acquisition: located
+
+  - id: ROSPATENT-INVENTION
+    title: Государственная регистрация изобретения и выдача патента
+    authority: Роспатент
+    regulation: Приказ Минэкономразвития России от 21.02.2023 № 107
+    source: https://rospatent.gov.ru/ru/stateservices/gosudarstvennaya-registraciya-izobreteniya-i-vydacha-patenta-na-izobretenie-ego-dublikata
+    acquisition: located

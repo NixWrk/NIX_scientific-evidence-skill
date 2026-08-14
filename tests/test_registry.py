@@ -22,6 +22,7 @@ _SPEC.loader.exec_module(VALIDATOR)
 REGISTRY = yaml.safe_load((ROOT / "registry" / "skills.yaml").read_text(encoding="utf-8"))
 QUEUE = yaml.safe_load((ROOT / "registry" / "skill-test-queue.yaml").read_text(encoding="utf-8"))
 GENRES = yaml.safe_load((ROOT / "registry" / "genres.yaml").read_text(encoding="utf-8"))
+NORMATIVE = yaml.safe_load((ROOT / "registry" / "normative-base.yaml").read_text(encoding="utf-8"))
 EXPERIMENT_IDS = {
     path.name.split("-", maxsplit=2)[0] + "-" + path.name.split("-", maxsplit=2)[1]
     for path in (ROOT / "experiments").iterdir()
@@ -173,6 +174,50 @@ def test_declared_bundle_modes_are_known() -> None:
     for genre in GENRES["genres"]:
         if "bundle_mode" in genre:
             assert genre["bundle_mode"] in GENRES["axes"]["bundle_mode"], genre["id"]
+
+
+def test_normative_documents_are_uniquely_identified_and_tiered() -> None:
+    tiers = NORMATIVE["priority_tiers"]
+    ids = [document["id"] for document in NORMATIVE["documents"]]
+
+    assert len(ids) == len(set(ids))
+    assert sorted(tiers) == list(range(1, len(tiers) + 1))
+    for document in NORMATIVE["documents"]:
+        assert document["tier"] in tiers, document["id"]
+        assert document["acquisition"] in NORMATIVE["acquisition_states"], document["id"]
+        assert document["scope"], document["id"]
+        assert document["rules_to_extract"], document["id"]
+
+
+def test_normative_registry_claims_no_extracted_requirements() -> None:
+    """The registry holds pointers.
+
+    A requirement counts as established only once a normative-pattern card is
+    built from the file itself, and that genre is still reserved. Flipping this
+    flag without implementing the genre would let the skills treat a recollection
+    as a rule.
+    """
+
+    provenance = NORMATIVE["provenance"]
+    reserved = {
+        genre["id"]: genre["status"]
+        for genre in GENRES["genres"]
+        if genre["id"] == "normative-pattern-analysis"
+    }
+
+    assert provenance["requirements_extracted"] is False
+    assert provenance["designations_verified_by"] == "user"
+    assert reserved == {"normative-pattern-analysis": "reserved"}
+
+
+def test_a_defended_example_never_outranks_a_normative_document() -> None:
+    tiers = NORMATIVE["priority_tiers"]
+    example_tier = next(tier for tier, name in tiers.items() if name == "defended_example")
+
+    assert example_tier == max(tiers)
+    for document in NORMATIVE["documents"]:
+        if document.get("status") == "defended_example":
+            assert document["tier"] == example_tier, document["id"]
 
 
 def test_corpus_acquisition_stays_outside_processing() -> None:
