@@ -10,6 +10,7 @@ import importlib.util
 import re
 from pathlib import Path
 
+import pytest
 import yaml
 
 
@@ -208,6 +209,82 @@ def test_normative_registry_claims_no_extracted_requirements() -> None:
     assert provenance["requirements_extracted"] is False
     assert provenance["designations_verified_by"] == "user"
     assert reserved == {"normative-pattern-analysis": "reserved"}
+
+
+def test_holdings_and_acquisition_states_agree() -> None:
+    """Holding a file and saying so must not drift apart."""
+
+    holdings = {
+        key: value
+        for key, value in NORMATIVE["holdings"].items()
+        if isinstance(value, dict)
+    }
+    states = {document["id"]: document["acquisition"] for document in NORMATIVE["documents"]}
+
+    for document_id, holding in holdings.items():
+        if document_id not in states:
+            continue
+        assert states[document_id] in {"obtained", "carded"}, document_id
+        assert holding["kind"] in {"document", "catalogue_card", "index_page"}, document_id
+    for document_id, state in states.items():
+        if state in {"obtained", "carded"}:
+            assert document_id in holdings, f"{document_id} claims a file it does not record"
+
+
+def test_a_catalogue_card_is_not_recorded_as_the_standard() -> None:
+    """A Rosstandart card carries designation and status, never the requirements.
+
+    Recording one as a document would let the skills believe the text is in
+    hand when only its registry entry is.
+    """
+
+    holdings = NORMATIVE["holdings"]
+
+    for document in NORMATIVE["documents"]:
+        holding = holdings.get(document["id"])
+        if not isinstance(holding, dict):
+            continue
+        if document["id"].startswith("GOST"):
+            assert holding["kind"] == "catalogue_card", document["id"]
+            assert "не получен" in holding["note"], document["id"]
+
+
+def test_recorded_hashes_match_the_local_files() -> None:
+    """Verifies the store when it is present; skips where it is not.
+
+    The files are deliberately outside the repository, so this check only runs
+    on a machine that holds them.
+    """
+
+    store = ROOT / NORMATIVE["local_store"]["path"]
+    if not store.is_dir():
+        pytest.skip("normative store is not present on this machine")
+
+    checked = 0
+    for holding in NORMATIVE["holdings"].values():
+        if not isinstance(holding, dict):
+            continue
+        for entry in holding.get("files", []):
+            path = store / entry["name"]
+            if not path.is_file():
+                pytest.skip(f"{entry['name']} is not present")
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            assert digest == entry["sha256"], entry["name"]
+            assert path.stat().st_size == entry["bytes"], entry["name"]
+            checked += 1
+
+    assert checked, "holdings record no files"
+
+
+def test_the_normative_store_is_not_committed() -> None:
+    """Standards carry their own terms of use; only hashes belong in git."""
+
+    ignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    store = NORMATIVE["local_store"]
+
+    assert store["committed"] is False
+    assert store["gitignored_by"].rstrip("/") + "/" in ignore
+    assert store["path"].startswith(store["gitignored_by"].rstrip("/"))
 
 
 def test_a_defended_example_never_outranks_a_normative_document() -> None:

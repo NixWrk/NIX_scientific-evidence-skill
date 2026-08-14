@@ -41,6 +41,17 @@ conflict_resolution:
 
 acquisition_states: [needed, located, obtained, carded]
 
+# Files live outside the repository. Standards and institutional materials carry
+# their own terms of use, so only hashes are committed. `holding.kind` says what
+# was actually obtained, which is not always the document itself:
+#   document        — the text that carries the requirements
+#   catalogue_card  — the registry entry: designation, status, dates. Not the text.
+#   index_page      — a listing that points at documents
+local_store:
+  path: corpus/private/normative
+  committed: false
+  gitignored_by: "corpus/private/"
+
 # `located` means the official source is identified, not that the file is held.
 # Only `obtained` and `carded` involve an actual file.
 retrieval_attempts:
@@ -58,6 +69,25 @@ retrieval_attempts:
       файла, поэтому этот путь не может дать пригодную карточку ни при каких
       условиях. Файлы должен получить пользователь.
     next_action: пользователь помещает файлы в corpus/private/normative/
+
+  - date: 2026-08-14
+    agent: claude-code-session
+    outcome: partial
+    change: пользователь снял ограничение на российские хосты
+    obtained: 47
+    refused: [uchsov.bmstu.ru, vak.gisnauka.ru]
+    diagnosis: >-
+      Имя uchsov.bmstu.ru разрешается в hoster.bmstu.ru, но соединение не
+      устанавливается; vak.gisnauka.ru не отвечает. Остальные хосты доступны.
+    verified: >-
+      Каждый файл проверен по сигнатуре и по содержимому: обозначение стандарта
+      в карточке, ожидаемый текст в документе организации, заголовок PDF. Хеш
+      страницы-заглушки в реестр не попал.
+    still_missing:
+      - текст стандартов: карточки Росстандарта не содержат содержания
+      - BMSTU-DISS-REQ страница Учёного совета
+      - VAK-EDITIONS перечень изданий
+      - EXAMPLE-SATANENKO-2026 не найден поиском по библиотеке
 
 documents:
 
@@ -82,7 +112,7 @@ documents:
       гуманитарных и общественных отраслей и к 2.2.12 не относится. Проверка
       числа публикаций недостаточна: издание должно удовлетворять требованиям
       к рецензируемым научным изданиям.
-    acquisition: located
+    acquisition: obtained
 
   # --- tier 2: specialty passport ------------------------------------------
 
@@ -141,7 +171,7 @@ documents:
       списка опубликованных работ отсылает к ГОСТ Р 7.0.5-2008. Машиночитаемая
       версия требований опубликована отдельным файлом DOCX
       (https://mf.bmstu.ru/assets/info/dissovet/requirements/docs/diss_bmstu_requirements.docx).
-    acquisition: located
+    acquisition: obtained
 
   - id: BMSTU-LIB-DISS
     title: Требования научно-технической библиотеки к сдаче диссертационных материалов
@@ -155,7 +185,7 @@ documents:
     notes: >-
       По объёму автореферата отсылает к конкретному совету. Жёсткое число
       страниц из этого документа не выводится.
-    acquisition: located
+    acquisition: obtained
 
   - id: BMSTU-TITLE
     title: Титульный лист диссертации, образец
@@ -171,7 +201,7 @@ documents:
       Опубликован разделом Мытищинского филиала. Институциональный образец, а не
       подтверждённая форма совета 24.2.331.09. Более надёжный эталон титульного
       листа берётся из принятой работы этого совета.
-    acquisition: located
+    acquisition: obtained
 
   - id: BMSTU-REVIEW-TEMPLATES
     title: Схемы отзывов, заключений и сопроводительных документов
@@ -183,7 +213,7 @@ documents:
     source: https://mf.bmstu.ru/info/dissovet/applicant/
     scope: [отзыв ведущей организации, отзыв руководителя, сведения об оппонентах, проект заключения, стенограмма]
     rules_to_extract: [состав и порядок разделов сопроводительных документов]
-    acquisition: located
+    acquisition: obtained
 
   - id: BMSTU-ETHICS
     title: Положение об этическом комитете и форма информированного согласия
@@ -217,7 +247,7 @@ documents:
       - обязательные подразделы введения
       - структура автореферата
     notes: Основной источник состава частей. До построения карточки состав частей не считается установленным.
-    acquisition: located
+    acquisition: obtained
 
   # --- tier 5: formatting standards ----------------------------------------
 
@@ -231,7 +261,7 @@ documents:
     scope: [внутритекстовые ссылки, подстрочные ссылки, затекстовые ссылки]
     rules_to_extract: [формы ссылок и правила их размещения]
     notes: Область не совпадает с ГОСТ Р 7.0.100-2018; наборы правил не объединяются.
-    acquisition: located
+    acquisition: obtained
 
   - id: GOST-R-7.0.100-2018
     title: Библиографическая запись. Библиографическое описание
@@ -243,7 +273,7 @@ documents:
     source: https://protect.gost.ru/gost/details/389dfd5a-535a-458a-81c3-14b729b1cee1
     scope: [библиографическое описание источников]
     rules_to_extract: [структура описания по видам документов]
-    acquisition: located
+    acquisition: obtained
 
   - id: GOST-7.32-2017
     title: Отчёт о научно-исследовательской работе. Структура и правила оформления
@@ -256,7 +286,7 @@ documents:
     scope: [таблицы, рисунки, формулы, приложения]
     rules_to_extract: [правила оформления таблиц, рисунков, формул и приложений]
     conditional: Применяется только там, где на него ссылается документ совета.
-    acquisition: located
+    acquisition: obtained
 
   - id: GOST-8.417-2024
     title: Государственная система обеспечения единства измерений. Единицы величин
@@ -273,7 +303,7 @@ documents:
     notes: >-
       Фиксируется конкретное обозначение, а не формула «в актуальной редакции».
       Статус перепроверяется при обновлении нормативной базы: поправки уже есть.
-    acquisition: located
+    acquisition: obtained
 
   # --- tier 6: medical device standards ------------------------------------
 
@@ -288,7 +318,7 @@ documents:
     scope: [клинические исследования медицинских изделий с участием человека]
     rules_to_extract: [требования к протоколу и к описанию проведённого исследования]
     applicability: Только при клиническом исследовании с участием человека.
-    acquisition: located
+    acquisition: obtained
 
   - id: GOST-ISO-14971-2021
     title: Изделия медицинские. Применение менеджмента риска к медицинским изделиям
@@ -301,7 +331,7 @@ documents:
     rules_to_extract: [состав документации менеджмента риска]
     notes: Действующее обозначение — ГОСТ ISO, не ГОСТ Р ИСО.
     applicability: Только если предмет работы — медицинское изделие.
-    acquisition: located
+    acquisition: obtained
 
   - id: GOST-IEC-60601-1-2024
     title: Изделия медицинские электрические. Общие требования безопасности с учётом основных функциональных характеристик
@@ -320,7 +350,7 @@ documents:
       стандарты серий IEC 60601 и 80601: электромагнитная совместимость,
       программируемые системы, конкретное диагностическое или терапевтическое
       оборудование.
-    acquisition: located
+    acquisition: obtained
 
   # --- tier 7: defended examples -------------------------------------------
 
@@ -356,7 +386,7 @@ documents:
     source: https://library.bmstu.ru/Authors/Details/f161f544-afa1-4cce-b54b-70a49fbfbb49
     scope: [полная диссертация и автореферат]
     rules_to_extract: [устойчивые локальные шаблоны совета в отличие от особенностей одной работы]
-    acquisition: located
+    acquisition: obtained
 
   - id: EXAMPLE-MANSUROV-2023
     title: Разработка системы аппланационной тонометрии
@@ -370,7 +400,7 @@ documents:
     scope: [приборно-медицинский образец, патенты в апробации]
     rules_to_extract: [разделы новизны, положений, практической значимости, публикаций и патентов]
     notes: Содержит три патента РФ — полезен для проверки правил приравнивания результатов к публикациям.
-    acquisition: located
+    acquisition: obtained
 
   - id: ZOTERO-HERT-LUNG-GENERATIONS
     title: Кандидатские диссертации направления, коллекция Zotero
@@ -406,3 +436,135 @@ intellectual_property:
     regulation: Приказ Минэкономразвития России от 21.02.2023 № 107
     source: https://rospatent.gov.ru/ru/stateservices/gosudarstvennaya-registraciya-izobreteniya-i-vydacha-patenta-na-izobretenie-ego-dublikata
     acquisition: located
+
+# Generated from the files on disk; regenerate rather than edit by hand.
+holdings:
+  retrieved_on: 2026-08-14
+  BMSTU-DISS-REQ:
+    kind: document
+    note: "Получен файл DOCX с mf.bmstu.ru. Объявленный источник uchsov.bmstu.ru недоступен, поэтому тождественность двух публикаций требований не подтверждена."
+    files:
+      - name: BMSTU-DISS-REQ.docx
+        url: https://mf.bmstu.ru/assets/info/dissovet/requirements/docs/diss_bmstu_requirements.docx
+        bytes: 20121
+        sha256: 439c1dd01c9015a735406239249a918cb879238d10dd0474b18aae4c72e54e02
+  BMSTU-TITLE:
+    kind: document
+    files:
+      - name: BMSTU-TITLE.docx
+        url: https://mf.bmstu.ru/assets/info/dissovet/applicant/docs/2022.12.20/dissertation_title_page.docx
+        bytes: 13511
+        sha256: 5b56e1bcdb5b68fc75dcf948f6818966b6b415b4217a0cf6878bf19c835f4f60
+  BMSTU-LIB-DISS:
+    kind: document
+    files:
+      - name: BMSTU-LIB-DISS.html
+        url: https://library.bmstu.ru/Pages/About/Dissertations
+        bytes: 22495
+        sha256: 81b961f543bd9c041ceafb1ba7abda773de1b188879c7180aed85b708171d873
+  BMSTU-REVIEW-TEMPLATES:
+    kind: document
+    note: "Страница-перечень; сами шаблоны учтены записью BMSTU-REVIEW-TEMPLATES-SET."
+    files:
+      - name: BMSTU-REVIEW-TEMPLATES.html
+        url: https://mf.bmstu.ru/info/dissovet/applicant/
+        bytes: 54150
+        sha256: e83b3bf2c75afc00772a9ee9321fa4eeedc6dc76f3cabee3ee08fd7f22d3f96e
+  PP-842:
+    kind: document
+    note: "Изложение справочной правовой системы, не официальное опубликование."
+    files:
+      - name: PP-842.consultant.html
+        url: https://www.consultant.ru/document/cons_doc_LAW_152458/
+        bytes: 32911
+        sha256: 57b11252b6f53c754e4436870c8a45dbb95a62e8984de4b29725dfe46a9c246d
+      - name: PP-842.criteria.consultant.html
+        url: https://www.consultant.ru/document/cons_doc_LAW_152458/8af0961a8a1cae81e691dc69dc02108292933253/
+        bytes: 61073
+        sha256: d846a5da52f4b11cf75fa9c9f0ef2b7cf28713ce02a19107cb291f4e3dbe41d1
+  EXAMPLE-MANSUROV-2023:
+    kind: document
+    files:
+      - name: EXAMPLE-MANSUROV-2023.pdf
+        url: https://library.bmstu.ru/DigitalResources/Download/84965
+        bytes: 1145405
+        sha256: 03aafc0b9148441c8949bd17ba9b6edc0ffacb2f8b621eec8af20d99e67fde17
+  EXAMPLE-SEMCHUK-2022:
+    kind: index_page
+    note: "Страница автора. Полный текст и автореферат не выгружены."
+    files:
+      - name: EXAMPLE-SEMCHUK-2022.index.html
+        url: https://library.bmstu.ru/Authors/Details/f161f544-afa1-4cce-b54b-70a49fbfbb49
+        bytes: 56792
+        sha256: 218cca3259b6f35c5b9f902fbb1ce35de4f54095b79f2bb272231f26cb15b0eb
+  GOST-R-7.0.11-2011:
+    kind: catalogue_card
+    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    files:
+      - name: GOST-R-7.0.11-2011.card.html
+        url: https://protect.gost.ru/gost/details/80cb3ff3-6f82-4267-9122-0873213d8d53
+        bytes: 86274
+        sha256: a929ce22381ee0ebc71ccae28360ccb6fb2c7d34a61cd5e9abf5f386f5d3872b
+  GOST-R-7.0.5-2008:
+    kind: catalogue_card
+    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    files:
+      - name: GOST-R-7.0.5-2008.card.html
+        url: https://protect.gost.ru/gost/details/2eef7820-44bc-49a4-bf1f-fe51c54039dc
+        bytes: 85505
+        sha256: bb5c4334614c44b4d101af675c976c6839bca407c7b05c71645f23e1c73c30d7
+  GOST-R-7.0.100-2018:
+    kind: catalogue_card
+    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    files:
+      - name: GOST-R-7.0.100-2018.card.html
+        url: https://protect.gost.ru/gost/details/389dfd5a-535a-458a-81c3-14b729b1cee1
+        bytes: 89965
+        sha256: f42d16aaafdd57bd5be47d09d1fb181505e4543caa3e4da11525b49dc8ba53aa
+  GOST-7.32-2017:
+    kind: catalogue_card
+    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    files:
+      - name: GOST-7.32-2017.card.html
+        url: https://protect.gost.ru/gost/details/7d280e43-7036-4a69-8e6e-d15867028343
+        bytes: 93753
+        sha256: 2460af649798b06ae699cb83169d8c503384b60f40273718a272eb7cd2625857
+  GOST-8.417-2024:
+    kind: catalogue_card
+    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    files:
+      - name: GOST-8.417-2024.card.html
+        url: https://protect.gost.ru/gost/details/fa1165d5-0547-429a-9c3e-f16f4bdb101f
+        bytes: 89672
+        sha256: 03e12cc5e8f32aaa13e432e2461dbc0c985b882a2a02cefd33d6522d1819ee86
+  GOST-R-ISO-14155-2022:
+    kind: catalogue_card
+    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    files:
+      - name: GOST-R-ISO-14155-2022.card.html
+        url: https://protect.gost.ru/gost/details/b8cd9a61-5f63-443b-a69e-3ac82313d10b
+        bytes: 85911
+        sha256: 4054b73feabd310dbea9a0b1e877a22ff950bc2bdac48c7c9528ab94e8fc1b67
+  GOST-ISO-14971-2021:
+    kind: catalogue_card
+    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    files:
+      - name: GOST-ISO-14971-2021.card.html
+        url: https://protect.gost.ru/gost/details/fc5f8123-88dd-4608-b1d0-aa23526a3b8e
+        bytes: 88770
+        sha256: 7e3e08fe44cbfda0cd8498553853ca39e9e6b6e2d2d9ab0f500d066346b86f95
+  GOST-IEC-60601-1-2024:
+    kind: catalogue_card
+    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    files:
+      - name: GOST-IEC-60601-1-2024.card.html
+        url: https://protect.gost.ru/gost/details/590e2759-7777-45ca-923a-d39f5296ab37
+        bytes: 89043
+        sha256: 007cf13ca337f0702ab0aecd2cc7cd15d3561ba4375a42d63fdbe3d4529868d3
+  BMSTU-REVIEW-TEMPLATES-SET:
+    kind: document
+    note: "Комплект шаблонов совета; пофайловые хеши в bmstu-templates.sha256."
+    url_prefix: https://mf.bmstu.ru/assets/info/dissovet/applicant/docs/
+    files_count: 31
+    bytes: 783827
+    set_sha256: fa7febafc40362a8a65da1aea0ce40679be8426f421e968d0f774ff987d19d66
