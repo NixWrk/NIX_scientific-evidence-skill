@@ -7,6 +7,7 @@ instead of a stale line in `registry/skills.yaml`.
 
 import hashlib
 import importlib.util
+import json
 import re
 from pathlib import Path
 
@@ -145,9 +146,11 @@ def test_implemented_genres_match_the_skill() -> None:
         rules = VALIDATOR.GENRES[genre_id]
         assert genre["status"] == "existing", genre_id
         assert genre["bundle_mode"] == rules["bundle_mode"], genre_id
-        assert genre["bundle_mode"] in VALIDATOR.MODES, genre_id
+        if genre["bundle_mode"] is not None:
+            assert genre["bundle_mode"] in VALIDATOR.MODES, genre_id
         assert genre["source_count"]["min"] == rules["source_min"], genre_id
         assert genre["source_count"]["max"] == rules["source_max"], genre_id
+        assert genre.get("figure_control", False) == rules.get("figure_control", False), genre_id
         for dimension in GENRES["axes"]["evidence_dimensions"]:
             assert genre["evidence_regime"][dimension] == rules[dimension], (
                 f"{genre_id}: {dimension} differs between registry and skill"
@@ -190,25 +193,32 @@ def test_normative_documents_are_uniquely_identified_and_tiered() -> None:
         assert document["rules_to_extract"], document["id"]
 
 
-def test_normative_registry_claims_no_extracted_requirements() -> None:
-    """The registry holds pointers.
+def test_carding_state_matches_the_cards_that_exist() -> None:
+    """A requirement counts as established only through a card.
 
-    A requirement counts as established only once a normative-pattern card is
-    built from the file itself, and that genre is still reserved. Flipping this
-    flag without implementing the genre would let the skills treat a recollection
-    as a rule.
+    The registry may not claim more extraction than there are cards, and a
+    document may not be marked carded without one. Both directions are checked
+    so the flag cannot be flipped ahead of the work.
     """
 
-    provenance = NORMATIVE["provenance"]
-    reserved = {
-        genre["id"]: genre["status"]
-        for genre in GENRES["genres"]
-        if genre["id"] == "normative-pattern-analysis"
+    card_dir = ROOT / "skills/scientific-evidence-workflow/references/normative-patterns"
+    carded_by_file = {
+        json.loads(path.read_text(encoding="utf-8"))["document_id"]
+        for path in card_dir.glob("*.json")
     }
+    states = {document["id"]: document["acquisition"] for document in NORMATIVE["documents"]}
+    carded_by_registry = {doc_id for doc_id, state in states.items() if state == "carded"}
 
-    assert provenance["requirements_extracted"] is False
-    assert provenance["designations_verified_by"] == "user"
-    assert reserved == {"normative-pattern-analysis": "reserved"}
+    assert carded_by_registry == carded_by_file, "cards and registry disagree on what is carded"
+
+    if not carded_by_file:
+        expected = "none"
+    elif carded_by_file == set(states):
+        expected = "complete"
+    else:
+        expected = "partial"
+    assert NORMATIVE["provenance"]["requirements_extracted"] == expected
+    assert NORMATIVE["provenance"]["designations_verified_by"] == "user"
 
 
 def test_holdings_and_acquisition_states_agree() -> None:

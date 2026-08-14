@@ -17,8 +17,11 @@ target:
 provenance:
   designations_verified_by: user
   designations_verified_on: 2026-08-14
-  requirements_extracted: false
-  blocking_gap: normative-pattern-analysis genre is reserved, not implemented
+  requirements_extracted: partial
+  carding_status: >-
+    Жанр normative-pattern-analysis реализован. Карточки построены для
+    BMSTU-DISS-REQ и GOST-8.417-2024. Требования остальных документов не
+    установлены: у них нет карточек, а у восьми стандартов нет и текста.
 
 # Lower tier wins. The order is the point of this file: it is what lets a
 # conflict be resolved without argument.
@@ -171,7 +174,7 @@ documents:
       списка опубликованных работ отсылает к ГОСТ Р 7.0.5-2008. Машиночитаемая
       версия требований опубликована отдельным файлом DOCX
       (https://mf.bmstu.ru/assets/info/dissovet/requirements/docs/diss_bmstu_requirements.docx).
-    acquisition: obtained
+    acquisition: carded
 
   - id: BMSTU-LIB-DISS
     title: Требования научно-технической библиотеки к сдаче диссертационных материалов
@@ -303,7 +306,7 @@ documents:
     notes: >-
       Фиксируется конкретное обозначение, а не формула «в актуальной редакции».
       Статус перепроверяется при обновлении нормативной базы: поправки уже есть.
-    acquisition: obtained
+    acquisition: carded
 
   # --- tier 6: medical device standards ------------------------------------
 

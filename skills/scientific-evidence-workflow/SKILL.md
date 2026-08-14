@@ -51,6 +51,13 @@ reference:
   `references/genres/procedure-record.md`, mode `record`.
 - `decision-log`: why a choice was made, against what was known then —
   `references/genres/decision-log.md`, mode `record`.
+- `stage-presentation`: what a stage produced, shown and spoken over —
+  `references/genres/stage-presentation.md`, mode `record`, figure control
+  applies as it does to a manuscript.
+- `normative-pattern-analysis`: one normative document turned into a card —
+  `references/genres/normative-pattern-analysis.md`. This genre produces a card
+  rather than an evidence bundle and is validated by
+  `scripts/validate_normative_card.py`.
 
 Leave `task.genre` unset for a request that no listed genre describes. Do not
 force a request into a genre it does not fit.
@@ -226,6 +233,10 @@ Stop and request input instead of guessing when:
 - `scripts/validate_bundle.py`: dependency-free structural validator.
 - `references/journal-pattern-memory.md`: rules for extracting and retaining
   formatting patterns from a user-supplied journal example.
+- `references/normative-pattern-memory.md`: rules for carding a normative
+  document, and why a catalogue entry may carry no requirements.
+- `assets/normative-pattern.template.json`: normative-card scaffold.
+- `scripts/validate_normative_card.py`: dependency-free card validator.
 - `references/russian-scientific-style.md`: Russian language core.
 - `references/russian/`: genre language profiles.
 - `scripts/audit_russian_style.py`: dependency-free heuristic style audit.

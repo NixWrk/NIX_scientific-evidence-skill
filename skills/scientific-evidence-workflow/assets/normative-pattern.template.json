@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "pattern_id": "NORM-EXAMPLE-001",
+  "record_version": "v1",
+  "document_id": "DOC-ID-FROM-THE-NORMATIVE-REGISTRY",
+  "title": "Название нормативного документа",
+  "authority": "Кто издал документ",
+  "tier": 3,
+  "provenance": {
+    "source_kind": "document",
+    "local_file": "corpus/private/normative/<file>",
+    "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "url": "https://...",
+    "analyzed_on": "2026-01-01",
+    "analyzed_by": "кто выполнил разбор"
+  },
+  "coverage": [
+    "какие части документа прочитаны",
+    "какие части недоступны или не рассматривались"
+  ],
+  "requirements": [
+    {
+      "requirement_id": "REQ-001",
+      "topic": "структура | объём | оформление | ссылки | таблицы | подписи | сроки",
+      "statement": "Что именно требуется, своими словами и проверяемо.",
+      "locator": "раздел, пункт, страница или абзац исходного файла",
+      "observation": "observed",
+      "binding": "mandatory",
+      "applies_to": null,
+      "verbatim_trigger": "короткая формулировка документа, если она определяет толкование",
+      "note": null
+    }
+  ],
+  "not_observed": [
+    "что документ не устанавливает",
+    "что он передаёт другому органу, с указанием какому"
+  ],
+  "conflicts": [],
+  "application_notes": [
+    "Как применять карточку и чего она не решает."
+  ]
+}

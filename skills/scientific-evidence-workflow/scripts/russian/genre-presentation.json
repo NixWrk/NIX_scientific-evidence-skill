@@ -1,0 +1,37 @@
+{
+  "profile_id": "genre-presentation",
+  "description": "Stage and defense presentations. The characteristic failures are a caption that names a category instead of the content, a visual reference with nothing to anchor it, a plan presented as an achievement, and filler where a claim belongs.",
+  "latin_allow": [],
+  "rules": [
+    {
+      "code": "label_as_caption",
+      "severity": "warning",
+      "pattern": "(?im)^\\s*(?:#{1,6}\\s*)?(?:результаты|данные|график|диаграмма|схема|таблица|итоги|выводы)\\s*$",
+      "message": "Name the quantity, group, and condition shown instead of the kind of object."
+    },
+    {
+      "code": "unanchored_visual_reference",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:как видно (?:из|на) (?:рисунк\\w+|график\\w+|таблиц\\w+|слайд\\w+)|на (?:графике|рисунке|слайде) видно|здесь видно)(?!\\s*[№N]?\\s*\\d)",
+      "message": "Give the number of the figure or slide being referred to."
+    },
+    {
+      "code": "plan_as_achievement",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:ожидается, что|должно улучшить|планируется получить|позволит значительно|в перспективе достигн\\w+|будет достигнут\\w*)(?![а-яё])",
+      "message": "Separate what was achieved from what is intended; a plan is not a result."
+    },
+    {
+      "code": "slide_filler",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:немного о|несколько слов о|краткий обзор того|пару слов о|как известно)(?![а-яё])",
+      "message": "Replace the filler with the statement the slide is meant to carry."
+    },
+    {
+      "code": "rounded_away_unit",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:порядка \\d|около \\d|примерно \\d|где-то \\d)(?![а-яё])",
+      "message": "Give the measured value with its unit and uncertainty instead of an approximation."
+    }
+  ]
+}

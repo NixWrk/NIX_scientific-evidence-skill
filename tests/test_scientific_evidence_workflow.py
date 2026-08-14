@@ -195,6 +195,94 @@ def test_schema_accepts_a_bundle_carrying_structure_records() -> None:
     jsonschema.validate(bundle, SCHEMA)
 
 
+CARD_SPEC = importlib.util.spec_from_file_location(
+    "scientific_evidence_validate_card", SKILL_DIR / "scripts" / "validate_normative_card.py"
+)
+assert CARD_SPEC and CARD_SPEC.loader
+CARD_VALIDATOR = importlib.util.module_from_spec(CARD_SPEC)
+CARD_SPEC.loader.exec_module(CARD_VALIDATOR)
+
+CARD_DIR = SKILL_DIR / "references" / "normative-patterns"
+
+
+def load_card(name: str) -> dict:
+    return json.loads((CARD_DIR / f"{name}.json").read_text(encoding="utf-8"))
+
+
+def test_stored_normative_cards_validate() -> None:
+    cards = sorted(CARD_DIR.glob("*.json"))
+
+    assert cards
+    for path in cards:
+        report = CARD_VALIDATOR.validate_card(json.loads(path.read_text(encoding="utf-8")))
+        assert report["valid"] is True, f"{path.name}: {report['errors']}"
+        assert report["warnings"] == [], f"{path.name}: {report['warnings']}"
+
+
+def test_a_catalogue_card_may_not_carry_requirements() -> None:
+    """The rule the card validator exists for.
+
+    A registry entry establishes a designation and a status. Letting it carry
+    requirements would put a standard's rules in hand on the strength of its
+    name alone.
+    """
+
+    card = load_card("NORM-GOST-8.417-2024-001")
+    assert card["provenance"]["source_kind"] == "catalogue_card"
+    assert card["requirements"] == []
+
+    card["requirements"] = [
+        {
+            "requirement_id": "REQ-001",
+            "topic": "единицы",
+            "statement": "Единицы пишутся через пробел после числа.",
+            "locator": "раздел 5",
+            "observation": "observed",
+            "binding": "mandatory",
+        }
+    ]
+    report = CARD_VALIDATOR.validate_card(card)
+
+    assert report["valid"] is False
+    assert "cannot carry requirements" in "\n".join(report["errors"])
+
+
+def test_a_requirement_needs_a_locator_and_an_honest_observation() -> None:
+    card = load_card("NORM-BMSTU-DISS-REQ-001")
+    requirement = copy.deepcopy(card["requirements"][0])
+    requirement.update({"requirement_id": "REQ-900", "locator": "", "observation": "uncertain"})
+    card["requirements"].append(requirement)
+
+    report = CARD_VALIDATOR.validate_card(card)
+    errors = "\n".join(report["errors"])
+
+    assert report["valid"] is False
+    assert "locator: expected a non-empty string" in errors
+    assert "note: required when the observation is uncertain" in errors
+
+
+def test_a_document_card_must_say_what_it_does_not_settle() -> None:
+    card = load_card("NORM-BMSTU-DISS-REQ-001")
+    card["not_observed"] = []
+
+    report = CARD_VALIDATOR.validate_card(card)
+
+    assert report["valid"] is True
+    assert any("no absent feature is recorded" in warning for warning in report["warnings"])
+
+
+def test_the_council_card_records_its_conflicts() -> None:
+    """Discrepancies found while reading are kept, not smoothed."""
+
+    card = load_card("NORM-BMSTU-DISS-REQ-001")
+
+    assert card["tier"] == 3
+    assert len(card["conflicts"]) >= 3
+    assert any("7.0.5" in conflict for conflict in card["conflicts"])
+    uncertain = [r for r in card["requirements"] if r["observation"] == "uncertain"]
+    assert uncertain and all(r["note"] for r in uncertain)
+
+
 def test_stored_journal_patterns_are_versioned_and_provenanced() -> None:
     pattern_dir = SKILL_DIR / "references" / "journal-patterns"
     patterns = [
@@ -634,6 +722,12 @@ def decision_bundle() -> dict:
     return record_bundle("decision-log", representation="text")
 
 
+def presentation_bundle() -> dict:
+    bundle = stage_report_bundle()
+    bundle["task"].update({"genre": "stage-presentation", "figure_mode": "without_figures"})
+    return bundle
+
+
 def test_implemented_genres_accept_their_own_shape() -> None:
     builders = (
         annotation_bundle,
@@ -642,12 +736,58 @@ def test_implemented_genres_accept_their_own_shape() -> None:
         experiment_bundle,
         procedure_bundle,
         decision_bundle,
+        presentation_bundle,
     )
+    bundle_genres = {
+        genre for genre, rules in VALIDATOR.GENRES.items() if rules["bundle_mode"] is not None
+    }
 
-    assert len(builders) == len(VALIDATOR.GENRES)
+    assert len(builders) == len(bundle_genres)
     for build in builders:
         report = VALIDATOR.validate_bundle(build())
         assert report["valid"] is True, f"{build.__name__}: {report['errors']}"
+
+
+def test_stage_presentation_carries_figure_control_outside_a_manuscript() -> None:
+    bundle = presentation_bundle()
+    bundle["task"].pop("figure_mode")
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "stage-presentation requires one of" in error_text(report)
+
+
+def test_stage_presentation_figures_must_trace_to_an_input() -> None:
+    bundle = presentation_bundle()
+    bundle["task"].update({"figure_mode": "with_figures", "figure_source_ids": ["SRC-ABSENT"]})
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "unknown source 'SRC-ABSENT'" in error_text(report)
+
+    bundle["task"]["figure_source_ids"] = ["SRC-EXAMPLE-001"]
+    assert VALIDATOR.validate_bundle(bundle)["valid"] is True
+
+
+def test_stage_presentation_does_not_take_journal_formatting() -> None:
+    """Figure control generalizes; journal formatting stays manuscript-only."""
+
+    bundle = presentation_bundle()
+
+    assert VALIDATOR.validate_bundle(bundle)["valid"] is True
+    assert "formatting_mode" not in bundle["task"]
+
+
+def test_a_card_genre_is_rejected_as_a_bundle_genre() -> None:
+    bundle = load_template()
+    bundle["task"]["genre"] = "normative-pattern-analysis"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "not an evidence bundle" in error_text(report)
 
 
 def test_experiment_description_refuses_a_reconstruction() -> None:
@@ -799,10 +939,17 @@ def test_hypothesis_cannot_be_asserted_or_left_unattributed() -> None:
 
 
 def test_genre_references_and_templates_exist() -> None:
-    for genre_id in VALIDATOR.GENRES:
+    """A card genre ships a JSON scaffold; a bundle genre ships a Markdown one."""
+
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+
+    for genre_id, rules in VALIDATOR.GENRES.items():
         assert (SKILL_DIR / "references" / "genres" / f"{genre_id}.md").is_file(), genre_id
-        assert (SKILL_DIR / "assets" / f"{genre_id}.template.md").is_file(), genre_id
-        assert f"`{genre_id}`" in (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8"), genre_id
+        assert f"`{genre_id}`" in skill, genre_id
+        if rules["bundle_mode"] is None:
+            assert (SKILL_DIR / "assets" / "normative-pattern.template.json").is_file(), genre_id
+        else:
+            assert (SKILL_DIR / "assets" / f"{genre_id}.template.md").is_file(), genre_id
 
 
 def test_unknown_fields_fail_closed() -> None:

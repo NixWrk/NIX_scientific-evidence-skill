@@ -117,6 +117,29 @@ GENRES: dict[str, dict[str, Any]] = {
         "source_max": None,
         "source_representations": None,
     },
+    "stage-presentation": {
+        "bundle_mode": "record",
+        "literature": "allowed",
+        "own_results": "required",
+        "internal_crossref": "allowed",
+        "organizational": "allowed",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": None,
+        "figure_control": True,
+    },
+    # Produces a normative card, not an evidence bundle. Validated by
+    # scripts/validate_normative_card.py.
+    "normative-pattern-analysis": {
+        "bundle_mode": None,
+        "literature": "forbidden",
+        "own_results": "forbidden",
+        "internal_crossref": "forbidden",
+        "organizational": "required",
+        "source_min": 1,
+        "source_max": 1,
+        "source_representations": None,
+    },
 }
 CERTAINTIES = {"direct", "inferred", "uncertain", "conflicted"}
 CLAIM_STATUSES = {"supported", "bounded", "unsupported", "conflicted"}
@@ -293,13 +316,24 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     mode = task.get("mode")
     if mode not in MODES:
         errors.append(f"bundle.task.mode: expected one of {sorted(MODES)}")
-    if mode == "manuscript":
+
+    genre = task.get("genre")
+    genre_rules = GENRES.get(genre) if _nonempty_string(genre) else None
+
+    # Figures need the same discipline wherever they appear, not only in a
+    # manuscript: a chart shown at a meeting is as capable of inventing data as
+    # a figure in a paper. Journal formatting stays manuscript-only.
+    figure_controlled = mode == "manuscript" or bool(
+        genre_rules and genre_rules.get("figure_control")
+    )
+    if figure_controlled:
         figure_mode = task.get("figure_mode")
-        formatting_mode = task.get("formatting_mode")
         if figure_mode not in FIGURE_MODES:
             errors.append(
-                f"bundle.task.figure_mode: manuscript requires one of {sorted(FIGURE_MODES)}"
+                f"bundle.task.figure_mode: {genre or mode} requires one of {sorted(FIGURE_MODES)}"
             )
+    if mode == "manuscript":
+        formatting_mode = task.get("formatting_mode")
         if formatting_mode not in FORMATTING_MODES:
             errors.append(
                 "bundle.task.formatting_mode: manuscript requires one of "
@@ -312,6 +346,8 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                 "bundle.task",
                 errors,
             )
+    if figure_controlled:
+        figure_mode = task.get("figure_mode")
         figure_source_ids = task.get("figure_source_ids")
         if figure_mode == "with_figures":
             if (
@@ -360,7 +396,7 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     for source_id in input_scope:
         if source_id not in sources:
             errors.append(f"bundle.task.input_scope: unknown source {source_id!r}")
-    if mode == "manuscript" and task.get("figure_mode") == "with_figures":
+    if figure_controlled and task.get("figure_mode") == "with_figures":
         for source_id in task.get("figure_source_ids", []):
             if source_id not in sources:
                 errors.append(f"bundle.task.figure_source_ids: unknown source {source_id!r}")
@@ -535,10 +571,14 @@ def validate_bundle(data: Any) -> dict[str, Any]:
             if disposition != "request_input":
                 errors.append(f"{path}: a hypothesis must use disposition 'request_input'")
 
-    genre = task.get("genre")
     if genre is not None:
         if not _nonempty_string(genre) or genre not in GENRES:
             errors.append(f"bundle.task.genre: unknown or unimplemented genre {genre!r}")
+        elif GENRES[genre]["bundle_mode"] is None:
+            errors.append(
+                f"bundle.task.genre: {genre!r} produces a record of its own kind, not an "
+                "evidence bundle; validate it with its own validator"
+            )
         else:
             rules = GENRES[genre]
             if mode != rules["bundle_mode"]:

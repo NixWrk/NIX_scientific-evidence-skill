@@ -523,7 +523,12 @@ genres:
 
   - id: stage-presentation
     family: presentation
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: record
+    source_count: {min: 1, max: null}
+    source_representations: null
+    figure_control: true
     normativity: free
     depth: document
     purpose: report_result
@@ -637,7 +642,11 @@ genres:
 
   - id: normative-pattern-analysis
     family: format
-    status: reserved
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: null
+    source_count: {min: 1, max: 1}
+    source_representations: null
     normativity: mandated
     depth: document
     purpose: record_format
@@ -647,7 +656,10 @@ genres:
     invariants: [INV-DERIVED-NOTE-MARKED]
     render_targets: [plain]
     language_profile: genre-micro-report
-    notes: Отложено. До построения карточки требования совета и стандартов не считаются установленными.
+    notes: >-
+      Производит карточку, а не доказательный набор; проверяется скриптом
+      validate_normative_card.py. Карточка реестра не может нести требований:
+      она устанавливает обозначение и статус, но не содержание.
 
   # --- H. acquisition --------------------------------------------------------
 

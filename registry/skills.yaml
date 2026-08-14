@@ -12,8 +12,8 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.7"
-    skill_sha256: 1d615d53e8171af1d613b16744be954f2509bccac5308c626f7a9f3c57ed3caa
+    version: "0.8"
+    skill_sha256: ef8424927122bcb43c9a20719bf5ad64d7b7457347e8b609667862829a606b04
     task: [qa, literature_review, manuscript]
     license: not_declared
     spec_subset: pass
@@ -39,6 +39,9 @@ verdicts:
       - internal_reference_cannot_substitute_for_evidence
       - genre_gates_for_annotation_stage_report_and_micro_review
       - working_family_closed_with_experiment_procedure_and_decision_records
+      - figure_control_generalized_beyond_the_manuscript_mode
+      - normative_card_required_before_a_requirement_is_established
+      - catalogue_entry_cannot_carry_requirements
       - experiment_description_refuses_reconstruction_without_protocol_or_data
       - recorded_hypothesis_cannot_become_a_reported_result
       - genre_table_checked_against_registry_by_test
