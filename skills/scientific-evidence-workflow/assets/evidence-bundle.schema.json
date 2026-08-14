@@ -2,40 +2,74 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://paper-analyzer-writer.local/scientific-evidence-workflow/evidence-bundle.schema.json",
   "title": "Scientific evidence workflow bundle",
+  "description": "Structural declaration of the bundle for hosts that cannot run Python. scripts/validate_bundle.py enforces this structure plus the semantic rules of references/evidence-contract.md and stays authoritative for a release decision. Field names, required sets, enumerations, identifier pattern, and the manuscript conditionals are kept identical to that validator by an automated drift test; type refinements below may be stricter where the validator is silent.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "bundle_id", "task", "sources", "evidence", "results", "claims"],
+  "required": ["schema_version", "bundle_id", "task", "sources", "evidence", "claims"],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "manuscript_mode": {
+      "properties": {"mode": {"const": "manuscript"}},
+      "required": ["mode"]
+    }
+  },
   "properties": {
     "schema_version": {"const": "1.0"},
     "bundle_id": {"type": "string", "minLength": 1},
     "task": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mode", "request", "input_scope"],
+      "required": ["mode", "request"],
       "properties": {
-        "mode": {"enum": ["qa", "literature_review", "manuscript"]},
+        "mode": {"enum": ["qa", "literature_review", "manuscript", "record"]},
+        "genre": {"type": "string", "minLength": 1},
         "request": {"type": "string", "minLength": 1},
         "input_scope": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
         "language": {"type": "string"},
         "audience": {"type": "string"},
         "figure_mode": {"enum": ["with_figures", "without_figures"]},
-        "figure_source_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "figure_source_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
         "formatting_mode": {"enum": ["journal_example", "section_only"]},
         "journal_pattern_id": {"type": "string", "minLength": 1},
         "journal_example_source_id": {"type": "string", "minLength": 1}
       },
       "allOf": [
         {
-          "if": {"properties": {"mode": {"const": "manuscript"}}, "required": ["mode"]},
+          "if": {"$ref": "#/$defs/manuscript_mode"},
           "then": {"required": ["figure_mode", "formatting_mode"]}
         },
         {
-          "if": {"properties": {"formatting_mode": {"const": "journal_example"}}, "required": ["formatting_mode"]},
+          "if": {
+            "allOf": [
+              {"$ref": "#/$defs/manuscript_mode"},
+              {"properties": {"formatting_mode": {"const": "journal_example"}}, "required": ["formatting_mode"]}
+            ]
+          },
           "then": {"required": ["journal_pattern_id", "journal_example_source_id"]}
         },
         {
-          "if": {"properties": {"figure_mode": {"const": "with_figures"}}, "required": ["figure_mode"]},
-          "then": {"required": ["figure_source_ids"]}
+          "if": {
+            "allOf": [
+              {"$ref": "#/$defs/manuscript_mode"},
+              {"properties": {"figure_mode": {"const": "with_figures"}}, "required": ["figure_mode"]}
+            ]
+          },
+          "then": {
+            "required": ["figure_source_ids"],
+            "properties": {"figure_source_ids": {"minItems": 1}}
+          }
+        },
+        {
+          "if": {
+            "allOf": [
+              {"$ref": "#/$defs/manuscript_mode"},
+              {"properties": {"figure_mode": {"const": "without_figures"}}, "required": ["figure_mode"]}
+            ]
+          },
+          "then": {"not": {"required": ["figure_source_ids"]}}
         }
       ]
     },
@@ -44,9 +78,9 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["source_id", "title", "content_hash", "representation", "local_ref"],
+        "required": ["source_id", "title", "representation", "local_ref"],
         "properties": {
-          "source_id": {"type": "string", "minLength": 1},
+          "source_id": {"$ref": "#/$defs/identifier"},
           "title": {"type": "string", "minLength": 1},
           "content_hash": {"type": ["string", "null"]},
           "representation": {"enum": ["html", "pdf", "markdown", "text", "table", "figure", "data", "protocol", "note"]},
@@ -62,7 +96,7 @@
         "additionalProperties": false,
         "required": ["evidence_id", "source_id", "locator", "claim", "support_type", "verification_status"],
         "properties": {
-          "evidence_id": {"type": "string", "minLength": 1},
+          "evidence_id": {"$ref": "#/$defs/identifier"},
           "source_id": {"type": "string", "minLength": 1},
           "locator": {"type": "string", "minLength": 1},
           "claim": {"type": "string", "minLength": 1},
@@ -81,15 +115,32 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["result_id", "source_id", "locator", "value", "unit", "version"],
+        "required": ["result_id", "source_id", "locator", "value", "version"],
         "properties": {
-          "result_id": {"type": "string", "minLength": 1},
+          "result_id": {"$ref": "#/$defs/identifier"},
           "source_id": {"type": "string", "minLength": 1},
           "locator": {"type": "string", "minLength": 1},
-          "value": {},
+          "value": {"not": {"type": "null"}},
           "unit": {"type": ["string", "null"]},
           "version": {"type": "string", "minLength": 1},
           "analysis": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["unit_id", "unit_type", "label", "status"],
+        "properties": {
+          "unit_id": {"$ref": "#/$defs/identifier"},
+          "unit_type": {"enum": ["part", "chapter", "section", "paragraph", "equation", "table", "figure", "appendix", "task", "conclusion", "proposition"]},
+          "label": {"type": "string", "minLength": 1},
+          "title": {"type": ["string", "null"]},
+          "parent_id": {"type": ["string", "null"]},
+          "document": {"type": ["string", "null"]},
+          "status": {"enum": ["planned", "drafted", "final"]}
         }
       }
     },
@@ -98,19 +149,21 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["claim_id", "text", "output_section", "claim_type", "certainty", "evidence_ids", "result_ids", "status", "disposition"],
+        "required": ["claim_id", "text", "output_section", "claim_type", "certainty", "status", "disposition"],
         "properties": {
-          "claim_id": {"type": "string", "minLength": 1},
+          "claim_id": {"$ref": "#/$defs/identifier"},
           "text": {"type": "string", "minLength": 1},
           "output_section": {"type": "string", "minLength": 1},
-          "claim_type": {"enum": ["factual", "numeric", "causal", "interpretive", "synthesis", "method", "limitation"]},
+          "claim_type": {"enum": ["factual", "numeric", "causal", "interpretive", "synthesis", "method", "limitation", "structural", "hypothesis"]},
           "certainty": {"enum": ["direct", "inferred", "uncertain", "conflicted"]},
           "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
           "result_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "structure_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
           "status": {"enum": ["supported", "bounded", "unsupported", "conflicted"]},
           "disposition": {"enum": ["keep", "hedge", "keep_with_boundary", "drop", "request_input", "disclose_conflict"]},
           "boundary": {"type": ["string", "null"]},
-          "causal_basis": {"type": ["string", "null"]}
+          "causal_basis": {"type": ["string", "null"]},
+          "attribution": {"type": ["string", "null"]}
         }
       }
     }

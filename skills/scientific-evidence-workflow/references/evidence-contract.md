@@ -52,6 +52,28 @@ Use a result record for author-provided research data used in a manuscript.
 Do not calculate or transform a result unless the user explicitly authorizes
 that operation and the transformation is recorded as a new versioned result.
 
+## Structure record
+
+Use a structure record for an addressable unit of the work being produced, not
+of a source. Create these records whenever the output carries internal
+references: a chapter, a numbered section, an equation, a table, a figure, a
+declared task, a conclusion, or a proposition defended.
+
+| Field | Requirement |
+|---|---|
+| `unit_id` | Unique stable identifier. |
+| `unit_type` | `part`, `chapter`, `section`, `paragraph`, `equation`, `table`, `figure`, `appendix`, `task`, `conclusion`, or `proposition`. |
+| `label` | Label as it appears in the work, such as `3.4`, `Рис. 2`, or `Задача 1`. |
+| `title` | Optional heading or caption text. |
+| `parent_id` | Optional containing unit; the chain must not close on itself. |
+| `document` | Optional document the unit belongs to, for a reference that crosses documents. |
+| `status` | `planned`, `drafted`, or `final`. |
+
+An identifier is stable; a label is not. Renumbering a section changes `label`
+and leaves `unit_id` untouched, so existing references survive. Keep the
+identifier out of user-facing prose and render it as the label the reader
+expects.
+
 ## Claim record
 
 | Field | Requirement |
@@ -59,14 +81,45 @@ that operation and the transformation is recorded as a new versioned result.
 | `claim_id` | Unique identifier. |
 | `text` | Exact proposed output claim. |
 | `output_section` | Answer, review section, Abstract, Methods, Results, Discussion, or other named location. |
-| `claim_type` | `factual`, `numeric`, `causal`, `interpretive`, `synthesis`, `method`, or `limitation`. |
+| `claim_type` | `factual`, `numeric`, `causal`, `interpretive`, `synthesis`, `method`, `limitation`, `structural`, or `hypothesis`. |
 | `certainty` | `direct`, `inferred`, `uncertain`, or `conflicted`. |
 | `evidence_ids` | Supporting or contrary evidence records. |
 | `result_ids` | Approved research results, normally required for manuscript Results numbers. |
+| `structure_ids` | Units of the work referenced by the claim. |
 | `status` | `supported`, `bounded`, `unsupported`, or `conflicted`. |
 | `disposition` | `keep`, `hedge`, `keep_with_boundary`, `drop`, `request_input`, or `disclose_conflict`. |
 | `boundary` | Required when the claim needs sample, design, time, or applicability limits. |
 | `causal_basis` | Required for a direct causal claim; name the design feature that permits it. |
+| `attribution` | Who formulated the claim when it is not the current analysis; required for a hypothesis. |
+
+## Recorded hypotheses
+
+A `hypothesis` is a conjecture the researcher already holds, written down so
+that a later stage can test it. It is never an assertion of the current
+analysis. Recording one is permitted; proposing new research directions is not.
+
+A hypothesis keeps status `unsupported` and disposition `request_input`, and
+names its author in `attribution`. This is what stops a working guess from
+reappearing in a later report as an established result.
+
+## Internal references
+
+An internal reference points; it does not support. Naming a section does not
+make a claim true, and a chain of internal references can otherwise launder an
+unsupported statement into an apparently supported one.
+
+Two rules keep the distinction:
+
+- For every claim type except `structural`, `structure_ids` locate the claim
+  inside the work and never count toward `supported` or `bounded`. Those
+  statuses still require evidence or result records.
+- A `structural` claim is a statement about the organization of the work
+  itself, such as "task 3 is solved in chapter 4" or "proposition 2 is
+  established in section 3.4". It requires `structure_ids`, and those
+  references are its support.
+
+A `structural` claim may not rest on a `planned` unit. A unit that has not been
+drafted cannot yet establish anything.
 
 ## Consistency rules
 
@@ -77,6 +130,9 @@ that operation and the transformation is recorded as a new versioned result.
   `disclose_conflict`.
 - A numeric manuscript Results claim must cite at least one `result_id`.
 - A direct causal claim must name a supplied causal basis.
+- Every `structure_id` must resolve to an existing unit.
+- A `structural` claim requires `structure_ids`; no other claim type is
+  supported by them.
 - A locator must be meaningful within the authorized local record system.
 - A passing JSON validator does not establish that the referenced fragment
   truly supports the wording; perform semantic review separately.

@@ -11,7 +11,7 @@ from typing import Any, Iterable
 
 
 ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]*$")
-MODES = {"qa", "literature_review", "manuscript"}
+MODES = {"qa", "literature_review", "manuscript", "record"}
 FIGURE_MODES = {"with_figures", "without_figures"}
 FORMATTING_MODES = {"journal_example", "section_only"}
 REPRESENTATIONS = {
@@ -27,10 +27,155 @@ REPRESENTATIONS = {
 }
 SUPPORT_TYPES = {"direct", "inferential", "method", "context", "limitation", "contrary"}
 VERIFICATION_STATUSES = {"extracted", "verified", "rejected"}
-CLAIM_TYPES = {"factual", "numeric", "causal", "interpretive", "synthesis", "method", "limitation"}
+CLAIM_TYPES = {
+    "factual",
+    "numeric",
+    "causal",
+    "interpretive",
+    "synthesis",
+    "method",
+    "limitation",
+    "structural",
+    "hypothesis",
+}
+UNIT_TYPES = {
+    "part",
+    "chapter",
+    "section",
+    "paragraph",
+    "equation",
+    "table",
+    "figure",
+    "appendix",
+    "task",
+    "conclusion",
+    "proposition",
+}
+UNIT_STATUSES = {"planned", "drafted", "final"}
+
+# Genres implemented by this skill. The repository keeps this table identical to
+# registry/genres.yaml with a drift test; the skill itself stays self-contained
+# and never reads that file.
+GENRES: dict[str, dict[str, Any]] = {
+    "article-annotation": {
+        "bundle_mode": "qa",
+        "literature": "required",
+        "own_results": "forbidden",
+        "internal_crossref": "forbidden",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": 1,
+    },
+    "stage-report": {
+        "bundle_mode": "record",
+        "literature": "allowed",
+        "own_results": "required",
+        "internal_crossref": "allowed",
+        "organizational": "allowed",
+        "source_min": 1,
+        "source_max": None,
+    },
+    "micro-review": {
+        "bundle_mode": "literature_review",
+        "literature": "required",
+        "own_results": "forbidden",
+        "internal_crossref": "allowed",
+        "organizational": "forbidden",
+        "source_min": 2,
+        "source_max": 5,
+    },
+}
 CERTAINTIES = {"direct", "inferred", "uncertain", "conflicted"}
 CLAIM_STATUSES = {"supported", "bounded", "unsupported", "conflicted"}
 DISPOSITIONS = {"keep", "hedge", "keep_with_boundary", "drop", "request_input", "disclose_conflict"}
+
+# Field names and required sets are module constants so that
+# assets/evidence-bundle.schema.json can be checked against this validator
+# instead of drifting away from it. See the schema drift test.
+TOP_LEVEL_FIELDS = {
+    "schema_version",
+    "bundle_id",
+    "task",
+    "sources",
+    "evidence",
+    "results",
+    "structure",
+    "claims",
+}
+TOP_LEVEL_REQUIRED_STRINGS = ("schema_version", "bundle_id")
+TOP_LEVEL_REQUIRED = TOP_LEVEL_REQUIRED_STRINGS + ("task", "sources", "evidence", "claims")
+
+TASK_FIELDS = {
+    "mode",
+    "genre",
+    "request",
+    "input_scope",
+    "language",
+    "audience",
+    "figure_mode",
+    "figure_source_ids",
+    "formatting_mode",
+    "journal_pattern_id",
+    "journal_example_source_id",
+}
+TASK_REQUIRED = ("mode", "request")
+
+SOURCE_FIELDS = {"source_id", "title", "content_hash", "representation", "local_ref", "version"}
+SOURCE_REQUIRED = ("source_id", "title", "representation", "local_ref")
+
+EVIDENCE_FIELDS = {
+    "evidence_id",
+    "source_id",
+    "locator",
+    "claim",
+    "support_type",
+    "fragment",
+    "value",
+    "unit",
+    "study_context",
+    "limitations",
+    "verification_status",
+}
+EVIDENCE_REQUIRED = (
+    "evidence_id",
+    "source_id",
+    "locator",
+    "claim",
+    "support_type",
+    "verification_status",
+)
+
+RESULT_FIELDS = {"result_id", "source_id", "locator", "value", "unit", "version", "analysis"}
+RESULT_REQUIRED_STRINGS = ("result_id", "source_id", "locator", "version")
+RESULT_REQUIRED = RESULT_REQUIRED_STRINGS + ("value",)
+
+STRUCTURE_FIELDS = {"unit_id", "unit_type", "label", "title", "parent_id", "document", "status"}
+STRUCTURE_REQUIRED = ("unit_id", "unit_type", "label", "status")
+
+CLAIM_FIELDS = {
+    "claim_id",
+    "text",
+    "output_section",
+    "claim_type",
+    "certainty",
+    "evidence_ids",
+    "result_ids",
+    "structure_ids",
+    "status",
+    "disposition",
+    "boundary",
+    "causal_basis",
+    "attribution",
+}
+CLAIM_REQUIRED = (
+    "claim_id",
+    "text",
+    "output_section",
+    "claim_type",
+    "certainty",
+    "status",
+    "disposition",
+)
 
 
 def _nonempty_string(value: Any) -> bool:
@@ -55,6 +200,22 @@ def _check_required_strings(
     for key in required:
         if not _nonempty_string(record.get(key)):
             errors.append(f"{path}.{key}: expected a non-empty string")
+
+
+def _cyclic_units(structure: dict[str, dict[str, Any]]) -> set[str]:
+    """Return units whose parent chain closes on itself."""
+
+    cyclic: set[str] = set()
+    for unit_id in structure:
+        walked: list[str] = []
+        current: Any = unit_id
+        while isinstance(current, str) and current in structure:
+            if current in walked:
+                cyclic.update(walked[walked.index(current) :])
+                break
+            walked.append(current)
+            current = structure[current].get("parent_id")
+    return cyclic
 
 
 def _index_records(
@@ -84,9 +245,8 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     if not isinstance(data, dict):
         return {"valid": False, "errors": ["bundle: expected an object"], "warnings": [], "counts": {}}
 
-    top_allowed = {"schema_version", "bundle_id", "task", "sources", "evidence", "results", "claims"}
-    _check_allowed_keys(data, top_allowed, "bundle", errors)
-    _check_required_strings(data, ["schema_version", "bundle_id"], "bundle", errors)
+    _check_allowed_keys(data, TOP_LEVEL_FIELDS, "bundle", errors)
+    _check_required_strings(data, TOP_LEVEL_REQUIRED_STRINGS, "bundle", errors)
     if data.get("schema_version") != "1.0":
         errors.append("bundle.schema_version: expected '1.0'")
 
@@ -95,24 +255,8 @@ def validate_bundle(data: Any) -> dict[str, Any]:
         errors.append("bundle.task: expected an object")
         task = {}
     else:
-        _check_allowed_keys(
-            task,
-            {
-                "mode",
-                "request",
-                "input_scope",
-                "language",
-                "audience",
-                "figure_mode",
-                "figure_source_ids",
-                "formatting_mode",
-                "journal_pattern_id",
-                "journal_example_source_id",
-            },
-            "bundle.task",
-            errors,
-        )
-        _check_required_strings(task, ["mode", "request"], "bundle.task", errors)
+        _check_allowed_keys(task, TASK_FIELDS, "bundle.task", errors)
+        _check_required_strings(task, TASK_REQUIRED, "bundle.task", errors)
     mode = task.get("mode")
     if mode not in MODES:
         errors.append(f"bundle.task.mode: expected one of {sorted(MODES)}")
@@ -159,18 +303,19 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     source_records = _as_list(data.get("sources"), "bundle.sources", errors)
     evidence_records = _as_list(data.get("evidence"), "bundle.evidence", errors)
     result_records = _as_list(data.get("results", []), "bundle.results", errors)
+    structure_records = _as_list(data.get("structure", []), "bundle.structure", errors)
     claim_records = _as_list(data.get("claims"), "bundle.claims", errors)
 
     sources = _index_records(source_records, "source_id", "bundle.sources", errors)
     evidence = _index_records(evidence_records, "evidence_id", "bundle.evidence", errors)
     results = _index_records(result_records, "result_id", "bundle.results", errors)
+    structure = _index_records(structure_records, "unit_id", "bundle.structure", errors)
     claims = _index_records(claim_records, "claim_id", "bundle.claims", errors)
 
-    source_allowed = {"source_id", "title", "content_hash", "representation", "local_ref", "version"}
     for source_id, source in sources.items():
         path = f"source[{source_id}]"
-        _check_allowed_keys(source, source_allowed, path, errors)
-        _check_required_strings(source, ["source_id", "title", "representation", "local_ref"], path, errors)
+        _check_allowed_keys(source, SOURCE_FIELDS, path, errors)
+        _check_required_strings(source, SOURCE_REQUIRED, path, errors)
         if source.get("representation") not in REPRESENTATIONS:
             errors.append(f"{path}.representation: unsupported representation")
         content_hash = source.get("content_hash")
@@ -203,28 +348,10 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                 f"{journal_example_source_id!r} is outside input_scope"
             )
 
-    evidence_allowed = {
-        "evidence_id",
-        "source_id",
-        "locator",
-        "claim",
-        "support_type",
-        "fragment",
-        "value",
-        "unit",
-        "study_context",
-        "limitations",
-        "verification_status",
-    }
     for evidence_id, item in evidence.items():
         path = f"evidence[{evidence_id}]"
-        _check_allowed_keys(item, evidence_allowed, path, errors)
-        _check_required_strings(
-            item,
-            ["evidence_id", "source_id", "locator", "claim", "support_type", "verification_status"],
-            path,
-            errors,
-        )
+        _check_allowed_keys(item, EVIDENCE_FIELDS, path, errors)
+        _check_required_strings(item, EVIDENCE_REQUIRED, path, errors)
         if item.get("source_id") not in sources:
             errors.append(f"{path}.source_id: unknown source {item.get('source_id')!r}")
         if item.get("support_type") not in SUPPORT_TYPES:
@@ -237,38 +364,39 @@ def validate_bundle(data: Any) -> dict[str, Any]:
         if fragment is not None and not isinstance(fragment, str):
             errors.append(f"{path}.fragment: expected a string or null")
 
-    result_allowed = {"result_id", "source_id", "locator", "value", "unit", "version", "analysis"}
     for result_id, item in results.items():
         path = f"result[{result_id}]"
-        _check_allowed_keys(item, result_allowed, path, errors)
-        _check_required_strings(item, ["result_id", "source_id", "locator", "version"], path, errors)
+        _check_allowed_keys(item, RESULT_FIELDS, path, errors)
+        _check_required_strings(item, RESULT_REQUIRED_STRINGS, path, errors)
         if item.get("source_id") not in sources:
             errors.append(f"{path}.source_id: unknown source {item.get('source_id')!r}")
         if "value" not in item or item.get("value") is None:
             errors.append(f"{path}.value: frozen result value is required")
 
-    claim_allowed = {
-        "claim_id",
-        "text",
-        "output_section",
-        "claim_type",
-        "certainty",
-        "evidence_ids",
-        "result_ids",
-        "status",
-        "disposition",
-        "boundary",
-        "causal_basis",
-    }
+    for unit_id, item in structure.items():
+        path = f"structure[{unit_id}]"
+        _check_allowed_keys(item, STRUCTURE_FIELDS, path, errors)
+        _check_required_strings(item, STRUCTURE_REQUIRED, path, errors)
+        if item.get("unit_type") not in UNIT_TYPES:
+            errors.append(f"{path}.unit_type: expected one of {sorted(UNIT_TYPES)}")
+        if item.get("status") not in UNIT_STATUSES:
+            errors.append(f"{path}.status: expected one of {sorted(UNIT_STATUSES)}")
+        parent_id = item.get("parent_id")
+        if parent_id is not None:
+            if not _nonempty_string(parent_id):
+                errors.append(f"{path}.parent_id: expected a string or null")
+            elif parent_id == unit_id:
+                errors.append(f"{path}.parent_id: a unit cannot contain itself")
+            elif parent_id not in structure:
+                errors.append(f"{path}.parent_id: unknown unit {parent_id!r}")
+
+    for unit_id in sorted(_cyclic_units(structure)):
+        errors.append(f"structure[{unit_id}]: parent chain closes on itself")
+
     for claim_id, item in claims.items():
         path = f"claim[{claim_id}]"
-        _check_allowed_keys(item, claim_allowed, path, errors)
-        _check_required_strings(
-            item,
-            ["claim_id", "text", "output_section", "claim_type", "certainty", "status", "disposition"],
-            path,
-            errors,
-        )
+        _check_allowed_keys(item, CLAIM_FIELDS, path, errors)
+        _check_required_strings(item, CLAIM_REQUIRED, path, errors)
         if item.get("claim_type") not in CLAIM_TYPES:
             errors.append(f"{path}.claim_type: expected one of {sorted(CLAIM_TYPES)}")
         if item.get("certainty") not in CERTAINTIES:
@@ -280,23 +408,43 @@ def validate_bundle(data: Any) -> dict[str, Any]:
 
         evidence_ids = item.get("evidence_ids", [])
         result_ids = item.get("result_ids", [])
+        structure_ids = item.get("structure_ids", [])
         if not isinstance(evidence_ids, list) or not all(_nonempty_string(value) for value in evidence_ids):
             errors.append(f"{path}.evidence_ids: expected a list of identifiers")
             evidence_ids = []
         if not isinstance(result_ids, list) or not all(_nonempty_string(value) for value in result_ids):
             errors.append(f"{path}.result_ids: expected a list of identifiers")
             result_ids = []
+        if not isinstance(structure_ids, list) or not all(_nonempty_string(value) for value in structure_ids):
+            errors.append(f"{path}.structure_ids: expected a list of identifiers")
+            structure_ids = []
 
         unknown_evidence = sorted(set(evidence_ids) - set(evidence))
         unknown_results = sorted(set(result_ids) - set(results))
+        unknown_units = sorted(set(structure_ids) - set(structure))
         for identifier in unknown_evidence:
             errors.append(f"{path}.evidence_ids: unknown evidence {identifier!r}")
         for identifier in unknown_results:
             errors.append(f"{path}.result_ids: unknown result {identifier!r}")
+        for identifier in unknown_units:
+            errors.append(f"{path}.structure_ids: unknown unit {identifier!r}")
 
         status = item.get("status")
         disposition = item.get("disposition")
+
+        # An internal reference points; it does not support. Only a structural
+        # claim, which is a statement about the organization of the work, is
+        # established by the units it names.
         references = evidence_ids + result_ids
+        if item.get("claim_type") == "structural":
+            if not structure_ids:
+                errors.append(f"{path}.structure_ids: required for a structural claim")
+            references = references + structure_ids
+            for identifier in sorted(set(structure_ids)):
+                if structure.get(identifier, {}).get("status") == "planned":
+                    errors.append(
+                        f"{path}: structural claim cannot rest on planned unit {identifier!r}"
+                    )
         if status == "supported":
             if not references:
                 errors.append(f"{path}: supported claim requires evidence or result references")
@@ -343,10 +491,57 @@ def validate_bundle(data: Any) -> dict[str, Any]:
         ):
             errors.append(f"{path}.causal_basis: required for direct supported causal claim")
 
+        # A hypothesis is a recorded conjecture, never an assertion of the
+        # current analysis. Keeping it unsupported blocks the path by which a
+        # working guess becomes a reported result.
+        if item.get("claim_type") == "hypothesis":
+            if not _nonempty_string(item.get("attribution")):
+                errors.append(f"{path}.attribution: required for a hypothesis")
+            if status != "unsupported":
+                errors.append(f"{path}: a hypothesis must keep status 'unsupported'")
+            if disposition != "request_input":
+                errors.append(f"{path}: a hypothesis must use disposition 'request_input'")
+
+    genre = task.get("genre")
+    if genre is not None:
+        if not _nonempty_string(genre) or genre not in GENRES:
+            errors.append(f"bundle.task.genre: unknown or unimplemented genre {genre!r}")
+        else:
+            rules = GENRES[genre]
+            if mode != rules["bundle_mode"]:
+                errors.append(
+                    f"bundle.task.genre: {genre!r} runs in mode {rules['bundle_mode']!r}, "
+                    f"not {mode!r}"
+                )
+            if len(input_scope) < rules["source_min"]:
+                errors.append(
+                    f"bundle.task.input_scope: {genre!r} requires at least "
+                    f"{rules['source_min']} source(s)"
+                )
+            if rules["source_max"] is not None and len(input_scope) > rules["source_max"]:
+                warnings.append(
+                    f"bundle.task.input_scope: {genre!r} is defined for at most "
+                    f"{rules['source_max']} source(s); consider a wider genre"
+                )
+            if rules["literature"] == "required" and not evidence:
+                errors.append(f"bundle.evidence: {genre!r} requires literature evidence")
+            if rules["own_results"] == "required" and not results:
+                errors.append(f"bundle.results: {genre!r} requires own research results")
+            if rules["own_results"] == "forbidden" and results:
+                errors.append(f"bundle.results: {genre!r} does not report own research results")
+            if rules["internal_crossref"] == "forbidden":
+                for claim_id, item in claims.items():
+                    if item.get("structure_ids"):
+                        errors.append(
+                            f"claim[{claim_id}].structure_ids: {genre!r} carries no internal "
+                            "references"
+                        )
+
     counts = {
         "sources": len(sources),
         "evidence": len(evidence),
         "results": len(results),
+        "structure": len(structure),
         "claims": len(claims),
         "supported_claims": sum(1 for item in claims.values() if item.get("status") == "supported"),
         "bounded_claims": sum(1 for item in claims.values() if item.get("status") == "bounded"),

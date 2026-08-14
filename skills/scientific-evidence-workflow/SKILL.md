@@ -30,6 +30,24 @@ Always read `references/evidence-contract.md` first. Then load exactly one mode:
   `references/literature-review-workflow.md`.
 - Manuscript drafting, audit, or revision from supplied literature and research
   records: `references/manuscript-workflow.md`.
+- A record of the author's own work in a bounded stage: mode `record`, with the
+  genre reference below.
+
+## Select a genre when one fits
+
+A genre narrows a mode to a named kind of text with its own required parts and
+gates. When the request matches one, set `task.genre` and also load its
+reference:
+
+- `article-annotation`: one publication annotated for the reference library —
+  `references/genres/article-annotation.md`, mode `qa`.
+- `stage-report`: what was done, produced, opened, and blocked in one stage —
+  `references/genres/stage-report.md`, mode `record`.
+- `micro-review`: one review question across two to five sources —
+  `references/genres/micro-review.md`, mode `literature_review`.
+
+Leave `task.genre` unset for a request that no listed genre describes. Do not
+force a request into a genre it does not fit.
 
 Read `references/local-model-compatibility.md` when preparing context or a run
 for a local model.
@@ -99,6 +117,17 @@ Use only these dispositions:
 
 Never resolve a conflict by choosing the more convenient value.
 
+When the output carries internal references, record every addressable unit of
+the work — chapter, numbered section, equation, table, figure, declared task,
+conclusion, proposition — as a structure record with a stable identifier. Point
+claims at those units through `structure_ids`.
+
+An internal reference points; it does not support. Naming a section never makes
+a claim supported: evidence or result records are still required. The single
+exception is a `structural` claim, which states how the work is organized, such
+as "task 3 is solved in chapter 4"; it is established by the units it names and
+may not rest on a unit that is still `planned`.
+
 ### 5. Draft the requested artifact
 
 Draft only after the evidence and claim ledgers exist. Preserve the direction,
@@ -114,11 +143,12 @@ Before release, verify:
 
 1. every material claim has valid evidence or result references;
 2. every cited locator belongs to the allowed input set;
-3. every number exactly matches its source or approved result record;
-4. causal language is permitted by the design;
-5. conflicting evidence is visible;
-6. unsupported claims are removed or explicitly blocked;
-7. no scientific source was introduced from model memory.
+3. every internal reference resolves to an existing unit of the work;
+4. every number exactly matches its source or approved result record;
+5. causal language is permitted by the design;
+6. conflicting evidence is visible;
+7. unsupported claims are removed or explicitly blocked;
+8. no scientific source was introduced from model memory.
 
 When a bundle is available, run:
 
@@ -136,13 +166,19 @@ When writing in Russian, revise the evidence-checked draft using
 citations, locators, uncertainty, and causal strength before revising. Improve
 only terminology, syntax, cohesion, and concision.
 
-When Python is available, run:
+The language rules layer: the core file always applies, a genre profile under
+`references/russian/` describes how this kind of text typically fails, and a
+domain profile carries subject vocabulary. Genre and subject area are
+independent; neither implies the other.
+
+When Python is available, run the audit with the same profiles:
 
 ```text
-python scripts/audit_russian_style.py output.md --json
+python scripts/audit_russian_style.py output.md --json --profile genre-review
 ```
 
-The script detects selected surface patterns only. Resolve its findings, then
+Use `--list-profiles` to see what exists. The script detects selected surface
+patterns only. Resolve its findings, then
 perform the manual checks in the reference. Do not report a clean automated
 audit as proof of linguistic or scientific quality.
 
@@ -172,12 +208,20 @@ Stop and request input instead of guessing when:
 ## Bundled resources
 
 - `assets/evidence-bundle.template.json`: neutral machine-readable bundle.
+- `assets/evidence-bundle.schema.json`: structural declaration of the bundle for
+  a host that cannot run Python. `scripts/validate_bundle.py` enforces the same
+  structure plus the semantic rules and stays authoritative for release.
 - `assets/qa-output.template.md`: Q&A output scaffold.
+- `references/genres/`: genre references with their required parts and gates.
+- `assets/article-annotation.template.md`, `assets/stage-report.template.md`,
+  `assets/micro-review.template.md`: genre output scaffolds.
 - `assets/literature-review-output.template.md`: review scaffold.
 - `assets/manuscript-output.template.md`: manuscript scaffold.
 - `assets/journal-pattern.template.json`: journal-pattern memory scaffold.
 - `scripts/validate_bundle.py`: dependency-free structural validator.
 - `references/journal-pattern-memory.md`: rules for extracting and retaining
   formatting patterns from a user-supplied journal example.
-- `references/russian-scientific-style.md`: Russian scientific-language rules.
+- `references/russian-scientific-style.md`: Russian language core.
+- `references/russian/`: genre language profiles.
 - `scripts/audit_russian_style.py`: dependency-free heuristic style audit.
+- `scripts/russian/`: machine-readable core, genre, and domain rule profiles.

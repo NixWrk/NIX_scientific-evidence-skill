@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-08-03
+updated: 2026-08-14
 
 policy:
   input_scope: supplied_corpus_only
@@ -12,12 +12,12 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.2"
-    skill_sha256: 5b1bb62f8c1558b6f0c586bea9256b7d5ea9eb3d916bb1690de159685971a72e
+    version: "0.6"
+    skill_sha256: 6fff2201419d2025eae9842cc55047cf5e93d15227c8d5840802873a86797f7a
     task: [qa, literature_review, manuscript]
     license: not_declared
     spec_subset: pass
-    portability: current_agent_qa_and_literature_review_pass_local_llm_execution_pending
+    portability: current_agent_qa_review_and_manuscript_pass_local_llm_execution_pending
     corpus_policy: pass
     reasons:
       - supplied_corpus_only
@@ -29,9 +29,19 @@ verdicts:
       - retracted_metadata_rejected_by_evidence_gate
       - separate_russian_language_revision_after_evidence_gate
       - dependency_free_heuristic_russian_style_auditor
+      - language_rules_as_data_with_core_genre_and_domain_profiles
+      - domain_vocabulary_separated_from_general_language_core
       - target_review_style_regression_passed_without_evidence_drift
+      - mandatory_manuscript_figure_and_formatting_modes
+      - versioned_journal_pattern_memory_from_supplied_example
+      - structural_schema_checked_against_validator_by_test
+      - addressable_structure_ledger_for_internal_references
+      - internal_reference_cannot_substitute_for_evidence
+      - genre_gates_for_annotation_stage_report_and_micro_review
+      - recorded_hypothesis_cannot_become_a_reported_result
+      - genre_table_checked_against_registry_by_test
       - actual_local_model_run_pending
-    experiments: [EXP-0021, EXP-0022, EXP-0023]
+    experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025]
     next_action: blind_new_corpus_review_then_local_model_run
 
   - id: literature-triage-matrix
