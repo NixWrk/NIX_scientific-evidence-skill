@@ -41,6 +41,24 @@ conflict_resolution:
 
 acquisition_states: [needed, located, obtained, carded]
 
+# `located` means the official source is identified, not that the file is held.
+# Only `obtained` and `carded` involve an actual file.
+retrieval_attempts:
+  - date: 2026-08-14
+    agent: claude-code-session
+    outcome: failed
+    reachable: [example.com]
+    refused: [protect.gost.ru, uchsov.bmstu.ru, mf.bmstu.ru, rospatent.gov.ru, consultant.ru]
+    diagnosis: >-
+      Сеть доступна, но перечисленные хосты отказывают в соединении, что
+      выглядит как фильтрация по расположению клиента. Файлы не получены.
+    structural_limitation: >-
+      Даже при доступности хоста инструмент выборки страниц возвращает пересказ
+      содержимого моделью, а не исходные байты. Карточка норматива требует хеша
+      файла, поэтому этот путь не может дать пригодную карточку ни при каких
+      условиях. Файлы должен получить пользователь.
+    next_action: пользователь помещает файлы в corpus/private/normative/
+
 documents:
 
   # --- tier 1: federal law -------------------------------------------------
