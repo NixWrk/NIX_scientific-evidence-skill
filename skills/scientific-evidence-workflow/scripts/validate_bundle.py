@@ -65,6 +65,7 @@ GENRES: dict[str, dict[str, Any]] = {
         "organizational": "forbidden",
         "source_min": 1,
         "source_max": 1,
+        "source_representations": None,
     },
     "stage-report": {
         "bundle_mode": "record",
@@ -74,6 +75,7 @@ GENRES: dict[str, dict[str, Any]] = {
         "organizational": "allowed",
         "source_min": 1,
         "source_max": None,
+        "source_representations": None,
     },
     "micro-review": {
         "bundle_mode": "literature_review",
@@ -83,6 +85,37 @@ GENRES: dict[str, dict[str, Any]] = {
         "organizational": "forbidden",
         "source_min": 2,
         "source_max": 5,
+        "source_representations": None,
+    },
+    "experiment-description": {
+        "bundle_mode": "record",
+        "literature": "allowed",
+        "own_results": "allowed",
+        "internal_crossref": "allowed",
+        "organizational": "allowed",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": ["protocol", "data"],
+    },
+    "procedure-record": {
+        "bundle_mode": "record",
+        "literature": "forbidden",
+        "own_results": "allowed",
+        "internal_crossref": "allowed",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": ["protocol", "data", "note"],
+    },
+    "decision-log": {
+        "bundle_mode": "record",
+        "literature": "allowed",
+        "own_results": "allowed",
+        "internal_crossref": "allowed",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": None,
     },
 }
 CERTAINTIES = {"direct", "inferred", "uncertain", "conflicted"}
@@ -523,8 +556,30 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                     f"bundle.task.input_scope: {genre!r} is defined for at most "
                     f"{rules['source_max']} source(s); consider a wider genre"
                 )
+            required_reps = rules["source_representations"]
+            if required_reps:
+                present = {
+                    sources[source_id].get("representation")
+                    for source_id in input_scope
+                    if source_id in sources
+                }
+                if not present & set(required_reps):
+                    errors.append(
+                        f"bundle.task.input_scope: {genre!r} requires a source with "
+                        f"representation {sorted(required_reps)}; without a record of what "
+                        "was performed the account would be reconstructed"
+                    )
             if rules["literature"] == "required" and not evidence:
                 errors.append(f"bundle.evidence: {genre!r} requires literature evidence")
+            if rules["literature"] == "forbidden":
+                # `context` is the literature-context support type. A record of
+                # what was done does not argue from the field's opinion.
+                for evidence_id, item in evidence.items():
+                    if item.get("support_type") == "context":
+                        errors.append(
+                            f"evidence[{evidence_id}].support_type: {genre!r} carries no "
+                            "literature context"
+                        )
             if rules["own_results"] == "required" and not results:
                 errors.append(f"bundle.results: {genre!r} requires own research results")
             if rules["own_results"] == "forbidden" and results:

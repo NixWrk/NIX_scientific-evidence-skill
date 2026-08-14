@@ -79,6 +79,7 @@ genres:
     implemented_in: scientific-evidence-workflow
     bundle_mode: record
     source_count: {min: 1, max: null}
+    source_representations: null
     normativity: free
     depth: section
     purpose: record_procedure
@@ -98,12 +99,16 @@ genres:
 
   - id: experiment-description
     family: working
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: record
+    source_count: {min: 1, max: null}
+    source_representations: [protocol, data]
     normativity: conventional
     depth: section
     purpose: record_procedure
     audience: [self, supervisor, coauthors]
-    evidence_regime: {literature: allowed, own_results: required, internal_crossref: allowed, organizational: allowed}
+    evidence_regime: {literature: allowed, own_results: allowed, internal_crossref: allowed, organizational: allowed}
     required_components:
       - объект и материалы
       - приборы, версии и настройки
@@ -124,12 +129,16 @@ genres:
 
   - id: procedure-record
     family: working
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: record
+    source_count: {min: 1, max: null}
+    source_representations: [protocol, data, note]
     normativity: free
     depth: paragraph
     purpose: record_procedure
     audience: [self]
-    evidence_regime: {literature: forbidden, own_results: required, internal_crossref: allowed, organizational: forbidden}
+    evidence_regime: {literature: forbidden, own_results: allowed, internal_crossref: allowed, organizational: forbidden}
     required_components: [дата, что выполнено, отклонения от протокола, полученные файлы и версии]
     invariants: [INV-CROSSREF-RESOLVABLE]
     render_targets: [obsidian]
@@ -137,7 +146,11 @@ genres:
 
   - id: decision-log
     family: working
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: record
+    source_count: {min: 1, max: null}
+    source_representations: null
     normativity: free
     depth: paragraph
     purpose: record_procedure
@@ -169,6 +182,7 @@ genres:
     implemented_in: scientific-evidence-workflow
     bundle_mode: literature_review
     source_count: {min: 2, max: 5}
+    source_representations: null
     normativity: free
     depth: section
     purpose: systematize_prior_work
@@ -288,6 +302,7 @@ genres:
     implemented_in: scientific-evidence-workflow
     bundle_mode: qa
     source_count: {min: 1, max: 1}
+    source_representations: null
     normativity: free
     depth: paragraph
     purpose: systematize_prior_work

@@ -615,10 +615,71 @@ def stage_report_bundle() -> dict:
     return bundle
 
 
+def record_bundle(genre: str, representation: str = "protocol") -> dict:
+    bundle = load_template()
+    bundle["task"].update({"mode": "record", "genre": genre})
+    bundle["sources"][0]["representation"] = representation
+    return bundle
+
+
+def experiment_bundle() -> dict:
+    return record_bundle("experiment-description")
+
+
+def procedure_bundle() -> dict:
+    return record_bundle("procedure-record")
+
+
+def decision_bundle() -> dict:
+    return record_bundle("decision-log", representation="text")
+
+
 def test_implemented_genres_accept_their_own_shape() -> None:
-    for build in (annotation_bundle, micro_review_bundle, stage_report_bundle):
+    builders = (
+        annotation_bundle,
+        micro_review_bundle,
+        stage_report_bundle,
+        experiment_bundle,
+        procedure_bundle,
+        decision_bundle,
+    )
+
+    assert len(builders) == len(VALIDATOR.GENRES)
+    for build in builders:
         report = VALIDATOR.validate_bundle(build())
         assert report["valid"] is True, f"{build.__name__}: {report['errors']}"
+
+
+def test_experiment_description_refuses_a_reconstruction() -> None:
+    """Without a protocol or data source the account would come from memory."""
+
+    bundle = record_bundle("experiment-description", representation="html")
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires a source with representation ['data', 'protocol']" in error_text(report)
+
+
+def test_procedure_record_accepts_a_note_but_not_literature_context() -> None:
+    bundle = record_bundle("procedure-record", representation="note")
+    assert VALIDATOR.validate_bundle(bundle)["valid"] is True
+
+    bundle["evidence"][0]["support_type"] = "context"
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "carries no literature context" in error_text(report)
+
+
+def test_decision_log_takes_no_organizational_record() -> None:
+    """The regime is declared as forbidden and must not sit unenforced."""
+
+    rules = VALIDATOR.GENRES["decision-log"]
+
+    assert rules["organizational"] == "forbidden"
+    assert rules["source_representations"] is None
+    assert rules["bundle_mode"] == "record"
 
 
 def test_unknown_genre_is_rejected() -> None:
@@ -895,6 +956,23 @@ def test_genre_and_domain_profiles_compose() -> None:
 def test_unknown_profile_names_the_available_ones() -> None:
     with pytest.raises(FileNotFoundError, match="genre-review"):
         STYLE_AUDITOR.audit_text("Текст.", ["genre-dissertation"])
+
+
+def test_genre_language_profiles_pass_the_core_audit() -> None:
+    """A genre profile must not use the prose it warns against.
+
+    The auditor cannot tell mention from use, so a profile that quotes a
+    forbidden phrase puts it in code formatting like any other literal.
+
+    references/russian-scientific-style.md is deliberately out of scope: it is
+    the catalogue of forbidden patterns, so naming them is its subject matter.
+    Contorting that file to satisfy the tool would damage the primary reference
+    to buy a green check.
+    """
+
+    for path in sorted((SKILL_DIR / "references" / "russian").glob("*.md")):
+        report = STYLE_AUDITOR.audit_text(path.read_text(encoding="utf-8"))
+        assert report["counts"]["issues"] == 0, f"{path.name}: {report['issues']}"
 
 
 def test_every_shipped_profile_compiles() -> None:

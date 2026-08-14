@@ -1,0 +1,37 @@
+{
+  "profile_id": "genre-experiment",
+  "description": "Experiment description. The characteristic failures are a plan written as if performed, a deviation smoothed into standard practice, uncontrolled conditions presented as controlled, and a single run generalized.",
+  "latin_allow": [],
+  "rules": [
+    {
+      "code": "planned_as_performed",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:планируется|предполагается|будет (?:выполнен\\w*|проведён\\w*|измерен\\w*)|должен быть (?:выполнен\\w*|измерен\\w*)|намечено)(?![а-яё])",
+      "message": "This genre records what was performed; move the plan to a separate record."
+    },
+    {
+      "code": "smoothed_deviation",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:в целом по протоколу|с небольшими отклонениями|как обычно|стандартным образом|по стандартной методике|в штатном режиме)(?![а-яё])",
+      "message": "Name the deviation, its step, and its extent."
+    },
+    {
+      "code": "uncontrolled_as_controlled",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:при прочих равных|в одинаковых условиях|в идентичных условиях|при неизменных условиях)(?![а-яё])",
+      "message": "List the controlled factors and name those that were not controlled."
+    },
+    {
+      "code": "generalized_single_run",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:как правило|обычно|типично|в большинстве случаев|всегда даёт)(?![а-яё])",
+      "message": "One run shows what happened in that run; state the number of runs."
+    },
+    {
+      "code": "unversioned_reference",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:последн(?:яя|ей|юю) верси(?:я|и|ю)|актуальн(?:ая|ой|ую) верси(?:я|и|ю)|текущ(?:ая|ей|ую) верси(?:я|и|ю))(?![а-яё])",
+      "message": "Record the exact version at the time of the run; it will not stay current."
+    }
+  ]
+}

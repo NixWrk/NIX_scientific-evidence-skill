@@ -45,6 +45,12 @@ reference:
   `references/genres/stage-report.md`, mode `record`.
 - `micro-review`: one review question across two to five sources —
   `references/genres/micro-review.md`, mode `literature_review`.
+- `experiment-description`: what was set up and performed in one experiment —
+  `references/genres/experiment-description.md`, mode `record`.
+- `procedure-record`: one performed procedure, its deviations and outputs —
+  `references/genres/procedure-record.md`, mode `record`.
+- `decision-log`: why a choice was made, against what was known then —
+  `references/genres/decision-log.md`, mode `record`.
 
 Leave `task.genre` unset for a request that no listed genre describes. Do not
 force a request into a genre it does not fit.
@@ -213,8 +219,7 @@ Stop and request input instead of guessing when:
   structure plus the semantic rules and stays authoritative for release.
 - `assets/qa-output.template.md`: Q&A output scaffold.
 - `references/genres/`: genre references with their required parts and gates.
-- `assets/article-annotation.template.md`, `assets/stage-report.template.md`,
-  `assets/micro-review.template.md`: genre output scaffolds.
+- `assets/<genre>.template.md`: genre output scaffolds.
 - `assets/literature-review-output.template.md`: review scaffold.
 - `assets/manuscript-output.template.md`: manuscript scaffold.
 - `assets/journal-pattern.template.json`: journal-pattern memory scaffold.
