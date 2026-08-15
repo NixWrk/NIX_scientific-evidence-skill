@@ -214,6 +214,40 @@ def test_deferred_work_names_real_documents_and_a_trigger() -> None:
         assert entry.get("trigger", "").strip(), f"{document_id}: deferral without a trigger"
 
 
+def test_a_deferral_the_repository_cannot_settle_names_who_decides() -> None:
+    """Some conditions depend on the subject of the work, which only the author knows.
+
+    GOST ISO 14971 and GOST IEC 60601-1 unfold by kind of device. Carding them
+    before the device is named would not be early work, it would be a guess
+    written down as a requirement, and it would tie a skill meant to be
+    subject-independent to one subject. So these entries are a finished state,
+    not a queue item, and the flag says whose call it is.
+
+    Two things are checked because both can rot: that such an entry explains
+    itself, and that nobody quietly cards it anyway.
+    """
+
+    deciders = {"author"}
+    carded = {
+        document["id"]
+        for document in NORMATIVE["documents"]
+        if document["acquisition"] == "carded"
+    }
+
+    flagged = [entry for entry in NORMATIVE["deferred"] if "decided_by" in entry]
+    assert flagged, "the deferrals that only the author can settle have disappeared"
+
+    for entry in flagged:
+        document_id = entry["id"]
+        assert entry["decided_by"] in deciders, f"{document_id}: unknown decider"
+        assert entry.get("note", "").strip(), (
+            f"{document_id}: deferred to the author without saying why the repository cannot decide"
+        )
+        assert document_id not in carded, (
+            f"{document_id}: carded although its condition depends on facts only the author has"
+        )
+
+
 def test_nothing_is_both_carded_and_deferred() -> None:
     """A carded document is done; leaving it deferred would misstate the state."""
 

@@ -17,6 +17,22 @@ honestly. The validator refuses to accept requirements on a card whose source
 is a catalogue entry, because a designation standing in for content is the
 failure this whole mechanism exists to prevent.
 
+## What must not be carded yet
+
+A standard whose requirements unfold by subject — by kind of device, by kind of
+study — is not carded until the subject is named. Reading it early does not
+produce an early requirement; it produces a guess recorded in the same shape as
+an observation, which is the one thing a card must never contain.
+
+There is a second reason, and it outranks the first. This skill is meant to
+work for any subject. A card built for a device nobody has named would bind the
+skill to that device, and the binding would be invisible: it would look like
+part of the normative base rather than like an assumption. Genre and subject are
+independent axes here, and the normative layer keeps that separation too.
+
+Such a document stays deferred with the decision attributed to whoever can make
+it. That is a finished state, not an item waiting in a queue.
+
 ## Required provenance
 
 Create one JSON record from `assets/normative-pattern.template.json`. Preserve:
