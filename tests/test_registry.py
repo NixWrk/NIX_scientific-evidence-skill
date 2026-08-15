@@ -193,6 +193,31 @@ def test_normative_documents_are_uniquely_identified_and_tiered() -> None:
         assert document["rules_to_extract"], document["id"]
 
 
+def test_every_card_hashes_a_file_the_registry_actually_holds() -> None:
+    """A card's provenance hash must match a file recorded in the registry.
+
+    Without this the hash is just a string in a JSON file, and a wrong one
+    looks exactly like a right one. This check caught a fabricated hash once
+    already.
+    """
+
+    card_dir = ROOT / "skills/scientific-evidence-workflow/references/normative-patterns"
+    holdings = NORMATIVE["holdings"]
+
+    for path in sorted(card_dir.glob("*.json")):
+        card = json.loads(path.read_text(encoding="utf-8"))
+        document_id = card["document_id"]
+        recorded = card["provenance"]["content_hash"].removeprefix("sha256:")
+        holding = holdings.get(document_id)
+
+        assert isinstance(holding, dict), f"{path.name}: {document_id} is not in holdings"
+        known = {entry["sha256"] for entry in holding.get("files", [])}
+        assert recorded in known, (
+            f"{path.name}: content_hash {recorded[:16]}… matches no file recorded for "
+            f"{document_id}; the card hashes something the registry does not hold"
+        )
+
+
 def test_carding_state_matches_the_cards_that_exist() -> None:
     """A requirement counts as established only through a card.
 
