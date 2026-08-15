@@ -25,7 +25,10 @@ VERSION_PATTERN = re.compile(r"^v\d+$")
 
 SOURCE_KINDS = {"document", "catalogue_card", "index_page"}
 OBSERVATION = {"observed", "not_observed", "uncertain"}
-BINDING = {"mandatory", "recommended", "conditional", "unclear"}
+# `observed_practice` is what a defended work happened to do. It binds nobody,
+# and it is the only strength an example may carry.
+BINDING = {"mandatory", "recommended", "conditional", "unclear", "observed_practice"}
+EXAMPLE_TIER = 7
 
 CARD_FIELDS = {
     "schema_version",
@@ -152,6 +155,19 @@ def validate_card(data: Any) -> dict[str, Any]:
             errors.append(f"{path}.note: required when the observation is uncertain")
         if item.get("binding") == "conditional" and not _nonempty(item.get("applies_to")):
             errors.append(f"{path}.applies_to: required for a conditional requirement")
+
+        # An accepted work shows what was done and accepted. It establishes no
+        # rule, so an example may only record practice, and only an example may.
+        if tier == EXAMPLE_TIER and item.get("binding") != "observed_practice":
+            errors.append(
+                f"{path}.binding: a defended example carries 'observed_practice' only; "
+                f"{item.get('binding')!r} would turn a precedent into a rule"
+            )
+        if item.get("binding") == "observed_practice" and tier != EXAMPLE_TIER:
+            errors.append(
+                f"{path}.binding: 'observed_practice' belongs to a defended example "
+                f"(tier {EXAMPLE_TIER}), not to tier {tier!r}"
+            )
 
     not_observed = data.get("not_observed", [])
     if not isinstance(not_observed, list):

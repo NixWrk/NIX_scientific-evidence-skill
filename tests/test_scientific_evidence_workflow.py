@@ -247,6 +247,37 @@ def test_a_catalogue_card_may_not_carry_requirements() -> None:
     assert "cannot carry requirements" in "\n".join(report["errors"])
 
 
+def test_a_defended_example_cannot_bind_anyone() -> None:
+    """A precedent is not a rule.
+
+    An accepted work shows what one council let through. Letting its card
+    carry a mandatory requirement is how "my predecessor did it this way"
+    becomes "this is required", which no example can establish.
+    """
+
+    card = load_card("NORM-EXAMPLE-SATANENKO-2026-001")
+    assert card["tier"] == 7
+    assert {item["binding"] for item in card["requirements"]} == {"observed_practice"}
+
+    for binding in ("mandatory", "recommended", "conditional"):
+        broken = copy.deepcopy(card)
+        broken["requirements"][0]["binding"] = binding
+        broken["requirements"][0]["applies_to"] = "нечто"
+        report = CARD_VALIDATOR.validate_card(broken)
+        assert report["valid"] is False, binding
+        assert "would turn a precedent into a rule" in "\n".join(report["errors"]), binding
+
+
+def test_observed_practice_belongs_only_to_an_example() -> None:
+    card = load_card("NORM-GOST-R-7.0.11-2011-001")
+    card["requirements"][0]["binding"] = "observed_practice"
+
+    report = CARD_VALIDATOR.validate_card(card)
+
+    assert report["valid"] is False
+    assert "belongs to a defended example" in "\n".join(report["errors"])
+
+
 def test_a_requirement_needs_a_locator_and_an_honest_observation() -> None:
     card = load_card("NORM-BMSTU-DISS-REQ-001")
     requirement = copy.deepcopy(card["requirements"][0])
