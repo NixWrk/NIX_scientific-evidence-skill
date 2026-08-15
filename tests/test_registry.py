@@ -224,14 +224,10 @@ def test_nothing_is_both_carded_and_deferred() -> None:
         if document["acquisition"] == "carded"
     }
 
-    overlap = deferred & carded
-    # GOST-8.417-2024 is the deliberate exception: carded from the registry
-    # entry, with the text still to be read, and its note says so.
-    allowed = {"GOST-8.417-2024"}
-    assert overlap <= allowed, f"carded but still listed as deferred: {sorted(overlap - allowed)}"
-    for entry in NORMATIVE["deferred"]:
-        if entry["id"] in allowed & overlap:
-            assert entry.get("note", ""), f"{entry['id']}: exception without an explanation"
+    # GOST-8.417-2024 used to be allowed here: carded from the registry entry
+    # with the text still unread. Once the text was carded the exception had no
+    # subject left, so it is gone rather than kept as a dormant loophole.
+    assert not deferred & carded, f"carded but still listed as deferred: {sorted(deferred & carded)}"
 
 
 def test_every_card_hashes_a_file_the_registry_actually_holds() -> None:

@@ -247,6 +247,47 @@ def test_a_catalogue_card_may_not_carry_requirements() -> None:
     assert "cannot carry requirements" in "\n".join(report["errors"])
 
 
+def test_a_second_card_is_added_beside_the_first_and_never_over_it() -> None:
+    """One document may hold several cards; none may quietly replace another.
+
+    GOST 8.417-2024 has two: one built from the Rosstandart registry entry,
+    which establishes the designation and status, and one built from the text,
+    which carries the rules. Reading the text does not make the first record
+    wrong, so it stays. The failure this guards is the tempting one — writing
+    the text card over the catalogue card, which would erase the record of
+    what was known before the file was in hand.
+
+    The filename must equal the pattern id, because that is what makes an
+    overwrite impossible by accident rather than by care.
+    """
+
+    cards = {path.name: json.loads(path.read_text(encoding="utf-8")) for path in CARD_DIR.glob("*.json")}
+
+    assert cards
+    for name, card in cards.items():
+        assert name == f"{card['pattern_id']}.json", f"{name}: filename does not match its pattern id"
+
+    by_document: dict[str, list[dict]] = {}
+    for card in cards.values():
+        by_document.setdefault(card["document_id"], []).append(card)
+
+    shared = {doc: group for doc, group in by_document.items() if len(group) > 1}
+    assert "GOST-8.417-2024" in shared, "the two-card case this invariant is about has disappeared"
+
+    for document_id, group in shared.items():
+        hashes = {card["provenance"]["content_hash"] for card in group}
+        assert len(hashes) == len(group), (
+            f"{document_id}: two cards hash the same file, so one of them cards nothing new"
+        )
+        kinds = [card["provenance"]["source_kind"] for card in group]
+        for card in group:
+            if card["provenance"]["source_kind"] in {"catalogue_card", "index_page"}:
+                assert not card["requirements"], f"{card['pattern_id']}: identity card carrying rules"
+        assert "document" in kinds, (
+            f"{document_id}: several cards and not one of them reads the text"
+        )
+
+
 def test_a_defended_example_cannot_bind_anyone() -> None:
     """A precedent is not a rule.
 
