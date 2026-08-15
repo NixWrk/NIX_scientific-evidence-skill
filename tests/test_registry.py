@@ -193,6 +193,47 @@ def test_normative_documents_are_uniquely_identified_and_tiered() -> None:
         assert document["rules_to_extract"], document["id"]
 
 
+def test_deferred_work_names_real_documents_and_a_trigger() -> None:
+    """Deferred is not forgotten and not done.
+
+    Every entry must point at a real document and say what would make it
+    needed; a deferral without a trigger is indistinguishable from an item
+    that fell out of sight.
+    """
+
+    known = {document["id"] for document in NORMATIVE["documents"]}
+    deferred = NORMATIVE["deferred"]
+
+    assert deferred
+    seen = set()
+    for entry in deferred:
+        document_id = entry["id"]
+        assert document_id in known, f"deferred entry {document_id} is not a known document"
+        assert document_id not in seen, f"{document_id} deferred twice"
+        seen.add(document_id)
+        assert entry.get("trigger", "").strip(), f"{document_id}: deferral without a trigger"
+
+
+def test_nothing_is_both_carded_and_deferred() -> None:
+    """A carded document is done; leaving it deferred would misstate the state."""
+
+    deferred = {entry["id"] for entry in NORMATIVE["deferred"]}
+    carded = {
+        document["id"]
+        for document in NORMATIVE["documents"]
+        if document["acquisition"] == "carded"
+    }
+
+    overlap = deferred & carded
+    # GOST-8.417-2024 is the deliberate exception: carded from the registry
+    # entry, with the text still to be read, and its note says so.
+    allowed = {"GOST-8.417-2024"}
+    assert overlap <= allowed, f"carded but still listed as deferred: {sorted(overlap - allowed)}"
+    for entry in NORMATIVE["deferred"]:
+        if entry["id"] in allowed & overlap:
+            assert entry.get("note", ""), f"{entry['id']}: exception without an explanation"
+
+
 def test_every_card_hashes_a_file_the_registry_actually_holds() -> None:
     """A card's provenance hash must match a file recorded in the registry.
 
