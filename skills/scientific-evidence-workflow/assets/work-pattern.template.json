@@ -3,6 +3,7 @@
   "kind": "work",
   "work_id": "WORK-FAMILY-YEAR",
   "record_version": "v1",
+  "document_kind": "dissertation",
   "bibliographic": {
     "author": "Фамилия И. О.",
     "title": "Название работы",
@@ -78,7 +79,10 @@
       "locator": "с. 8–9",
       "count": 4,
       "shape": "Какой формы утверждения: перечнем или сплошным текстом, чем открывается каждое.",
-      "openers": ["Разработан", "Установлено"],
+      "openers": [
+        "Разработан",
+        "Установлено"
+      ],
       "quote": "вербатим первого пункта",
       "note": null
     }

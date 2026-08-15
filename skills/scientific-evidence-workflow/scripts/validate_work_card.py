@@ -66,10 +66,15 @@ OBLIGATION = re.compile(
 QUOTE_FIELDS = {"quote"}
 
 WORK_FIELDS = {
-    "schema_version", "kind", "work_id", "record_version", "bibliographic", "stratum",
-    "provenance", "coverage", "structure", "volumes", "narrative", "spine", "formulations",
-    "practice", "not_observed", "notes",
+    "schema_version", "kind", "work_id", "record_version", "document_kind", "bibliographic",
+    "stratum", "provenance", "coverage", "structure", "volumes", "narrative", "spine",
+    "formulations", "practice", "not_observed", "notes",
 }
+# One file, one hash, one card. A dissertation and its abstract are two
+# documents of the same work, and their narrative is not comparable: the
+# abstract compresses four chapters into a few pages. Carding them together
+# would average two different objects into one description.
+DOCUMENT_KINDS = ("dissertation", "autoreferat")
 BIBLIOGRAPHIC_REQUIRED = (
     "author", "title", "year", "specialty_as_printed", "council", "organization", "supervisor",
 )
@@ -148,6 +153,11 @@ def validate_work(data: dict[str, Any]) -> dict[str, Any]:
         errors.append("work.record_version: expected 'v<number>'")
     if data.get("stratum") not in STRATA:
         errors.append(f"work.stratum: expected one of {list(STRATA)}")
+    if data.get("document_kind") not in DOCUMENT_KINDS:
+        errors.append(
+            f"work.document_kind: expected one of {list(DOCUMENT_KINDS)}; a dissertation and "
+            "its abstract argue at different lengths and are not comparable"
+        )
 
     bibliographic = data.get("bibliographic")
     if not isinstance(bibliographic, dict):

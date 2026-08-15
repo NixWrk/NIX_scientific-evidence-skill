@@ -36,6 +36,7 @@ def sound_card() -> dict:
         "kind": "work",
         "work_id": "WORK-TEST-2012",
         "record_version": "v1",
+        "document_kind": "dissertation",
         "bibliographic": {
             "author": "Иванов И. И.",
             "title": "Название",
@@ -397,6 +398,23 @@ def test_a_formulation_without_its_verbatim_wording_is_flagged() -> None:
 
     assert report["valid"] is True
     assert any("verbatim" in warning for warning in report["warnings"])
+
+
+def test_a_card_says_whether_it_reads_a_dissertation_or_an_abstract() -> None:
+    """The two are not comparable at the level this store exists for.
+
+    An abstract compresses four chapters into a few pages, so its chapter moves
+    and its seams are a different object from the dissertation's. Carding them
+    without saying which is which would average two shapes into one.
+    """
+
+    card = sound_card()
+    del card["document_kind"]
+
+    report = WORK.validate(card)
+
+    assert report["valid"] is False
+    assert "not comparable" in "\n".join(report["errors"])
 
 
 def test_stored_work_records_validate_against_each_other() -> None:

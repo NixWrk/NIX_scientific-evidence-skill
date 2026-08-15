@@ -329,6 +329,37 @@ def test_every_card_hashes_a_file_the_registry_actually_holds() -> None:
         )
 
 
+def test_every_work_card_hashes_a_file_the_registry_actually_holds() -> None:
+    """The same guard as for normative cards, for the same reason.
+
+    A hash nobody checks is a string, and a wrong one looks exactly like a
+    right one. Work cards read files held in Zotero, so the registry holdings
+    are the only place the hash can be checked against.
+    """
+
+    work_dir = ROOT / "skills/scientific-evidence-workflow/references/work-patterns"
+    known = {
+        entry["sha256"]
+        for holding in NORMATIVE["holdings"].values()
+        if isinstance(holding, dict)
+        for entry in holding.get("files", [])
+    }
+
+    checked = 0
+    for path in sorted(work_dir.glob("*.json")):
+        card = json.loads(path.read_text(encoding="utf-8"))
+        if card.get("kind") != "work":
+            continue
+        recorded = card["provenance"]["content_hash"].removeprefix("sha256:")
+        assert recorded in known, (
+            f"{path.name}: content_hash {recorded[:16]}… matches no file the registry records"
+        )
+        checked += 1
+
+    if not checked:
+        pytest.skip("no work cards yet")
+
+
 def test_carding_state_matches_the_cards_that_exist() -> None:
     """A requirement counts as established only through a card.
 
