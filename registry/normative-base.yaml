@@ -184,6 +184,18 @@ retrieval_attempts:
       - VAK-EDITIONS перечень изданий
       - EXAMPLE-SATANENKO-2026 не найден поиском по библиотеке
 
+  - date: 2026-08-15
+    agent: claude-code-session
+    outcome: failed
+    change: поиск полного текста диссертации Сатаненко по просьбе пользователя
+    refused: [bmstu.ru, wwv.bmstu.ru, mirror.bmstu.ru]
+    diagnosis: >-
+      Поиск дал рабочий формат адреса карточки диссертанта, но все узлы МГТУ
+      отказывают в соединении со стороны агента — то же поведение, что 14
+      августа. Идентификатор карточки Сатаненко не установлен и не угадывался:
+      выдуманный номер выглядел бы как найденный.
+    next_action: пользователь открывает список диссертантов и находит запись сам
+
   - date: 2026-08-14
     agent: claude-code-session
     outcome: partial
@@ -498,6 +510,16 @@ documents:
     council_specific: true
     role: primary
     source: https://library.bmstu.ru/
+    full_text_lookup: >-
+      Автореферат на обороте обложки указывает: «С диссертацией можно
+      ознакомиться в библиотеке МГТУ им. Н.Э. Баумана и на сайте www.bmstu.ru».
+      Карточки диссертантов адресуются как
+      https://bmstu.ru/mstu/works/science/degree-candidates/dissertants/?id=NNN&q=dissertation
+      с числовым идентификатором; известно зеркало
+      https://mirror.bmstu.ru/svedendoc/disser/index.php?q=dissertation&id=NNN
+      и версия для слабовидящих на https://bmstu.ru/plain/works/science/degree-candidates/dissertants/.
+      Идентификатор Сатаненко не установлен: узлы отказывают в соединении со
+      стороны агента. Формат адреса подтверждён поисковой выдачей, сам файл — нет.
     scope: [структура автореферата, последовательность разделов, практика совета]
     rules_to_extract:
       - последовательность блоков автореферата
