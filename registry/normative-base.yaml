@@ -161,7 +161,7 @@ documents:
     rules_to_extract:
       - перечень областей исследований специальности
       - формулировки, по которым проверяется соответствие темы и положений
-    acquisition: obtained
+    acquisition: carded
 
   - id: VAK-EDITIONS
     title: Перечень рецензируемых научных изданий
@@ -174,7 +174,7 @@ documents:
     rules_to_extract:
       - действующий состав перечня и категории изданий на дату проверки
     notes: Состав и категории изменяются; дата обращения фиксируется в карточке.
-    acquisition: obtained
+    acquisition: carded
 
   # --- tier 3: council and organization ------------------------------------
 
