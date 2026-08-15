@@ -915,12 +915,19 @@ holdings:
         sha256: 5193b42def70821d44f1397daa62de2a5d020027a228403a0aa5080fa423c002
   EXAMPLE-SATANENKO-2026:
     kind: document
-    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»."
+    note: >-
+      Автореферат получен из библиотеки Zotero, коллекция «Написание
+      кандидатской». Полный текст диссертации добавлен пользователем
+      2026-08-15 после того, как поиск со стороны агента не удался.
     files:
       - name: dissertation-abstract-Сатаненко.pdf
         url: zotero://select/library/items/CJHLEPW6
         bytes: 1177185
         sha256: 8e5dd231f12bb947c3b415e84138eeaaa0cd575301422c97cb1ed7a59713a3a3
+      - name: dissertation Сатаненко.pdf
+        url: zotero://select/library/items/HUBLFM2A
+        bytes: 11111306
+        sha256: 44a4152c7585396cea016356a68f1a99519ce5f2b69b8467dd7cffd9050d836f
   BMSTU-REVIEW-TEMPLATES-SET:
     kind: document
     note: "Комплект шаблонов совета; пофайловые хеши в bmstu-templates.sha256."
