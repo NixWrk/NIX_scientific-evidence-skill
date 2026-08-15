@@ -242,21 +242,22 @@ def test_holdings_and_acquisition_states_agree() -> None:
 
 
 def test_a_catalogue_card_is_not_recorded_as_the_standard() -> None:
-    """A Rosstandart card carries designation and status, never the requirements.
+    """A registry entry carries designation and status, never the requirements.
 
-    Recording one as a document would let the skills believe the text is in
-    hand when only its registry entry is.
+    The invariant is about the kind, not about which documents happen to be
+    cards today: any holding declared a catalogue entry must say plainly that
+    the text was not obtained, so nobody reads a designation as content.
     """
 
-    holdings = NORMATIVE["holdings"]
-
-    for document in NORMATIVE["documents"]:
-        holding = holdings.get(document["id"])
+    for document_id, holding in NORMATIVE["holdings"].items():
         if not isinstance(holding, dict):
             continue
-        if document["id"].startswith("GOST"):
-            assert holding["kind"] == "catalogue_card", document["id"]
-            assert "не получен" in holding["note"], document["id"]
+        if holding["kind"] == "catalogue_card":
+            assert "не получен" in holding.get("note", ""), document_id
+            assert not any(
+                name.lower().endswith(".pdf") for name in
+                (entry["name"] for entry in holding.get("files", []))
+            ), f"{document_id}: помечено карточкой, но держит документ"
 
 
 def test_recorded_hashes_match_the_local_files() -> None:
@@ -270,20 +271,28 @@ def test_recorded_hashes_match_the_local_files() -> None:
     if not store.is_dir():
         pytest.skip("normative store is not present on this machine")
 
-    checked = 0
+    checked, absent, external = 0, [], 0
     for holding in NORMATIVE["holdings"].values():
         if not isinstance(holding, dict):
             continue
         for entry in holding.get("files", []):
+            # Files held inside a Zotero library live outside this store and
+            # their path is not portable; count them rather than going blind.
+            if str(entry.get("url", "")).startswith("zotero://"):
+                external += 1
+                continue
             path = store / entry["name"]
             if not path.is_file():
-                pytest.skip(f"{entry['name']} is not present")
-            digest = hashlib.sha256(path.read_bytes()).hexdigest()
-            assert digest == entry["sha256"], entry["name"]
+                absent.append(entry["name"])
+                continue
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == entry["sha256"], entry["name"]
             assert path.stat().st_size == entry["bytes"], entry["name"]
             checked += 1
 
-    assert checked, "holdings record no files"
+    if not checked and absent:
+        pytest.skip(f"none of the {len(absent)} store files are present on this machine")
+    assert checked, "holdings record no verifiable file"
+    assert not absent, f"recorded but missing from the store: {sorted(absent)}"
 
 
 def test_the_normative_store_is_not_committed() -> None:

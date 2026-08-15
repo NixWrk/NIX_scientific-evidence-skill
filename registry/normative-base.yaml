@@ -21,7 +21,10 @@ provenance:
   carding_status: >-
     Жанр normative-pattern-analysis реализован. Карточки построены для
     BMSTU-DISS-REQ и GOST-8.417-2024. Требования остальных документов не
-    установлены: у них нет карточек, а у восьми стандартов нет и текста.
+    установлены: у них нет карточек. Тексты при этом получены — с 2026-08-15
+    из библиотеки Zotero доступны все восемь стандартов, паспорт специальности,
+    перечень изданий и автореферат Сатаненко, так что препятствие теперь только
+    в работе по разбору, а не в отсутствии материала.
 
 # Lower tier wins. The order is the point of this file: it is what lets a
 # conflict be resolved without argument.
@@ -152,7 +155,7 @@ documents:
     rules_to_extract:
       - перечень областей исследований специальности
       - формулировки, по которым проверяется соответствие темы и положений
-    acquisition: located
+    acquisition: obtained
 
   - id: VAK-EDITIONS
     title: Перечень рецензируемых научных изданий
@@ -165,7 +168,7 @@ documents:
     rules_to_extract:
       - действующий состав перечня и категории изданий на дату проверки
     notes: Состав и категории изменяются; дата обращения фиксируется в карточке.
-    acquisition: located
+    acquisition: obtained
 
   # --- tier 3: council and organization ------------------------------------
 
@@ -398,7 +401,7 @@ documents:
       назначена на 25.03.2026, предметно близок к медицинским измерениям.
       Указаны шесть публикаций, три из них в изданиях перечня ВАК — это
       наблюдение практики, а не норматив.
-    acquisition: located
+    acquisition: obtained
 
   - id: EXAMPLE-SEMCHUK-2022
     title: Биотехническая система видеоплетизмографического мониторинга сердечного ритма
@@ -444,7 +447,7 @@ documents:
       локальный интерфейс Zotero на порту 23119. На 2026-08-14 не работает ни
       один: плагин установлен в профиль, но требует перезапуска Zotero, а
       локальный интерфейс отвечает «Local API is not enabled».
-    acquisition: needed
+    acquisition: obtained
 
 # --- separate module: intellectual property ---------------------------------
 # Kept apart from dissertation formatting on purpose: these are registration
@@ -546,77 +549,249 @@ holdings:
         bytes: 1145405
         sha256: 03aafc0b9148441c8949bd17ba9b6edc0ffacb2f8b621eec8af20d99e67fde17
   EXAMPLE-SEMCHUK-2022:
-    kind: index_page
-    note: "Страница автора. Полный текст и автореферат не выгружены."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»."
     files:
       - name: EXAMPLE-SEMCHUK-2022.index.html
         url: https://library.bmstu.ru/Authors/Details/f161f544-afa1-4cce-b54b-70a49fbfbb49
         bytes: 56792
         sha256: 218cca3259b6f35c5b9f902fbb1ce35de4f54095b79f2bb272231f26cb15b0eb
+      - name: Семчук диссертация.pdf
+        url: zotero://select/library/items/K9RMY3YB
+        bytes: 4598551
+        sha256: edd5163e02220c47b2470cf1393ddc1232bf656d088ed174350e143b76665cc7
+      - name: семчук автореферат.pdf
+        url: zotero://select/library/items/US6VFS28
+        bytes: 925674
+        sha256: 7e6eeb0e5de64201bc39cca398bfdc8f06aa8583aca6a86758499077d1ef1251
   GOST-R-7.0.11-2011:
-    kind: catalogue_card
-    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»; карточка Росстандарта сохранена как запись реестра."
     files:
       - name: GOST-R-7.0.11-2011.card.html
         url: https://protect.gost.ru/gost/details/80cb3ff3-6f82-4267-9122-0873213d8d53
         bytes: 86274
         sha256: a929ce22381ee0ebc71ccae28360ccb6fb2c7d34a61cd5e9abf5f386f5d3872b
+      - name: ГОСТ Р 7.0.11-2011 — диссертация и автореферат.pdf
+        url: zotero://select/library/items/7C6QRVY7
+        bytes: 89033
+        sha256: da859e2f24d2be61df3316ffc5741851dddb063d5ec1c7ebdcaffa61d6ae9f3f
   GOST-R-7.0.5-2008:
-    kind: catalogue_card
-    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»; карточка Росстандарта сохранена как запись реестра."
     files:
       - name: GOST-R-7.0.5-2008.card.html
         url: https://protect.gost.ru/gost/details/2eef7820-44bc-49a4-bf1f-fe51c54039dc
         bytes: 85505
         sha256: bb5c4334614c44b4d101af675c976c6839bca407c7b05c71645f23e1c73c30d7
+      - name: ГОСТ Р 7.0.5-2008 — библиографическая ссылка.pdf
+        url: zotero://select/library/items/JC6BQAN9
+        bytes: 726434
+        sha256: b81ad4d34a30b4571f2f4818eb88669ddfe708828bb283652858a902a0a33ecc
   GOST-R-7.0.100-2018:
-    kind: catalogue_card
-    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»; карточка Росстандарта сохранена как запись реестра."
     files:
       - name: GOST-R-7.0.100-2018.card.html
         url: https://protect.gost.ru/gost/details/389dfd5a-535a-458a-81c3-14b729b1cee1
         bytes: 89965
         sha256: f42d16aaafdd57bd5be47d09d1fb181505e4543caa3e4da11525b49dc8ba53aa
+      - name: ГОСТ Р 7.0.100-2018 — библиографическое описание.pdf
+        url: zotero://select/library/items/7ZH84CLI
+        bytes: 9844582
+        sha256: c738ab06639d901ce18f6c8041abe6e53d7719ea1844ca2084be2d06d4e2a3c7
   GOST-7.32-2017:
-    kind: catalogue_card
-    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»; карточка Росстандарта сохранена как запись реестра."
     files:
       - name: GOST-7.32-2017.card.html
         url: https://protect.gost.ru/gost/details/7d280e43-7036-4a69-8e6e-d15867028343
         bytes: 93753
         sha256: 2460af649798b06ae699cb83169d8c503384b60f40273718a272eb7cd2625857
+      - name: ГОСТ 7.32-2017 — отчёт о НИР.pdf
+        url: zotero://select/library/items/ZIIQMWFG
+        bytes: 645546
+        sha256: 0a983e086e3b04a167f6e8140b0c1b73ec5fb00648128fc796fabe437e1e2ee9
   GOST-8.417-2024:
-    kind: catalogue_card
-    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»; карточка Росстандарта сохранена как запись реестра."
     files:
       - name: GOST-8.417-2024.card.html
         url: https://protect.gost.ru/gost/details/fa1165d5-0547-429a-9c3e-f16f4bdb101f
         bytes: 89672
         sha256: 03e12cc5e8f32aaa13e432e2461dbc0c985b882a2a02cefd33d6522d1819ee86
+      - name: ГОСТ 8.417-2024 — единицы величин.pdf
+        url: zotero://select/library/items/UELHJEDW
+        bytes: 101030
+        sha256: 610091f35ce53ca6c3699af14449291b756acb733340d436131e4e1b730a8e43
   GOST-R-ISO-14155-2022:
-    kind: catalogue_card
-    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»; карточка Росстандарта сохранена как запись реестра."
     files:
       - name: GOST-R-ISO-14155-2022.card.html
         url: https://protect.gost.ru/gost/details/b8cd9a61-5f63-443b-a69e-3ac82313d10b
         bytes: 85911
         sha256: 4054b73feabd310dbea9a0b1e877a22ff950bc2bdac48c7c9528ab94e8fc1b67
+      - name: ГОСТ Р ИСО 14155-2022 — клинические исследования.pdf
+        url: zotero://select/library/items/N4HSJ8X5
+        bytes: 33801046
+        sha256: 10319b6adb0cbfccb4218cc86075829e44d5313b31749ff6c6832c7325d89e1a
   GOST-ISO-14971-2021:
-    kind: catalogue_card
-    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»; карточка Росстандарта сохранена как запись реестра."
     files:
       - name: GOST-ISO-14971-2021.card.html
         url: https://protect.gost.ru/gost/details/fc5f8123-88dd-4608-b1d0-aa23526a3b8e
         bytes: 88770
         sha256: 7e3e08fe44cbfda0cd8498553853ca39e9e6b6e2d2d9ab0f500d066346b86f95
+      - name: ГОСТ ISO 14971-2021 — менеджмент риска.pdf
+        url: zotero://select/library/items/PUEP9UX5
+        bytes: 675818
+        sha256: 3e20dc7f03a66582074f7d91c1f595de7f74c626d0721d15ee9480f60398d322
   GOST-IEC-60601-1-2024:
-    kind: catalogue_card
-    note: "Карточка Росстандарта. Текст стандарта не получен, требования не извлекаемы."
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»; карточка Росстандарта сохранена как запись реестра."
     files:
       - name: GOST-IEC-60601-1-2024.card.html
         url: https://protect.gost.ru/gost/details/590e2759-7777-45ca-923a-d39f5296ab37
         bytes: 89043
         sha256: 007cf13ca337f0702ab0aecd2cc7cd15d3561ba4375a42d63fdbe3d4529868d3
+      - name: ГОСТ IEC 60601-1-2024 — общая безопасность медицинских электрических изделий.pdf
+        url: zotero://select/library/items/EUN66WHU
+        bytes: 19813524
+        sha256: ea63eb8e709b7caf742ed0fbb555576ed5fd03ddb46e75a3f7a4a9aec251ad99
+  ZOTERO-HERT-LUNG-GENERATIONS:
+    kind: document
+    note: "Корпус образцов направления из библиотеки Zotero, коллекция «Знания прошлых поколений»: 25 файлов из 22 записей. Диссертации и авторефераты предшественников, отчёты РФФИ и отчёт о НИР."
+    files:
+      - name: Cybulski - 2011 - Impedance Cardiography [EN HTML].html
+        url: zotero://select/library/items/CVEZFAPR
+        bytes: 1014047
+        sha256: da514740eb1cfcfe2009b2f8b9af5f49f4c4256ecd15aab424a4c55d4eeec283
+      - name: Cybulski - 2011 - Impedance Cardiography.pdf
+        url: zotero://select/library/items/KMIMGXX2
+        bytes: 452578
+        sha256: da8060e461435601081ef77b03b0f35aa80f483b55bc17eaf14ee1519006b7a3
+      - name: Gaw и Eng - The Eﬀect of Red Blood Cell Orientation on the Electrical Impedance of Pulsatile Blood with Implicat.pdf
+        url: zotero://select/library/items/ESS2937Z
+        bytes: 5100666
+        sha256: 2c94a015fa78df975be79f99cd91b655c4eab2a27bd4b8a0552b18535df1df77
+      - name: Metshein - Wearable Solutions for Monitoring Cardiorespiratory Activity.pdf
+        url: zotero://select/library/items/QURZ4MCD
+        bytes: 15446350
+        sha256: fb926055ec9775bb74452fc3e7b987374c07e6c7cd387b42680f73a9e6eb0197
+      - name: Proença - Non-invasive hemodynamic monitoring by electrical impedance tomography [MIXED HTML].html
+        url: zotero://select/library/items/RS89H643
+        bytes: 909688
+        sha256: 75f58e72118b8a7fbe6320c24ae6e476ca82191b8cbd91d0d73a01b4704ae8e7
+      - name: Proença - Non-invasive hemodynamic monitoring by electrical impedance tomography.pdf
+        url: zotero://select/library/items/2LFUAIDL
+        bytes: 6367679
+        sha256: 60469d6e82c15b9c79be12fc6ec32d7464d395947370daa80bb3628ee8057fec
+      - name: Автореферат Кризский 2004 Математическое моделирование потенциальных электрических полей.pdf
+        url: zotero://select/library/items/V5XPRKQE
+        bytes: 509269
+        sha256: 9b2365fe59dc7426fee538202dd6cc230f95c9510df43133f618979ebec93010
+      - name: Автореферат Тихомиров АН.pdf
+        url: zotero://select/library/items/FIW7DWQH
+        bytes: 1652291
+        sha256: 9293e7f33184dac5829892a1927b11d7860eb5703a66ece2e513a78fd91125d3
+      - name: Диссертация Астапенко ЕМ 2012.pdf
+        url: zotero://select/library/items/7HYIFW4G
+        bytes: 8703357
+        sha256: cbe68ab69a864843667c4dbb124872bf9abef3c1b4aea6c35e9af586d0587215
+      - name: Диссертация Беляев 1996.doc
+        url: zotero://select/library/items/7BGQ5R47
+        bytes: 2892288
+        sha256: 5f82a7506473c75e32fe2f029c026c959805f123e02b60c5c6bd81a4b19d9c18
+      - name: Диссертация Беляева 2002 Математическое моделирование электрических полей.pdf
+        url: zotero://select/library/items/HRR7GAHN
+        bytes: 12823496
+        sha256: c1979810b12f6af22319af25a364bcc441dba077638f6864421615447aab9d66
+      - name: Диссертация Кирпиченко 2012.doc
+        url: zotero://select/library/items/FBM795XI
+        bytes: 14073856
+        sha256: 34df2aaf6a363866ec7f3b664052dcaa2c01ead450977d2d9fbd6959c6627f72
+      - name: Диссертация Малахов 2016.pdf
+        url: zotero://select/library/items/PK3K8TDF
+        bytes: 1846488
+        sha256: fc514c5ea9730849302f00dd2a2d7eb64746a58bbdd35066bc21409e9314451e
+      - name: Диссертация Морозов.pdf
+        url: zotero://select/library/items/FXNKT2FA
+        bytes: 33063694
+        sha256: cad4a3335e3fa932b922ec70d488d35044b2da70a4a7f6c07908c5c2bc2491ec
+      - name: Диссертация Тимохин 2012.pdf
+        url: zotero://select/library/items/FUAIYW7I
+        bytes: 5200279
+        sha256: 168ad86a508fea2f55e5c774cbef5ddaded9b3e5bed69db2b9dd0033919bc9fe
+      - name: Диссертация Шашкова 2013 .pdf
+        url: zotero://select/library/items/II3CC95F
+        bytes: 11188608
+        sha256: 4e3a5b30238184e8e7da69ba9008953c3223729600ba03cc47f746fadb7adebb
+      - name: Диссертация_Кузьмин_2019_Симуляционные_системы_для_неинвазивной.pdf
+        url: zotero://select/library/items/HIH28WYY
+        bytes: 4115644
+        sha256: ad23e5df196273936b3b0a85f5559b446940044c04dce2da326188a4d6d436d2
+      - name: Козубовская - 1965 - Диссертации на соискание ученой степени кандидата физико-математических наук.pdf
+        url: zotero://select/library/items/4N5GC5YU
+        bytes: 246541
+        sha256: 325f0ae9d1179752238b50fb75d0fa523e41c2b976843f8bfbb2c157591d2be1
+      - name: Отчет РФФИ 2020.pdf
+        url: zotero://select/library/items/SG58QNPU
+        bytes: 4564600
+        sha256: 4b25e11e9e73d63985f40e1e6c35657e69bacde20f50857ad658d6157c99db0a
+      - name: Отчет РФФИ 2021 v2.1.pdf
+        url: zotero://select/library/items/3NAQJNXQ
+        bytes: 7642787
+        sha256: 973704070f9943ddbb83c3f196ca16b9b83fc4ceb4f2784be5cf089fe7a4d2f8
+      - name: Отчёт о НИР.pdf
+        url: zotero://select/library/items/4E75B7GJ
+        bytes: 4345564
+        sha256: c15e29db826ab4e1b38c18029182a82edcc725fe505a3406767dad4f77adc508
+      - name: Сергеев И.К._ocr.pdf
+        url: zotero://select/library/items/29DWIUWW
+        bytes: 100141877
+        sha256: 0a29bb94f200ecd7f378542d1e62285d39ccc792e226e0537dc79359d1f56d3c
+      - name: Стрелков В.Б. 2004_ocr.pdf
+        url: zotero://select/library/items/ZI4IHPKR
+        bytes: 94005987
+        sha256: 6bd3d0eb6be359c6ae0e4f3549f87e1eea0cf20109ad49bf1952a8dc160444f1
+      - name: Тихомиров - Компьютерная система многоканальной электроимпедансной кардиографии [RU HTML].html
+        url: zotero://select/library/items/8ESNDD86
+        bytes: 569388
+        sha256: 94389c050c4a8b21b6a3b0fbe3e0a34dfc2c0eb5f277d31267e1301eb61a84f2
+      - name: Тихомиров - Компьютерная система многоканальной электроимпедансной кардиографии.pdf
+        url: zotero://select/library/items/NUZKBZGS
+        bytes: 7672745
+        sha256: f4b2ae3075b60dd1ab45cc0d2077d2a2b1e1b1f798d0215403070643a14d49ff
+  BMSTU-REVIEW-TEMPLATES-SET:
+    kind: document
+    note: "Комплект шаблонов совета; пофайловые хеши в bmstu-templates.sha256."
+    files:
+  PASSPORT-2.2.12:
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»."
+    files:
+      - name: Паспорт научной специальности 2.2.12.pdf
+        url: zotero://select/library/items/9CWH9QSJ
+        bytes: 391758
+        sha256: 4792def9114aa108eebf78aaad0d178ce22ba200d7616acc9bdff1e0552a3b47
+  VAK-EDITIONS:
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»."
+    files:
+      - name: перечень рецензируемых изданий.pdf
+        url: zotero://select/library/items/9QXJGIR8
+        bytes: 10555669
+        sha256: 5193b42def70821d44f1397daa62de2a5d020027a228403a0aa5080fa423c002
+  EXAMPLE-SATANENKO-2026:
+    kind: document
+    note: "Текст получен из библиотеки Zotero, коллекция «Написание кандидатской»."
+    files:
+      - name: dissertation-abstract-Сатаненко.pdf
+        url: zotero://select/library/items/CJHLEPW6
+        bytes: 1177185
+        sha256: 8e5dd231f12bb947c3b415e84138eeaaa0cd575301422c97cb1ed7a59713a3a3
   BMSTU-REVIEW-TEMPLATES-SET:
     kind: document
     note: "Комплект шаблонов совета; пофайловые хеши в bmstu-templates.sha256."
