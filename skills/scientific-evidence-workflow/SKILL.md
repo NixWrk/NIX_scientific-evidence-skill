@@ -238,8 +238,10 @@ Stop and request input instead of guessing when:
 - `assets/normative-pattern.template.json`: normative-card scaffold.
 - `scripts/validate_normative_card.py`: dependency-free card validator.
 - `references/work-pattern-memory.md`: rules for reading a defended work for
-  its form — structure, how a chapter argues, how chapters connect — and why
-  such a record has no field in which a requirement could be written.
+  its form — structure, how a chapter argues, how chapters connect, how the
+  load-bearing statements are worded — why such a record has no field in which
+  a requirement could be written, and why an expected arc lives in data with
+  the name of whoever stated it.
 - `assets/work-pattern.template.json`: work-card scaffold.
 - `assets/work-aggregate.template.json`: scaffold for a pattern across works.
 - `scripts/validate_work_card.py`: dependency-free work and aggregate

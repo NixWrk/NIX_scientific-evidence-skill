@@ -3,18 +3,31 @@
   "kind": "aggregate",
   "aggregate_id": "PATTERN-SCOPE",
   "record_version": "v1",
-  "scope": "council-24.2.331.09 | specialty-2.2.12",
-  "required_stratum": "council | specialty",
+  "scope": "council-24.2.331.09",
+  "required_stratum": "council",
   "compiled_on": "2026-01-01",
   "compiled_by": "кто собирал",
+  "expected_arc": {
+    "source": "кто назвал эту дугу — человек, а не корпус",
+    "stated_on": "2026-01-01",
+    "note": "Гипотеза, заявленная до чтения. Работа отвечает на неё observed или absent; absent — результат, а не промах разбора.",
+    "links": [
+      "медицинская задача",
+      "обзор технических решений",
+      "медико-техническая задача",
+      "разработка",
+      "доказательство",
+      "значимость"
+    ]
+  },
   "works": [
     "WORK-FAMILY-YEAR"
   ],
   "features": [
     {
       "feature_id": "F-001",
-      "level": "скелет | ход главы | стык | сквозная линия | формальная практика",
-      "question": "На какой вопрос отвечает признак.",
+      "level": "стык",
+      "question": "На какой вопрос отвечает признак. Уровни: скелет, ход главы, стык, сквозная линия, формулировки, формальная практика.",
       "shown_by": [
         {
           "work_id": "WORK-FAMILY-YEAR",
@@ -29,9 +42,9 @@
           "work_ids": ["WORK-FAMILY-YEAR"]
         }
       ],
-      "norm_relation": "confirms | norm_silent | diverges",
-      "norm_reference": "NORM-...-001 REQ-0NN, либо null для norm_silent",
-      "note": null
+      "norm_relation": "norm_silent",
+      "norm_reference": null,
+      "note": "Отношения: confirms и diverges называют карточку и требование, norm_silent не называет ничего."
     }
   ],
   "not_observed": [

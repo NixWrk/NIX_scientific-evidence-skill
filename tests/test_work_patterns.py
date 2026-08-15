@@ -67,7 +67,24 @@ def sound_card() -> dict:
                 "leads_to": "выбору метода",
             }
         ],
-        "spine": [{"link": "пробел", "where": "с. 47", "how": "назван прямо"}],
+        "spine": [
+            {
+                "link": "медицинская задача",
+                "status": "observed",
+                "where": "с. 47",
+                "how": "сформулирована в конце обзора",
+            }
+        ],
+        "formulations": [
+            {
+                "element": "положения на защиту",
+                "locator": "с. 8",
+                "count": 4,
+                "shape": "перечень, каждый пункт с отглагольного существительного",
+                "openers": ["Разработан"],
+                "quote": "Разработан метод оценки ...",
+            }
+        ],
         "practice": [
             {
                 "topic": "ссылки",
@@ -90,6 +107,12 @@ def sound_aggregate() -> dict:
         "required_stratum": "council",
         "compiled_on": "2026-08-15",
         "compiled_by": "тест",
+        "expected_arc": {
+            "source": "автор работы, до чтения корпуса",
+            "stated_on": "2026-08-15",
+            "note": "гипотеза",
+            "links": ["медицинская задача", "медико-техническая задача", "разработка"],
+        },
         "works": ["WORK-TEST-2026"],
         "features": [
             {
@@ -269,6 +292,111 @@ def test_a_feature_cites_a_work_that_exists_and_is_declared() -> None:
     report = WORK.validate(absent, cards)
     assert report["valid"] is False
     assert "no work card" in "\n".join(report["errors"])
+
+
+def test_the_shipped_aggregate_template_is_a_usable_starting_point() -> None:
+    report = WORK.validate(
+        json.loads((ASSET_DIR / "work-aggregate.template.json").read_text(encoding="utf-8"))
+    )
+
+    assert report["valid"] is True, report["errors"]
+
+
+def test_an_absent_link_is_a_finding_and_still_owes_its_evidence() -> None:
+    """The point of recording absence at all.
+
+    A work that never forms the medical problem before reviewing technical
+    solutions has told us something. But «нет» with nothing behind it is as
+    unverifiable as an invented quotation, so an absent link still says how the
+    absence was established — and cannot point at a page, because there is none.
+    """
+
+    absent = sound_card()
+    absent["spine"] = [
+        {
+            "link": "медико-техническая задача",
+            "status": "absent",
+            "where": None,
+            "how": "главы 1 и 2 прочитаны целиком; постановка сразу техническая",
+        }
+    ]
+    assert WORK.validate(absent)["valid"] is True
+
+    pointing = copy.deepcopy(absent)
+    pointing["spine"][0]["where"] = "с. 40"
+    report = WORK.validate(pointing)
+    assert report["valid"] is False
+    assert "nowhere to point" in "\n".join(report["errors"])
+
+    unaccounted = copy.deepcopy(absent)
+    unaccounted["spine"][0]["how"] = ""
+    report = WORK.validate(unaccounted)
+    assert report["valid"] is False
+    assert "how" in "\n".join(report["errors"])
+
+
+def test_an_observed_link_points_at_where_it_sits() -> None:
+    card = sound_card()
+    card["spine"][0]["where"] = ""
+
+    report = WORK.validate(card)
+
+    assert report["valid"] is False
+    assert "points at where it sits" in "\n".join(report["errors"])
+
+
+def test_the_expected_arc_records_who_stated_it() -> None:
+    """A frame brought to the corpus must be distinguishable from one it produced.
+
+    Read eight works looking for five links and eight will show them. Naming
+    the source and the date is what lets a later reader see that the arc was a
+    hypothesis stated in advance rather than a finding.
+    """
+
+    cards = council_cards()
+    anonymous = sound_aggregate()
+    del anonymous["expected_arc"]["source"]
+
+    report = WORK.validate(anonymous, cards)
+
+    assert report["valid"] is False
+    assert "expected_arc.source" in "\n".join(report["errors"])
+
+
+def test_a_link_the_arc_did_not_anticipate_is_reported_but_not_refused() -> None:
+    """The corpus is allowed to answer back.
+
+    An unanticipated link means the hypothesis was incomplete, not that the
+    reading was wrong. Refusing it would make the frame unfalsifiable — which
+    is the whole failure this design is avoiding — so it warns instead.
+    """
+
+    cards = council_cards()
+    cards["WORK-TEST-2026"]["spine"] = [
+        {
+            "link": "клиническая апробация",
+            "status": "observed",
+            "where": "с. 120",
+            "how": "отдельная глава",
+        }
+    ]
+
+    report = WORK.validate(sound_aggregate(), cards)
+
+    assert report["valid"] is True
+    assert any("does not anticipate" in warning for warning in report["warnings"])
+
+
+def test_a_formulation_without_its_verbatim_wording_is_flagged() -> None:
+    """Wording is the observation here, so a paraphrase discards the evidence."""
+
+    card = sound_card()
+    card["formulations"][0]["quote"] = None
+
+    report = WORK.validate(card)
+
+    assert report["valid"] is True
+    assert any("verbatim" in warning for warning in report["warnings"])
 
 
 def test_stored_work_records_validate_against_each_other() -> None:

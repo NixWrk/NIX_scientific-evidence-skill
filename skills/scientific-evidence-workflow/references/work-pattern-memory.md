@@ -74,16 +74,54 @@ last. *No normative document in the base says anything about this.*
 per-chapter conclusions, whether the closing of one names the question the
 next opens, how cross-references run. *Nothing in the base says anything.*
 
-**4. Сквозная линия.** The through-line — gap in the field, task, solution,
-evidence, significance — and where each link physically sits. *Nothing.*
+**4. Сквозная линия.** The through-line of the whole work and where each link
+physically sits. The links are **not fixed by this file** — see below.
+*Nothing.*
 
-**5. Формальная практика.** Reference-list order and grouping, citation form,
+**5. Формулировки.** How the load-bearing statements are actually worded: цель,
+задачи, научная новизна, положения на защиту, практическая значимость. Record
+them verbatim in `quote`, then observe their shape — how many there are, what
+word each one opens with, whether they are enumerated or run as prose, whether
+a proposition states a result or an activity. *GOST R 7.0.11 names these
+elements and never touches their wording, so the element is settled and the
+form is not.*
+
+**6. Формальная практика.** Reference-list order and grouping, citation form,
 the author's publication list, patents, title page, numbering of figures and
-tables. *Partly checkable; the reference-list order in particular is settled
-by no document and is the clearest case where practice is the only source.*
+tables. *Partly checkable; the reference-list order in particular is settled by
+no document and is the clearest case where practice is the only source.*
 
-Levels 2 through 4 are the reason for doing this at all. Level 1 and 5 mostly
+Levels 2 through 5 are the reason for doing this at all. Levels 1 and 6 mostly
 confirm what cards already establish.
+
+## The expected arc is a hypothesis, and it lives in data
+
+Someone who knows the field can say in advance roughly how such a work runs —
+for this specialty: a literature review that forms the **medical** problem, then
+a review of technical solutions that forms the **medico-technical** problem, and
+only then the development, the calculation, the modelling, the experiment.
+
+That is worth having and dangerous to hold wrongly. Read eight works looking for
+a five-link arc and eight of them will show it, because the reading was
+organised by it. The frame would then be confirmed by its own application.
+
+Three rules keep it honest:
+
+- **The arc is data, not code.** The validator fixes no vocabulary of links.
+  An aggregate declares its `expected_arc` together with `source` — who said
+  so — and `stated_on`. A later reader can then see that the frame came from
+  the author in advance and not from the corpus.
+- **Every link carries a status.** `observed` or `absent`. A work that does not
+  form the medical problem before reviewing technical solutions is a finding,
+  not a failed reading, and `absent` is where such findings live.
+- **An absent link still needs its evidence.** Say how the absence was
+  established — which sections were read and what stands in its place — because
+  «нет» asserted without a locator is unverifiable in the same way an invented
+  quotation is.
+
+Where a work shows a link the frame did not anticipate, add it. The frame is
+the starting hypothesis, and a corpus that only ever confirms its frame has
+taught nobody anything.
 
 ## Confounders
 
@@ -140,6 +178,7 @@ python scripts/validate_work_card.py card.json
 ```
 
 It checks structure, locators, strata, the absence of obligation — in keys and
-in prose — and, for an aggregate, that every cited work exists and that no
-claim rests on a stratum too weak to bear it. It cannot check whether a chapter
-was read correctly; that needs a second reading against the locator.
+in prose — and, for an aggregate, that every cited work exists, that no claim
+rests on a stratum too weak to bear it, and that every spine link used by a work
+belongs to the arc the aggregate declares. It cannot check whether a chapter was
+read correctly; that needs a second reading against the locator.

@@ -31,7 +31,12 @@ STRATA = ("council", "specialty", "outside")
 # specialty is content with either. Nothing supports a claim from `outside`.
 STRATUM_RANK = {"council": 2, "specialty": 1, "outside": 0}
 NORM_RELATIONS = ("confirms", "norm_silent", "diverges")
-SPINE_LINKS = ("пробел", "задача", "решение", "доказательство", "значимость")
+# The links of the through-line are deliberately not fixed here. An expected arc
+# is a hypothesis somebody states before reading, and hard-coding it would let
+# the frame confirm itself: read eight works looking for five links and eight
+# will show them. The aggregate declares the arc together with who said so, and
+# the check happens there.
+SPINE_STATUSES = ("observed", "absent")
 
 # Keys that would let a rule be written down. Their absence is the point of
 # this schema, so they are refused wherever they appear at any depth.
@@ -62,8 +67,8 @@ QUOTE_FIELDS = {"quote"}
 
 WORK_FIELDS = {
     "schema_version", "kind", "work_id", "record_version", "bibliographic", "stratum",
-    "provenance", "coverage", "structure", "volumes", "narrative", "spine", "practice",
-    "not_observed", "notes",
+    "provenance", "coverage", "structure", "volumes", "narrative", "spine", "formulations",
+    "practice", "not_observed", "notes",
 }
 BIBLIOGRAPHIC_REQUIRED = (
     "author", "title", "year", "specialty_as_printed", "council", "organization", "supervisor",
@@ -72,8 +77,9 @@ PROVENANCE_REQUIRED = ("local_file", "content_hash", "analyzed_on")
 
 AGGREGATE_FIELDS = {
     "schema_version", "kind", "aggregate_id", "record_version", "scope", "required_stratum",
-    "compiled_on", "compiled_by", "works", "features", "not_observed", "notes",
+    "compiled_on", "compiled_by", "expected_arc", "works", "features", "not_observed", "notes",
 }
+ARC_REQUIRED = ("source", "stated_on")
 
 
 def _nonempty(value: Any) -> bool:
@@ -171,8 +177,11 @@ def validate_work(data: dict[str, Any]) -> dict[str, Any]:
         ("chapter", "locator", "role", "ends_with", "leads_to"),
         errors,
     )
-    _check_located(data.get("spine", []), "work.spine", ("link", "where", "how"), errors)
+    _check_located(data.get("spine", []), "work.spine", ("link", "how"), errors)
     _check_located(data.get("practice", []), "work.practice", ("topic", "observation", "locator"), errors)
+    _check_located(
+        data.get("formulations", []), "work.formulations", ("element", "locator", "shape"), errors
+    )
 
     narrative = data.get("narrative", [])
     if isinstance(narrative, list):
@@ -187,14 +196,40 @@ def validate_work(data: dict[str, Any]) -> dict[str, Any]:
                 )
 
     spine = data.get("spine", [])
-    if isinstance(spine, list) and spine:
-        named = {item.get("link") for item in spine if isinstance(item, dict)}
-        unknown = sorted(link for link in named if link not in SPINE_LINKS)
-        if unknown:
-            errors.append(f"work.spine: unknown links {unknown}; expected among {list(SPINE_LINKS)}")
-        missing = [link for link in SPINE_LINKS if link not in named]
-        if missing:
-            warnings.append(f"work.spine: no link recorded for {missing}; say so in not_observed if absent")
+    if isinstance(spine, list):
+        for index, link in enumerate(spine):
+            if not isinstance(link, dict):
+                continue
+            here = f"work.spine[{index}]"
+            status = link.get("status")
+            if status not in SPINE_STATUSES:
+                errors.append(f"{here}.status: expected one of {list(SPINE_STATUSES)}")
+                continue
+            # An observed link points at a page. An absent one cannot, but it
+            # still owes an account of how the absence was established: a bare
+            # «нет» is as unverifiable as an invented quotation.
+            if status == "observed" and not _nonempty(link.get("where")):
+                errors.append(f"{here}.where: an observed link points at where it sits")
+            if status == "absent" and _nonempty(link.get("where")):
+                errors.append(f"{here}.where: an absent link has nowhere to point")
+
+    formulations = data.get("formulations", [])
+    if isinstance(formulations, list):
+        for index, item in enumerate(formulations):
+            if not isinstance(item, dict):
+                continue
+            here = f"work.formulations[{index}]"
+            count = item.get("count")
+            if count is not None and (not isinstance(count, int) or count < 0):
+                errors.append(f"{here}.count: expected a non-negative integer or null")
+            openers = item.get("openers")
+            if openers is not None and not isinstance(openers, list):
+                errors.append(f"{here}.openers: expected a list of opening words or null")
+            # Wording is the subject here, so a paraphrase loses the evidence.
+            if not _nonempty(item.get("quote")):
+                warnings.append(
+                    f"{here}.quote: the wording is what is being observed; record it verbatim"
+                )
 
     if not data.get("not_observed"):
         warnings.append("work.not_observed: nothing recorded as unexamined or absent")
@@ -237,6 +272,42 @@ def validate_aggregate(data: dict[str, Any], cards: dict[str, dict[str, Any]] | 
     if not isinstance(works, list) or not works:
         errors.append("aggregate.works: expected the list of work cards it rests on")
         works = []
+
+    # An expected arc stated before reading can confirm itself. Recording who
+    # stated it, and when, is what lets a later reader tell a frame brought to
+    # the corpus from one the corpus produced.
+    arc = data.get("expected_arc")
+    arc_links: set[str] = set()
+    if arc is not None:
+        if not isinstance(arc, dict):
+            errors.append("aggregate.expected_arc: expected an object")
+        else:
+            _required(arc, ARC_REQUIRED, "aggregate.expected_arc", errors)
+            if _nonempty(arc.get("stated_on")) and not DATE_PATTERN.fullmatch(arc["stated_on"]):
+                errors.append("aggregate.expected_arc.stated_on: expected YYYY-MM-DD")
+            links = arc.get("links")
+            if not isinstance(links, list) or not links:
+                errors.append("aggregate.expected_arc.links: expected the anticipated links")
+            else:
+                arc_links = {link for link in links if isinstance(link, str)}
+
+    if arc_links and cards:
+        for work_id in works:
+            card = cards.get(work_id)
+            if not isinstance(card, dict):
+                continue
+            for index, link in enumerate(card.get("spine") or []):
+                if not isinstance(link, dict):
+                    continue
+                name = link.get("link")
+                if _nonempty(name) and name not in arc_links:
+                    # Not an error. A work showing a link nobody anticipated is
+                    # the corpus answering back, and that is the reason to read
+                    # it; the arc is what gets updated, not the observation.
+                    warnings.append(
+                        f"aggregate.expected_arc: {work_id} spine[{index}] uses {name!r}, which "
+                        "the declared arc does not anticipate; extend the arc if the corpus is right"
+                    )
 
     features = data.get("features")
     if not isinstance(features, list):
