@@ -214,6 +214,46 @@ def test_deferred_work_names_real_documents_and_a_trigger() -> None:
         assert entry.get("trigger", "").strip(), f"{document_id}: deferral without a trigger"
 
 
+def test_a_document_held_for_lookup_is_not_queued_for_a_card() -> None:
+    """Not every held document is a document awaiting a card.
+
+    A council roster is a list of people; a library page is a submission
+    procedure. Neither states a rule about the text, and everything they touch
+    in it is already established by a higher tier. Leaving them in `deferred`
+    read as pending normative work and quietly promised requirements that would
+    never arrive.
+
+    So each entry must say when it is consulted, what it gives, and why a card
+    would add nothing — and must be in exactly one of the two lists.
+    """
+
+    consulted = NORMATIVE["consulted_not_carded"]
+    known = {document["id"] for document in NORMATIVE["documents"]}
+    deferred = {entry["id"] for entry in NORMATIVE["deferred"]}
+    carded = {
+        document["id"]
+        for document in NORMATIVE["documents"]
+        if document["acquisition"] == "carded"
+    }
+
+    assert consulted
+    seen = set()
+    for entry in consulted:
+        document_id = entry["id"]
+        assert document_id in known, f"{document_id} is not a known document"
+        assert document_id not in seen, f"{document_id} listed twice"
+        seen.add(document_id)
+        for field in ("consulted_at", "gives", "why_no_card"):
+            assert entry.get(field, "").strip(), f"{document_id}: {field} is empty"
+        assert document_id not in deferred, (
+            f"{document_id}: both deferred and held for lookup; the two states say "
+            "opposite things about whether a card is coming"
+        )
+        assert document_id not in carded, (
+            f"{document_id}: carded although it was judged to establish no rule"
+        )
+
+
 def test_a_deferral_the_repository_cannot_settle_names_who_decides() -> None:
     """Some conditions depend on the subject of the work, which only the author knows.
 
