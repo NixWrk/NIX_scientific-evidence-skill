@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "kind": "work",
+  "work_id": "WORK-FAMILY-YEAR",
+  "record_version": "v1",
+  "bibliographic": {
+    "author": "Фамилия И. О.",
+    "title": "Название работы",
+    "year": "2012",
+    "degree": "кандидат технических наук",
+    "specialty_as_printed": "05.11.17 — Приборы, системы и изделия медицинского назначения",
+    "council": "unknown",
+    "organization": "МГТУ им. Н. Э. Баумана",
+    "supervisor": "unknown"
+  },
+  "stratum": "specialty",
+  "provenance": {
+    "local_file": "Zotero storage/<key>/<file>",
+    "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "url": "zotero://select/library/items/<key>",
+    "analyzed_on": "2026-01-01",
+    "analyzed_by": "кто выполнил разбор"
+  },
+  "coverage": [
+    "какие части работы прочитаны",
+    "какие просмотрены бегло или не рассматривались"
+  ],
+  "structure": [
+    {
+      "part": "Введение",
+      "locator": "с. 4–12",
+      "note": null
+    }
+  ],
+  "volumes": {
+    "pages": null,
+    "sources": null,
+    "figures": null,
+    "tables": null,
+    "publications": null,
+    "note": null
+  },
+  "narrative": [
+    {
+      "chapter": "Глава 1. Название",
+      "locator": "с. 13–48",
+      "role": "Зачем эта глава нужна работе, своими словами.",
+      "moves": [
+        "первый ход изложения",
+        "второй ход",
+        "чем ход завершается"
+      ],
+      "ends_with": "Чем глава заканчивается.",
+      "leads_to": "Какой вопрос она открывает для следующей главы.",
+      "quote": null,
+      "note": null
+    }
+  ],
+  "spine": [
+    {
+      "link": "пробел",
+      "where": "с. 11, абзац 2",
+      "how": "Как именно звено выражено. Звенья: пробел, задача, решение, доказательство, значимость.",
+      "quote": null
+    }
+  ],
+  "practice": [
+    {
+      "topic": "ссылки",
+      "observation": "Что наблюдается. Темы: список литературы, ссылки, публикации, патенты, титульный лист, нумерация, объём.",
+      "locator": "с. 96–104",
+      "quote": null,
+      "note": null
+    }
+  ],
+  "not_observed": [
+    "что в работе не рассматривалось при разборе",
+    "что в самой работе отсутствует и это заметно"
+  ],
+  "notes": []
+}

@@ -237,6 +237,14 @@ Stop and request input instead of guessing when:
   document, and why a catalogue entry may carry no requirements.
 - `assets/normative-pattern.template.json`: normative-card scaffold.
 - `scripts/validate_normative_card.py`: dependency-free card validator.
+- `references/work-pattern-memory.md`: rules for reading a defended work for
+  its form — structure, how a chapter argues, how chapters connect — and why
+  such a record has no field in which a requirement could be written.
+- `assets/work-pattern.template.json`: work-card scaffold.
+- `assets/work-aggregate.template.json`: scaffold for a pattern across works.
+- `scripts/validate_work_card.py`: dependency-free work and aggregate
+  validator; refuses obligation in keys and in prose, and refuses a claim
+  resting on a work too weak to bear it.
 - `references/russian-scientific-style.md`: Russian language core.
 - `references/russian/`: genre language profiles.
 - `scripts/audit_russian_style.py`: dependency-free heuristic style audit.

@@ -1,0 +1,369 @@
+"""Validate a work-pattern card or an aggregate, without external packages.
+
+A defended work shows what one council accepted; it establishes nothing. Three
+failures are worth stopping here, and each has its own check:
+
+1. an obligation appearing in a record of somebody else's practice — in a key
+   or in prose. A normative card relies on the author writing
+   `observed_practice`; this schema simply has nowhere to put a rule, and the
+   validator keeps it that way;
+2. an observation without a locator, which cannot be checked back;
+3. an aggregate resting on works too weak to bear its claim — a statement about
+   one council's practice supported by a work defended elsewhere.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+from typing import Any
+
+ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]*$")
+HASH_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
+DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+VERSION_PATTERN = re.compile(r"^v\d+$")
+
+STRATA = ("council", "specialty", "outside")
+# A claim about one council needs a work from that council. A claim about the
+# specialty is content with either. Nothing supports a claim from `outside`.
+STRATUM_RANK = {"council": 2, "specialty": 1, "outside": 0}
+NORM_RELATIONS = ("confirms", "norm_silent", "diverges")
+SPINE_LINKS = ("пробел", "задача", "решение", "доказательство", "значимость")
+
+# Keys that would let a rule be written down. Their absence is the point of
+# this schema, so they are refused wherever they appear at any depth.
+FORBIDDEN_KEYS = {"binding", "requirement", "requirements", "requirement_id", "mandatory", "applies_to"}
+
+# Obligation in prose is the same leak by another route. Verbatim text from the
+# work belongs in `quote`, which is exempt: a work may well say «должен».
+#
+# The stem is «долж», not «должн» — «должен» has no н before the ending, and an
+# earlier version of this pattern silently missed the single most common form.
+# Two words are deliberately absent. «следует» is ambiguous between obligation
+# and inference («из главы 1 следует»), and «требования» is an ordinary noun a
+# work card needs («глава 2 формулирует требования к системе»); only the verb
+# «требуется» is refused.
+OBLIGATION = re.compile(
+    r"\b("
+    r"долж(?:ен|на|но|ны|ного|ному|ным|ными|ных)"
+    r"|обязан(?:а|о|ы)?"
+    r"|обязательн\w*"
+    r"|требуетс\w*|требуютс\w*"
+    r"|необходим(?:о|а|ы|ый|ая|ое|ые|ого|ому)?"
+    r"|надлежит"
+    r"|не\s+допускаетс\w*"
+    r")\b",
+    re.IGNORECASE,
+)
+QUOTE_FIELDS = {"quote"}
+
+WORK_FIELDS = {
+    "schema_version", "kind", "work_id", "record_version", "bibliographic", "stratum",
+    "provenance", "coverage", "structure", "volumes", "narrative", "spine", "practice",
+    "not_observed", "notes",
+}
+BIBLIOGRAPHIC_REQUIRED = (
+    "author", "title", "year", "specialty_as_printed", "council", "organization", "supervisor",
+)
+PROVENANCE_REQUIRED = ("local_file", "content_hash", "analyzed_on")
+
+AGGREGATE_FIELDS = {
+    "schema_version", "kind", "aggregate_id", "record_version", "scope", "required_stratum",
+    "compiled_on", "compiled_by", "works", "features", "not_observed", "notes",
+}
+
+
+def _nonempty(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _unexpected(record: dict[str, Any], allowed: set[str], path: str, errors: list[str]) -> None:
+    for key in sorted(set(record) - allowed):
+        errors.append(f"{path}: unexpected field {key!r}")
+
+
+def _required(record: dict[str, Any], keys: tuple[str, ...], path: str, errors: list[str]) -> None:
+    for key in keys:
+        if not _nonempty(record.get(key)):
+            errors.append(f"{path}.{key}: expected a non-empty string")
+
+
+def _scan_for_obligation(node: Any, path: str, errors: list[str]) -> None:
+    """Walk the whole record refusing rule-shaped keys and obligation prose."""
+
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key.lower() in FORBIDDEN_KEYS:
+                errors.append(
+                    f"{path}.{key}: a work card has no field for an obligation; a defended "
+                    "work shows practice and establishes nothing"
+                )
+            _scan_for_obligation(value, f"{path}.{key}" if key not in QUOTE_FIELDS else "", errors)
+        return
+    if isinstance(node, list):
+        for index, item in enumerate(node):
+            _scan_for_obligation(item, f"{path}[{index}]" if path else "", errors)
+        return
+    if isinstance(node, str) and path and OBLIGATION.search(node):
+        found = OBLIGATION.search(node)
+        assert found is not None
+        errors.append(
+            f"{path}: observation states an obligation ({found.group(0)!r}); describe what the "
+            "work does, or put verbatim text in 'quote'"
+        )
+
+
+def _check_located(items: Any, path: str, fields: tuple[str, ...], errors: list[str]) -> None:
+    if not isinstance(items, list):
+        errors.append(f"{path}: expected a list")
+        return
+    for index, item in enumerate(items):
+        here = f"{path}[{index}]"
+        if not isinstance(item, dict):
+            errors.append(f"{here}: expected an object")
+            continue
+        _required(item, fields, here, errors)
+
+
+def validate_work(data: dict[str, Any]) -> dict[str, Any]:
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    _unexpected(data, WORK_FIELDS, "work", errors)
+    _required(data, ("schema_version", "work_id", "record_version"), "work", errors)
+    if data.get("schema_version") != "1.0":
+        errors.append("work.schema_version: expected '1.0'")
+    if _nonempty(data.get("work_id")) and not ID_PATTERN.fullmatch(data["work_id"]):
+        errors.append("work.work_id: invalid identifier")
+    if _nonempty(data.get("record_version")) and not VERSION_PATTERN.fullmatch(data["record_version"]):
+        errors.append("work.record_version: expected 'v<number>'")
+    if data.get("stratum") not in STRATA:
+        errors.append(f"work.stratum: expected one of {list(STRATA)}")
+
+    bibliographic = data.get("bibliographic")
+    if not isinstance(bibliographic, dict):
+        errors.append("work.bibliographic: expected an object")
+    else:
+        _required(bibliographic, BIBLIOGRAPHIC_REQUIRED, "work.bibliographic", errors)
+        # A confounder left blank is indistinguishable from one nobody looked
+        # for, so 'unknown' has to be written rather than omitted.
+        for key in ("council", "supervisor"):
+            if bibliographic.get(key) == "":
+                errors.append(f"work.bibliographic.{key}: write 'unknown' rather than leaving it empty")
+
+    provenance = data.get("provenance")
+    if not isinstance(provenance, dict):
+        errors.append("work.provenance: expected an object")
+    else:
+        _required(provenance, PROVENANCE_REQUIRED, "work.provenance", errors)
+        if _nonempty(provenance.get("content_hash")) and not HASH_PATTERN.fullmatch(provenance["content_hash"]):
+            errors.append("work.provenance.content_hash: expected 'sha256:<64 hex digits>'")
+        if _nonempty(provenance.get("analyzed_on")) and not DATE_PATTERN.fullmatch(provenance["analyzed_on"]):
+            errors.append("work.provenance.analyzed_on: expected YYYY-MM-DD")
+
+    _check_located(data.get("structure", []), "work.structure", ("part", "locator"), errors)
+    _check_located(
+        data.get("narrative", []),
+        "work.narrative",
+        ("chapter", "locator", "role", "ends_with", "leads_to"),
+        errors,
+    )
+    _check_located(data.get("spine", []), "work.spine", ("link", "where", "how"), errors)
+    _check_located(data.get("practice", []), "work.practice", ("topic", "observation", "locator"), errors)
+
+    narrative = data.get("narrative", [])
+    if isinstance(narrative, list):
+        for index, chapter in enumerate(narrative):
+            if not isinstance(chapter, dict):
+                continue
+            moves = chapter.get("moves")
+            if not isinstance(moves, list) or not moves:
+                errors.append(
+                    f"work.narrative[{index}].moves: expected the ordered moves of the chapter; "
+                    "a chapter recorded without its moves is a heading, not its argument"
+                )
+
+    spine = data.get("spine", [])
+    if isinstance(spine, list) and spine:
+        named = {item.get("link") for item in spine if isinstance(item, dict)}
+        unknown = sorted(link for link in named if link not in SPINE_LINKS)
+        if unknown:
+            errors.append(f"work.spine: unknown links {unknown}; expected among {list(SPINE_LINKS)}")
+        missing = [link for link in SPINE_LINKS if link not in named]
+        if missing:
+            warnings.append(f"work.spine: no link recorded for {missing}; say so in not_observed if absent")
+
+    if not data.get("not_observed"):
+        warnings.append("work.not_observed: nothing recorded as unexamined or absent")
+
+    _scan_for_obligation(data, "work", errors)
+
+    return {
+        "valid": not errors,
+        "errors": errors,
+        "warnings": warnings,
+        "counts": {
+            "structure": len(data.get("structure") or []),
+            "chapters": len(narrative if isinstance(narrative, list) else []),
+            "spine": len(spine if isinstance(spine, list) else []),
+            "practice": len(data.get("practice") or []),
+            "not_observed": len(data.get("not_observed") or []),
+        },
+    }
+
+
+def validate_aggregate(data: dict[str, Any], cards: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    cards = cards or {}
+
+    _unexpected(data, AGGREGATE_FIELDS, "aggregate", errors)
+    _required(
+        data,
+        ("schema_version", "aggregate_id", "record_version", "scope", "compiled_on"),
+        "aggregate",
+        errors,
+    )
+    if data.get("schema_version") != "1.0":
+        errors.append("aggregate.schema_version: expected '1.0'")
+    required_stratum = data.get("required_stratum")
+    if required_stratum not in ("council", "specialty"):
+        errors.append("aggregate.required_stratum: expected 'council' or 'specialty'")
+
+    works = data.get("works")
+    if not isinstance(works, list) or not works:
+        errors.append("aggregate.works: expected the list of work cards it rests on")
+        works = []
+
+    features = data.get("features")
+    if not isinstance(features, list):
+        errors.append("aggregate.features: expected a list")
+        features = []
+
+    seen: set[str] = set()
+    for index, feature in enumerate(features):
+        path = f"aggregate.features[{index}]"
+        if not isinstance(feature, dict):
+            errors.append(f"{path}: expected an object")
+            continue
+        _required(feature, ("feature_id", "level", "question"), path, errors)
+        identifier = feature.get("feature_id")
+        if _nonempty(identifier):
+            if identifier in seen:
+                errors.append(f"{path}.feature_id: duplicate {identifier!r}")
+            seen.add(identifier)
+        if feature.get("norm_relation") not in NORM_RELATIONS:
+            errors.append(f"{path}.norm_relation: expected one of {list(NORM_RELATIONS)}")
+        if feature.get("norm_relation") in ("confirms", "diverges") and not _nonempty(feature.get("norm_reference")):
+            errors.append(
+                f"{path}.norm_reference: naming a relation to the norm requires naming which "
+                "card and requirement"
+            )
+
+        shown_by = feature.get("shown_by")
+        if not isinstance(shown_by, list) or not shown_by:
+            errors.append(f"{path}.shown_by: a feature with no work behind it is an assertion")
+            continue
+        for offset, item in enumerate(shown_by):
+            here = f"{path}.shown_by[{offset}]"
+            if not isinstance(item, dict):
+                errors.append(f"{here}: expected an object")
+                continue
+            _required(item, ("work_id", "what", "locator"), here, errors)
+            work_id = item.get("work_id")
+            if not _nonempty(work_id):
+                continue
+            if work_id not in works:
+                errors.append(f"{here}.work_id: {work_id!r} is not listed in aggregate.works")
+            card = cards.get(work_id)
+            if card is None:
+                if cards:
+                    errors.append(f"{here}.work_id: no work card {work_id!r} exists")
+                continue
+            stratum = card.get("stratum")
+            if STRATUM_RANK.get(stratum, -1) < STRATUM_RANK.get(required_stratum, 99):
+                errors.append(
+                    f"{here}.work_id: {work_id!r} is stratum {stratum!r}, too weak to support a "
+                    f"claim about {data.get('scope')!r}"
+                )
+
+        variants = feature.get("variants") or []
+        if not isinstance(variants, list):
+            errors.append(f"{path}.variants: expected a list")
+        elif len(shown_by) > 1 and not variants and not _nonempty(feature.get("common")):
+            warnings.append(
+                f"{path}: several works and neither a common pattern nor a variant recorded"
+            )
+
+    if cards:
+        for work_id in works:
+            if work_id not in cards:
+                errors.append(f"aggregate.works: no work card {work_id!r} exists")
+
+    _scan_for_obligation(data, "aggregate", errors)
+
+    return {
+        "valid": not errors,
+        "errors": errors,
+        "warnings": warnings,
+        "counts": {"works": len(works), "features": len(features)},
+    }
+
+
+def validate(data: Any, cards: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
+    if not isinstance(data, dict):
+        return {"valid": False, "errors": ["record: expected an object"], "warnings": [], "counts": {}}
+    kind = data.get("kind")
+    if kind == "work":
+        return validate_work(data)
+    if kind == "aggregate":
+        return validate_aggregate(data, cards)
+    return {
+        "valid": False,
+        "errors": [f"record.kind: expected 'work' or 'aggregate', got {kind!r}"],
+        "warnings": [],
+        "counts": {},
+    }
+
+
+def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("record", type=Path, help="Path to a work card or an aggregate")
+    parser.add_argument(
+        "--cards",
+        type=Path,
+        help="Directory of work cards, so an aggregate can be checked against them",
+    )
+    parser.add_argument("--output", type=Path, help="Optional validation-report path")
+    args = parser.parse_args()
+
+    cards: dict[str, dict[str, Any]] = {}
+    if args.cards and args.cards.is_dir():
+        for path in sorted(args.cards.glob("*.json")):
+            try:
+                candidate = json.loads(path.read_text(encoding="utf-8-sig"))
+            except json.JSONDecodeError:
+                continue
+            if isinstance(candidate, dict) and candidate.get("kind") == "work":
+                cards[candidate.get("work_id", path.stem)] = candidate
+
+    try:
+        report = validate(json.loads(args.record.read_text(encoding="utf-8-sig")), cards)
+    except (OSError, json.JSONDecodeError) as error:
+        report = {"valid": False, "errors": [str(error)], "warnings": [], "counts": {}}
+
+    rendered = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(rendered, encoding="utf-8")
+    print(rendered, end="")
+    return 0 if report["valid"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
