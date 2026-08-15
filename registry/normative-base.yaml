@@ -92,6 +92,28 @@ retrieval_attempts:
       - VAK-EDITIONS перечень изданий
       - EXAMPLE-SATANENKO-2026 не найден поиском по библиотеке
 
+  - date: 2026-08-14
+    agent: claude-code-session
+    outcome: partial
+    change: повторная проверка отказавших узлов
+    obtained: 6
+    diagnosis: >-
+      Узел uchsov.bmstu.ru отвечает по http, но не по https. Шесть страниц
+      Учёного совета получены по незащищённому протоколу; это отмечено в
+      holdings. Узел vak.gisnauka.ru не отвечает ни по одному протоколу.
+    verified: >-
+      Страница требований сверена с файлом DOCX по шести требованиям — совпали
+      все. Побайтового сравнения не проводилось: страница является частью
+      файла, который сводит четыре страницы совета. Состав совета 24.2.331.09
+      подтверждён на странице состава вместе со специальностью 2.2.12.
+    still_missing:
+      - текст восьми стандартов
+      - PASSPORT-2.2.12 и VAK-EDITIONS: узел ВАК не отвечает
+      - BMSTU-ETHICS: публично не найдено
+      - EXAMPLE-SATANENKO-2026: прямая ссылка неизвестна
+      - ZOTERO-HERT-LUNG-GENERATIONS: сервер Zotero не подключён
+      - ROSPATENT-SOFTWARE и ROSPATENT-INVENTION: не выгружались
+
 documents:
 
   # --- tier 1: federal law -------------------------------------------------
@@ -156,7 +178,7 @@ documents:
     source: https://uchsov.bmstu.ru/uhstsostav.htm
     scope: [идентификация совета, соответствие специальности]
     rules_to_extract: [состав совета, закреплённые специальности]
-    acquisition: located
+    acquisition: obtained
 
   - id: BMSTU-DISS-REQ
     title: Требования к оформлению диссертаций Учёного совета МГТУ
@@ -445,12 +467,40 @@ holdings:
   retrieved_on: 2026-08-14
   BMSTU-DISS-REQ:
     kind: document
-    note: "Получен файл DOCX с mf.bmstu.ru. Объявленный источник uchsov.bmstu.ru недоступен, поэтому тождественность двух публикаций требований не подтверждена."
+    note: "Файл DOCX сводит четыре страницы совета. Получено по незащищённому протоколу: узел не отвечает по https."
     files:
       - name: BMSTU-DISS-REQ.docx
         url: https://mf.bmstu.ru/assets/info/dissovet/requirements/docs/diss_bmstu_requirements.docx
         bytes: 20121
         sha256: 439c1dd01c9015a735406239249a918cb879238d10dd0474b18aae4c72e54e02
+      - name: BMSTU-UCHSOV-uhstnorm_tr.html
+        url: http://uchsov.bmstu.ru/uhstnorm_tr.htm
+        bytes: 14343
+        sha256: e881ea6a104281de2599e45a8f4798d503f4986292dd641bc54d453fde866f9a
+      - name: BMSTU-UCHSOV-uhstnorm_rec.html
+        url: http://uchsov.bmstu.ru/uhstnorm_rec.htm
+        bytes: 28649
+        sha256: 491ccb15c4f8a2a383dd48a0d37fa0acf4dc8e4805aed69db59dbbb1d0627274
+      - name: BMSTU-UCHSOV-uhstnorm_doc.html
+        url: http://uchsov.bmstu.ru/uhstnorm_doc.htm
+        bytes: 42663
+        sha256: 7b83d6a293cd890ad15c6c3f85c8b53328c128987e3a5ab1961c57adb58bda42
+      - name: BMSTU-UCHSOV-uhstnorm_z.html
+        url: http://uchsov.bmstu.ru/uhstnorm_z.htm
+        bytes: 58101
+        sha256: 15370651350bc5ef3f55adf52e74aec928c887d9806e017c81689b507a125d8e
+      - name: BMSTU-UCHSOV-uhstnorm.html
+        url: http://uchsov.bmstu.ru/uhstnorm.htm
+        bytes: 5166
+        sha256: 8ad9df5a0b01c7bb8d098efcad3bcd38b2a6279cc4fcdbbedd144cda29511ee0
+  BMSTU-DS-24.2.331.09:
+    kind: document
+    note: "Состав советов МГТУ. Получено по незащищённому протоколу: узел не отвечает по https."
+    files:
+      - name: BMSTU-UCHSOV-uhstsostav.html
+        url: http://uchsov.bmstu.ru/uhstsostav.htm
+        bytes: 124097
+        sha256: c56da3f0543b9458da90a91cc3a4dc170c067e6591b6701d9b532dee67a98cce
   BMSTU-TITLE:
     kind: document
     files:
