@@ -33,3 +33,16 @@ not establish alphabetical order or order of first citation.
 
 Coverage is rule- and record-type-specific. Emit `not_assessed` for any type or
 field outside the card coverage matrix.
+
+## Title page and TOC authorities
+
+The base dissertation title page resolves
+`NORM-GOST-R-7.0.11-2011-001:REQ-007`. Pass local title-page requirements
+explicitly as `local_profile.authority_ids`; selecting
+`NORM-BMSTU-DISS-REQ-001:REQ-007` makes the applicant signature line
+mandatory. Do not report that local authority when it was not selected.
+
+A final single-volume TOC resolves REQ-008 (exact heading text and dot leaders)
+and REQ-031 (complete list of main parts with starting pages). REQ-030 and
+REQ-032 are conditional multi-volume requirements and remain `not_assessed`
+unless the input declares a multi-volume dissertation.

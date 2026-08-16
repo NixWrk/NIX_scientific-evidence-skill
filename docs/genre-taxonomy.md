@@ -132,12 +132,12 @@
 | `journal-format-analysis` | разбор образца статьи и сохранение карточки оформления | есть |
 | `format-requirement-update` | уточнение карточки оформления по письму редакции или рецензента | новый |
 | `normative-pattern-analysis` | разбор нормативного документа | есть |
-| `dissertation-apparatus` | сборка и аудит оформительского аппарата диссертации | новый |
-| `dissertation-title-page` | титульный лист по нормативному профилю | новый |
-| `dissertation-rendered-toc` | финальное оглавление из стилей и обновлённых полей Word | новый |
-| `dissertation-abbreviations-list` | перечень сокращений и контроль их раскрытия | новый |
-| `dissertation-terminology-glossary` | словарь терминов и контроль единообразия | новый |
-| `dissertation-bibliography` | ссылки, библиографические записи, сортировка и взаимная сверка | новый |
+| `dissertation-apparatus` | сборка и аудит оформительского аппарата диссертации | есть, базовый |
+| `dissertation-title-page` | титульный лист по нормативному профилю | есть |
+| `dissertation-rendered-toc` | финальное оглавление из стилей и обновлённых полей Word | есть |
+| `dissertation-abbreviations-list` | перечень сокращений и контроль их раскрытия | есть, базовый |
+| `dissertation-terminology-glossary` | словарь терминов и контроль единообразия | есть, базовый |
+| `dissertation-bibliography` | ссылки, библиографические записи, сортировка и взаимная сверка | есть, базовый |
 | `dissertation-illustration-list` | перечни иллюстраций и таблиц | новый |
 | `dissertation-appendix-register` | порядок, обозначение и ссылки на приложения | новый |
 

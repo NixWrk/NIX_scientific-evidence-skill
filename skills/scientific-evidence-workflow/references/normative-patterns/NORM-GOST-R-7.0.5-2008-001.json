@@ -8,7 +8,7 @@
   "tier": 5,
   "provenance": {
     "source_kind": "document",
-    "local_file": "temporary Wikisource scan/ГОСТ Р 7.0.5-2008.pdf",
+    "local_file": "corpus/private/normative/ГОСТ Р 7.0.5-2008 — полный скан.pdf",
     "content_hash": "sha256:8424ece74bcccd2885a9f6ddc6c8d5ab84f38139141369e9f7cc5efed09e7b08",
     "url": "https://upload.wikimedia.org/wikisource/ru/e/e7/%D0%93%D0%9E%D0%A1%D0%A2_%D0%A0_7.0.5-2008.pdf",
     "analyzed_on": "2026-08-17",

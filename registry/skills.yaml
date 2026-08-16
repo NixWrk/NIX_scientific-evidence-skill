@@ -62,8 +62,8 @@ verdicts:
 
   - id: dissertation-formatting-and-apparatus
     source: local:skills/dissertation-formatting-and-apparatus
-    version: "0.1"
-    skill_sha256: f9f2809e1379df612177667e08274482dda630c705cf4f9537d8af68ed7441d6
+    version: "0.2"
+    skill_sha256: 69f71d41bedf1fcb26bcafb79e4d038a2aab7ff5034d3479b96d980242282b89
     task: [qualification_work, document_formatting, bibliography, document_review]
     license: not_declared
     spec_subset: pass
@@ -80,8 +80,12 @@ verdicts:
       - benchmark_gold_hidden_from_critic
       - word_review_has_structural_ooxml_audit
       - visual_docx_render_requires_available_office_engine
-    experiment: EXP-0027
-    next_action: complete_targeted_gost_sections_after_source_pdfs_are_available
+      - title_page_requires_resolved_authorities_and_complete_credentials
+      - final_toc_uses_word_heading_styles_and_refreshed_field
+      - corrupt_text_layer_gates_dependent_critic_checks
+    experiment: EXP-0028
+    prior_static_experiment: EXP-0027
+    next_action: extend_record_type_validators_and_run_fresh_holdout
 
   - id: literature-triage-matrix
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix

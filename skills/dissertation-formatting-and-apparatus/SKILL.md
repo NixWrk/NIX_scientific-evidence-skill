@@ -12,7 +12,8 @@ workflow instead of silently repairing them here.
 
 ## Resolve authority before formatting
 
-Load `references/normative-profile.md`. Resolve applicable versioned normative
+Load `references/normative-profile.md`. For title-page or final-TOC work also
+load `references/title-page-and-word-toc.md`. Resolve applicable versioned normative
 cards and local council requirements before selecting a citation form,
 bibliographic description, numbering, grouping, sorting, title page, or list.
 Treat an uncovered rule as `not_assessed`, never as a pass. Never infer an
@@ -29,9 +30,10 @@ For bibliography work, keep these layers distinct:
 ### Generate apparatus
 
 Require an approved, versioned manuscript and the relevant ledgers. Generate
-only fields supported by those inputs. A logical outline comes from the
-scientific workflow; a final Word TOC comes from heading styles and refreshed
-fields after layout.
+only fields supported by those inputs. Materialize a title page with
+`scripts/apply_dissertation_title_page.py`. A logical outline comes from the
+scientific workflow; finalize it with `scripts/finalize_word_toc.py` only from
+Word heading styles and refresh the real field after layout.
 
 ### Audit apparatus
 
@@ -59,6 +61,10 @@ changes automatically.
   and resolved normative profile; check resolution, duplicates, numbering,
   selected order, and supported record rules. Do not enforce an unspecified
   sort strategy.
+- Title page: require all GOST fields and structured supervisor/consultant
+  credentials; enforce a local signature only when its authority is selected.
+- Final TOC: derive entries from Word heading styles, reject hierarchy jumps,
+  insert a real field, refresh externally, and inspect its cached result.
 
 ## Critic and benchmark contract
 
@@ -75,6 +81,9 @@ the critic.
 - Resolve every Word annotation to one `issue_id`.
 - Fail on missing or ambiguous exact-text locators; never guess an anchor.
 - Mark unsupported bibliography source types `not_assessed`.
+- Gate source quality before language or structure criticism; if the text
+  layer is corrupt, emit one source-quality finding and mark dependent checks
+  `not_assessed` instead of inventing errors.
 - Structurally inspect comments and revisions in OOXML.
 - Render and inspect every page after any DOCX write. Rendering does not prove
   that comments exist; verify their OOXML anchors, relationships, and content
