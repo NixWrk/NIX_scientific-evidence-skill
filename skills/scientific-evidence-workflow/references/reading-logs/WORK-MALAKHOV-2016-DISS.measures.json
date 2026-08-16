@@ -1,0 +1,171 @@
+{
+  "reconstruction": {
+    "paragraphs": 826,
+    "starts_with_capital": 0.787,
+    "ends_with_sentence_punctuation": 0.594
+  },
+  "blocks": {
+    "prose": 826,
+    "data": 14
+  },
+  "pages": 123,
+  "placement": {
+    "рисунок": {
+      "упоминаний": 120,
+      "подпись не найдена в текстовом слое": 120,
+      "объект есть, проза его не называет": [],
+      "положение относительно упоминания": {}
+    },
+    "таблица": {
+      "упоминаний": 19,
+      "подпись не найдена в текстовом слое": 0,
+      "объект есть, проза его не называет": [
+        "15"
+      ],
+      "положение относительно упоминания": {
+        "ниже на той же странице": 10,
+        "на следующих страницах": 6,
+        "на предыдущих страницах": 3
+      }
+    }
+  },
+  "per_chapter": {
+    "введение": {
+      "paragraphs": 40,
+      "characters": 9409,
+      "hedging": 6,
+      "certainty": 5,
+      "personal": 1,
+      "impersonal": 14,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 1,
+      "citations": 13,
+      "citations_per_1000_chars": 1.38,
+      "median_sentence_length": 128
+    },
+    "глава 1": {
+      "paragraphs": 161,
+      "characters": 23327,
+      "hedging": 28,
+      "certainty": 0,
+      "personal": 0,
+      "impersonal": 26,
+      "negative_result": 8,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 4,
+      "citations": 10,
+      "citations_per_1000_chars": 0.43,
+      "median_sentence_length": 128
+    },
+    "глава 2": {
+      "paragraphs": 124,
+      "characters": 19324,
+      "hedging": 1,
+      "certainty": 6,
+      "personal": 0,
+      "impersonal": 28,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 3,
+      "citations": 6,
+      "citations_per_1000_chars": 0.31,
+      "median_sentence_length": 146
+    },
+    "глава 3": {
+      "paragraphs": 262,
+      "characters": 39509,
+      "hedging": 24,
+      "certainty": 7,
+      "personal": 0,
+      "impersonal": 55,
+      "negative_result": 2,
+      "comparison_with_others": 1,
+      "boundary_of_applicability": 6,
+      "citations": 13,
+      "citations_per_1000_chars": 0.33,
+      "median_sentence_length": 134
+    },
+    "глава 4": {
+      "paragraphs": 89,
+      "characters": 11401,
+      "hedging": 2,
+      "certainty": 4,
+      "personal": 0,
+      "impersonal": 31,
+      "negative_result": 0,
+      "comparison_with_others": 1,
+      "boundary_of_applicability": 1,
+      "citations": 3,
+      "citations_per_1000_chars": 0.26,
+      "median_sentence_length": 124
+    },
+    "выводы": {
+      "paragraphs": 9,
+      "characters": 1487,
+      "hedging": 1,
+      "certainty": 3,
+      "personal": 0,
+      "impersonal": 7,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 0,
+      "citations": 0,
+      "citations_per_1000_chars": 0.0,
+      "median_sentence_length": 174
+    },
+    "список литературы": {
+      "paragraphs": 75,
+      "characters": 9015,
+      "hedging": 0,
+      "certainty": 0,
+      "personal": 0,
+      "impersonal": 2,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 0,
+      "citations": 0,
+      "citations_per_1000_chars": 0.0,
+      "median_sentence_length": 64
+    },
+    "вне глав": {
+      "paragraphs": 66,
+      "characters": 6367,
+      "hedging": 0,
+      "certainty": 0,
+      "personal": 0,
+      "impersonal": 1,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 0,
+      "citations": 0,
+      "citations_per_1000_chars": 0.0,
+      "median_sentence_length": 106
+    }
+  },
+  "whole_text": {
+    "characters": 119846,
+    "hedging": 62,
+    "certainty": 25,
+    "personal": 1,
+    "impersonal": 164,
+    "negative_result": 10,
+    "comparison_with_others": 2,
+    "boundary_of_applicability": 15,
+    "citations": 45,
+    "numbers": 881,
+    "numbers_with_uncertainty": 14,
+    "sample_size_mentions": 5,
+    "decimal_places": {
+      "1": 41,
+      "2": 2,
+      "3": 1
+    },
+    "figure_reference_distance_pages": {
+      "n": 0,
+      "forward": 0,
+      "same_page": 0,
+      "backward": 0
+    }
+  }
+}
