@@ -1,0 +1,31 @@
+{
+  "sources": [
+    {
+      "source_id": "HOLDOUT-SHASHKOVA-2013",
+      "zotero_item": "II3CC95F",
+      "title": "Шашкова Т. Г. Конечноэлементное моделирование геоэлектромагнитных полей...",
+      "sha256": "4e3a5b30238184e8e7da69ba9008953c3223729600ba03cc47f746fadb7adebb",
+      "pages": 120,
+      "previously_used": false,
+      "text_quality": "usable_with_ocr_spacing_artifacts"
+    },
+    {
+      "source_id": "HOLDOUT-KUZMIN-2019",
+      "zotero_item": "HIH28WYY",
+      "title": "Кузьмин А. В. Симуляционные системы для неинвазивной кардиодиагностики и обучения",
+      "sha256": "ad23e5df196273936b3b0a85f5559b446940044c04dce2da326188a4d6d436d2",
+      "pages": 314,
+      "previously_used": false,
+      "text_quality": "usable_with_ocr_spacing_artifacts"
+    },
+    {
+      "source_id": "HOLDOUT-MOROZOV",
+      "zotero_item": "FXNKT2FA",
+      "title": "Диссертация Морозов",
+      "sha256": "cad4a3335e3fa932b922ec70d488d35044b2da70a4a7f6c07908c5c2bc2491ec",
+      "pages": 118,
+      "previously_used": false,
+      "text_quality": "not_assessed_due_to_corrupted_text_layer"
+    }
+  ]
+}

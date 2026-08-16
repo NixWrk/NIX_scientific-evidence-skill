@@ -1,0 +1,249 @@
+{
+  "schema_version": "PSES-DISS-001/v1",
+  "findings": [
+    {
+      "issue_id": "EXP28-SHASH-001",
+      "rule_id": "DISS-TOC-CLOSURE-001",
+      "module": "dissertation-apparatus",
+      "severity": "major",
+      "issue_class": "internal_inconsistency",
+      "locator": {
+        "kind": "pdf",
+        "page": 2,
+        "exact_text": "ОГЛАВЛЕНИЕ",
+        "occurrence": 1
+      },
+      "observed": "Оглавление начинается с главы 1 и не содержит строку введения, хотя введение начинается на PDF-странице 5.",
+      "expected": "Реестр оглавления замкнут на фактические структурные разделы документа.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-SHASHKOVA-2013"],
+      "suggested_fix": "Добавить введение после внедрения модуля Word-оглавления и обновить поле, не вводя номер страницы вручную.",
+      "confidence": 0.99,
+      "autofix_safe": false,
+      "word_action": "comment"
+    },
+    {
+      "issue_id": "EXP28-SHASH-002",
+      "rule_id": "RU-AGREEMENT-001",
+      "module": "russian-scientific-style",
+      "severity": "minor",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "pdf",
+        "page": 5,
+        "exact_text": "называемым внешним радиусом КЭД",
+        "occurrence": 1
+      },
+      "observed": "Причастие не согласовано с формой «на расстоянии».",
+      "expected": "Локальная грамматическая связь не меняет научного смысла.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-SHASHKOVA-2013"],
+      "suggested_fix": {
+        "old": "называемым внешним радиусом КЭД",
+        "new": "называемом внешним радиусом КЭД"
+      },
+      "confidence": 0.99,
+      "autofix_safe": true,
+      "word_action": "tracked_change"
+    },
+    {
+      "issue_id": "EXP28-SHASH-003",
+      "rule_id": "DISS-VALIDITY-CRITERIA-001",
+      "module": "dissertation-introduction",
+      "severity": "major",
+      "issue_class": "evidence_gap",
+      "locator": {
+        "kind": "pdf",
+        "page": 7,
+        "exact_text": "должно адекватно учитывать",
+        "occurrence": 1
+      },
+      "observed": "Требование адекватности заявлено без измеримого критерия, допуска и ссылки на процедуру верификации.",
+      "expected": "Термин «адекватно» связан с метрикой, эталоном и допустимым отклонением либо заменён на проверяемое описание.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-SHASHKOVA-2013"],
+      "suggested_fix": "Указать в комментарии, где в работе заданы эталон, метрика и критерий приемки; не придумывать численное значение.",
+      "confidence": 0.9,
+      "autofix_safe": false,
+      "word_action": "comment"
+    },
+    {
+      "issue_id": "EXP28-KUZ-001",
+      "rule_id": "RU-AGREEMENT-001",
+      "module": "russian-scientific-style",
+      "severity": "minor",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "pdf",
+        "page": 6,
+        "exact_text": "Сейчас разработаны ряд моделей",
+        "occurrence": 1
+      },
+      "observed": "Сказуемое не согласовано с подлежащим «ряд».",
+      "expected": "Грамматическое согласование сохранено.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-KUZMIN-2019"],
+      "suggested_fix": {
+        "old": "Сейчас разработаны ряд моделей",
+        "new": "В настоящее время разработан ряд моделей"
+      },
+      "confidence": 0.99,
+      "autofix_safe": true,
+      "word_action": "tracked_change"
+    },
+    {
+      "issue_id": "EXP28-KUZ-002",
+      "rule_id": "RU-AGREEMENT-001",
+      "module": "russian-scientific-style",
+      "severity": "minor",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "pdf",
+        "page": 6,
+        "exact_text": "внесли отечественный ученые",
+        "occurrence": 1
+      },
+      "observed": "Определение не согласовано с существительным во множественном числе.",
+      "expected": "Грамматическое согласование сохранено.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-KUZMIN-2019"],
+      "suggested_fix": {
+        "old": "внесли отечественный ученые",
+        "new": "внесли отечественные учёные"
+      },
+      "confidence": 0.99,
+      "autofix_safe": true,
+      "word_action": "tracked_change"
+    },
+    {
+      "issue_id": "EXP28-KUZ-003",
+      "rule_id": "RU-PREDICATE-001",
+      "module": "russian-scientific-style",
+      "severity": "minor",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "pdf",
+        "page": 7,
+        "exact_text": "Объектом исследования  системы неинвазивной диагностики",
+        "occurrence": 1
+      },
+      "observed": "В определении объекта исследования пропущено сказуемое.",
+      "expected": "Объект исследования сформулирован законченным предложением.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-KUZMIN-2019"],
+      "suggested_fix": {
+        "old": "Объектом исследования  системы неинвазивной диагностики",
+        "new": "Объектом исследования являются системы неинвазивной диагностики"
+      },
+      "confidence": 0.99,
+      "autofix_safe": true,
+      "word_action": "tracked_change"
+    },
+    {
+      "issue_id": "EXP28-KUZ-004",
+      "rule_id": "RU-CASE-001",
+      "module": "russian-scientific-style",
+      "severity": "minor",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "pdf",
+        "page": 8,
+        "exact_text": "фрактальная геометрию",
+        "occurrence": 1
+      },
+      "observed": "Однородный член перечня поставлен в неверном падеже.",
+      "expected": "Все названия методов в перечне имеют одну синтаксическую форму.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-KUZMIN-2019"],
+      "suggested_fix": {
+        "old": "фрактальная геометрию",
+        "new": "фрактальная геометрия"
+      },
+      "confidence": 0.99,
+      "autofix_safe": true,
+      "word_action": "tracked_change"
+    },
+    {
+      "issue_id": "EXP28-KUZ-005",
+      "rule_id": "RU-AGREEMENT-001",
+      "module": "russian-scientific-style",
+      "severity": "minor",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "pdf",
+        "page": 13,
+        "exact_text": "Предложенная система моделирования и визуализации состояния сердца внедрены",
+        "occurrence": 1
+      },
+      "observed": "Сказуемое во множественном числе не согласовано с подлежащим «система».",
+      "expected": "Грамматическое согласование сохранено.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-KUZMIN-2019"],
+      "suggested_fix": {
+        "old": "Предложенная система моделирования и визуализации состояния сердца внедрены",
+        "new": "Предложенная система моделирования и визуализации состояния сердца внедрена"
+      },
+      "confidence": 0.99,
+      "autofix_safe": true,
+      "word_action": "tracked_change"
+    },
+    {
+      "issue_id": "EXP28-KUZ-006",
+      "rule_id": "RU-SENTENCE-CLOSURE-001",
+      "module": "russian-scientific-style",
+      "severity": "minor",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "pdf",
+        "page": 13,
+        "exact_text": "И используются в действующем макете",
+        "occurrence": 1
+      },
+      "observed": "Самостоятельное предложение начинается присоединительным союзом и не содержит явно названного подлежащего.",
+      "expected": "Связь с предыдущим предложением выражена без двусмысленности.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-KUZMIN-2019"],
+      "suggested_fix": "Объединить с предыдущим предложением после проверки, относится ли внедрение к системе, методам или программным средствам.",
+      "confidence": 0.95,
+      "autofix_safe": false,
+      "word_action": "comment"
+    },
+    {
+      "issue_id": "EXP28-KUZ-007",
+      "rule_id": "DISS-PERSONAL-CONTRIBUTION-001",
+      "module": "dissertation-introduction",
+      "severity": "major",
+      "issue_class": "evidence_gap",
+      "locator": {
+        "kind": "pdf",
+        "page": 15,
+        "exact_text": "получены непосредственно автором, под его руководством или при его решающем участии",
+        "occurrence": 1
+      },
+      "observed": "Одна формулировка объединяет три различающиеся роли и не связывает каждую роль с конкретным результатом.",
+      "expected": "Для каждого результата отдельно указано, что выполнено лично, под руководством автора или при его участии.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-KUZMIN-2019"],
+      "suggested_fix": "Разнести результаты по ролям после сверки с публикациями, актами и вкладом соавторов; не усиливать личный вклад без источника.",
+      "confidence": 0.95,
+      "autofix_safe": false,
+      "word_action": "comment"
+    },
+    {
+      "issue_id": "EXP28-MOR-001",
+      "rule_id": "SOURCE-QUALITY-GATE-001",
+      "module": "dissertation-critic",
+      "severity": "critical",
+      "issue_class": "evidence_gap",
+      "locator": null,
+      "observed": "Текстовый слой систематически искажает кириллицу и окончания; надёжная локализация языковых дефектов невозможна.",
+      "expected": "До critic-прогона доступен проверенный OCR или исходный DOCX с устойчивыми локаторами.",
+      "authority_ids": [],
+      "evidence_ids": ["HOLDOUT-MOROZOV"],
+      "suggested_fix": "Пометить работу not_assessed; выполнить отдельный OCR с визуальной сверкой, не выдавая артефакты распознавания за ошибки автора.",
+      "confidence": 1.0,
+      "autofix_safe": false,
+      "word_action": "none"
+    }
+  ]
+}

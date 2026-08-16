@@ -1,0 +1,17 @@
+{
+  "experiment_id": "EXP-0028",
+  "title": "Independent dissertation critic forward test",
+  "standard": "PSES-DISS-001/0.1.0",
+  "stage": "holdout",
+  "run_date": "2026-08-17",
+  "blind_policy": {
+    "works_used_in_pattern_memory": false,
+    "gold_available_to_critic": false,
+    "source_files_modified": false
+  },
+  "modules": [
+    "russian-scientific-style",
+    "dissertation-critic-contract"
+  ],
+  "status": "critic_run_complete_expert_adjudication_pending"
+}
