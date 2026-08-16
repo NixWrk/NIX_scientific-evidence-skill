@@ -45,6 +45,12 @@ invariants:
   INV-TOC-STRUCTURE: оглавление совпадает с иерархией адресуемых единиц, а финальные страницы получены после вёрстки
   INV-REVISION-TRACEABLE: научное исправление сохраняет исходную формулировку и доказательное основание
   INV-METHOD-RECORD: каждое утверждение о выполненном методе опирается на запись protocol, data или утверждённый result
+  INV-ABBREVIATION-CLOSED: каждое сокращение раскрыто и имеет одно значение в заданной области документа
+  INV-GLOSSARY-CONSISTENT: словарь не создаёт определений и не расходится с употреблением терминов в тексте
+  INV-CITATION-RESOLVABLE: каждая отсылка разрешается в одну библиографическую запись, а статус нецитированных записей известен
+  INV-BIBLIOGRAPHY-PROFILE: описание, нумерация, группировка и порядок проверяются только по разрешённому нормативному профилю
+  INV-APPARATUS-CROSSREF: каждый элемент перечня и приложение разрешаются в объект и ссылку основного текста
+  INV-WORD-REVIEW-TRACEABLE: каждый комментарий и фрагмент записи исправлений разрешается в замечание критика
 
 genres:
 
@@ -692,6 +698,125 @@ genres:
       Производит карточку, а не доказательный набор; проверяется скриптом
       validate_normative_card.py. Карточка реестра не может нести требований:
       она устанавливает обозначение и статус, но не содержание.
+
+  - id: dissertation-apparatus
+    family: format
+    status: new
+    normativity: mandated
+    depth: document
+    purpose: record_format
+    audience: [self, council, opponent]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: required, organizational: required}
+    required_components: [нормативный профиль, титульный лист, оглавление, условные перечни, библиография, приложения]
+    invariants: [INV-TOC-STRUCTURE, INV-ABBREVIATION-CLOSED, INV-GLOSSARY-CONSISTENT, INV-CITATION-RESOLVABLE, INV-BIBLIOGRAPHY-PROFILE, INV-APPARATUS-CROSSREF, INV-WORD-REVIEW-TRACEABLE]
+    render_targets: [docx, plain]
+    language_profile: genre-dissertation
+    notes: Планируемый отдельный скилл оформления поверх научно выверенного текста.
+
+  - id: dissertation-title-page
+    family: format
+    parent: dissertation-apparatus
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: record_format
+    audience: [self, council]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: forbidden, organizational: required}
+    required_components: [метаданные работы, организация, специальность, степень, город, год]
+    invariants: [INV-REVISION-TRACEABLE]
+    render_targets: [docx]
+    language_profile: genre-dissertation
+
+  - id: dissertation-rendered-toc
+    family: format
+    parent: dissertation-apparatus
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: record_format
+    audience: [self, council, opponent]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: required, organizational: forbidden}
+    required_components: [иерархия заголовков, номера разделов, обновлённые номера страниц]
+    invariants: [INV-TOC-STRUCTURE]
+    render_targets: [docx]
+    language_profile: genre-dissertation
+
+  - id: dissertation-abbreviations-list
+    family: format
+    parent: dissertation-apparatus
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: record_format
+    audience: [self, council, opponent]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: required, organizational: forbidden}
+    required_components: [сокращение, раскрытие, первое употребление, область действия]
+    invariants: [INV-ABBREVIATION-CLOSED]
+    render_targets: [docx, plain]
+    language_profile: genre-dissertation
+    notes: Условно обязательный элемент при наличии соответствующего содержания.
+
+  - id: dissertation-terminology-glossary
+    family: format
+    parent: dissertation-apparatus
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: record_format
+    audience: [self, council, opponent]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: required, organizational: forbidden}
+    required_components: [термин, утверждённое определение, локаторы употребления]
+    invariants: [INV-GLOSSARY-CONSISTENT]
+    render_targets: [docx, plain]
+    language_profile: genre-dissertation
+    notes: Условно обязательный элемент; определения получает из научного контура и не создаёт сам.
+
+  - id: dissertation-bibliography
+    family: format
+    parent: dissertation-apparatus
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: record_format
+    audience: [self, council, opponent]
+    evidence_regime: {literature: required, own_results: forbidden, internal_crossref: required, organizational: required}
+    required_components: [нормативный профиль, отсылки, библиографические записи, порядок, журнал дедупликации]
+    invariants: [INV-CITATION-RESOLVABLE, INV-BIBLIOGRAPHY-PROFILE]
+    render_targets: [docx, plain]
+    language_profile: genre-dissertation
+    notes: >-
+      7.0.5 регулирует ссылку, 7.0.100 — описание; существующие карточки перед
+      реализацией требуют повторного сплошного разбора непокрытых разделов.
+
+  - id: dissertation-illustration-list
+    family: format
+    parent: dissertation-apparatus
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: record_format
+    audience: [self, council, opponent]
+    evidence_regime: {literature: forbidden, own_results: forbidden, internal_crossref: required, organizational: forbidden}
+    required_components: [номер, подпись, страница, ссылка из основного текста]
+    invariants: [INV-APPARATUS-CROSSREF]
+    render_targets: [docx, plain]
+    language_profile: genre-dissertation
+    notes: Условно обязательный элемент при наличии соответствующих объектов.
+
+  - id: dissertation-appendix-register
+    family: format
+    parent: dissertation-apparatus
+    status: new
+    normativity: mandated
+    depth: section
+    purpose: record_format
+    audience: [self, council, opponent]
+    evidence_regime: {literature: forbidden, own_results: allowed, internal_crossref: required, organizational: allowed}
+    required_components: [обозначение, заголовок, порядок, ссылка из основного текста]
+    invariants: [INV-APPARATUS-CROSSREF]
+    render_targets: [docx, plain]
+    language_profile: genre-dissertation
+    notes: Условно обязательный элемент при наличии приложений.
 
   # --- H. acquisition --------------------------------------------------------
 
