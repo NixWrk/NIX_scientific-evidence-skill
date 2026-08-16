@@ -33,6 +33,15 @@ limitations. -->
 |---|---|---|---|---|
 | CL-001 | Results | ... | RES-001 | supported |
 
+## Formulation revision ledger
+
+| Revision ID | Locator | Original | Corrected | Category | Claim/evidence/result IDs | Status |
+|---|---|---|---|---|---|---|
+| REV-001 | ... | ... | ... | scientific_precision / evidence_boundary / terminology / logic / grammar / structure | CL-... / EV-... / RES-... | proposed / accepted / rejected |
+
+<!-- Omit this section from the reader-facing manuscript when no wording was
+     revised. Keep it in the working artifact whenever corrections exist. -->
+
 ## Unresolved input requirements
 
 <!-- List missing protocol, result, table, figure, or source records. -->

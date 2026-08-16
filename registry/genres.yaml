@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-08-14
+updated: 2026-08-16
 status: draft
 specialty: "2.2.12"
 design_document: docs/genre-taxonomy.md
@@ -42,6 +42,8 @@ invariants:
   INV-NUMBER-RESULT: каждое число раздела результатов привязано к записи результата
   INV-DERIVED-NOTE-MARKED: производная запись помечена и не подменяет публикацию
   INV-HYPOTHESIS-ATTRIBUTED: у гипотезы указан автор формулировки
+  INV-TOC-STRUCTURE: оглавление совпадает с иерархией адресуемых единиц, а финальные страницы получены после вёрстки
+  INV-REVISION-TRACEABLE: научное исправление сохраняет исходную формулировку и доказательное основание
 
 genres:
 
@@ -361,7 +363,7 @@ genres:
     purpose: obtain_qualification
     audience: [council, opponent]
     evidence_regime: {literature: required, own_results: required, internal_crossref: required, organizational: required}
-    required_components: [оглавление, введение, главы, заключение, список литературы, приложения]
+    required_components: [титульный лист, оглавление, введение, главы основной части, заключение, список сокращений и условных обозначений при наличии, словарь терминов при наличии, список литературы, список иллюстративного материала при наличии, приложения при наличии]
     invariants:
       - INV-AIM-SINGLE
       - INV-TASK-CONCLUSION-COVERAGE
@@ -371,14 +373,39 @@ genres:
       - INV-NUMBER-RESULT
       - INV-FIGURE-SOURCE
       - INV-NOVELTY-BOUNDED
+      - INV-TOC-STRUCTURE
+      - INV-REVISION-TRACEABLE
     render_targets: [docx, obsidian]
     language_profile: genre-dissertation
-    notes: Состав частей уточняется карточкой нормативного документа, пока не построенной.
+    notes: Состав частей подтверждён NORM-GOST-R-7.0.11-2011-001, REQ-002; условные списки и приложения включаются при наличии соответствующего содержания.
+
+  - id: dissertation-outline
+    family: qualification
+    parent: dissertation
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: record
+    source_count: {min: 1, max: null}
+    source_representations: [organizational]
+    normativity: mandated
+    depth: document
+    purpose: obtain_qualification
+    audience: [supervisor, council, opponent]
+    evidence_regime: {literature: allowed, own_results: allowed, internal_crossref: required, organizational: required}
+    required_components: [оглавление, введение, главы основной части, заключение, список литературы, условные списки и приложения при наличии]
+    invariants: [INV-TOC-STRUCTURE, INV-TASK-CONCLUSION-COVERAGE, INV-TERM-CONSISTENCY, INV-CROSSREF-RESOLVABLE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+    notes: Финальные номера страниц формируются из стилей заголовков после вёрстки; число и названия глав нормативным документом не установлены.
 
   - id: dissertation-introduction
     family: qualification
     parent: dissertation
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 2, max: null}
+    source_representations: [organizational]
     normativity: mandated
     depth: chapter
     purpose: obtain_qualification
@@ -393,10 +420,10 @@ genres:
       - методология и методы
       - положения, выносимые на защиту
       - степень достоверности и апробация
-    invariants: [INV-AIM-SINGLE, INV-NOVELTY-BOUNDED, INV-PROPOSITION-ANCHOR, INV-TERM-CONSISTENCY, INV-CROSSREF-RESOLVABLE]
+    invariants: [INV-AIM-SINGLE, INV-NOVELTY-BOUNDED, INV-PROPOSITION-ANCHOR, INV-TERM-CONSISTENCY, INV-CROSSREF-RESOLVABLE, INV-REVISION-TRACEABLE]
     render_targets: [docx, obsidian]
     language_profile: genre-dissertation
-    notes: Состав подразделов подлежит подтверждению карточкой нормативного документа.
+    notes: Восемь элементов подтверждены NORM-GOST-R-7.0.11-2011-001, REQ-025; отдельные заголовки для элементов стандартом не установлены.
 
   - id: dissertation-methods-chapter
     family: qualification

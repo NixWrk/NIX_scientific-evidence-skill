@@ -1,0 +1,31 @@
+{
+  "profile_id": "genre-dissertation",
+  "description": "Russian candidate dissertation prose. Flags unbounded novelty, a topic presented as a defence proposition, and improvement claims that require frozen comparative results.",
+  "latin_allow": [],
+  "rules": [
+    {
+      "code": "absolute_novelty",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:не имеет аналогов|аналогов не существует|единственн\\w+ в мире)(?![а-яё])",
+      "message": "Remove the absolute novelty claim or cite a separately established comparison corpus and boundary."
+    },
+    {
+      "code": "unbounded_first_claim",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])впервые (?:разработан\\w*|предложен\\w*|получен\\w*|установлен\\w*|выявлен\\w*|показан\\w*)(?![а-яё])",
+      "message": "Name the comparison corpus or prior capability that bounds the novelty claim."
+    },
+    {
+      "code": "topic_as_proposition",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:на защиту выносится|положением,? выносимым на защиту,? является) (?:метод|методика|модель|алгоритм|система|устройство)(?![а-яё])",
+      "message": "State a falsifiable assertion supported by a result, not only the topic or artifact name."
+    },
+    {
+      "code": "untraced_improvement",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:повышает|увеличивает|снижает|улучшает) (?:эффективность|точность|качество|над[её]жность|погрешность|время)(?![а-яё])",
+      "message": "Link the improvement to a frozen comparative result with value, conditions, and unit."
+    }
+  ]
+}

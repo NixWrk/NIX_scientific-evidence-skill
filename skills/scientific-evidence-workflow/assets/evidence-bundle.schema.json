@@ -83,7 +83,7 @@
           "source_id": {"$ref": "#/$defs/identifier"},
           "title": {"type": "string", "minLength": 1},
           "content_hash": {"type": ["string", "null"]},
-          "representation": {"enum": ["html", "pdf", "markdown", "text", "table", "figure", "data", "protocol", "note"]},
+          "representation": {"enum": ["html", "pdf", "markdown", "text", "table", "figure", "data", "protocol", "note", "organizational"]},
           "local_ref": {"type": "string", "minLength": 1},
           "version": {"type": ["string", "null"]}
         }
@@ -141,6 +141,27 @@
           "parent_id": {"type": ["string", "null"]},
           "document": {"type": ["string", "null"]},
           "status": {"enum": ["planned", "drafted", "final"]}
+        }
+      }
+    },
+    "revisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["revision_id", "locator", "original", "corrected", "reason", "category", "status"],
+        "properties": {
+          "revision_id": {"$ref": "#/$defs/identifier"},
+          "locator": {"type": "string", "minLength": 1},
+          "structure_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "claim_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "original": {"type": "string", "minLength": 1},
+          "corrected": {"type": "string", "minLength": 1},
+          "reason": {"type": "string", "minLength": 1},
+          "category": {"enum": ["scientific_precision", "evidence_boundary", "terminology", "logic", "grammar", "structure"]},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "result_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "status": {"enum": ["proposed", "accepted", "rejected"]}
         }
       }
     },

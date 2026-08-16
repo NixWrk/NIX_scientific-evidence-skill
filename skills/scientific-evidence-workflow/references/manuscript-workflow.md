@@ -102,6 +102,13 @@ Preserve the accepted source version and change only what the task requires.
 Do not silently alter numbers, citations, variables, equations, sample sizes,
 or causal direction. Record unresolved issues as `request_input`.
 
+Before changing supplied scientific wording, create a revision record with the
+exact original and corrected forms. Link an accepted semantic change to the
+affected claim and to evidence or an approved result. A grammar-only change may
+omit scientific references only when it preserves the claim, number, unit,
+population, uncertainty, comparison, and causal strength. The language auditor
+may trigger review; it never authorizes a scientific correction.
+
 ## Final gate
 
 Check manuscript text against the claim ledger, research result records, tables,

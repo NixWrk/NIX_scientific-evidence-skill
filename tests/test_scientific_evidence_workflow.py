@@ -68,6 +68,7 @@ def test_skill_references_and_assets_exist() -> None:
         "references/manuscript-workflow.md",
         "references/local-model-compatibility.md",
         "references/journal-pattern-memory.md",
+        "references/dissertation-analysis-protocol.md",
         "references/russian-scientific-style.md",
         "assets/evidence-bundle.schema.json",
         "assets/evidence-bundle.template.json",
@@ -92,6 +93,7 @@ SCHEMA_SECTIONS = (
     (("results",), VALIDATOR.RESULT_FIELDS, VALIDATOR.RESULT_REQUIRED),
     (("structure",), VALIDATOR.STRUCTURE_FIELDS, VALIDATOR.STRUCTURE_REQUIRED),
     (("claims",), VALIDATOR.CLAIM_FIELDS, VALIDATOR.CLAIM_REQUIRED),
+    (("revisions",), VALIDATOR.REVISION_FIELDS, VALIDATOR.REVISION_REQUIRED),
 )
 
 ID_FIELDS = {
@@ -100,6 +102,7 @@ ID_FIELDS = {
     "results": "result_id",
     "structure": "unit_id",
     "claims": "claim_id",
+    "revisions": "revision_id",
 }
 
 SCHEMA_ENUMERATIONS = (
@@ -115,6 +118,8 @@ SCHEMA_ENUMERATIONS = (
     (("claims", "disposition"), VALIDATOR.DISPOSITIONS),
     (("structure", "unit_type"), VALIDATOR.UNIT_TYPES),
     (("structure", "status"), VALIDATOR.UNIT_STATUSES),
+    (("revisions", "category"), VALIDATOR.REVISION_CATEGORIES),
+    (("revisions", "status"), VALIDATOR.REVISION_STATUSES),
 )
 
 
@@ -397,6 +402,7 @@ def test_valid_qa_template_passes() -> None:
         "results": 0,
         "structure": 0,
         "claims": 1,
+        "revisions": 0,
         "supported_claims": 1,
         "bounded_claims": 0,
         "unsupported_claims": 0,
@@ -800,6 +806,149 @@ def presentation_bundle() -> dict:
     return bundle
 
 
+def dissertation_outline_bundle() -> dict:
+    bundle = record_bundle("dissertation-outline", representation="organizational")
+    bundle["structure"] = [
+        {
+            "unit_id": "CH-1",
+            "unit_type": "chapter",
+            "label": "1",
+            "title": "Обзор и постановка задачи",
+            "parent_id": None,
+            "document": "dissertation",
+            "status": "planned",
+        },
+        {
+            "unit_id": "SEC-1.1",
+            "unit_type": "section",
+            "label": "1.1",
+            "title": "Состояние вопроса",
+            "parent_id": "CH-1",
+            "document": "dissertation",
+            "status": "planned",
+        },
+    ]
+    bundle["claims"][0].update(
+        {
+            "text": "Раздел 1.1 планируется как обзор состояния вопроса.",
+            "claim_type": "structural",
+            "certainty": "uncertain",
+            "evidence_ids": [],
+            "result_ids": [],
+            "structure_ids": ["SEC-1.1"],
+            "status": "unsupported",
+            "disposition": "request_input",
+        }
+    )
+    return bundle
+
+
+def dissertation_introduction_bundle() -> dict:
+    bundle = load_template()
+    bundle["task"].update(
+        {
+            "mode": "manuscript",
+            "genre": "dissertation-introduction",
+            "figure_mode": "without_figures",
+            "formatting_mode": "section_only",
+        }
+    )
+    add_source(bundle, 2)
+    bundle["sources"][1]["representation"] = "organizational"
+    bundle["results"] = [
+        {
+            "result_id": "RES-INTRO-001",
+            "source_id": "SRC-EXAMPLE-001",
+            "locator": "approved-results.json:RES-INTRO-001",
+            "value": "bounded result",
+            "unit": None,
+            "version": "v1",
+            "analysis": "approved analysis",
+        }
+    ]
+    bundle["structure"] = [
+        {
+            "unit_id": "SEC-INTRO",
+            "unit_type": "section",
+            "label": "Введение",
+            "title": "Введение",
+            "parent_id": None,
+            "document": "dissertation",
+            "status": "drafted",
+        },
+        {
+            "unit_id": "TASK-01",
+            "unit_type": "task",
+            "label": "Задача 1",
+            "title": "Установить проверяемую зависимость",
+            "parent_id": "SEC-INTRO",
+            "document": "dissertation",
+            "status": "drafted",
+        },
+        {
+            "unit_id": "PROP-01",
+            "unit_type": "proposition",
+            "label": "Положение 1",
+            "title": "Проверяемое положение",
+            "parent_id": "SEC-INTRO",
+            "document": "dissertation",
+            "status": "drafted",
+        },
+    ]
+
+    def claim(
+        claim_id: str,
+        section: str,
+        *,
+        evidence_ids: list[str] | None = None,
+        result_ids: list[str] | None = None,
+        structure_ids: list[str] | None = None,
+        status: str = "supported",
+        disposition: str = "keep",
+        boundary: str | None = None,
+    ) -> dict:
+        return {
+            "claim_id": claim_id,
+            "text": f"Проверяемая формулировка раздела {section}.",
+            "output_section": section,
+            "claim_type": "factual",
+            "certainty": "direct" if status == "supported" else "inferred",
+            "evidence_ids": evidence_ids or [],
+            "result_ids": result_ids or [],
+            "structure_ids": structure_ids or ["SEC-INTRO"],
+            "status": status,
+            "disposition": disposition,
+            "boundary": boundary,
+            "causal_basis": None,
+        }
+
+    bundle["claims"] = [
+        claim("CL-REL", "relevance", evidence_ids=["EV-001"]),
+        claim("CL-STATE", "state_of_art", evidence_ids=["EV-001"]),
+        claim("CL-AIM", "aim", evidence_ids=["EV-001"]),
+        claim("CL-TASK", "tasks", evidence_ids=["EV-001"], structure_ids=["TASK-01"]),
+        claim(
+            "CL-NOV",
+            "novelty",
+            evidence_ids=["EV-001"],
+            result_ids=["RES-INTRO-001"],
+            status="bounded",
+            disposition="keep_with_boundary",
+            boundary="supplied comparison corpus",
+        ),
+        claim("CL-SIG", "significance", result_ids=["RES-INTRO-001"]),
+        claim("CL-METHOD", "methods", evidence_ids=["EV-001"]),
+        claim(
+            "CL-PROP",
+            "propositions",
+            result_ids=["RES-INTRO-001"],
+            structure_ids=["PROP-01"],
+        ),
+        claim("CL-VALID", "validity_and_approbation", evidence_ids=["EV-001"]),
+    ]
+    return bundle
+
+
 def test_implemented_genres_accept_their_own_shape() -> None:
     builders = (
         annotation_bundle,
@@ -809,6 +958,8 @@ def test_implemented_genres_accept_their_own_shape() -> None:
         procedure_bundle,
         decision_bundle,
         presentation_bundle,
+        dissertation_outline_bundle,
+        dissertation_introduction_bundle,
     )
     bundle_genres = {
         genre for genre, rules in VALIDATOR.GENRES.items() if rules["bundle_mode"] is not None
@@ -894,9 +1045,224 @@ def test_decision_log_takes_no_organizational_record() -> None:
     assert rules["bundle_mode"] == "record"
 
 
+def test_dissertation_outline_requires_organizational_record() -> None:
+    bundle = dissertation_outline_bundle()
+    bundle["sources"][0]["representation"] = "note"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires a source with representation ['organizational']" in error_text(report)
+
+def test_dissertation_outline_requires_chapter_and_section_units() -> None:
+    bundle = dissertation_outline_bundle()
+    bundle["structure"] = [bundle["structure"][0]]
+    bundle["claims"][0]["structure_ids"] = ["CH-1"]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires a 'section' unit" in error_text(report)
+
+
+def test_planned_outline_mapping_must_remain_a_proposal() -> None:
+    bundle = dissertation_outline_bundle()
+    assert VALIDATOR.validate_bundle(bundle)["valid"] is True
+
+    bundle["claims"][0].update({"status": "supported", "disposition": "keep"})
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "cannot rest on planned unit 'SEC-1.1'" in error_text(report)
+
+
+def test_dissertation_introduction_requires_every_normative_element() -> None:
+    bundle = dissertation_introduction_bundle()
+    bundle["claims"] = [
+        item for item in bundle["claims"] if item["output_section"] != "methods"
+    ]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires output_section 'methods'" in error_text(report)
+
+
+def test_dissertation_introduction_requires_organizational_record() -> None:
+    bundle = dissertation_introduction_bundle()
+    bundle["sources"][1]["representation"] = "text"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires a source with representation ['organizational']" in error_text(report)
+
+
+def test_dissertation_introduction_requires_internal_addresses() -> None:
+    bundle = dissertation_introduction_bundle()
+    bundle["claims"][0]["structure_ids"] = []
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires an addressable output unit" in error_text(report)
+
+
+def test_dissertation_introduction_requires_exactly_one_aim() -> None:
+    bundle = dissertation_introduction_bundle()
+    duplicate = copy.deepcopy(
+        next(item for item in bundle["claims"] if item["output_section"] == "aim")
+    )
+    duplicate["claim_id"] = "CL-AIM-002"
+    bundle["claims"].append(duplicate)
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires exactly one supported or bounded aim" in error_text(report)
+
+
+def test_dissertation_novelty_must_name_its_boundary() -> None:
+    bundle = dissertation_introduction_bundle()
+    novelty = next(item for item in bundle["claims"] if item["output_section"] == "novelty")
+    novelty.update({"status": "supported", "disposition": "keep", "boundary": None})
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "novelty must be bounded" in error_text(report)
+
+
+def test_dissertation_proposition_requires_result_and_structure_anchor() -> None:
+    bundle = dissertation_introduction_bundle()
+    proposition = next(
+        item for item in bundle["claims"] if item["output_section"] == "propositions"
+    )
+    proposition.update({"result_ids": [], "structure_ids": ["SEC-INTRO"]})
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "proposition requires result_ids" in error_text(report)
+
+
+def test_accepted_semantic_revision_is_traceable() -> None:
+    bundle = dissertation_introduction_bundle()
+    bundle["revisions"] = [
+        {
+            "revision_id": "REV-INTRO-001",
+            "locator": "Введение/Актуальность/абзац 1",
+            "structure_ids": ["SEC-INTRO"],
+            "claim_ids": ["CL-REL"],
+            "original": "Метод полностью решает задачу.",
+            "corrected": "В представленном наборе метод решает указанную задачу.",
+            "reason": "Сужена область применимости до проверенного набора.",
+            "category": "evidence_boundary",
+            "evidence_ids": ["EV-001"],
+            "result_ids": [],
+            "status": "accepted",
+        }
+    ]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is True
+    assert report["counts"]["revisions"] == 1
+
+
+def test_semantic_revision_cannot_supply_its_own_evidence() -> None:
+    bundle = dissertation_introduction_bundle()
+    bundle["revisions"] = [
+        {
+            "revision_id": "REV-INTRO-001",
+            "locator": "Введение/Актуальность/абзац 1",
+            "structure_ids": ["SEC-INTRO"],
+            "claim_ids": ["CL-REL"],
+            "original": "Метод полностью решает задачу.",
+            "corrected": "Метод решает задачу.",
+            "reason": "Предлагается научное уточнение.",
+            "category": "scientific_precision",
+            "evidence_ids": [],
+            "result_ids": [],
+            "status": "accepted",
+        }
+    ]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires evidence_ids or result_ids" in error_text(report)
+
+
+def test_grammar_revision_may_be_evidence_neutral() -> None:
+    bundle = dissertation_introduction_bundle()
+    bundle["revisions"] = [
+        {
+            "revision_id": "REV-INTRO-002",
+            "locator": "Введение/Цель",
+            "structure_ids": ["SEC-INTRO"],
+            "claim_ids": ["CL-AIM"],
+            "original": "Целью является разработка метода.",
+            "corrected": "Цель исследования — разработать метод.",
+            "reason": "Устранена тяжёлая синтаксическая конструкция без изменения смысла.",
+            "category": "grammar",
+            "evidence_ids": [],
+            "result_ids": [],
+            "status": "accepted",
+        }
+    ]
+
+    assert VALIDATOR.validate_bundle(bundle)["valid"] is True
+
+
+def test_revision_references_must_resolve() -> None:
+    bundle = dissertation_introduction_bundle()
+    bundle["revisions"] = [
+        {
+            "revision_id": "REV-INTRO-003",
+            "locator": "Введение/Новизна",
+            "structure_ids": ["SEC-ABSENT"],
+            "claim_ids": ["CL-ABSENT"],
+            "original": "Старый текст.",
+            "corrected": "Новый текст.",
+            "reason": "Проверка ссылочной целостности.",
+            "category": "logic",
+            "evidence_ids": ["EV-ABSENT"],
+            "result_ids": [],
+            "status": "proposed",
+        }
+    ]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "unknown identifier 'SEC-ABSENT'" in error_text(report)
+    assert "unknown identifier 'CL-ABSENT'" in error_text(report)
+    assert "unknown identifier 'EV-ABSENT'" in error_text(report)
+
+
+def test_bundle_without_revision_ledger_stays_valid() -> None:
+    bundle = load_template()
+    bundle.pop("revisions")
+
+    assert VALIDATOR.validate_bundle(bundle)["valid"] is True
+
+
+def test_preliminary_dissertation_protocol_is_versioned() -> None:
+    protocol = (
+        SKILL_DIR / "references" / "dissertation-analysis-protocol.md"
+    ).read_text(encoding="utf-8")
+
+    assert "protocol_id: PSAD-2.2.12" in protocol
+    assert "version: 0.1.0" in protocol
+    assert "status: preliminary" in protocol
+    assert "Three independent locators" in protocol
+    assert "source file" in protocol
+
+
 def test_unknown_genre_is_rejected() -> None:
     bundle = load_template()
-    bundle["task"]["genre"] = "dissertation-introduction"
+    bundle["task"]["genre"] = "genre-that-is-not-implemented"
 
     report = VALIDATOR.validate_bundle(bundle)
 
@@ -1159,6 +1525,24 @@ def test_review_profile_flags_uncounted_support_and_prestige() -> None:
     }
 
 
+def test_dissertation_profile_flags_unbounded_scientific_formulations() -> None:
+    text = (
+        "Впервые разработан метод, который не имеет аналогов. "
+        "На защиту выносится метод. Метод повышает точность."
+    )
+
+    without = STYLE_AUDITOR.audit_text(text)
+    with_genre = STYLE_AUDITOR.audit_text(text, ["genre-dissertation"])
+
+    assert without["counts"]["issues"] == 0
+    assert {issue["code"] for issue in with_genre["issues"]} == {
+        "absolute_novelty",
+        "unbounded_first_claim",
+        "topic_as_proposition",
+        "untraced_improvement",
+    }
+
+
 def test_genre_and_domain_profiles_compose() -> None:
     report = STYLE_AUDITOR.audit_text(
         "Ряд исследований описывает respiratory phase.",
@@ -1174,7 +1558,7 @@ def test_genre_and_domain_profiles_compose() -> None:
 
 def test_unknown_profile_names_the_available_ones() -> None:
     with pytest.raises(FileNotFoundError, match="genre-review"):
-        STYLE_AUDITOR.audit_text("Текст.", ["genre-dissertation"])
+        STYLE_AUDITOR.audit_text("Текст.", ["genre-that-does-not-exist"])
 
 
 def test_genre_language_profiles_pass_the_core_audit() -> None:

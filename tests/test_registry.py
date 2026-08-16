@@ -1,4 +1,4 @@
-﻿"""Keep the machine-readable registry synchronized with the tested artifacts.
+"""Keep the machine-readable registry synchronized with the tested artifacts.
 
 A verdict is only reproducible while the recorded hash still identifies the
 skill that was actually tested. These checks turn that promise into a failure
@@ -150,6 +150,7 @@ def test_implemented_genres_match_the_skill() -> None:
             assert genre["bundle_mode"] in VALIDATOR.MODES, genre_id
         assert genre["source_count"]["min"] == rules["source_min"], genre_id
         assert genre["source_count"]["max"] == rules["source_max"], genre_id
+        assert genre.get("source_representations") == rules["source_representations"], genre_id
         assert genre.get("figure_control", False) == rules.get("figure_control", False), genre_id
         for dimension in GENRES["axes"]["evidence_dimensions"]:
             assert genre["evidence_regime"][dimension] == rules[dimension], (

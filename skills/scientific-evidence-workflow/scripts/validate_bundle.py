@@ -24,6 +24,7 @@ REPRESENTATIONS = {
     "data",
     "protocol",
     "note",
+    "organizational",
 }
 SUPPORT_TYPES = {"direct", "inferential", "method", "context", "limitation", "contrary"}
 VERIFICATION_STATUSES = {"extracted", "verified", "rejected"}
@@ -52,6 +53,15 @@ UNIT_TYPES = {
     "proposition",
 }
 UNIT_STATUSES = {"planned", "drafted", "final"}
+REVISION_CATEGORIES = {
+    "scientific_precision",
+    "evidence_boundary",
+    "terminology",
+    "logic",
+    "grammar",
+    "structure",
+}
+REVISION_STATUSES = {"proposed", "accepted", "rejected"}
 
 # Genres implemented by this skill. The repository keeps this table identical to
 # registry/genres.yaml with a drift test; the skill itself stays self-contained
@@ -128,6 +138,38 @@ GENRES: dict[str, dict[str, Any]] = {
         "source_representations": None,
         "figure_control": True,
     },
+    "dissertation-outline": {
+        "bundle_mode": "record",
+        "literature": "allowed",
+        "own_results": "allowed",
+        "internal_crossref": "required",
+        "organizational": "required",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": ["organizational"],
+        "required_structure_types": {"chapter", "section"},
+    },
+    "dissertation-introduction": {
+        "bundle_mode": "manuscript",
+        "literature": "required",
+        "own_results": "allowed",
+        "internal_crossref": "required",
+        "organizational": "required",
+        "source_min": 2,
+        "source_max": None,
+        "source_representations": ["organizational"],
+        "required_output_sections": {
+            "relevance",
+            "state_of_art",
+            "aim",
+            "tasks",
+            "novelty",
+            "significance",
+            "methods",
+            "propositions",
+            "validity_and_approbation",
+        },
+    },
     # Produces a normative card, not an evidence bundle. Validated by
     # scripts/validate_normative_card.py.
     "normative-pattern-analysis": {
@@ -157,6 +199,7 @@ TOP_LEVEL_FIELDS = {
     "results",
     "structure",
     "claims",
+    "revisions",
 }
 TOP_LEVEL_REQUIRED_STRINGS = ("schema_version", "bundle_id")
 TOP_LEVEL_REQUIRED = TOP_LEVEL_REQUIRED_STRINGS + ("task", "sources", "evidence", "claims")
@@ -231,6 +274,29 @@ CLAIM_REQUIRED = (
     "certainty",
     "status",
     "disposition",
+)
+
+REVISION_FIELDS = {
+    "revision_id",
+    "locator",
+    "structure_ids",
+    "claim_ids",
+    "original",
+    "corrected",
+    "reason",
+    "category",
+    "evidence_ids",
+    "result_ids",
+    "status",
+}
+REVISION_REQUIRED = (
+    "revision_id",
+    "locator",
+    "original",
+    "corrected",
+    "reason",
+    "category",
+    "status",
 )
 
 
@@ -374,12 +440,14 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     result_records = _as_list(data.get("results", []), "bundle.results", errors)
     structure_records = _as_list(data.get("structure", []), "bundle.structure", errors)
     claim_records = _as_list(data.get("claims"), "bundle.claims", errors)
+    revision_records = _as_list(data.get("revisions", []), "bundle.revisions", errors)
 
     sources = _index_records(source_records, "source_id", "bundle.sources", errors)
     evidence = _index_records(evidence_records, "evidence_id", "bundle.evidence", errors)
     results = _index_records(result_records, "result_id", "bundle.results", errors)
     structure = _index_records(structure_records, "unit_id", "bundle.structure", errors)
     claims = _index_records(claim_records, "claim_id", "bundle.claims", errors)
+    revisions = _index_records(revision_records, "revision_id", "bundle.revisions", errors)
 
     for source_id, source in sources.items():
         path = f"source[{source_id}]"
@@ -462,6 +530,57 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     for unit_id in sorted(_cyclic_units(structure)):
         errors.append(f"structure[{unit_id}]: parent chain closes on itself")
 
+    for revision_id, item in revisions.items():
+        path = f"revision[{revision_id}]"
+        _check_allowed_keys(item, REVISION_FIELDS, path, errors)
+        _check_required_strings(item, REVISION_REQUIRED, path, errors)
+        if item.get("category") not in REVISION_CATEGORIES:
+            errors.append(f"{path}.category: expected one of {sorted(REVISION_CATEGORIES)}")
+        if item.get("status") not in REVISION_STATUSES:
+            errors.append(f"{path}.status: expected one of {sorted(REVISION_STATUSES)}")
+        if item.get("original") == item.get("corrected"):
+            errors.append(f"{path}: original and corrected wording must differ")
+
+        revision_refs: dict[str, tuple[list[str], dict[str, dict[str, Any]]]] = {
+            "structure_ids": (item.get("structure_ids", []), structure),
+            "claim_ids": (item.get("claim_ids", []), claims),
+            "evidence_ids": (item.get("evidence_ids", []), evidence),
+            "result_ids": (item.get("result_ids", []), results),
+        }
+        clean_refs: dict[str, list[str]] = {}
+        for field, (values, known) in revision_refs.items():
+            if not isinstance(values, list) or not all(
+                _nonempty_string(value) for value in values
+            ):
+                errors.append(f"{path}.{field}: expected a list of identifiers")
+                clean_refs[field] = []
+                continue
+            clean_refs[field] = values
+            for identifier in sorted(set(values) - set(known)):
+                errors.append(f"{path}.{field}: unknown identifier {identifier!r}")
+
+        semantic = item.get("category") in {
+            "scientific_precision",
+            "evidence_boundary",
+            "terminology",
+            "logic",
+        }
+        if item.get("status") == "accepted" and semantic:
+            if not clean_refs["claim_ids"]:
+                errors.append(f"{path}.claim_ids: accepted semantic correction requires a claim")
+            if not (clean_refs["evidence_ids"] or clean_refs["result_ids"]):
+                errors.append(
+                    f"{path}: accepted semantic correction requires evidence_ids or result_ids"
+                )
+        if (
+            item.get("status") == "accepted"
+            and item.get("category") == "structure"
+            and not clean_refs["structure_ids"]
+        ):
+            errors.append(
+                f"{path}.structure_ids: accepted structural correction requires a unit"
+            )
+
     for claim_id, item in claims.items():
         path = f"claim[{claim_id}]"
         _check_allowed_keys(item, CLAIM_FIELDS, path, errors)
@@ -510,7 +629,10 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                 errors.append(f"{path}.structure_ids: required for a structural claim")
             references = references + structure_ids
             for identifier in sorted(set(structure_ids)):
-                if structure.get(identifier, {}).get("status") == "planned":
+                if (
+                    status in {"supported", "bounded"}
+                    and structure.get(identifier, {}).get("status") == "planned"
+                ):
                     errors.append(
                         f"{path}: structural claim cannot rest on planned unit {identifier!r}"
                     )
@@ -631,6 +753,72 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                             f"claim[{claim_id}].structure_ids: {genre!r} carries no internal "
                             "references"
                         )
+            elif rules["internal_crossref"] == "required":
+                if not structure:
+                    errors.append(f"bundle.structure: {genre!r} requires addressable units")
+                for claim_id, item in claims.items():
+                    if not item.get("structure_ids"):
+                        errors.append(
+                            f"claim[{claim_id}].structure_ids: {genre!r} requires an "
+                            "addressable output unit"
+                        )
+
+            required_structure_types = rules.get("required_structure_types", set())
+            present_structure_types = {item.get("unit_type") for item in structure.values()}
+            for unit_type in sorted(required_structure_types - present_structure_types):
+                errors.append(f"bundle.structure: {genre!r} requires a {unit_type!r} unit")
+
+            required_sections = rules.get("required_output_sections", set())
+            present_sections = {item.get("output_section") for item in claims.values()}
+            for section in sorted(required_sections - present_sections):
+                errors.append(
+                    f"bundle.claims: {genre!r} requires output_section {section!r}"
+                )
+
+            if genre == "dissertation-introduction":
+                aims = [
+                    item
+                    for item in claims.values()
+                    if item.get("output_section") == "aim"
+                    and item.get("status") in {"supported", "bounded"}
+                ]
+                if len(aims) != 1:
+                    errors.append(
+                        "bundle.claims: dissertation-introduction requires exactly one "
+                        "supported or bounded aim"
+                    )
+
+                novelty = [
+                    item for item in claims.values() if item.get("output_section") == "novelty"
+                ]
+                for item in novelty:
+                    if item.get("status") != "bounded" or not _nonempty_string(
+                        item.get("boundary")
+                    ):
+                        errors.append(
+                            f"claim[{item.get('claim_id')}]: dissertation novelty must be "
+                            "bounded and name its comparison boundary"
+                        )
+
+                propositions = [
+                    item
+                    for item in claims.values()
+                    if item.get("output_section") == "propositions"
+                ]
+                for item in propositions:
+                    anchored_units = [
+                        structure.get(identifier, {})
+                        for identifier in item.get("structure_ids", [])
+                        if identifier in structure
+                    ]
+                    if not item.get("result_ids") or not any(
+                        unit.get("unit_type") in {"proposition", "section"}
+                        for unit in anchored_units
+                    ):
+                        errors.append(
+                            f"claim[{item.get('claim_id')}]: dissertation proposition "
+                            "requires result_ids and a proposition or section unit"
+                        )
 
     counts = {
         "sources": len(sources),
@@ -638,6 +826,7 @@ def validate_bundle(data: Any) -> dict[str, Any]:
         "results": len(results),
         "structure": len(structure),
         "claims": len(claims),
+        "revisions": len(revisions),
         "supported_claims": sum(1 for item in claims.values() if item.get("status") == "supported"),
         "bounded_claims": sum(1 for item in claims.values() if item.get("status") == "bounded"),
         "unsupported_claims": sum(1 for item in claims.values() if item.get("status") == "unsupported"),

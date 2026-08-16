@@ -9,7 +9,7 @@ Use this contract in every mode. Keep identifiers stable across revisions.
 | `source_id` | Unique stable identifier. |
 | `title` | Human-readable source label. |
 | `content_hash` | Hash when available; otherwise `null` with version note. |
-| `representation` | `html`, `pdf`, `markdown`, `text`, `table`, `figure`, `data`, `protocol`, or `note`. |
+| `representation` | `html`, `pdf`, `markdown`, `text`, `table`, `figure`, `data`, `protocol`, `note`, or `organizational`. |
 | `local_ref` | Local file, Zotero key, or other authorized record reference. |
 
 Do not treat a derived note as stronger than the publication or research record
@@ -73,6 +73,28 @@ An identifier is stable; a label is not. Renumbering a section changes `label`
 and leaves `unit_id` untouched, so existing references survive. Keep the
 identifier out of user-facing prose and render it as the label the reader
 expects.
+
+## Formulation revision record
+
+Use a revision record whenever supplied scientific wording is changed. A
+revision is an audit trail, not evidence and not a new claim.
+
+| Field | Requirement |
+|---|---|
+| `revision_id` | Unique stable identifier. |
+| `locator` | Exact place in the draft or supplied manuscript. |
+| `structure_ids` | Addressable output units affected by the change. |
+| `claim_ids` | Claim records whose wording is being revised. |
+| `original`, `corrected` | Exact before and after wording; they must differ. |
+| `reason` | Specific reason for the proposed change. |
+| `category` | `scientific_precision`, `evidence_boundary`, `terminology`, `logic`, `grammar`, or `structure`. |
+| `evidence_ids`, `result_ids` | Authority for a semantic correction. |
+| `status` | `proposed`, `accepted`, or `rejected`. |
+
+An accepted semantic correction requires a linked claim and evidence or an
+approved result. Grammar may be corrected without a scientific source only if
+the claim, number, unit, uncertainty, population, comparison, and causal force
+remain unchanged. A revision record never raises the status of its claim.
 
 ## Claim record
 

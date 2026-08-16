@@ -98,7 +98,8 @@
 | Идентификатор | Жанр | Статус |
 |---|---|---|
 | `dissertation` | работа целиком | новый |
-| `dissertation-introduction` | введение с обязательными подразделами | новый |
+| `dissertation-outline` | оглавление и структурный план | есть |
+| `dissertation-introduction` | введение с обязательными элементами | есть |
 | `dissertation-methods-chapter` | глава методов и материалов | новый |
 | `dissertation-results-chapter` | глава результатов | новый |
 | `dissertation-synthesis-chapter` | глава обобщения и сопоставления | новый |
@@ -238,6 +239,8 @@
 | `INV-NUMBER-RESULT` | каждое число раздела результатов привязано к записи результата |
 | `INV-DERIVED-NOTE-MARKED` | производная запись помечена и не подменяет публикацию |
 | `INV-HYPOTHESIS-ATTRIBUTED` | у гипотезы указан автор формулировки |
+| `INV-TOC-STRUCTURE` | оглавление совпадает с иерархией адресуемых единиц; финальные страницы получены после вёрстки |
+| `INV-REVISION-TRACEABLE` | научное исправление сохраняет исходную формулировку и доказательное основание |
 
 Остальные требования к тексту — точность термина, порядок изложения, плотность
 формулировки — остаются в текстовых правилах. Программа их не проверяет, и
@@ -246,8 +249,8 @@
 ## 6а. Реализованные жанры
 
 Жанр считается реализованным, когда у него есть описание процесса, шаблон
-вывода, машинные ворота и языковой профиль. В версии скилла 0.8 реализованы
-восемь; рабочее семейство закрыто целиком.
+вывода, машинные ворота и языковой профиль. После реализации оглавления и введения доступны десять жанров; рабочее семейство
+закрыто целиком, а в квалификационном семействе реализованы первые два жанра.
 
 Режим задаёт крупный регламент обработки, жанр сужает его до именованного вида
 текста. Для рабочих записей добавлен режим `record`: требования к рукописи —
@@ -320,25 +323,29 @@
 - id: dissertation-introduction
   family: qualification
   parent: dissertation
-  status: new
+  status: existing
+  implemented_in: scientific-evidence-workflow
+  bundle_mode: manuscript
+  source_count: {min: 2, max: null}
+  source_representations: [organizational]
   normativity: mandated
   depth: chapter
   purpose: obtain_qualification
-  audience: [supervisor, council, opponent]
+  audience: [council, opponent]
   evidence_regime:
-    literature: allowed
+    literature: required
     own_results: allowed
     internal_crossref: required
-    organizational: allowed
+    organizational: required
   required_components: [...]
-  invariants: [INV-AIM-SINGLE, ...]
-  render_targets: [obsidian, docx]
+  invariants: [INV-AIM-SINGLE, INV-NOVELTY-BOUNDED, ...]
+  render_targets: [docx, obsidian]
   language_profile: genre-dissertation
 ```
 
 ## 8. Отложено
 
-- Разбор требований совета, паспорта специальности и стандартов оформления.
+- Реализация остальных жанров квалификационного семейства.
 - Форма результата поиска схожих работ.
 - Пороговые значения языковых профилей: их следует калибровать на собственных
   текстах, а не на придуманных примерах.

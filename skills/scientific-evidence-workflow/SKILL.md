@@ -1,6 +1,6 @@
 ---
 name: scientific-evidence-workflow
-description: Process only user-supplied scientific publications and research results into source-traceable Q&A, literature reviews, or manuscript text. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose, or draft a paper without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
+description: Process only user-supplied scientific publications and research results into source-traceable Q&A, literature reviews, manuscript text, dissertation outlines, and candidate-dissertation introductions. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or draft a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
 ---
 
 # Scientific Evidence Workflow
@@ -54,6 +54,12 @@ reference:
 - `stage-presentation`: what a stage produced, shown and spoken over —
   `references/genres/stage-presentation.md`, mode `record`, figure control
   applies as it does to a manuscript.
+- `dissertation-outline`: the addressable hierarchy and table of contents of a
+  candidate dissertation — `references/genres/dissertation-outline.md`, mode
+  `record`.
+- `dissertation-introduction`: the evidence-bound introduction with all eight
+  normative elements — `references/genres/dissertation-introduction.md`, mode
+  `manuscript`.
 - `normative-pattern-analysis`: one normative document turned into a card —
   `references/genres/normative-pattern-analysis.md`. This genre produces a card
   rather than an evidence bundle and is validated by
@@ -61,6 +67,12 @@ reference:
 
 Leave `task.genre` unset for a request that no listed genre describes. Do not
 force a request into a genre it does not fit.
+
+When analysing a defended dissertation or synopsis as evidence of writing
+practice, first read `references/dissertation-analysis-protocol.md`. Treat its
+current version as the preliminary corpus-analysis standard. Version it when
+the method changes; never treat it or the observed works as a normative source
+for what a dissertation must contain.
 
 Read `references/local-model-compatibility.md` when preparing context or a run
 for a local model.
@@ -139,7 +151,15 @@ An internal reference points; it does not support. Naming a section never makes
 a claim supported: evidence or result records are still required. The single
 exception is a `structural` claim, which states how the work is organized, such
 as "task 3 is solved in chapter 4"; it is established by the units it names and
-may not rest on a unit that is still `planned`.
+may not rest on a unit that is still `planned` when it is supported or bounded.
+An unsupported outline proposal may point to a planned unit while it remains a
+proposal.
+
+When revising supplied scientific prose, create a formulation revision record
+before applying a change. Preserve exact original and corrected wording,
+locator, category, reason, affected claims and structure, evidence/result
+references, and decision. An accepted semantic correction requires an existing
+claim and evidence or an approved result. A revision record is never evidence.
 
 ### 5. Draft the requested artifact
 
@@ -149,6 +169,11 @@ causal strength of each source claim.
 
 Keep observation, author interpretation, and synthesis by the current model
 distinct. Make limitations travel with the claim they constrain.
+
+For `dissertation-outline`, render the table of contents from stable structure
+records and generate final page numbers only after document layout. For
+`dissertation-introduction`, use the canonical claim-ledger section keys from
+its genre reference and keep all eight normative elements present.
 
 ### 6. Run the evidence gate
 
@@ -161,7 +186,8 @@ Before release, verify:
 5. causal language is permitted by the design;
 6. conflicting evidence is visible;
 7. unsupported claims are removed or explicitly blocked;
-8. no scientific source was introduced from model memory.
+8. every accepted semantic wording correction is traceable;
+9. no scientific source was introduced from model memory.
 
 When a bundle is available, run:
 
@@ -204,6 +230,7 @@ compact claim–evidence ledger when the output format permits. Always report:
 - unavailable evidence;
 - assumptions introduced only for formatting;
 - sections not assessed;
+- formulation corrections made, rejected, or still proposed;
 - whether any deterministic validator was run.
 
 ## Stop conditions
@@ -237,6 +264,10 @@ Stop and request input instead of guessing when:
   document, and why a catalogue entry may carry no requirements.
 - `assets/normative-pattern.template.json`: normative-card scaffold.
 - `scripts/validate_normative_card.py`: dependency-free card validator.
+- `references/dissertation-analysis-protocol.md`: preliminary, versioned
+  standard for source freezing, Pass A measurements, continuous Pass B reading,
+  promotion review, cross-work comparison, contents extraction, and correction
+  logging.
 - `references/work-pattern-memory.md`: rules for reading a defended work for
   its form — structure, how a chapter argues, how chapters connect, how the
   load-bearing statements are worded — why such a record has no field in which
