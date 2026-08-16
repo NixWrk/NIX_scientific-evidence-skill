@@ -201,12 +201,22 @@ these had a name before.
   its own right: surveying the market and surveying the methods are two
   different jobs, and a review chapter can carry both. What transfers is which
   stages a review has and in what order.
-- **`дословный-повтор`** — a conclusion assembled from conclusions already
-  stated in the body, often verbatim. *с. 40, 52, 59, 71, 92, 93; the chain runs
-  body → chapter conclusions → general conclusions.* An unbroken chain is
-  evidence that the argument was staged and that the closing claims are the ones
-  the body actually made. The case worth stopping at is the opposite one: a
-  closing claim that traces back to no sentence in the body.
+- **`дословный-повтор`** — a passage restated word for word, or nearly so,
+  somewhere else. *с. 40, 52, 59, 71, 92, 93 in Tikhomirov; с. 22, 24, 38, 55,
+  58, 63, 116 in Malakhov; с. 11, 27 in Timokhin.* The kind records the fact and
+  does not grade it. Recitation happens, and it can be any of several things:
+  an argument staged so that each closing claim traces back to a sentence the
+  body actually made; padding; or a passage carried over without attention —
+  Malakhov's с. 63 heads the drawbacks of ventriculography «Минусы ЭхоКГ»,
+  copied along with the list from the previous subsection. Two cases are worth
+  stopping at, in opposite directions: a closing claim that traces back to no
+  sentence in the body, and a passage that traces back to a *different work*.
+  The second is a separate question from continuity of argument, and this
+  reading found it twice across nine years — the definition of rheography with
+  its 50–100 kHz and 10 mA (Timokhin с. 27 → Tikhomirov с. 21) and the
+  acknowledgement to the supervisor (Timokhin с. 11 → Malakhov с. 12, without a
+  single difference). Recorded as fact; whether it is inheritance or reuse is
+  not settled by the observation.
 - **`решение-без-лица`** — a methodological choice recorded by an impersonal
   passive: «было решено», «принималось», «брались». *с. 33, 35, 62, 75.*
   Ordinary in Russian scientific prose, and who decided reads from context. It
