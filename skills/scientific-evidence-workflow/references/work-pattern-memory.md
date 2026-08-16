@@ -230,9 +230,43 @@ these had a name before.
   bookkeeping. A page with no observation is either unread or has nothing on it,
   and only this kind tells the two apart.
 
+One more was found on WORK-MALAKHOV-2016-DISS:
+
+- **`плюсы-минусы-списком`** — a method surveyed by two mirrored bullet lists,
+  what it is good for and what it is not, with no running argument between them.
+  *с. 16, 18, 20, 22, 57 — four methods in the review chapter and five more in
+  the second review inside chapter 3.* It is an alternative to arguing a method
+  through in prose, and it decides what a review chapter looks like.
+
 `дословный-повтор` and `заголовок-из-заголовка` require a `quote`, for the same
 reason `термин` and `оговорка` do: both are observations about wording, and a
 paraphrase destroys the evidence.
+
+### What the second work did to the first work's kinds
+
+Reading Malakhov was the first test of names coined on Tikhomirov, and it is
+the reason the corpus exists rather than a single deep read:
+
+| kind | on Malakhov |
+|---|---|
+| `формула-с-глоссарием` | held — с. 37, 60, 70, 76 |
+| `дословный-повтор` | held, and moved: sideways between parallel lists and captions, not only body → conclusions — с. 22, 24, 38, 55, 58, 63, 116 |
+| `решение-без-лица` | held — с. 81 |
+| `заголовок-из-заголовка` | held — с. 56 |
+| `страница-без-прозы` | held — nine pages |
+| `обзор-по-изделиям` | **absent.** Malakhov names no marketed device anywhere; his review runs by imaging modality |
+| `формула-без-функции` | **absent.** Every relation is given in full |
+
+An absence is a result. `обзор-по-изделиям` was the most confident finding of
+the Tikhomirov read and it did not survive the nearest neighbour in the same
+school under the same supervisor — which settles that it is one author's way of
+writing a review, not the school's and certainly not the field's.
+
+The citation practice split the same way. Tikhomirov's introduction cites
+exclusively author-year and carries no bracket at all; Malakhov brackets from
+first sentence to last and never uses author-year. Both name the same
+predecessors; Tikhomirov leaves eight of eleven of them out of his bibliography,
+Malakhov numbers them. Nothing about this is a school habit.
 
 Names that stayed single are still in the log and did not become kinds:
 `расхождение-нумерации`, `разнобой-заголовка`, `ссылка-на-изделие`,

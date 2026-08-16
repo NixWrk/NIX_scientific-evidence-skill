@@ -59,6 +59,8 @@ KINDS = (
     "формула-без-функции",
     "заголовок-из-заголовка",
     "страница-без-прозы",
+    # Found by reading Malakhov end to end.
+    "плюсы-минусы-списком",
     "unnamed",
 )
 # Observations about how something is worded lose their evidence when
