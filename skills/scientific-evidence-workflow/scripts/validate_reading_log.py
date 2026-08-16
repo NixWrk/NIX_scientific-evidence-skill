@@ -74,7 +74,7 @@ QUOTE_REQUIRED = {
 }
 PROMOTION_THRESHOLD = 3
 
-LINE_FIELDS = {"section", "page", "kind", "observation", "quote", "proposed_name", "note"}
+LINE_FIELDS = {"section", "page", "locator", "kind", "observation", "quote", "proposed_name", "note"}
 LINE_REQUIRED = ("section", "kind", "observation")
 
 
@@ -94,9 +94,19 @@ def validate_line(record: Any, index: int, errors: list[str], warnings: list[str
         if not _nonempty(record.get(key)):
             errors.append(f"{path}.{key}: ожидается непустая строка")
 
+    # A page number is the locator when the source has pages. A .doc has none,
+    # and paginating it ourselves would invent a locator rather than record one,
+    # so such a source names its place another way — a heading and an ordinal —
+    # and the invariant that survives is «checkable», not «paginated».
     page = record.get("page")
-    if not isinstance(page, int) or page < 1:
-        errors.append(f"{path}.page: наблюдение без страницы нельзя проверить по источнику")
+    located_by_page = isinstance(page, int) and page >= 1
+    if page is not None and not located_by_page:
+        errors.append(f"{path}.page: ожидается положительное целое или null")
+    if not located_by_page and not _nonempty(record.get("locator")):
+        errors.append(
+            f"{path}: наблюдение без локатора нельзя проверить по источнику; "
+            "укажи 'page' для источника со страницами или 'locator' для источника без них"
+        )
 
     kind = record.get("kind")
     if kind not in KINDS:

@@ -39,7 +39,29 @@ def line(**overrides) -> str:
     return json.dumps(record, ensure_ascii=False)
 
 
-def test_an_observation_without_a_page_cannot_be_checked_back() -> None:
+def test_a_source_without_pages_locates_an_observation_another_way() -> None:
+    """One work in the corpus is a .doc and has no pages.
+
+    Paginating it ourselves would invent a locator rather than record one, so
+    the invariant that has to survive is that a reader can find the place, not
+    that the place happens to be a page number.
+    """
+
+    report = LOG.validate_log([line(page=None, locator="раздел 1.2, абзац 14")])
+
+    assert report["valid"] is True
+
+
+def test_a_page_that_is_not_a_page_is_still_rejected() -> None:
+    """`locator` admits sources without pages; it does not admit nonsense."""
+
+    report = LOG.validate_log([line(page=0, locator="раздел 1.2, абзац 14")])
+
+    assert report["valid"] is False
+    assert "положительное целое" in "\n".join(report["errors"])
+
+
+def test_an_observation_without_a_locator_cannot_be_checked_back() -> None:
     """A log full of unlocatable claims is worse than no log at all."""
 
     report = LOG.validate_log([line(page=None)])
