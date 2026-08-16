@@ -187,35 +187,48 @@ ends on.
 
 Seven more were found on WORK-TIKHOMIROV-2021-DISS, read page by page. Each is
 recorded with the locators that promoted it, so a later reader can check the
-promotion rather than take it:
+promotion rather than take it.
 
-- **`обзор-по-изделиям`** — a review conducted through commercial products with
-  their manufacturers rather than through publications. *с. 18, 25, 26; every
-  one of the six review subsections ends in a list of marketed devices.* This
-  changes what goes into a review chapter and in what order, which is why it is
-  a kind and not a statistic.
-- **`дословный-повтор`** — a conclusion assembled by copying sentences from the
-  body verbatim, sometimes with a deictic resolved or a verb swapped. *с. 40,
-  52, 59, 71, 92, 93; the chain runs body → chapter conclusions → general
-  conclusions, and a doubled word survives the copy on с. 59.*
+**A kind names something to look at, not something wrong.** Every one of the
+seven below turned out, once weighed, to be ordinary practice. That is the
+point rather than a disappointment: a reader needs a name for a recurring move
+before they can tell an ordinary instance of it from a telling one, and none of
+these had a name before.
+
+- **`обзор-по-изделиям`** — a review conducted through marketed products with
+  their manufacturers rather than through publications. *с. 18, 25, 26; all six
+  review subsections end in a list of devices.* This is a stage of a review in
+  its own right: surveying the market and surveying the methods are two
+  different jobs, and a review chapter can carry both. What transfers is which
+  stages a review has and in what order.
+- **`дословный-повтор`** — a conclusion assembled from conclusions already
+  stated in the body, often verbatim. *с. 40, 52, 59, 71, 92, 93; the chain runs
+  body → chapter conclusions → general conclusions.* An unbroken chain is
+  evidence that the argument was staged and that the closing claims are the ones
+  the body actually made. The case worth stopping at is the opposite one: a
+  closing claim that traces back to no sentence in the body.
 - **`решение-без-лица`** — a methodological choice recorded by an impersonal
-  passive with no agent: «было решено», «принималось», «брались». *с. 33, 35,
-  62, 75.* It marks the boundary between what the object does and what the
-  author decided, which `своё-чужое` does not cover because no one else is
-  involved.
-- **`формула-с-глоссарием`** — how a numbered relation is introduced and what
-  its «где» list covers: which symbols are glossed, whether units appear,
-  whether accuracy or a range of validity is attached. *с. 15, 30, 31, 54, 57.*
-- **`формула-без-функции`** — a numbered relation whose right-hand side is the
-  word `func` with a list of arguments, the function itself never given. *с.
-  38, 69, 70, 81; twice the argument list is cut off by an ellipsis.*
+  passive: «было решено», «принималось», «брались». *с. 33, 35, 62, 75.*
+  Ordinary in Russian scientific prose, and who decided reads from context. It
+  earns a name because it marks **where** the choices are, not because the form
+  is a defect.
+- **`формула-с-глоссарием`** — a numbered relation followed by «где» and a list
+  of symbols with units. *с. 15, 30, 31, 54, 57.* This is the form to expect;
+  the observation is how completely it is carried out — which symbols the gloss
+  covers, whether units appear, whether a range of validity is attached.
+- **`формула-без-функции`** — a relation whose right-hand side is the word
+  `func` with a list of arguments, the function itself not given. *с. 38, 69,
+  70, 81.* A normal way to assert that a dependence exists and defer its form.
 - **`заголовок-из-заголовка`** — a subsection heading built from the chapter
   heading rather than naming its own subject. *с. 42, 46, 53; on с. 46 the
-  subsection heading is the chapter heading, differing by one letter.*
-- **`страница-без-прозы`** — a page carrying no running text at all. *с. 1, 3,
-  4, 37, 56, 65, 77, 82, 84, 86–89, 91, 94–96, 100 — eighteen of 102.* It is
-  also what makes coverage auditable: a page with no observation is either
-  unread or has nothing on it, and only this kind tells the two apart.
+  subsection heading is the chapter heading, differing by one letter.* It says
+  the chapter's internal progression is not carried by its headings. Where it
+  is, the headings are themselves a summary of the argument.
+- **`страница-без-прозы`** — a page carrying no running text. *с. 1, 3, 4, 37,
+  56, 65, 77, 82, 84, 86–89, 91, 94–96, 100 — eighteen of 102,* and
+  unremarkable: appendices and figure-heavy chapters run this way. Its use is
+  bookkeeping. A page with no observation is either unread or has nothing on it,
+  and only this kind tells the two apart.
 
 `дословный-повтор` and `заголовок-из-заголовка` require a `quote`, for the same
 reason `термин` and `оговорка` do: both are observations about wording, and a
@@ -226,6 +239,41 @@ Names that stayed single are still in the log and did not become kinds:
 `задача-без-главы`, `сдвоенный-элемент`, `соответствие-паспорту`,
 `грантовая-поддержка`, `анонс-мимо-структуры`, `вывод-предписанием`,
 `цель-внутри-раздела`, `формула-дважды`. A second work may promote them.
+
+### What a full reading is not allowed to call a finding
+
+Pass B turns up anomalies easily, and most of them are ordinary practice being
+seen for the first time. The measurements of pass A make this worse: a
+distribution with a hole in it looks like a defect long before anyone has asked
+what normally fills it. Before an observation is written up as a finding:
+
+- **A missing citation is not automatically a gap.** Introductions and
+  physiological background often carry none — the facts are common knowledge, or
+  the reference list is deliberately being kept short. A gap is where a specific
+  contestable number rests on nothing.
+- **Uncertainty is not owed on every number.** It matters where accuracy is the
+  claim: instrument and method accuracy, patient parameters, ages, and anything
+  a later reader would compare against. A model's geometric parameter or the
+  step of a sweep does not need a ±.
+- **Counts of the introduction's elements are individual.** Three novelty points
+  or four, two significance items or three — the number belongs to the work and
+  its council, and a corpus-wide tally of them measures nothing.
+- **Tasks need not map onto chapters one to one.** Tasks can be close in
+  meaning, one can be answered in passing while another is being worked, and one
+  can turn out not to be answerable. A task without its own chapter is worth
+  recording and is not a defect.
+- **The sample studied need not equal the sample shown.** A work can carry the
+  main, the problematic and the interesting cases in full and give the rest as
+  statistics, plots or groups. A difference between the two numbers is a
+  question about presentation, not a contradiction.
+- **Sentence-length statistics say nothing.** Only the extremes carry anything —
+  sentences too long or too short to read — and the middle of the distribution
+  is noise.
+
+What survives this filter is narrow and worth having: a number that contradicts
+another number in the same work, a cross-reference that points at the wrong
+object, a designation that changes meaning between two pages, a closing claim
+the body never made.
 
 ## Confounders
 
@@ -264,6 +312,27 @@ Exactly three, and only one of them is actionable:
 - **diverges** — a card settles it otherwise. The card wins, always. The
   divergence is recorded as a fact about practice, never as licence to depart
   from the norm.
+
+## A defended work is a model, not a standard
+
+Every work in this store passed a council, and none of them is faultless. This
+one contradicts itself between a table and the prose that cites it, points at
+table 13 where table 12 stands, and carries three abbreviations for one
+quantity. Those are facts about the work and they are recorded as such. They do
+not become a norm because a council accepted them, and they do not become a
+prohibition because a reader noticed them.
+
+The consequence for reading is the whole reason there is a corpus: **a move seen
+in one work is a candidate, and it takes about five works by different authors
+before it is a pattern.** One author's habit, one supervisor's house style and
+one year's fashion all look exactly like a rule when the sample is one.
+
+This bounds what pass B produces. The seven kinds found by reading Tikhomirov
+were promoted on three locators **within a single work**, which is enough to
+name a recurring move and to make the next reading look for it. It is not
+enough to say the move is how such works are written. Only the aggregate, over
+works by different authors, can say that — and even then it names the works
+rather than a percentage.
 
 ## Counting
 

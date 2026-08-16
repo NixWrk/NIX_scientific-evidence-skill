@@ -37,6 +37,12 @@ NORM_RELATIONS = ("confirms", "norm_silent", "diverges")
 # will show them. The aggregate declares the arc together with who said so, and
 # the check happens there.
 SPINE_STATUSES = ("observed", "absent")
+# A defended work is a model and not a standard, and a move seen in one of them
+# is that author's. Roughly five works by different authors is where the store
+# stops mistaking a habit for a practice of the field. Nothing makes this number
+# exact; it is a stated threshold, and it warns rather than refuses so that an
+# aggregate can be built up while it is still short of evidence.
+AUTHORS_FOR_A_PATTERN = 5
 
 # Keys that would let a rule be written down. Their absence is the point of
 # this schema, so they are refused wherever they appear at any depth.
@@ -377,6 +383,32 @@ def validate_aggregate(data: dict[str, Any], cards: dict[str, dict[str, Any]] | 
         elif len(shown_by) > 1 and not variants and not _nonempty(feature.get("common")):
             warnings.append(
                 f"{path}: several works and neither a common pattern nor a variant recorded"
+            )
+
+        # A defended work is a model, not a standard, and one work is one work.
+        # A `common` is a claim about how such works are written; a `variants`
+        # entry is a claim about one of them, and needs no corpus behind it.
+        cited = [cards[item["work_id"]] for item in shown_by
+                 if isinstance(item, dict) and item.get("work_id") in cards]
+        authors = {card.get("bibliographic", {}).get("author") for card in cited}
+        authors.discard(None)
+        if cited and _nonempty(feature.get("common")) and len(authors) < AUTHORS_FOR_A_PATTERN:
+            warnings.append(
+                f"{path}.common: a common pattern drawn from {len(authors)} author(s), fewer than "
+                f"{AUTHORS_FOR_A_PATTERN}; below that a habit, a house style and a practice of the "
+                "field are indistinguishable. Record it as a variant, or name the works and wait"
+            )
+        # The memory has said this since the store was built and nothing checked
+        # it: a feature shared across one supervisor's students is that
+        # supervisor's house style until somebody else's student shows it too.
+        supervisors = {card.get("bibliographic", {}).get("supervisor") for card in cited}
+        supervisors.discard(None)
+        supervisors.discard("unknown")
+        if len(cited) > 1 and len(supervisors) == 1 and len(authors) > 1:
+            warnings.append(
+                f"{path}: every work behind this feature was supervised by "
+                f"{next(iter(supervisors))!r}; record it as that supervisor's practice until a "
+                "work under another supervisor shows it"
             )
 
     if cards:

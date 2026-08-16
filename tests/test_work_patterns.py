@@ -417,6 +417,91 @@ def test_a_card_says_whether_it_reads_a_dissertation_or_an_abstract() -> None:
     assert "not comparable" in "\n".join(report["errors"])
 
 
+def corpus(authors: int, supervisor_of=lambda index: f"Руководитель {index}") -> tuple[dict, dict]:
+    """An aggregate whose single feature is shown by `authors` different people."""
+
+    cards: dict[str, dict] = {}
+    shown_by = []
+    for index in range(authors):
+        card = sound_card()
+        card.update({"work_id": f"WORK-AUTHOR{index}-2026", "stratum": "council"})
+        card["bibliographic"].update(
+            {
+                "author": f"Автор {index}",
+                "council": "24.2.331.09",
+                "supervisor": supervisor_of(index),
+            }
+        )
+        cards[card["work_id"]] = card
+        shown_by.append(
+            {"work_id": card["work_id"], "what": "выводы приведены", "locator": "с. 48"}
+        )
+
+    aggregate = sound_aggregate()
+    aggregate["works"] = list(cards)
+    aggregate["features"][0]["shown_by"] = shown_by
+    return aggregate, cards
+
+
+def test_a_common_pattern_needs_works_by_several_different_authors() -> None:
+    """A defended work is a model, not a standard, and one of them is one of them.
+
+    Below the threshold an author's habit, a supervisor's house style and a
+    practice of the field are the same observation. It warns rather than fails:
+    an aggregate is built up over time and is short of evidence while it grows.
+    """
+
+    thin, thin_cards = corpus(WORK.AUTHORS_FOR_A_PATTERN - 1)
+    enough, enough_cards = corpus(WORK.AUTHORS_FOR_A_PATTERN)
+
+    thin_report = WORK.validate(thin, thin_cards)
+    enough_report = WORK.validate(enough, enough_cards)
+
+    assert thin_report["valid"] is True
+    assert any("fewer than" in warning for warning in thin_report["warnings"])
+    assert not any("fewer than" in warning for warning in enough_report["warnings"])
+
+
+def test_a_variant_needs_no_corpus_behind_it() -> None:
+    """Variants are a result. Recording that one work does otherwise is the point."""
+
+    single, cards = corpus(1)
+    single["features"][0]["common"] = None
+    single["features"][0]["variants"] = [
+        {"variant": "выводов по главе нет", "work_ids": ["WORK-AUTHOR0-2026"]}
+    ]
+
+    report = WORK.validate(single, cards)
+
+    assert report["valid"] is True
+    assert not any("fewer than" in warning for warning in report["warnings"])
+
+
+def test_a_feature_from_one_supervisors_students_is_that_supervisors_practice() -> None:
+    """The memory has said this since the store was built; nothing checked it.
+
+    Eight works of one supervisor are one supervisor, however many authors sign
+    them, and the count is what makes the habit look like a field.
+    """
+
+    shared, cards = corpus(WORK.AUTHORS_FOR_A_PATTERN, supervisor_of=lambda _: "Щукин С. И.")
+
+    report = WORK.validate(shared, cards)
+
+    assert report["valid"] is True
+    assert any("supervised by" in warning for warning in report["warnings"])
+
+
+def test_an_unknown_supervisor_is_not_evidence_of_a_shared_one() -> None:
+    """'unknown' means nobody looked, and absence of a record is not a record."""
+
+    unknown, cards = corpus(WORK.AUTHORS_FOR_A_PATTERN, supervisor_of=lambda _: "unknown")
+
+    report = WORK.validate(unknown, cards)
+
+    assert not any("supervised by" in warning for warning in report["warnings"])
+
+
 def test_stored_work_records_validate_against_each_other() -> None:
     """Whatever the store holds must pass, and aggregates must resolve."""
 
