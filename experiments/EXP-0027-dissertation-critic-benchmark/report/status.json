@@ -1,0 +1,873 @@
+{
+  "experiment_id": "EXP-0027",
+  "standard_id": "PSES-DISS-001",
+  "status": "passed",
+  "release_decision": "pass",
+  "stages": [
+    "regression",
+    "mutation",
+    "clean_control",
+    "holdout"
+  ],
+  "cases": {
+    "count": 4,
+    "by_stage": {
+      "regression": 1,
+      "mutation": 1,
+      "clean_control": 1,
+      "holdout": 1
+    },
+    "input_sha256": {
+      "CLEAN-001": "2a5b3c44f42a979d8aa7f254fcb5b8407c328fc0b7724577137746cd99277927",
+      "HOLD-001": "9b9c70540acf1c53876a8d7e6b4673111fc5036b7356ed3e5000c0dd0a506179",
+      "MUT-001": "17fe67deb6eb3051f370f0dcf0da86f9f0293878997db363c3f84c55e7ba8353",
+      "REG-001": "e5d49bc2604fc6e2d8de26e942f82f5314fa5919a8933f132e9374c763f0f1e6"
+    }
+  },
+  "gold_protection": {
+    "hidden_from_runner_output": true,
+    "path": "gold/findings.json",
+    "sha256": "366d38fd50e99ad6e451d408e4e77db3416658aa3cc786c186553267edf28876"
+  },
+  "frozen_hashes": {
+    "required": true,
+    "frozen": true,
+    "expected_files": 13,
+    "checked": {
+      "fixtures/clean_control.json": {
+        "sha256": "2a5b3c44f42a979d8aa7f254fcb5b8407c328fc0b7724577137746cd99277927",
+        "recorded": "sha256:2a5b3c44f42a979d8aa7f254fcb5b8407c328fc0b7724577137746cd99277927",
+        "match": true
+      },
+      "fixtures/holdout.json": {
+        "sha256": "9b9c70540acf1c53876a8d7e6b4673111fc5036b7356ed3e5000c0dd0a506179",
+        "recorded": "sha256:9b9c70540acf1c53876a8d7e6b4673111fc5036b7356ed3e5000c0dd0a506179",
+        "match": true
+      },
+      "fixtures/mutation.json": {
+        "sha256": "17fe67deb6eb3051f370f0dcf0da86f9f0293878997db363c3f84c55e7ba8353",
+        "recorded": "sha256:17fe67deb6eb3051f370f0dcf0da86f9f0293878997db363c3f84c55e7ba8353",
+        "match": true
+      },
+      "fixtures/regression.json": {
+        "sha256": "e5d49bc2604fc6e2d8de26e942f82f5314fa5919a8933f132e9374c763f0f1e6",
+        "recorded": "sha256:e5d49bc2604fc6e2d8de26e942f82f5314fa5919a8933f132e9374c763f0f1e6",
+        "match": true
+      },
+      "gold/findings.json": {
+        "sha256": "366d38fd50e99ad6e451d408e4e77db3416658aa3cc786c186553267edf28876",
+        "recorded": "sha256:366d38fd50e99ad6e451d408e4e77db3416658aa3cc786c186553267edf28876",
+        "match": true
+      },
+      "outputs/baseline/CLEAN-001.json": {
+        "sha256": "f5cb3afc210b59fef6dcda6e8030e6e55836bbd642c39399e17cff2ef9bea32c",
+        "recorded": "sha256:f5cb3afc210b59fef6dcda6e8030e6e55836bbd642c39399e17cff2ef9bea32c",
+        "match": true
+      },
+      "outputs/baseline/HOLD-001.json": {
+        "sha256": "57d08eb7578f5f10975680b0229b13159d49ec039b14afaa0d8372680efb2993",
+        "recorded": "sha256:57d08eb7578f5f10975680b0229b13159d49ec039b14afaa0d8372680efb2993",
+        "match": true
+      },
+      "outputs/baseline/MUT-001.json": {
+        "sha256": "04e6584b88bead541fae2e6b1e81e8cd92c118d1382240d940c2ae646e28b818",
+        "recorded": "sha256:04e6584b88bead541fae2e6b1e81e8cd92c118d1382240d940c2ae646e28b818",
+        "match": true
+      },
+      "outputs/baseline/REG-001.json": {
+        "sha256": "77e41dfa8c8a9b7a3ed8f306e468cee41a0447bee4ca3e604ebf9ce6e10f07d1",
+        "recorded": "sha256:77e41dfa8c8a9b7a3ed8f306e468cee41a0447bee4ca3e604ebf9ce6e10f07d1",
+        "match": true
+      },
+      "outputs/skill/CLEAN-001.json": {
+        "sha256": "f5cb3afc210b59fef6dcda6e8030e6e55836bbd642c39399e17cff2ef9bea32c",
+        "recorded": "sha256:f5cb3afc210b59fef6dcda6e8030e6e55836bbd642c39399e17cff2ef9bea32c",
+        "match": true
+      },
+      "outputs/skill/HOLD-001.json": {
+        "sha256": "7da8be7a96e2328d0e99321bca99ff7569f9d28366e54e2424ab63f737210b29",
+        "recorded": "sha256:7da8be7a96e2328d0e99321bca99ff7569f9d28366e54e2424ab63f737210b29",
+        "match": true
+      },
+      "outputs/skill/MUT-001.json": {
+        "sha256": "95422cf7d6caba20bc2ee73530c178cb200e698bb57694807a386c2ae1a74450",
+        "recorded": "sha256:95422cf7d6caba20bc2ee73530c178cb200e698bb57694807a386c2ae1a74450",
+        "match": true
+      },
+      "outputs/skill/REG-001.json": {
+        "sha256": "d92521e422dc94c0d3fb168dcc74f03750eac89570c757acb75af143c67c3fab",
+        "recorded": "sha256:d92521e422dc94c0d3fb168dcc74f03750eac89570c757acb75af143c67c3fab",
+        "match": true
+      }
+    },
+    "errors": []
+  },
+  "outputs": {
+    "baseline": {
+      "CLEAN-001": {
+        "path": "outputs\\baseline\\CLEAN-001.json",
+        "sha256": "f5cb3afc210b59fef6dcda6e8030e6e55836bbd642c39399e17cff2ef9bea32c"
+      },
+      "HOLD-001": {
+        "path": "outputs\\baseline\\HOLD-001.json",
+        "sha256": "57d08eb7578f5f10975680b0229b13159d49ec039b14afaa0d8372680efb2993"
+      },
+      "MUT-001": {
+        "path": "outputs\\baseline\\MUT-001.json",
+        "sha256": "04e6584b88bead541fae2e6b1e81e8cd92c118d1382240d940c2ae646e28b818"
+      },
+      "REG-001": {
+        "path": "outputs\\baseline\\REG-001.json",
+        "sha256": "77e41dfa8c8a9b7a3ed8f306e468cee41a0447bee4ca3e604ebf9ce6e10f07d1"
+      }
+    },
+    "skill": {
+      "CLEAN-001": {
+        "path": "outputs\\skill\\CLEAN-001.json",
+        "sha256": "f5cb3afc210b59fef6dcda6e8030e6e55836bbd642c39399e17cff2ef9bea32c"
+      },
+      "HOLD-001": {
+        "path": "outputs\\skill\\HOLD-001.json",
+        "sha256": "7da8be7a96e2328d0e99321bca99ff7569f9d28366e54e2424ab63f737210b29"
+      },
+      "MUT-001": {
+        "path": "outputs\\skill\\MUT-001.json",
+        "sha256": "95422cf7d6caba20bc2ee73530c178cb200e698bb57694807a386c2ae1a74450"
+      },
+      "REG-001": {
+        "path": "outputs\\skill\\REG-001.json",
+        "sha256": "d92521e422dc94c0d3fb168dcc74f03750eac89570c757acb75af143c67c3fab"
+      }
+    }
+  },
+  "execution_policy": {
+    "external_llm_called": false,
+    "network_used": false,
+    "gold_exposed_to_critic": false
+  },
+  "metrics": {
+    "baseline": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 3,
+      "TP": 0,
+      "FP": 0,
+      "FN": 3,
+      "cases": 4,
+      "gold_findings": 3,
+      "predicted_findings": 0,
+      "per_rule": {
+        "RULE-CAUSAL-001": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "locator": {
+            "evaluated": 0,
+            "exact": 0,
+            "accuracy": null
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 0,
+            "exact": 0,
+            "class_exact": 0,
+            "severity_exact": 0,
+            "accuracy": null
+          },
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        },
+        "RULE-CITATION-001": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "locator": {
+            "evaluated": 0,
+            "exact": 0,
+            "accuracy": null
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 0,
+            "exact": 0,
+            "class_exact": 0,
+            "severity_exact": 0,
+            "accuracy": null
+          },
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        },
+        "RULE-EVIDENCE-001": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "locator": {
+            "evaluated": 0,
+            "exact": 0,
+            "accuracy": null
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 0,
+            "exact": 0,
+            "class_exact": 0,
+            "severity_exact": 0,
+            "accuracy": null
+          },
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        }
+      },
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "locator": {
+        "evaluated": 0,
+        "exact": 0,
+        "accuracy": null
+      },
+      "authority": {
+        "applicable": 0,
+        "resolved": 0,
+        "exact": 0,
+        "resolution_rate": null,
+        "accuracy": null
+      },
+      "classification": {
+        "evaluated": 0,
+        "exact": 0,
+        "class_exact": 0,
+        "severity_exact": 0,
+        "accuracy": null
+      },
+      "per_stage": {
+        "regression": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "cases": 1,
+          "gold_findings": 1,
+          "predicted_findings": 0,
+          "per_rule": {
+            "RULE-CITATION-001": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1,
+              "TP": 0,
+              "FP": 0,
+              "FN": 1,
+              "locator": {
+                "evaluated": 0,
+                "exact": 0,
+                "accuracy": null
+              },
+              "authority": {
+                "applicable": 0,
+                "resolved": 0,
+                "exact": 0,
+                "resolution_rate": null,
+                "accuracy": null
+              },
+              "classification": {
+                "evaluated": 0,
+                "exact": 0,
+                "class_exact": 0,
+                "severity_exact": 0,
+                "accuracy": null
+              },
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          },
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "locator": {
+            "evaluated": 0,
+            "exact": 0,
+            "accuracy": null
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 0,
+            "exact": 0,
+            "class_exact": 0,
+            "severity_exact": 0,
+            "accuracy": null
+          },
+          "stage": "regression"
+        },
+        "mutation": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "cases": 1,
+          "gold_findings": 1,
+          "predicted_findings": 0,
+          "per_rule": {
+            "RULE-CAUSAL-001": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1,
+              "TP": 0,
+              "FP": 0,
+              "FN": 1,
+              "locator": {
+                "evaluated": 0,
+                "exact": 0,
+                "accuracy": null
+              },
+              "authority": {
+                "applicable": 0,
+                "resolved": 0,
+                "exact": 0,
+                "resolution_rate": null,
+                "accuracy": null
+              },
+              "classification": {
+                "evaluated": 0,
+                "exact": 0,
+                "class_exact": 0,
+                "severity_exact": 0,
+                "accuracy": null
+              },
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          },
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "locator": {
+            "evaluated": 0,
+            "exact": 0,
+            "accuracy": null
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 0,
+            "exact": 0,
+            "class_exact": 0,
+            "severity_exact": 0,
+            "accuracy": null
+          },
+          "stage": "mutation"
+        },
+        "clean_control": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "cases": 1,
+          "gold_findings": 0,
+          "predicted_findings": 0,
+          "per_rule": {},
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "locator": {
+            "evaluated": 0,
+            "exact": 0,
+            "accuracy": null
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 0,
+            "exact": 0,
+            "class_exact": 0,
+            "severity_exact": 0,
+            "accuracy": null
+          },
+          "stage": "clean_control"
+        },
+        "holdout": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "cases": 1,
+          "gold_findings": 1,
+          "predicted_findings": 0,
+          "per_rule": {
+            "RULE-EVIDENCE-001": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1,
+              "TP": 0,
+              "FP": 0,
+              "FN": 1,
+              "locator": {
+                "evaluated": 0,
+                "exact": 0,
+                "accuracy": null
+              },
+              "authority": {
+                "applicable": 0,
+                "resolved": 0,
+                "exact": 0,
+                "resolution_rate": null,
+                "accuracy": null
+              },
+              "classification": {
+                "evaluated": 0,
+                "exact": 0,
+                "class_exact": 0,
+                "severity_exact": 0,
+                "accuracy": null
+              },
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          },
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "locator": {
+            "evaluated": 0,
+            "exact": 0,
+            "accuracy": null
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 0,
+            "exact": 0,
+            "class_exact": 0,
+            "severity_exact": 0,
+            "accuracy": null
+          },
+          "stage": "holdout"
+        }
+      },
+      "profile": "baseline"
+    },
+    "skill": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "TP": 3,
+      "FP": 0,
+      "FN": 0,
+      "cases": 4,
+      "gold_findings": 3,
+      "predicted_findings": 3,
+      "per_rule": {
+        "RULE-CAUSAL-001": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "TP": 1,
+          "FP": 0,
+          "FN": 0,
+          "locator": {
+            "evaluated": 1,
+            "exact": 1,
+            "accuracy": 1.0
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 1,
+            "exact": 1,
+            "class_exact": 1,
+            "severity_exact": 1,
+            "accuracy": 1.0
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "RULE-CITATION-001": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "TP": 1,
+          "FP": 0,
+          "FN": 0,
+          "locator": {
+            "evaluated": 1,
+            "exact": 1,
+            "accuracy": 1.0
+          },
+          "authority": {
+            "applicable": 1,
+            "resolved": 1,
+            "exact": 1,
+            "resolution_rate": 1.0,
+            "accuracy": 1.0
+          },
+          "classification": {
+            "evaluated": 1,
+            "exact": 1,
+            "class_exact": 1,
+            "severity_exact": 1,
+            "accuracy": 1.0
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "RULE-EVIDENCE-001": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "TP": 1,
+          "FP": 0,
+          "FN": 0,
+          "locator": {
+            "evaluated": 1,
+            "exact": 1,
+            "accuracy": 1.0
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 1,
+            "exact": 1,
+            "class_exact": 1,
+            "severity_exact": 1,
+            "accuracy": 1.0
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "locator": {
+        "evaluated": 3,
+        "exact": 3,
+        "accuracy": 1.0
+      },
+      "authority": {
+        "applicable": 1,
+        "resolved": 1,
+        "exact": 1,
+        "resolution_rate": 1.0,
+        "accuracy": 1.0
+      },
+      "classification": {
+        "evaluated": 3,
+        "exact": 3,
+        "class_exact": 3,
+        "severity_exact": 3,
+        "accuracy": 1.0
+      },
+      "per_stage": {
+        "regression": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "TP": 1,
+          "FP": 0,
+          "FN": 0,
+          "cases": 1,
+          "gold_findings": 1,
+          "predicted_findings": 1,
+          "per_rule": {
+            "RULE-CITATION-001": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "TP": 1,
+              "FP": 0,
+              "FN": 0,
+              "locator": {
+                "evaluated": 1,
+                "exact": 1,
+                "accuracy": 1.0
+              },
+              "authority": {
+                "applicable": 1,
+                "resolved": 1,
+                "exact": 1,
+                "resolution_rate": 1.0,
+                "accuracy": 1.0
+              },
+              "classification": {
+                "evaluated": 1,
+                "exact": 1,
+                "class_exact": 1,
+                "severity_exact": 1,
+                "accuracy": 1.0
+              },
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "locator": {
+            "evaluated": 1,
+            "exact": 1,
+            "accuracy": 1.0
+          },
+          "authority": {
+            "applicable": 1,
+            "resolved": 1,
+            "exact": 1,
+            "resolution_rate": 1.0,
+            "accuracy": 1.0
+          },
+          "classification": {
+            "evaluated": 1,
+            "exact": 1,
+            "class_exact": 1,
+            "severity_exact": 1,
+            "accuracy": 1.0
+          },
+          "stage": "regression"
+        },
+        "mutation": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "TP": 1,
+          "FP": 0,
+          "FN": 0,
+          "cases": 1,
+          "gold_findings": 1,
+          "predicted_findings": 1,
+          "per_rule": {
+            "RULE-CAUSAL-001": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "TP": 1,
+              "FP": 0,
+              "FN": 0,
+              "locator": {
+                "evaluated": 1,
+                "exact": 1,
+                "accuracy": 1.0
+              },
+              "authority": {
+                "applicable": 0,
+                "resolved": 0,
+                "exact": 0,
+                "resolution_rate": null,
+                "accuracy": null
+              },
+              "classification": {
+                "evaluated": 1,
+                "exact": 1,
+                "class_exact": 1,
+                "severity_exact": 1,
+                "accuracy": 1.0
+              },
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "locator": {
+            "evaluated": 1,
+            "exact": 1,
+            "accuracy": 1.0
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 1,
+            "exact": 1,
+            "class_exact": 1,
+            "severity_exact": 1,
+            "accuracy": 1.0
+          },
+          "stage": "mutation"
+        },
+        "clean_control": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "cases": 1,
+          "gold_findings": 0,
+          "predicted_findings": 0,
+          "per_rule": {},
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "locator": {
+            "evaluated": 0,
+            "exact": 0,
+            "accuracy": null
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 0,
+            "exact": 0,
+            "class_exact": 0,
+            "severity_exact": 0,
+            "accuracy": null
+          },
+          "stage": "clean_control"
+        },
+        "holdout": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "TP": 1,
+          "FP": 0,
+          "FN": 0,
+          "cases": 1,
+          "gold_findings": 1,
+          "predicted_findings": 1,
+          "per_rule": {
+            "RULE-EVIDENCE-001": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "TP": 1,
+              "FP": 0,
+              "FN": 0,
+              "locator": {
+                "evaluated": 1,
+                "exact": 1,
+                "accuracy": 1.0
+              },
+              "authority": {
+                "applicable": 0,
+                "resolved": 0,
+                "exact": 0,
+                "resolution_rate": null,
+                "accuracy": null
+              },
+              "classification": {
+                "evaluated": 1,
+                "exact": 1,
+                "class_exact": 1,
+                "severity_exact": 1,
+                "accuracy": 1.0
+              },
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "locator": {
+            "evaluated": 1,
+            "exact": 1,
+            "accuracy": 1.0
+          },
+          "authority": {
+            "applicable": 0,
+            "resolved": 0,
+            "exact": 0,
+            "resolution_rate": null,
+            "accuracy": null
+          },
+          "classification": {
+            "evaluated": 1,
+            "exact": 1,
+            "class_exact": 1,
+            "severity_exact": 1,
+            "accuracy": 1.0
+          },
+          "stage": "holdout"
+        }
+      },
+      "profile": "skill"
+    }
+  },
+  "stop_errors": []
+}

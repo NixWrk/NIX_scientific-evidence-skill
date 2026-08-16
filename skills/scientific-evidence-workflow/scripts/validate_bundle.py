@@ -170,6 +170,25 @@ GENRES: dict[str, dict[str, Any]] = {
             "validity_and_approbation",
         },
     },
+    "dissertation-literature-review-chapter": {
+        "bundle_mode": "manuscript",
+        "literature": "required",
+        "own_results": "forbidden",
+        "internal_crossref": "required",
+        "organizational": "forbidden",
+        "source_min": 3,
+        "source_max": None,
+        "source_representations": None,
+        "required_structure_types": {"chapter", "section"},
+        "required_output_sections": {
+            "review_scope",
+            "conceptual_framework",
+            "thematic_synthesis",
+            "conflicts_and_limits",
+            "research_gap",
+            "chapter_conclusions",
+        },
+    },
     "dissertation-methods-chapter": {
         "bundle_mode": "manuscript",
         "literature": "allowed",
@@ -836,6 +855,37 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                         errors.append(
                             f"claim[{item.get('claim_id')}]: dissertation proposition "
                             "requires result_ids and a proposition or section unit"
+                        )
+
+            if genre == "dissertation-literature-review-chapter":
+                for claim_id, item in claims.items():
+                    if item.get("output_section") == "research_gap":
+                        if item.get("status") != "bounded" or not _nonempty_string(
+                            item.get("boundary")
+                        ):
+                            errors.append(
+                                f"claim[{claim_id}]: dissertation literature-review gap "
+                                "must be bounded and name its corpus boundary"
+                            )
+
+                    if item.get("status") not in {"supported", "bounded"}:
+                        continue
+                    if item.get("claim_type") == "structural":
+                        continue
+                    scoped_literature = [
+                        evidence.get(identifier, {})
+                        for identifier in item.get("evidence_ids", [])
+                        if identifier in evidence
+                        and evidence[identifier].get("source_id") in input_scope
+                        and sources.get(evidence[identifier].get("source_id"), {}).get(
+                            "representation"
+                        )
+                        in {"html", "pdf", "markdown", "text"}
+                    ]
+                    if not scoped_literature:
+                        errors.append(
+                            f"claim[{claim_id}]: dissertation literature-review requires "
+                            "in-scope literature evidence for every supported synthesis"
                         )
 
             if genre == "dissertation-methods-chapter":

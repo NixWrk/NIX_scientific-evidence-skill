@@ -1,0 +1,6 @@
+{
+  "case_id": "MUT-001",
+  "stage": "mutation",
+  "text": "Полученные данные доказывают эффективность метода.",
+  "fixture_kind": "controlled_causal_strengthening"
+}

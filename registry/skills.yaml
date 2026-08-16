@@ -12,8 +12,8 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.10"
-    skill_sha256: 26e1de2381d8b2d3b94ca061bf5dd569296c8473b34bef82e55443af3af9e54b
+    version: "0.11"
+    skill_sha256: b41629c8a8858ab112304be1692d1d11883020c0faa4946cc9cef1d31a1917cf
     task: [qa, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass
@@ -55,8 +55,33 @@ verdicts:
       - dissertation_methods_chapter_protocol_data_gated
       - methods_chapter_corrected_from_mandated_to_conventional
       - fresh_agent_methods_stop_condition_pass
+      - dissertation_literature_review_generate_and_critic_contract
+      - research_gap_bounded_to_frozen_corpus
     experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025, EXP-0026]
     next_action: implement_dissertation_results_chapter
+
+  - id: dissertation-formatting-and-apparatus
+    source: local:skills/dissertation-formatting-and-apparatus
+    version: "0.1"
+    skill_sha256: f9f2809e1379df612177667e08274482dda630c705cf4f9537d8af68ed7441d6
+    task: [qualification_work, document_formatting, bibliography, document_review]
+    license: not_declared
+    spec_subset: pass
+    portability: current_agent_pass_docx_render_requires_local_office_engine
+    corpus_policy: pass
+    reasons:
+      - normative_profile_separates_citation_description_and_local_requirements
+      - uncovered_normative_branches_are_not_assessed
+      - abbreviations_terms_and_bibliography_have_deterministic_auditors
+      - critic_findings_have_machine_validated_authority_and_locator_contract
+      - comments_tracked_changes_and_hybrid_word_review_supported
+      - source_docx_existing_comments_and_revisions_preserved
+      - four_stage_regression_mutation_clean_control_holdout_protocol
+      - benchmark_gold_hidden_from_critic
+      - word_review_has_structural_ooxml_audit
+      - visual_docx_render_requires_available_office_engine
+    experiment: EXP-0027
+    next_action: complete_targeted_gost_sections_after_source_pdfs_are_available
 
   - id: literature-triage-matrix
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix

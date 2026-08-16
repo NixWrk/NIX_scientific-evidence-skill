@@ -1,0 +1,6 @@
+{
+  "case_id": "REG-001",
+  "stage": "regression",
+  "text": "Ссылка на источник оформлена в рабочем абзаце.",
+  "fixture_kind": "known_regression_case"
+}

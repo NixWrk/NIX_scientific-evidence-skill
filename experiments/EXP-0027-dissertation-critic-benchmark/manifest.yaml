@@ -1,0 +1,37 @@
+experiment_id: EXP-0027
+title: Deterministic four-stage dissertation critic benchmark scaffold
+standard_id: PSES-DISS-001
+standard_version: 0.1.0
+status: scaffold
+runner: local_deterministic_python
+external_model_api: forbidden
+network_during_run: forbidden
+gold_visibility: hidden
+
+stages:
+  - regression
+  - mutation
+  - clean_control
+  - holdout
+
+fixtures_dir: fixtures
+gold: gold/findings.json
+outputs:
+  baseline: outputs/baseline
+  skill: outputs/skill
+
+frozen_hashes:
+  files:
+    fixtures/regression.json: sha256:e5d49bc2604fc6e2d8de26e942f82f5314fa5919a8933f132e9374c763f0f1e6
+    fixtures/mutation.json: sha256:17fe67deb6eb3051f370f0dcf0da86f9f0293878997db363c3f84c55e7ba8353
+    fixtures/clean_control.json: sha256:2a5b3c44f42a979d8aa7f254fcb5b8407c328fc0b7724577137746cd99277927
+    fixtures/holdout.json: sha256:9b9c70540acf1c53876a8d7e6b4673111fc5036b7356ed3e5000c0dd0a506179
+    gold/findings.json: sha256:366d38fd50e99ad6e451d408e4e77db3416658aa3cc786c186553267edf28876
+    outputs/baseline/REG-001.json: sha256:77e41dfa8c8a9b7a3ed8f306e468cee41a0447bee4ca3e604ebf9ce6e10f07d1
+    outputs/baseline/MUT-001.json: sha256:04e6584b88bead541fae2e6b1e81e8cd92c118d1382240d940c2ae646e28b818
+    outputs/baseline/CLEAN-001.json: sha256:f5cb3afc210b59fef6dcda6e8030e6e55836bbd642c39399e17cff2ef9bea32c
+    outputs/baseline/HOLD-001.json: sha256:57d08eb7578f5f10975680b0229b13159d49ec039b14afaa0d8372680efb2993
+    outputs/skill/REG-001.json: sha256:d92521e422dc94c0d3fb168dcc74f03750eac89570c757acb75af143c67c3fab
+    outputs/skill/MUT-001.json: sha256:95422cf7d6caba20bc2ee73530c178cb200e698bb57694807a386c2ae1a74450
+    outputs/skill/CLEAN-001.json: sha256:f5cb3afc210b59fef6dcda6e8030e6e55836bbd642c39399e17cff2ef9bea32c
+    outputs/skill/HOLD-001.json: sha256:7da8be7a96e2328d0e99321bca99ff7569f9d28366e54e2424ab63f737210b29

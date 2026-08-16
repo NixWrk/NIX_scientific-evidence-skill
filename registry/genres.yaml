@@ -51,6 +51,9 @@ invariants:
   INV-BIBLIOGRAPHY-PROFILE: описание, нумерация, группировка и порядок проверяются только по разрешённому нормативному профилю
   INV-APPARATUS-CROSSREF: каждый элемент перечня и приложение разрешаются в объект и ссылку основного текста
   INV-WORD-REVIEW-TRACEABLE: каждый комментарий и фрагмент записи исправлений разрешается в замечание критика
+  INV-EVIDENCE-BOUND: каждый синтетический тезис опирается только на проверенные доказательства замороженного корпуса
+  INV-GAP-BOUNDED: исследовательский пробел сформулирован с явной границей корпуса, периода, объектов, методов и режимов
+  INV-CONFLICT-VISIBLE: противоречащие источники сохранены и не сведены к ложному консенсусу
 
 genres:
 
@@ -431,6 +434,25 @@ genres:
     render_targets: [docx, obsidian]
     language_profile: genre-dissertation
     notes: Восемь элементов подтверждены NORM-GOST-R-7.0.11-2011-001, REQ-025; отдельные заголовки для элементов стандартом не установлены.
+
+  - id: dissertation-literature-review-chapter
+    family: qualification
+    parent: dissertation
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 3, max: null}
+    source_representations: null
+    normativity: conventional
+    depth: chapter
+    purpose: obtain_qualification
+    audience: [council, opponent]
+    evidence_regime: {literature: required, own_results: forbidden, internal_crossref: required, organizational: forbidden}
+    required_components: [границы и provenance корпуса, понятийная рамка, тематический синтез, противоречия и ограничения, ограниченный исследовательский пробел, выводы по главе]
+    invariants: [INV-CROSSREF-RESOLVABLE, INV-EVIDENCE-BOUND, INV-GAP-BOUNDED, INV-CONFLICT-VISIBLE, INV-CONCLUSION-NO-NEW, INV-TERM-CONSISTENCY, INV-REVISION-TRACEABLE]
+    render_targets: [docx, obsidian]
+    language_profile: genre-dissertation
+    notes: ГОСТ не устанавливает отдельную обзорную главу и универсальную последовательность тем; жанр является доказательным соглашением. Отсутствие публикации в замороженном корпусе не доказывает отсутствие результата в науке.
 
   - id: dissertation-methods-chapter
     family: qualification

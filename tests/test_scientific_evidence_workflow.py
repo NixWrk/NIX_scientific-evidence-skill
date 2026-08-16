@@ -69,6 +69,7 @@ def test_skill_references_and_assets_exist() -> None:
         "references/local-model-compatibility.md",
         "references/journal-pattern-memory.md",
         "references/dissertation-analysis-protocol.md",
+        "references/genres/dissertation-literature-review-chapter.md",
         "references/genres/dissertation-methods-chapter.md",
         "references/russian-scientific-style.md",
         "assets/evidence-bundle.schema.json",
@@ -76,6 +77,7 @@ def test_skill_references_and_assets_exist() -> None:
         "assets/qa-output.template.md",
         "assets/literature-review-output.template.md",
         "assets/manuscript-output.template.md",
+        "assets/dissertation-literature-review-chapter.template.md",
         "assets/dissertation-methods-chapter.template.md",
         "assets/journal-pattern.template.json",
         "scripts/validate_bundle.py",
@@ -951,6 +953,58 @@ def dissertation_introduction_bundle() -> dict:
     return bundle
 
 
+def dissertation_literature_review_bundle() -> dict:
+    bundle = load_template()
+    bundle["task"].update(
+        {
+            "mode": "manuscript",
+            "genre": "dissertation-literature-review-chapter",
+            "figure_mode": "without_figures",
+            "formatting_mode": "section_only",
+        }
+    )
+    add_source(bundle, 2)
+    add_source(bundle, 3)
+    bundle["structure"] = [
+        {
+            "unit_id": "CH-REVIEW", "unit_type": "chapter", "label": "1",
+            "title": "Обзор литературы", "parent_id": None,
+            "document": "dissertation", "status": "drafted",
+        },
+        {
+            "unit_id": "SEC-REVIEW", "unit_type": "section", "label": "1.1",
+            "title": "Состояние вопроса", "parent_id": "CH-REVIEW",
+            "document": "dissertation", "status": "drafted",
+        },
+    ]
+
+    def claim(claim_id: str, section: str, *, bounded: bool = False) -> dict:
+        return {
+            "claim_id": claim_id,
+            "text": f"Проверяемая формулировка раздела {section}.",
+            "output_section": section,
+            "claim_type": "interpretive",
+            "certainty": "inferred" if bounded else "direct",
+            "evidence_ids": ["EV-001"],
+            "result_ids": [],
+            "structure_ids": ["SEC-REVIEW"],
+            "status": "bounded" if bounded else "supported",
+            "disposition": "keep_with_boundary" if bounded else "keep",
+            "boundary": "frozen three-source corpus" if bounded else None,
+            "causal_basis": None,
+        }
+
+    bundle["claims"] = [
+        claim("CL-REV-SCOPE", "review_scope"),
+        claim("CL-REV-FRAME", "conceptual_framework"),
+        claim("CL-REV-SYNTHESIS", "thematic_synthesis"),
+        claim("CL-REV-CONFLICT", "conflicts_and_limits"),
+        claim("CL-REV-GAP", "research_gap", bounded=True),
+        claim("CL-REV-CONCLUSION", "chapter_conclusions"),
+    ]
+    return bundle
+
+
 def dissertation_methods_bundle() -> dict:
     bundle = load_template()
     bundle["task"].update(
@@ -1020,6 +1074,7 @@ def test_implemented_genres_accept_their_own_shape() -> None:
         presentation_bundle,
         dissertation_outline_bundle,
         dissertation_introduction_bundle,
+        dissertation_literature_review_bundle,
         dissertation_methods_bundle,
     )
     bundle_genres = {
@@ -1104,6 +1159,43 @@ def test_decision_log_takes_no_organizational_record() -> None:
     assert rules["organizational"] == "forbidden"
     assert rules["source_representations"] is None
     assert rules["bundle_mode"] == "record"
+
+
+def test_dissertation_literature_review_gap_must_be_bounded() -> None:
+    bundle = dissertation_literature_review_bundle()
+    gap = next(item for item in bundle["claims"] if item["output_section"] == "research_gap")
+    gap.update({"status": "supported", "disposition": "keep", "boundary": None})
+    report = VALIDATOR.validate_bundle(bundle)
+    assert report["valid"] is False
+    assert "literature-review gap must be bounded" in error_text(report)
+
+
+def test_dissertation_literature_review_requires_three_sources() -> None:
+    bundle = dissertation_literature_review_bundle()
+    bundle["task"]["input_scope"].pop()
+    report = VALIDATOR.validate_bundle(bundle)
+    assert report["valid"] is False
+    assert "requires at least 3 source(s)" in error_text(report)
+
+
+def test_dissertation_literature_review_rejects_own_results() -> None:
+    bundle = dissertation_literature_review_bundle()
+    bundle["results"] = [{
+        "result_id": "RES-REVIEW-001", "source_id": "SRC-EXAMPLE-001",
+        "locator": "results:1", "value": "own result", "unit": None,
+        "version": "v1", "analysis": "not literature evidence",
+    }]
+    report = VALIDATOR.validate_bundle(bundle)
+    assert report["valid"] is False
+    assert "does not report own research results" in error_text(report)
+
+
+def test_dissertation_literature_review_requires_textual_evidence() -> None:
+    bundle = dissertation_literature_review_bundle()
+    bundle["sources"][0]["representation"] = "organizational"
+    report = VALIDATOR.validate_bundle(bundle)
+    assert report["valid"] is False
+    assert "requires in-scope literature evidence" in error_text(report)
 
 
 def test_dissertation_methods_requires_protocol_or_data() -> None:

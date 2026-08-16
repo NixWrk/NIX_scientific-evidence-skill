@@ -1,0 +1,25 @@
+{
+  "case_id": "HOLD-001",
+  "findings": [
+    {
+      "issue_id": "OUT-HOLD-001",
+      "rule_id": "RULE-EVIDENCE-001",
+      "module": "dissertation-critic",
+      "severity": "note",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "text",
+        "exact_text": "независимой выборке",
+        "occurrence": 1
+      },
+      "observed": "Независимая выборка заявлена, но её размер не указан в фрагменте.",
+      "expected": "Для воспроизводимости указать размер и критерии отбора выборки.",
+      "authority_ids": [],
+      "evidence_ids": [],
+      "suggested_fix": "Добавить размер и критерии отбора выборки либо явно ограничить утверждение.",
+      "confidence": 0.72,
+      "autofix_safe": false,
+      "word_action": "none"
+    }
+  ]
+}

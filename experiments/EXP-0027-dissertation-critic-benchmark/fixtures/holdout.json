@@ -1,0 +1,6 @@
+{
+  "case_id": "HOLD-001",
+  "stage": "holdout",
+  "text": "Метод оценён на независимой выборке.",
+  "fixture_kind": "unseen_controlled_example"
+}

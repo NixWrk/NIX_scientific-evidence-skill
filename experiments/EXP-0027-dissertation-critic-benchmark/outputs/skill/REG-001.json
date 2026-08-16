@@ -1,0 +1,25 @@
+{
+  "case_id": "REG-001",
+  "findings": [
+    {
+      "issue_id": "OUT-REG-001",
+      "rule_id": "RULE-CITATION-001",
+      "module": "dissertation-bibliography",
+      "severity": "major",
+      "issue_class": "normative_violation",
+      "locator": {
+        "kind": "text",
+        "exact_text": "Ссылка на источник",
+        "occurrence": 1
+      },
+      "observed": "Ссылка не имеет проверяемого нормативного основания в журнале.",
+      "expected": "Ссылка должна быть проверена по применимой карточке стандарта.",
+      "authority_ids": ["NORM-GOST-R-7.0.5-2008-001:REQ-001"],
+      "evidence_ids": ["E-REG-001"],
+      "suggested_fix": "Указать и проверить применимый requirement_id.",
+      "confidence": 0.98,
+      "autofix_safe": false,
+      "word_action": "comment"
+    }
+  ]
+}

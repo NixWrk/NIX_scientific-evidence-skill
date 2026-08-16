@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dissertation Formatting and Apparatus"
+  short_description: "Audit and format Russian dissertations"
+  default_prompt: "Use $dissertation-formatting-and-apparatus to audit and format this dissertation apparatus."

@@ -1,0 +1,29 @@
+{
+  "case_id": "MUT-001",
+  "findings": [
+    {
+      "issue_id": "OUT-MUT-001",
+      "rule_id": "RULE-CAUSAL-001",
+      "module": "dissertation-critic",
+      "severity": "major",
+      "issue_class": "evidence_gap",
+      "locator": {
+        "kind": "word",
+        "exact_text": "доказывают",
+        "occurrence": 1
+      },
+      "observed": "Фраза усиливает согласование данных до доказательства эффективности.",
+      "expected": "Причинность и сила вывода должны соответствовать представленным данным.",
+      "authority_ids": [],
+      "evidence_ids": ["E-MUT-001"],
+      "suggested_fix": {
+        "old": "доказывают",
+        "new": "согласуются с",
+        "rationale": "Без самостоятельного причинного дизайна это безопасная граница вывода."
+      },
+      "confidence": 0.95,
+      "autofix_safe": true,
+      "word_action": "tracked_change_with_comment"
+    }
+  ]
+}

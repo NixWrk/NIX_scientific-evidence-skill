@@ -1,0 +1,327 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paper-analyzer-writer.local/dissertation-formatting-and-apparatus/critic-findings.schema.json",
+  "title": "PSES-DISS-001 dissertation critic findings",
+  "description": "Machine-readable critic journal. The envelope form is canonical; a bare finding or an array of findings is accepted by the companion validator for adapters that stream records.",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "locator": {
+      "description": "A stable text or Word location. Word anchors must retain the exact text and its occurrence number.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "text",
+                "paragraph",
+                "page",
+                "character_range",
+                "heading",
+                "table",
+                "word",
+                "docx"
+              ]
+            },
+            "document": {
+              "type": "string",
+              "minLength": 1
+            },
+            "section": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "paragraph": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "char_start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "char_end": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "exact_text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "occurrence": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "exact_text"
+                ]
+              },
+              "then": {
+                "required": [
+                  "occurrence"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "occurrence"
+                ]
+              },
+              "then": {
+                "required": [
+                  "exact_text"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "char_start",
+                  "char_end"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "char_end": {
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "suggested_fix": {
+      "description": "A prose suggestion for a comment, or an exact old/new replacement for tracked changes.",
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "old",
+            "new"
+          ],
+          "properties": {
+            "old": {
+              "type": "string",
+              "minLength": 1
+            },
+            "new": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issue_id",
+        "rule_id",
+        "module",
+        "severity",
+        "issue_class",
+        "locator",
+        "observed",
+        "expected",
+        "authority_ids",
+        "evidence_ids",
+        "suggested_fix",
+        "confidence",
+        "autofix_safe",
+        "word_action"
+      ],
+      "properties": {
+        "issue_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "rule_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "module": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "enum": [
+            "critical",
+            "major",
+            "minor",
+            "note"
+          ]
+        },
+        "issue_class": {
+          "enum": [
+            "normative_violation",
+            "internal_inconsistency",
+            "evidence_gap",
+            "observed_practice_difference",
+            "recommendation"
+          ]
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "observed": {},
+        "expected": {},
+        "authority_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "suggested_fix": {
+          "$ref": "#/$defs/suggested_fix"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "autofix_safe": {
+          "type": "boolean"
+        },
+        "word_action": {
+          "enum": [
+            "none",
+            "comment",
+            "tracked_change",
+            "tracked_change_with_comment"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "word_action": {
+                "enum": [
+                  "comment",
+                  "tracked_change",
+                  "tracked_change_with_comment"
+                ]
+              }
+            },
+            "required": [
+              "word_action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "locator": {
+                "type": "object",
+                "required": [
+                  "exact_text",
+                  "occurrence"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "word_action": {
+                "enum": [
+                  "tracked_change",
+                  "tracked_change_with_comment"
+                ]
+              }
+            },
+            "required": [
+              "word_action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "suggested_fix": {
+                "type": "object",
+                "required": [
+                  "old",
+                  "new"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "findings"
+      ],
+      "properties": {
+        "schema_version": {
+          "enum": [
+            "PSES-DISS-001/v1",
+            "1.0"
+          ]
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/finding"
+          }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/envelope"
+    },
+    {
+      "$ref": "#/$defs/finding"
+    },
+    {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  ]
+}

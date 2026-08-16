@@ -1,0 +1,89 @@
+{
+  "schema_version": "PSES-DISS-001/v1",
+  "findings": [],
+  "cases": [
+    {
+      "case_id": "REG-001",
+      "findings": [
+        {
+          "issue_id": "ISSUE-REG-001",
+          "rule_id": "RULE-CITATION-001",
+          "module": "dissertation-bibliography",
+          "severity": "major",
+          "issue_class": "normative_violation",
+          "locator": {
+            "kind": "text",
+            "exact_text": "Ссылка на источник",
+            "occurrence": 1
+          },
+          "observed": "Ссылка не имеет проверяемого нормативного основания в журнале.",
+          "expected": "Ссылка должна быть проверена по применимой карточке стандарта.",
+          "authority_ids": ["NORM-GOST-R-7.0.5-2008-001:REQ-001"],
+          "evidence_ids": ["E-REG-001"],
+          "suggested_fix": "Указать и проверить применимый requirement_id.",
+          "confidence": 0.98,
+          "autofix_safe": false,
+          "word_action": "comment"
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-001",
+      "findings": [
+        {
+          "issue_id": "ISSUE-MUT-001",
+          "rule_id": "RULE-CAUSAL-001",
+          "module": "dissertation-critic",
+          "severity": "major",
+          "issue_class": "evidence_gap",
+          "locator": {
+            "kind": "word",
+            "exact_text": "доказывают",
+            "occurrence": 1
+          },
+          "observed": "Фраза усиливает согласование данных до доказательства эффективности.",
+          "expected": "Причинность и сила вывода должны соответствовать представленным данным.",
+          "authority_ids": [],
+          "evidence_ids": ["E-MUT-001"],
+          "suggested_fix": {
+            "old": "доказывают",
+            "new": "согласуются с",
+            "rationale": "Без самостоятельного причинного дизайна это безопасная граница вывода."
+          },
+          "confidence": 0.95,
+          "autofix_safe": true,
+          "word_action": "tracked_change_with_comment"
+        }
+      ]
+    },
+    {
+      "case_id": "CLEAN-001",
+      "findings": []
+    },
+    {
+      "case_id": "HOLD-001",
+      "findings": [
+        {
+          "issue_id": "ISSUE-HOLD-001",
+          "rule_id": "RULE-EVIDENCE-001",
+          "module": "dissertation-critic",
+          "severity": "note",
+          "issue_class": "recommendation",
+          "locator": {
+            "kind": "text",
+            "exact_text": "независимой выборке",
+            "occurrence": 1
+          },
+          "observed": "Независимая выборка заявлена, но её размер не указан в фрагменте.",
+          "expected": "Для воспроизводимости указать размер и критерии отбора выборки.",
+          "authority_ids": [],
+          "evidence_ids": [],
+          "suggested_fix": "Добавить размер и критерии отбора выборки либо явно ограничить утверждение.",
+          "confidence": 0.72,
+          "autofix_safe": false,
+          "word_action": "none"
+        }
+      ]
+    }
+  ]
+}

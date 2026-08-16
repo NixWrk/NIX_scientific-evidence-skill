@@ -1,0 +1,6 @@
+{
+  "case_id": "CLEAN-001",
+  "stage": "clean_control",
+  "text": "Полученные данные согласуются с результатами измерений.",
+  "fixture_kind": "unchanged_control"
+}

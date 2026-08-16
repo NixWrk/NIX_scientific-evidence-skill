@@ -60,6 +60,10 @@ reference:
 - `dissertation-introduction`: the evidence-bound introduction with all eight
   normative elements — `references/genres/dissertation-introduction.md`, mode
   `manuscript`.
+- `dissertation-literature-review-chapter`: a bounded synthesis of a frozen
+  literature corpus, including conflict and a non-absolute research gap —
+  `references/genres/dissertation-literature-review-chapter.md`, mode
+  `manuscript`.
 - `dissertation-methods-chapter`: a reproducible account of objects, procedures,
   processing, and quality control from protocol/data records —
   `references/genres/dissertation-methods-chapter.md`, mode `manuscript`.
@@ -177,6 +181,8 @@ For `dissertation-outline`, render the table of contents from stable structure
 records and generate final page numbers only after document layout. For
 `dissertation-introduction`, use the canonical claim-ledger section keys from
 its genre reference and keep all eight normative elements present.
+For `dissertation-literature-review-chapter`, freeze the corpus before synthesis,
+retain conflicts, and require every research-gap claim to name its boundary.
 For `dissertation-methods-chapter`, require protocol/data records, keep all five
 control sections addressable, and never reconstruct a procedure from results.
 
