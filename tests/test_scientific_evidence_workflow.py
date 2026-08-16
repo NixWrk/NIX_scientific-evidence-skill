@@ -69,12 +69,14 @@ def test_skill_references_and_assets_exist() -> None:
         "references/local-model-compatibility.md",
         "references/journal-pattern-memory.md",
         "references/dissertation-analysis-protocol.md",
+        "references/genres/dissertation-methods-chapter.md",
         "references/russian-scientific-style.md",
         "assets/evidence-bundle.schema.json",
         "assets/evidence-bundle.template.json",
         "assets/qa-output.template.md",
         "assets/literature-review-output.template.md",
         "assets/manuscript-output.template.md",
+        "assets/dissertation-methods-chapter.template.md",
         "assets/journal-pattern.template.json",
         "scripts/validate_bundle.py",
         "scripts/audit_russian_style.py",
@@ -949,6 +951,64 @@ def dissertation_introduction_bundle() -> dict:
     return bundle
 
 
+def dissertation_methods_bundle() -> dict:
+    bundle = load_template()
+    bundle["task"].update(
+        {
+            "mode": "manuscript",
+            "genre": "dissertation-methods-chapter",
+            "figure_mode": "without_figures",
+            "formatting_mode": "section_only",
+        }
+    )
+    bundle["sources"][0]["representation"] = "protocol"
+    bundle["structure"] = [
+        {
+            "unit_id": "CH-METHOD",
+            "unit_type": "chapter",
+            "label": "2",
+            "title": "Методы исследования",
+            "parent_id": None,
+            "document": "dissertation",
+            "status": "drafted",
+        },
+        {
+            "unit_id": "SEC-METHOD",
+            "unit_type": "section",
+            "label": "2.1",
+            "title": "Процедура и обработка данных",
+            "parent_id": "CH-METHOD",
+            "document": "dissertation",
+            "status": "drafted",
+        },
+    ]
+
+    def claim(claim_id: str, section: str) -> dict:
+        return {
+            "claim_id": claim_id,
+            "text": f"Проверяемая формулировка раздела {section}.",
+            "output_section": section,
+            "claim_type": "factual",
+            "certainty": "direct",
+            "evidence_ids": ["EV-001"],
+            "result_ids": [],
+            "structure_ids": ["SEC-METHOD"],
+            "status": "supported",
+            "disposition": "keep",
+            "boundary": None,
+            "causal_basis": None,
+        }
+
+    bundle["claims"] = [
+        claim("CL-METHOD-SCOPE", "method_scope"),
+        claim("CL-METHOD-PROCEDURE", "procedure"),
+        claim("CL-METHOD-PROCESSING", "data_processing"),
+        claim("CL-METHOD-QUALITY", "quality_control"),
+        claim("CL-METHOD-CONCLUSION", "chapter_conclusions"),
+    ]
+    return bundle
+
+
 def test_implemented_genres_accept_their_own_shape() -> None:
     builders = (
         annotation_bundle,
@@ -960,6 +1020,7 @@ def test_implemented_genres_accept_their_own_shape() -> None:
         presentation_bundle,
         dissertation_outline_bundle,
         dissertation_introduction_bundle,
+        dissertation_methods_bundle,
     )
     bundle_genres = {
         genre for genre, rules in VALIDATOR.GENRES.items() if rules["bundle_mode"] is not None
@@ -1043,6 +1104,103 @@ def test_decision_log_takes_no_organizational_record() -> None:
     assert rules["organizational"] == "forbidden"
     assert rules["source_representations"] is None
     assert rules["bundle_mode"] == "record"
+
+
+def test_dissertation_methods_requires_protocol_or_data() -> None:
+    bundle = dissertation_methods_bundle()
+    bundle["sources"][0]["representation"] = "note"
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires a source with representation ['data', 'protocol']" in error_text(report)
+
+
+def test_dissertation_methods_claim_cannot_rest_on_literature_alone() -> None:
+    bundle = dissertation_methods_bundle()
+    add_source(bundle, 2)
+    bundle["evidence"].append(
+        {
+            "evidence_id": "EV-LITERATURE",
+            "source_id": "SRC-EXAMPLE-002",
+            "locator": "article:methods",
+            "claim": "Published contextual method description.",
+            "support_type": "context",
+            "fragment": None,
+            "value": None,
+            "unit": None,
+            "study_context": "Literature context only.",
+            "limitations": "Does not record what this dissertation performed.",
+            "verification_status": "verified",
+        }
+    )
+    bundle["claims"][0]["evidence_ids"] = ["EV-LITERATURE"]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires protocol/data evidence or an approved result" in error_text(report)
+
+
+def test_dissertation_methods_evidence_must_be_inside_input_scope() -> None:
+    bundle = dissertation_methods_bundle()
+    outside = copy.deepcopy(bundle["sources"][0])
+    outside.update({"source_id": "SRC-OUTSIDE", "local_ref": "protocol:outside"})
+    bundle["sources"].append(outside)
+    bundle["evidence"].append(
+        {
+            "evidence_id": "EV-OUTSIDE",
+            "source_id": "SRC-OUTSIDE",
+            "locator": "protocol:outside:step-1",
+            "claim": "Method statement from a source outside task.input_scope.",
+            "support_type": "method",
+            "fragment": None,
+            "value": None,
+            "unit": None,
+            "study_context": "Out-of-scope protocol.",
+            "limitations": None,
+            "verification_status": "verified",
+        }
+    )
+    bundle["claims"][0]["evidence_ids"] = ["EV-OUTSIDE"]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires protocol/data evidence or an approved result" in error_text(report)
+
+def test_dissertation_methods_requires_all_control_sections() -> None:
+    bundle = dissertation_methods_bundle()
+    bundle["claims"] = [
+        item for item in bundle["claims"] if item["output_section"] != "quality_control"
+    ]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires output_section 'quality_control'" in error_text(report)
+
+
+def test_dissertation_methods_requires_chapter_and_section_units() -> None:
+    bundle = dissertation_methods_bundle()
+    bundle["structure"] = [bundle["structure"][0]]
+    for claim in bundle["claims"]:
+        claim["structure_ids"] = ["CH-METHOD"]
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires a 'section' unit" in error_text(report)
+
+
+def test_dissertation_methods_requires_internal_addresses() -> None:
+    bundle = dissertation_methods_bundle()
+    bundle["claims"][0]["structure_ids"] = []
+
+    report = VALIDATOR.validate_bundle(bundle)
+
+    assert report["valid"] is False
+    assert "requires an addressable output unit" in error_text(report)
 
 
 def test_dissertation_outline_requires_organizational_record() -> None:

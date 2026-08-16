@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-08-16
+updated: 2026-08-17
 status: draft
 specialty: "2.2.12"
 design_document: docs/genre-taxonomy.md
@@ -44,6 +44,7 @@ invariants:
   INV-HYPOTHESIS-ATTRIBUTED: у гипотезы указан автор формулировки
   INV-TOC-STRUCTURE: оглавление совпадает с иерархией адресуемых единиц, а финальные страницы получены после вёрстки
   INV-REVISION-TRACEABLE: научное исправление сохраняет исходную формулировку и доказательное основание
+  INV-METHOD-RECORD: каждое утверждение о выполненном методе опирается на запись protocol, data или утверждённый result
 
 genres:
 
@@ -428,17 +429,21 @@ genres:
   - id: dissertation-methods-chapter
     family: qualification
     parent: dissertation
-    status: new
-    normativity: mandated
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 1, max: null}
+    source_representations: [data, protocol]
+    normativity: conventional
     depth: chapter
     purpose: obtain_qualification
     audience: [council, opponent]
-    evidence_regime: {literature: allowed, own_results: required, internal_crossref: required, organizational: allowed}
-    required_components: [объекты и материалы, приборы и модели, выполненные процедуры, обработка данных, выводы по главе]
-    invariants: [INV-CROSSREF-RESOLVABLE, INV-NUMBER-RESULT, INV-TERM-CONSISTENCY]
+    evidence_regime: {literature: allowed, own_results: allowed, internal_crossref: required, organizational: allowed}
+    required_components: [объект, исходные данные и условия, выполненная процедура, обработка данных, контроль качества, выводы по главе]
+    invariants: [INV-CROSSREF-RESOLVABLE, INV-METHOD-RECORD, INV-FIGURE-SOURCE, INV-CONCLUSION-NO-NEW, INV-TERM-CONSISTENCY, INV-REVISION-TRACEABLE]
     render_targets: [docx, obsidian]
     language_profile: genre-dissertation
-    notes: Единственный допустимый вход — записи experiment-description и procedure-record.
+    notes: ГОСТ требует деление основной части на главы и разделы, но не отдельную главу методов и не этот состав; жанр является конвенциональным. Без источника protocol или data изложение процедуры считается реконструкцией.
 
   - id: dissertation-results-chapter
     family: qualification

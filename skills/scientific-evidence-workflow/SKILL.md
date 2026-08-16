@@ -1,6 +1,6 @@
 ---
 name: scientific-evidence-workflow
-description: Process only user-supplied scientific publications and research results into source-traceable Q&A, literature reviews, manuscript text, dissertation outlines, and candidate-dissertation introductions. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or draft a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
+description: Process only user-supplied scientific publications and research results into source-traceable Q&A, literature reviews, manuscript text, dissertation outlines, candidate-dissertation introductions, and methods chapters. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or draft a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
 ---
 
 # Scientific Evidence Workflow
@@ -60,6 +60,9 @@ reference:
 - `dissertation-introduction`: the evidence-bound introduction with all eight
   normative elements — `references/genres/dissertation-introduction.md`, mode
   `manuscript`.
+- `dissertation-methods-chapter`: a reproducible account of objects, procedures,
+  processing, and quality control from protocol/data records —
+  `references/genres/dissertation-methods-chapter.md`, mode `manuscript`.
 - `normative-pattern-analysis`: one normative document turned into a card —
   `references/genres/normative-pattern-analysis.md`. This genre produces a card
   rather than an evidence bundle and is validated by
@@ -174,6 +177,8 @@ For `dissertation-outline`, render the table of contents from stable structure
 records and generate final page numbers only after document layout. For
 `dissertation-introduction`, use the canonical claim-ledger section keys from
 its genre reference and keep all eight normative elements present.
+For `dissertation-methods-chapter`, require protocol/data records, keep all five
+control sections addressable, and never reconstruct a procedure from results.
 
 ### 6. Run the evidence gate
 

@@ -45,6 +45,27 @@ synthesis.
   language revision. The script has no third-party dependencies and its clean
   result does not replace manual language review.
 
+## Local-model release gate
+
+Treat local-model prose as a candidate artifact, never as a validated result.
+For scientific prose, use two bounded passes:
+
+1. evidence pass: draft from the verified claim/evidence ledger;
+2. revision pass: compare every statistic type (including mean versus median),
+   value, denominator, unit, sample, version, identifier, and causal strength
+   against the ledger before improving Russian language.
+
+The model must not report that Python, a validator, a style audit, source lookup,
+or any other host action ran. The host writes the validation disclosure from
+actual command results. Run deterministic locator and style checks when
+available, then perform a manual semantic comparison before release. A clean
+surface audit cannot detect a changed statistic type.
+
+Keep machine statuses in code formatting or translate them in reader-facing
+prose. If the host exposes a reasoning trace, store the final artifact and
+prediction statistics for the experiment; do not publish the trace as part of
+the scientific answer.
+
 ## Portable invocation
 
 Use a host-neutral instruction such as:

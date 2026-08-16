@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-08-16
+updated: 2026-08-17
 
 policy:
   input_scope: supplied_corpus_only
@@ -12,12 +12,12 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.9"
-    skill_sha256: 4a8bc6370ef65b1705d0a742073e395677c5476a6ff805dc91e14eb4b6f425df
+    version: "0.10"
+    skill_sha256: 26e1de2381d8b2d3b94ca061bf5dd569296c8473b34bef82e55443af3af9e54b
     task: [qa, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass
-    portability: current_agent_qa_review_manuscript_and_qualification_pass_local_llm_execution_pending
+    portability: current_agent_pass_local_llm_partial_two_pass_host_gate_required
     corpus_policy: pass
     reasons:
       - supplied_corpus_only
@@ -49,9 +49,14 @@ verdicts:
       - scientific_formulation_corrections_preserved_in_a_revision_ledger
       - preliminary_versioned_standard_for_defended_dissertation_analysis
       - fresh_agent_dissertation_routing_and_stop_condition_pass
-      - actual_local_model_run_pending
-    experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025]
-    next_action: actual_local_model_run_then_dissertation_methods_chapter
+      - actual_local_model_qwen35_9b_two_pass_completed
+      - local_model_single_pass_failed_on_statistic_type
+      - local_model_release_requires_host_semantic_gate
+      - dissertation_methods_chapter_protocol_data_gated
+      - methods_chapter_corrected_from_mandated_to_conventional
+      - fresh_agent_methods_stop_condition_pass
+    experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025, EXP-0026]
+    next_action: implement_dissertation_results_chapter
 
   - id: literature-triage-matrix
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix

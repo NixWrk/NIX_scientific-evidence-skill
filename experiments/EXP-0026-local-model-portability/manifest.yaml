@@ -1,0 +1,34 @@
+experiment_id: EXP-0026
+title: Two-pass local-model portability smoke
+status: completed
+task: qa
+date: 2026-08-17
+runner: local_llm
+external_model_api: forbidden
+network_during_run: forbidden
+model:
+  host: LM Studio CLI
+  key: qwen/qwen3.5-9b
+  variant: qwen/qwen3.5-9b@q4_k_m
+  identifier: science-qwen35-9b
+  quantization: Q4_K_M
+  context_length: 16384
+input:
+  prior_experiment: EXP-0021
+  bundle: ../EXP-0021-scientific-evidence-workflow/evidence-bundle.json
+  bundle_sha256: 4c734c9a1bc82408f2d01cb964d119f3e4112b73df5f25c31c4ae825071ecfd6
+  skill_sha256: 4a8bc6370ef65b1705d0a742073e395677c5476a6ff805dc91e14eb4b6f425df
+passes:
+  - id: run-01
+    role: evidence_bound_qa_draft
+    output: run-01-draft.md
+    prompt_tokens: 7805
+    predicted_tokens: 3664
+  - id: run-02
+    role: evidence_and_language_revision
+    output: run-02-revision.md
+    prompt_tokens: 5122
+    predicted_tokens: 5871
+evaluation: evaluation.json
+report: report.md
+verdict: partial_pass_two_pass_and_host_gate_required

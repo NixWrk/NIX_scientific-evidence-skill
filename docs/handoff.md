@@ -150,10 +150,10 @@
 | Публикации автора | калибруется терминологический профиль |
 | Форма результата `similar-work-search` | решение примет автор |
 
-Из карты жанров реализовано десять из 38. В квалификационном семействе
-реализованы `dissertation-outline` и `dissertation-introduction`. Остальные —
-включая главы методов и результатов, `dissertation-conclusion`,
-`defense-propositions`, `novelty-statement` и `thesis-synopsis` — описаны,
+Из карты жанров реализовано одиннадцать из 38. В квалификационном семействе
+реализованы `dissertation-outline`, `dissertation-introduction` и
+`dissertation-methods-chapter`. Остальные — включая главу результатов,
+`dissertation-conclusion`, `defense-propositions`, `novelty-statement` и `thesis-synopsis` — описаны,
 их инварианты названы, но реализация отложена до следующего рабочего блока.
 
 Две записи помечены `decided_by: author` и стоят особняком. Требования ГОСТ ISO

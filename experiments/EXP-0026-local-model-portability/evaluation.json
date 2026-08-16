@@ -1,0 +1,80 @@
+{
+  "experiment_id": "EXP-0026",
+  "model": "qwen/qwen3.5-9b@q4_k_m",
+  "runner": "LM Studio CLI",
+  "network_used": false,
+  "external_model_api_used": false,
+  "run_01": {
+    "new_scientific_sources": 0,
+    "locator_ids_preserved": true,
+    "critical_errors": [
+      {
+        "code": "STATISTIC_TYPE_DRIFT",
+        "original": "median standardized self-care score",
+        "generated": "Средний балл самоконтроля",
+        "effect": "median was changed to an unspecified average"
+      },
+      {
+        "code": "CORRUPTED_MIXED_TEXT",
+        "generated": "контакт混杂рованы",
+        "effect": "reader-facing sentence is corrupted"
+      },
+      {
+        "code": "CLAIM_ID_AS_EVIDENCE",
+        "generated": "CL-004 in an evidence column",
+        "effect": "claim and evidence namespaces were mixed"
+      },
+      {
+        "code": "FALSE_VALIDATION_DISCLOSURE",
+        "generated": "Russian style was reported as checked",
+        "effect": "the model claimed a host action that had not occurred"
+      }
+    ],
+    "style_audit": {"errors": 11, "warnings": 1},
+    "verdict": "fail"
+  },
+  "run_02": {
+    "fixed": [
+      "median/mean distinction",
+      "corrupted mixed text",
+      "claim ID removed from evidence column",
+      "false deterministic style-check claim"
+    ],
+    "remaining_issues": [
+      {
+        "code": "LOCATOR_TYPO_IN_DISCLOSURE",
+        "generated": "EV-07",
+        "expected": "EV-007"
+      },
+      {
+        "code": "UNSUPPORTED_HOST_INTERFACE_CLAIM",
+        "generated": "full text unavailable through this interface",
+        "effect": "the model inferred host state beyond the packet"
+      },
+      {
+        "code": "UNTRANSLATED_STATUS_TOKENS",
+        "generated": "supported/bounded/unsupported in Russian reader-facing table",
+        "effect": "five core language-audit errors remain"
+      },
+      {
+        "code": "AWKWARD_META_PROSE",
+        "generated": "Вкладка «Доказательства»",
+        "effect": "not suitable for the reader-facing artifact"
+      }
+    ],
+    "style_audit": {"errors": 5, "warnings": 0},
+    "verdict": "partial_pass_requires_host_gate"
+  },
+  "overall": {
+    "plain_text_skill_followed": true,
+    "two_pass_revision_materially_improved_output": true,
+    "local_model_output_safe_for_unreviewed_release": false,
+    "required_controls": [
+      "separate evidence and language passes",
+      "deterministic locator and style checks",
+      "manual semantic comparison for statistic type and causal strength",
+      "host-authored validation disclosure"
+    ],
+    "verdict": "partial_pass_two_pass_and_host_gate_required"
+  }
+}

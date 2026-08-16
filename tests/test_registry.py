@@ -25,6 +25,7 @@ REGISTRY = yaml.safe_load((ROOT / "registry" / "skills.yaml").read_text(encoding
 QUEUE = yaml.safe_load((ROOT / "registry" / "skill-test-queue.yaml").read_text(encoding="utf-8"))
 GENRES = yaml.safe_load((ROOT / "registry" / "genres.yaml").read_text(encoding="utf-8"))
 NORMATIVE = yaml.safe_load((ROOT / "registry" / "normative-base.yaml").read_text(encoding="utf-8"))
+TOOLS = yaml.safe_load((ROOT / "registry" / "tools.yaml").read_text(encoding="utf-8"))
 EXPERIMENT_IDS = {
     path.name.split("-", maxsplit=2)[0] + "-" + path.name.split("-", maxsplit=2)[1]
     for path in (ROOT / "experiments").iterdir()
@@ -157,6 +158,38 @@ def test_implemented_genres_match_the_skill() -> None:
                 f"{genre_id}: {dimension} differs between registry and skill"
             )
 
+
+def test_methods_chapter_is_a_convention_not_a_fabricated_norm() -> None:
+    methods = next(
+        genre for genre in GENRES["genres"] if genre["id"] == "dissertation-methods-chapter"
+    )
+
+    assert methods["normativity"] == "conventional"
+    assert methods["source_representations"] == ["data", "protocol"]
+    assert methods["evidence_regime"]["own_results"] == "allowed"
+    assert "не отдельную главу методов" in methods["notes"]
+
+
+def test_actual_local_model_run_records_failure_and_release_gate() -> None:
+    candidate = next(
+        item for item in TOOLS["candidates"] if item["id"] == "evidence-first-agent"
+    )
+    evaluation = json.loads(
+        (
+            ROOT
+            / "experiments"
+            / "EXP-0026-local-model-portability"
+            / "evaluation.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert "EXP-0026" in candidate["experiments"]
+    assert candidate["local_model_execution"] == (
+        "partial_pass_two_pass_and_host_gate_required"
+    )
+    assert evaluation["run_01"]["verdict"] == "fail"
+    assert evaluation["run_02"]["verdict"] == "partial_pass_requires_host_gate"
+    assert evaluation["overall"]["local_model_output_safe_for_unreviewed_release"] is False
 
 def test_implemented_genres_have_their_language_profile() -> None:
     """A genre is only closed when its language layer exists too."""

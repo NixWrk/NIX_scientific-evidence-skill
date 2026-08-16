@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-08-03
+updated: 2026-08-17
 
 execution_policy:
   corpus_external_llm_api: forbidden
@@ -39,11 +39,11 @@ candidates:
     tasks: [qa, literature_review, manuscript]
     role: structured_extraction_then_generation
     implementation: skills/scientific-evidence-workflow
-    experiments: [EXP-0021, EXP-0022, EXP-0023]
+    experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0026]
     current_agent_smoke: passed
     paired_literature_review: pass_for_auditability_no_demonstrated_accuracy_gain_nonblind
     russian_scientific_style_regression: passed_without_evidence_drift
-    local_model_execution: pending
+    local_model_execution: partial_pass_two_pass_and_host_gate_required
 
   - id: russian-scientific-style-audit
     category: tool
@@ -56,7 +56,7 @@ candidates:
     limitations:
       - surface_patterns_only
       - clean_result_does_not_establish_linguistic_or_scientific_quality
-      - generalization_and_local_model_run_pending
+      - local_model_two_pass_surface_audit_completed
 
   - id: grobid
     category: tool

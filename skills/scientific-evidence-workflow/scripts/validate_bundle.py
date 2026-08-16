@@ -170,6 +170,24 @@ GENRES: dict[str, dict[str, Any]] = {
             "validity_and_approbation",
         },
     },
+    "dissertation-methods-chapter": {
+        "bundle_mode": "manuscript",
+        "literature": "allowed",
+        "own_results": "allowed",
+        "internal_crossref": "required",
+        "organizational": "allowed",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": ["data", "protocol"],
+        "required_structure_types": {"chapter", "section"},
+        "required_output_sections": {
+            "method_scope",
+            "procedure",
+            "data_processing",
+            "quality_control",
+            "chapter_conclusions",
+        },
+    },
     # Produces a normative card, not an evidence bundle. Validated by
     # scripts/validate_normative_card.py.
     "normative-pattern-analysis": {
@@ -818,6 +836,29 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                         errors.append(
                             f"claim[{item.get('claim_id')}]: dissertation proposition "
                             "requires result_ids and a proposition or section unit"
+                        )
+
+            if genre == "dissertation-methods-chapter":
+                for claim_id, item in claims.items():
+                    if item.get("status") not in {"supported", "bounded"}:
+                        continue
+                    if item.get("claim_type") == "structural":
+                        continue
+                    recorded_method_evidence = [
+                        evidence.get(identifier, {})
+                        for identifier in item.get("evidence_ids", [])
+                        if identifier in evidence
+                        and evidence[identifier].get("source_id") in input_scope
+                        and sources.get(evidence[identifier].get("source_id"), {}).get(
+                            "representation"
+                        )
+                        in {"protocol", "data"}
+                    ]
+                    if not recorded_method_evidence and not item.get("result_ids"):
+                        errors.append(
+                            f"claim[{claim_id}]: dissertation-methods-chapter requires "
+                            "protocol/data evidence or an approved result for every "
+                            "supported method statement"
                         )
 
     counts = {
