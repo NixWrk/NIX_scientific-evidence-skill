@@ -157,9 +157,12 @@ than a checklist:
 - an observation the list of kinds does not cover is written as `unnamed` with
   a **proposed name**, so the reader is never confined to the kinds someone
   thought of in advance;
-- a proposed name becomes a kind on **three or more separate locators**. One
-  occurrence is an event, two is a coincidence. Single occurrences stay in the
-  log and are never promoted.
+- a proposed name reaches the promotion review on **three or more independent
+  locators**. One occurrence is an event, two is a coincidence. Three arbitrary
+  slices of one table, bibliography or continuous passage are still one event;
+- promotion also requires a transferable name: if the name cannot be stated
+  without the work's subject, reclassify the records under an existing generic
+  kind. Repetition is necessary for a kind, not sufficient by itself.
 
 The records that earn a promotion keep `kind: "unnamed"`. They are the evidence
 for it, and the validator reports such a name under «уже стало видом» instead
@@ -248,9 +251,72 @@ One more was found on WORK-MALAKHOV-2016-DISS:
   the second review inside chapter 3.* It is an alternative to arguing a method
   through in prose, and it decides what a review chapter looks like.
 
+One more was found while reading WORK-SERGEEV-2004-DISS:
+
+- **`анонс-решения-с-локатором`** — a problem established in the review is
+  immediately paired with the exact later subsection that contains the author's
+  solution. *с. 35, 36, 36: п. 2.8, 4.2 and 3.1.* The move turns a review from
+  background into a route through the subsequent development chapters.
+
+Seven more were found by reading WORK-KIRPICHENKO-2012-DISS end to end:
+
+- **`родословная-научной-школы`** — the work locates itself in a named chain of
+  predecessors and the bibliography carries that chain into identifiable works.
+  *Introduction paragraph 123; bibliography paragraphs 1467, 1492–1495 and
+  1517.* The transferable move is the explicit lineage, not the mere presence
+  of the supervisor's publications.
+- **`прямая-задача-перед-обратной`** — the forward problem establishes how
+  observable quantities depend on model parameters before the inverse problem
+  is used to recover them. *Paragraphs 523–524, 664–671 and 749–753.*
+- **`последовательное-усложнение-модели`** — models are not listed side by side:
+  each new geometry is introduced by the failure or omitted component of the
+  previous one, then the variants are tested in the same order. *Paragraphs
+  532–535, 580–594, 595–607, 1111–1133, 1152–1157, 1212–1219, 1299–1312 and
+  1318–1321.*
+- **`внешний-эталон-верификации`** — a calculated result is repeatedly checked
+  against an independent method, and disagreement is used to reject or revise
+  the model rather than only reported at the end. *Paragraphs 608–610,
+  1013–1014, 1108–1110, 1134–1135, 1282–1284 and 1335–1338.*
+- **`параметр-как-источник-погрешности`** — sensitivity to an input parameter is
+  turned into an explicit source of error and then into a restriction on what
+  the inverse calculation may recover. *Paragraphs 672, 748 and 1092–1093.*
+- **`априорные-параметры-из-визуализации`** — parameters not identifiable from
+  the principal signal are fixed from independent imaging before calculation.
+  *Paragraphs 764–771, 952, 1057–1063 and 1285–1298.*
+- **`бюджет-погрешности-по-источникам`** — the total error is decomposed by
+  physical and procedural sources, each source is perturbed separately, and
+  the final budget returns to those same sources. *Paragraphs 873–875,
+  911–919, 920–932 and 1221–1223.*
+
+Three repeated subject facts were deliberately not promoted. The phase of
+breathing and the interventricular septum belong to this experiment, not to the
+form of a scientific work; three consecutive slices of one bibliography are
+one bibliographic event, not three independent instances. Their observations
+remain in the log under generic kinds.
+
 `дословный-повтор` and `заголовок-из-заголовка` require a `quote`, for the same
 reason `термин` and `оговорка` do: both are observations about wording, and a
 paraphrase destroys the evidence.
+
+### Pass B matrix by author and supervisor
+
+The compact matrix below records the cross-work result. Exact locators and
+work-level evidence are stored in features F013-F021 of
+`work-patterns/PATTERN-SPECIALTY-2.2.12.json`. Sergeev contributes positive
+findings from pages 1-54 only; an absence claim is used only for a work whose
+Pass B reading is complete.
+
+| feature | Shchukin: Tikhomirov, Malakhov, Timokhin, Kirpichenko; Sergeev partial | Muravskaya: Semchuk | Kudashov: Satanenko | interpretation |
+|---|---|---|---|---|
+| F013 formula glossary | all five | present | present | cross-supervisor pattern: seven authors, three supervisors |
+| F014 verbatim repeat | Tikhomirov, Malakhov, Timokhin, Sergeev partial | present | absent | five authors under two supervisors |
+| F015 marketed-product review | Tikhomirov, Timokhin, Kirpichenko, Sergeev partial; absent in Malakhov | absent | present | a recurrent review variant, not a universal school rule |
+| F016 impersonal methodological choice | Tikhomirov, Malakhov | absent | present | cross-supervisor candidate: three authors |
+| F017 mirrored pros/cons lists | Malakhov | present | absent | cross-supervisor review device: two authors |
+| F018 methods as a separate introduction element | Sergeev partial; absent in the four completed works | absent | present | variant independent of period or supervisor |
+| F019 explicit specialty-passport compliance | Tikhomirov, Timokhin, Kirpichenko; absent in Malakhov | absent | absent | partial pattern inside the Shchukin group |
+| F020 explicit scientific-school lineage | Tikhomirov, Kirpichenko, Sergeev partial; Malakhov only implicit | absent | absent | partial Shchukin-group pattern, not yet universal |
+| F021 direct task -> staged complication -> external verification -> error budget | Kirpichenko only | not observed | not observed | transferable author-specific candidate, retained without school-level generalisation |
 
 ### What the second work did to the first work's kinds
 

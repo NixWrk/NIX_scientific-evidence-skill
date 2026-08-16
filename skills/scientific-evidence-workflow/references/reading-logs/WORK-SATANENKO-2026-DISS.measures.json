@@ -1,0 +1,229 @@
+{
+  "reconstruction": {
+    "paragraphs": 1051,
+    "starts_with_capital": 0.94,
+    "ends_with_sentence_punctuation": 0.499
+  },
+  "blocks": {
+    "prose": 1051,
+    "data": 119
+  },
+  "pages": 152,
+  "placement": {
+    "рисунок": {
+      "упоминаний": 33,
+      "подпись не найдена в текстовом слое": 0,
+      "объект есть, проза его не называет": [
+        "1.1",
+        "1.10",
+        "1.11",
+        "1.12",
+        "1.13",
+        "1.14",
+        "1.15",
+        "1.16",
+        "1.17",
+        "1.18",
+        "1.19",
+        "1.2",
+        "1.20",
+        "1.21",
+        "1.22",
+        "1.23",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7",
+        "1.8",
+        "1.9",
+        "2.19",
+        "2.7",
+        "3.1",
+        "3.10",
+        "3.11",
+        "3.3",
+        "3.5",
+        "3.6",
+        "3.7",
+        "3.8",
+        "4.1",
+        "4.2",
+        "4.3",
+        "4.5",
+        "4.6",
+        "4.7",
+        "4.8"
+      ],
+      "положение относительно упоминания": {
+        "ниже на той же странице": 14,
+        "на следующих страницах": 14,
+        "на предыдущих страницах": 2,
+        "выше на той же странице": 3
+      }
+    },
+    "таблица": {
+      "упоминаний": 21,
+      "подпись не найдена в текстовом слое": 0,
+      "объект есть, проза его не называет": [],
+      "положение относительно упоминания": {
+        "ниже на той же странице": 9,
+        "на следующих страницах": 11,
+        "на предыдущих страницах": 1
+      }
+    }
+  },
+  "per_chapter": {
+    "введение": {
+      "paragraphs": 44,
+      "characters": 9716,
+      "hedging": 1,
+      "certainty": 6,
+      "personal": 0,
+      "impersonal": 22,
+      "negative_result": 1,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 3,
+      "citations": 15,
+      "citations_per_1000_chars": 1.54,
+      "median_sentence_length": 141
+    },
+    "глава 1": {
+      "paragraphs": 216,
+      "characters": 54012,
+      "hedging": 30,
+      "certainty": 18,
+      "personal": 0,
+      "impersonal": 62,
+      "negative_result": 1,
+      "comparison_with_others": 7,
+      "boundary_of_applicability": 13,
+      "citations": 112,
+      "citations_per_1000_chars": 2.07,
+      "median_sentence_length": 160
+    },
+    "глава 2": {
+      "paragraphs": 176,
+      "characters": 40877,
+      "hedging": 24,
+      "certainty": 13,
+      "personal": 1,
+      "impersonal": 54,
+      "negative_result": 0,
+      "comparison_with_others": 4,
+      "boundary_of_applicability": 13,
+      "citations": 27,
+      "citations_per_1000_chars": 0.66,
+      "median_sentence_length": 162
+    },
+    "глава 3": {
+      "paragraphs": 74,
+      "characters": 20758,
+      "hedging": 11,
+      "certainty": 4,
+      "personal": 0,
+      "impersonal": 30,
+      "negative_result": 1,
+      "comparison_with_others": 1,
+      "boundary_of_applicability": 6,
+      "citations": 14,
+      "citations_per_1000_chars": 0.67,
+      "median_sentence_length": 154
+    },
+    "глава 4": {
+      "paragraphs": 78,
+      "characters": 16186,
+      "hedging": 16,
+      "certainty": 1,
+      "personal": 0,
+      "impersonal": 30,
+      "negative_result": 0,
+      "comparison_with_others": 1,
+      "boundary_of_applicability": 4,
+      "citations": 8,
+      "citations_per_1000_chars": 0.49,
+      "median_sentence_length": 149
+    },
+    "выводы": {
+      "paragraphs": 7,
+      "characters": 1841,
+      "hedging": 0,
+      "certainty": 0,
+      "personal": 0,
+      "impersonal": 8,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 0,
+      "citations": 0,
+      "citations_per_1000_chars": 0.0,
+      "median_sentence_length": 217
+    },
+    "список литературы": {
+      "paragraphs": 395,
+      "characters": 32697,
+      "hedging": 1,
+      "certainty": 0,
+      "personal": 0,
+      "impersonal": 3,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 0,
+      "citations": 0,
+      "citations_per_1000_chars": 0.0,
+      "median_sentence_length": 75
+    },
+    "приложения": {
+      "paragraphs": 4,
+      "characters": 171,
+      "hedging": 0,
+      "certainty": 0,
+      "personal": 0,
+      "impersonal": 4,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 0,
+      "citations": 0,
+      "citations_per_1000_chars": 0.0,
+      "median_sentence_length": 171
+    },
+    "вне глав": {
+      "paragraphs": 57,
+      "characters": 6818,
+      "hedging": 0,
+      "certainty": 3,
+      "personal": 0,
+      "impersonal": 5,
+      "negative_result": 0,
+      "comparison_with_others": 0,
+      "boundary_of_applicability": 0,
+      "citations": 0,
+      "citations_per_1000_chars": 0.0,
+      "median_sentence_length": 108
+    }
+  },
+  "whole_text": {
+    "characters": 183084,
+    "hedging": 83,
+    "certainty": 45,
+    "personal": 1,
+    "impersonal": 218,
+    "negative_result": 3,
+    "comparison_with_others": 13,
+    "boundary_of_applicability": 39,
+    "citations": 176,
+    "numbers": 1561,
+    "numbers_with_uncertainty": 12,
+    "sample_size_mentions": 6,
+    "decimal_places": {
+      "1": 45,
+      "2": 43,
+      "3": 4
+    },
+    "figure_reference_distance_pages": {
+      "n": 0,
+      "forward": 0,
+      "same_page": 0,
+      "backward": 0
+    }
+  }
+}

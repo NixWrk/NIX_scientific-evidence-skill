@@ -10,8 +10,10 @@ Three rules matter here beyond the shape:
 2. `kind: "unnamed"` is what makes discovery possible — the reader is not
    confined to the kinds someone thought of in advance — but even the unnamed
    must be given a proposed name, or the log fills with shapeless remarks;
-3. a proposed name becomes a kind only on three or more separate locators. One
-   occurrence is an event. Two is a coincidence.
+3. a proposed name reaches promotion review only on three or more independent
+   locators. One occurrence is an event. Two is a coincidence. Admission to
+   `KINDS` additionally records semantic review that the name is transferable
+   rather than subject-specific.
 
 Promotion adds the name to `KINDS` and leaves the records that earned it alone.
 The log is the evidence for the promotion; rewriting those records into the new
@@ -61,6 +63,16 @@ KINDS = (
     "страница-без-прозы",
     # Found by reading Malakhov end to end.
     "плюсы-минусы-списком",
+    # Found in the completed part of the partial Sergeev reading.
+    "анонс-решения-с-локатором",
+    # Found by reading Kirpichenko end to end.
+    "родословная-научной-школы",
+    "прямая-задача-перед-обратной",
+    "последовательное-усложнение-модели",
+    "внешний-эталон-верификации",
+    "параметр-как-источник-погрешности",
+    "априорные-параметры-из-визуализации",
+    "бюджет-погрешности-по-источникам",
     "unnamed",
 )
 # Observations about how something is worded lose their evidence when
@@ -158,7 +170,8 @@ def validate_log(lines: list[str], pages: int | None = None) -> dict[str, Any]:
     proposed: dict[str, list[str]] = defaultdict(list)
     for record in records:
         if record.get("kind") == "unnamed" and _nonempty(record.get("proposed_name")):
-            proposed[record["proposed_name"]].append(f"с. {record.get('page')}")
+            place = f"с. {record['page']}" if isinstance(record.get("page"), int) else record["locator"]
+            proposed[record["proposed_name"]].append(place)
 
     # A promoted name stays in the log under `unnamed`: the records that earned
     # it are the evidence for the promotion, and rewriting them would erase it.

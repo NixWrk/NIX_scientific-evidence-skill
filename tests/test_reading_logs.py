@@ -51,6 +51,16 @@ def test_a_source_without_pages_locates_an_observation_another_way() -> None:
 
     assert report["valid"] is True
 
+def test_a_proposed_name_reports_a_non_page_locator_verbatim() -> None:
+    """A .doc locator must remain usable in the discovery report."""
+
+    report = LOG.validate_log(
+        [line(page=None, locator="раздел 1.2, абзац 14", kind="unnamed", proposed_name="новое")]
+    )
+
+    assert report["ждут доказательств"] == {"новое": ["раздел 1.2, абзац 14"]}
+
+
 
 def test_a_page_that_is_not_a_page_is_still_rejected() -> None:
     """`locator` admits sources without pages; it does not admit nonsense."""
