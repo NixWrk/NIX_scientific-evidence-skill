@@ -142,6 +142,91 @@ Where a work shows a link the frame did not anticipate, add it. The frame is
 the starting hypothesis, and a corpus that only ever confirms its frame has
 taught nobody anything.
 
+## Reading the middle of the chapters
+
+Levels 2 through 5 above can be answered from a table of contents, an
+introduction, chapter conclusions and the seams. That is pass A, and it is
+cheap. It cannot see how an argument is actually built inside a subsection,
+because it never reads one.
+
+Pass B reads a work end to end, every page, and writes one observation per line
+into `references/reading-logs/<work_id>.jsonl`, checked by
+`scripts/validate_reading_log.py`. Two rules make it a discovery pass rather
+than a checklist:
+
+- an observation the list of kinds does not cover is written as `unnamed` with
+  a **proposed name**, so the reader is never confined to the kinds someone
+  thought of in advance;
+- a proposed name becomes a kind on **three or more separate locators**. One
+  occurrence is an event, two is a coincidence. Single occurrences stay in the
+  log and are never promoted.
+
+The records that earn a promotion keep `kind: "unnamed"`. They are the evidence
+for it, and the validator reports such a name under «уже стало видом» instead
+of proposing it again.
+
+### Kinds
+
+The first ten were named in advance. What each looks for:
+
+`открытие-раздела` — what a subsection opens with: a problem, an announcement,
+a continuation of the previous one, a definition. `ход-довода` — what is
+claimed and what supports it. `опора` — what a reference does *here*: supplies
+a fact, a method, a value to compare against, marks a gap, carries a competing
+view. `своё-чужое` — how the boundary between the author's work and other
+people's is marked. `число` — how a numeric result is given: magnitude, unit,
+uncertainty, sample, base of comparison. `иллюстрация` — how a figure or table
+is introduced, what the prose adds beyond the caption, where the object sits
+relative to the sentence naming it. `термин` — where a term is introduced, how
+abbreviated, whether the designation holds. `переход` — the seam between
+subsections, not only between chapters. `оговорка` — where a limit on a
+conclusion sits and how it is worded. `закрытие-раздела` — what a subsection
+ends on.
+
+### Kinds found by reading
+
+Seven more were found on WORK-TIKHOMIROV-2021-DISS, read page by page. Each is
+recorded with the locators that promoted it, so a later reader can check the
+promotion rather than take it:
+
+- **`обзор-по-изделиям`** — a review conducted through commercial products with
+  their manufacturers rather than through publications. *с. 18, 25, 26; every
+  one of the six review subsections ends in a list of marketed devices.* This
+  changes what goes into a review chapter and in what order, which is why it is
+  a kind and not a statistic.
+- **`дословный-повтор`** — a conclusion assembled by copying sentences from the
+  body verbatim, sometimes with a deictic resolved or a verb swapped. *с. 40,
+  52, 59, 71, 92, 93; the chain runs body → chapter conclusions → general
+  conclusions, and a doubled word survives the copy on с. 59.*
+- **`решение-без-лица`** — a methodological choice recorded by an impersonal
+  passive with no agent: «было решено», «принималось», «брались». *с. 33, 35,
+  62, 75.* It marks the boundary between what the object does and what the
+  author decided, which `своё-чужое` does not cover because no one else is
+  involved.
+- **`формула-с-глоссарием`** — how a numbered relation is introduced and what
+  its «где» list covers: which symbols are glossed, whether units appear,
+  whether accuracy or a range of validity is attached. *с. 15, 30, 31, 54, 57.*
+- **`формула-без-функции`** — a numbered relation whose right-hand side is the
+  word `func` with a list of arguments, the function itself never given. *с.
+  38, 69, 70, 81; twice the argument list is cut off by an ellipsis.*
+- **`заголовок-из-заголовка`** — a subsection heading built from the chapter
+  heading rather than naming its own subject. *с. 42, 46, 53; on с. 46 the
+  subsection heading is the chapter heading, differing by one letter.*
+- **`страница-без-прозы`** — a page carrying no running text at all. *с. 1, 3,
+  4, 37, 56, 65, 77, 82, 84, 86–89, 91, 94–96, 100 — eighteen of 102.* It is
+  also what makes coverage auditable: a page with no observation is either
+  unread or has nothing on it, and only this kind tells the two apart.
+
+`дословный-повтор` and `заголовок-из-заголовка` require a `quote`, for the same
+reason `термин` and `оговорка` do: both are observations about wording, and a
+paraphrase destroys the evidence.
+
+Names that stayed single are still in the log and did not become kinds:
+`расхождение-нумерации`, `разнобой-заголовка`, `ссылка-на-изделие`,
+`задача-без-главы`, `сдвоенный-элемент`, `соответствие-паспорту`,
+`грантовая-поддержка`, `анонс-мимо-структуры`, `вывод-предписанием`,
+`цель-внутри-раздела`, `формула-дважды`. A second work may promote them.
+
 ## Confounders
 
 Every card records, or explicitly marks unknown: supervisor, year, council,

@@ -12,6 +12,11 @@ Three rules matter here beyond the shape:
    must be given a proposed name, or the log fills with shapeless remarks;
 3. a proposed name becomes a kind only on three or more separate locators. One
    occurrence is an event. Two is a coincidence.
+
+Promotion adds the name to `KINDS` and leaves the records that earned it alone.
+The log is the evidence for the promotion; rewriting those records into the new
+kind would delete the only record of where it came from. The report therefore
+lists a promoted name under «уже стало видом» rather than proposing it again.
 """
 
 from __future__ import annotations
@@ -45,11 +50,26 @@ KINDS = (
     "переход",
     "оговорка",
     "закрытие-раздела",
+    # Found by reading Tikhomirov end to end; see the kinds section of
+    # `references/work-pattern-memory.md` for the locators that promoted each.
+    "обзор-по-изделиям",
+    "дословный-повтор",
+    "решение-без-лица",
+    "формула-с-глоссарием",
+    "формула-без-функции",
+    "заголовок-из-заголовка",
+    "страница-без-прозы",
     "unnamed",
 )
 # Observations about how something is worded lose their evidence when
 # paraphrased, so they carry the words themselves.
-QUOTE_REQUIRED = {"термин", "оговорка", "своё-чужое"}
+QUOTE_REQUIRED = {
+    "термин",
+    "оговорка",
+    "своё-чужое",
+    "дословный-повтор",
+    "заголовок-из-заголовка",
+}
 PROMOTION_THRESHOLD = 3
 
 LINE_FIELDS = {"section", "page", "kind", "observation", "quote", "proposed_name", "note"}
@@ -128,8 +148,15 @@ def validate_log(lines: list[str], pages: int | None = None) -> dict[str, Any]:
         if record.get("kind") == "unnamed" and _nonempty(record.get("proposed_name")):
             proposed[record["proposed_name"]].append(f"с. {record.get('page')}")
 
-    ready = {name: places for name, places in proposed.items() if len(places) >= PROMOTION_THRESHOLD}
-    waiting = {name: places for name, places in proposed.items() if len(places) < PROMOTION_THRESHOLD}
+    # A promoted name stays in the log under `unnamed`: the records that earned
+    # it are the evidence for the promotion, and rewriting them would erase it.
+    # So the report separates the names already in KINDS from the ones still
+    # arguing for admission, or every finished promotion would be re-proposed
+    # for the rest of the log's life.
+    settled = {name: places for name, places in proposed.items() if name in KINDS}
+    open_names = {name: places for name, places in proposed.items() if name not in KINDS}
+    ready = {name: places for name, places in open_names.items() if len(places) >= PROMOTION_THRESHOLD}
+    waiting = {name: places for name, places in open_names.items() if len(places) < PROMOTION_THRESHOLD}
 
     touched = sorted({r["page"] for r in records if isinstance(r.get("page"), int)})
     coverage: dict[str, Any] = {"страниц с наблюдениями": len(touched)}
@@ -153,6 +180,7 @@ def validate_log(lines: list[str], pages: int | None = None) -> dict[str, Any]:
             "по видам": dict(Counter(r.get("kind") for r in records)),
             "покрытие": coverage,
         },
+        "уже стало видом": settled,
         "готовы стать видом": ready,
         "ждут доказательств": waiting,
     }
