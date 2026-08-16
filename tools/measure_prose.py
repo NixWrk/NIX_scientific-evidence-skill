@@ -130,6 +130,74 @@ def reconstruction_quality(prose: list[str]) -> dict[str, Any]:
     }
 
 
+def placement(path: Path) -> dict[str, Any]:
+    """Where a figure or a table sits relative to the sentence that names it.
+
+    Page distance alone hides the common case: object and mention on one page,
+    where what matters is which comes first. So the vertical position of the
+    caption is compared with that of the naming block, and figures are kept
+    apart from tables — the two are captioned on opposite sides by convention,
+    and whether this work follows that is a question the numbers can answer.
+    """
+
+    import fitz
+
+    document = fitz.open(path)
+    captions: dict[tuple[str, str], tuple[int, float]] = {}
+    mentions: list[tuple[str, str, int, float]] = []
+
+    for index, page in enumerate(document, start=1):
+        for block in page.get_text("blocks"):
+            if block[6] != 0:
+                continue
+            text = " ".join(block[4].split())
+            top = block[1]
+            head = re.match(r"^(Рисунок|Таблица)\s*(\d+(?:\.\d+)?)", text)
+            if head:
+                key = ("рисунок" if head.group(1) == "Рисунок" else "таблица", head.group(2))
+                captions.setdefault(key, (index, top))
+                continue
+            for m in re.finditer(FIGURE_REF, text):
+                mentions.append(("рисунок", m.group(1), index, top))
+            for m in re.finditer(TABLE_REF, text):
+                mentions.append(("таблица", m.group(1), index, top))
+
+    tally: dict[str, Counter] = {"рисунок": Counter(), "таблица": Counter()}
+    unresolved: dict[str, int] = {"рисунок": 0, "таблица": 0}
+    for kind, number, page, top in mentions:
+        anchor = captions.get((kind, number))
+        if anchor is None:
+            unresolved[kind] += 1
+            continue
+        caption_page, caption_top = anchor
+        if caption_page > page:
+            tally[kind]["на следующих страницах"] += 1
+        elif caption_page < page:
+            tally[kind]["на предыдущих страницах"] += 1
+        elif caption_top > top:
+            tally[kind]["ниже на той же странице"] += 1
+        else:
+            tally[kind]["выше на той же странице"] += 1
+
+    # Two silences worth separating. A mention whose object has no caption in
+    # the text layer is a limit of the file — some captions are drawn inside
+    # the picture. A caption nothing ever names is a property of the work.
+    named = {(kind, number) for kind, number, _, _ in mentions}
+    never_named = sorted(
+        (kind, number) for (kind, number) in captions if (kind, number) not in named
+    )
+
+    return {
+        kind: {
+            "упоминаний": sum(tally[kind].values()) + unresolved[kind],
+            "подпись не найдена в текстовом слое": unresolved[kind],
+            "объект есть, проза его не называет": [n for k, n in never_named if k == kind],
+            "положение относительно упоминания": dict(tally[kind]),
+        }
+        for kind in tally
+    }
+
+
 def chapter_of(page: int, bounds: dict[str, list[int]]) -> str:
     for name, (first, last) in bounds.items():
         if first <= page <= last:
@@ -189,6 +257,7 @@ def measure(path: Path, bounds: dict[str, list[int]]) -> dict[str, Any]:
         "reconstruction": reconstruction_quality([b["text"] for b in prose]),
         "blocks": {"prose": len(prose), "data": len(data)},
         "pages": max((b["page"] for b in blocks), default=0),
+        "placement": placement(path),
         "per_chapter": per_chapter,
         "whole_text": {
             "characters": len(whole),
