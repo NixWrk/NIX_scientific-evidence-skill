@@ -94,6 +94,25 @@ no document and is the clearest case where practice is the only source.*
 Levels 2 through 5 are the reason for doing this at all. Levels 1 and 6 mostly
 confirm what cards already establish.
 
+## Signal against statistics
+
+Level 6 produces findings easily and they are almost always worthless. Whether
+a work writes «Выводы к главе» or «Выводы по главе», whether the novelty is
+bulleted or numbered, whether a table caption takes a full stop — these split
+the corpus cleanly, and a clean split is seductive. It is still only a
+statistic.
+
+The test is whether the observation would change how a work is **written**. A
+review chapter titled after the system being built rather than after the field
+surveyed changes what goes in it, in what order, and what it must end on; that
+transfers to any subject and belongs in a skill. A preposition in a heading
+changes nothing and belongs in `practice`, where it can be looked up if anyone
+ever needs it.
+
+Record level 6 anyway — it is cheap, and an absent record cannot be consulted
+later. But do not let it into the aggregate as a feature, and do not report it
+as a finding. A pattern earns that word by constraining the writing.
+
 ## The expected arc is a hypothesis, and it lives in data
 
 Someone who knows the field can say in advance roughly how such a work runs —
