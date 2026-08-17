@@ -76,9 +76,10 @@ def _normalise_text(value: str) -> str:
 
 @dataclass(frozen=True)
 class _Paragraph:
-    """A paragraph text fragment visible before the first explicit break."""
+    """A paragraph fragment before the first explicit page boundary."""
 
     text: str
+    anchor_text: str
     element: etree._Element
 
 
@@ -102,12 +103,17 @@ def _ancestor_paragraph(node: etree._Element) -> etree._Element | None:
     return None
 
 
-def _paragraph_text(paragraph: etree._Element) -> str:
+def _paragraph_anchor_text(paragraph: etree._Element) -> str:
+    """Match the Word review adapter's concatenation of actual text nodes."""
+
     return "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
 
 
 def _all_paragraph_texts(root: etree._Element) -> tuple[str, ...]:
-    return tuple(_paragraph_text(paragraph) for paragraph in root.xpath(".//w:p", namespaces=NS))
+    return tuple(
+        _paragraph_anchor_text(paragraph)
+        for paragraph in root.xpath(".//w:p", namespaces=NS)
+    )
 
 
 def _page_scope(root: etree._Element) -> _PageScope:
@@ -134,17 +140,29 @@ def _page_scope(root: etree._Element) -> _PageScope:
             boundary = True
             break
         if node.tag == _w("p"):
-            record = {"element": node, "parts": []}
+            record = {"element": node, "parts": [], "anchor_parts": []}
             records.append(record)
             by_element[id(node)] = record
             continue
-        if node.tag == _w("t") and not boundary:
+        if node.tag in {_w("t"), _w("tab"), _w("br")} and not boundary:
             paragraph = _ancestor_paragraph(node)
             if paragraph is not None and id(paragraph) in by_element:
-                by_element[id(paragraph)]["parts"].append(node.text or "")
+                record = by_element[id(paragraph)]
+                if node.tag == _w("t"):
+                    value = node.text or ""
+                    record["parts"].append(value)
+                    record["anchor_parts"].append(value)
+                else:
+                    # Line breaks and tabs separate visible words, but are not
+                    # part of an exact-text anchor used by apply_word_review.
+                    record["parts"].append(" ")
 
     visible = tuple(
-        _Paragraph("".join(record["parts"]), record["element"])
+        _Paragraph(
+            "".join(record["parts"]),
+            "".join(record["anchor_parts"]),
+            record["element"],
+        )
         for record in records
     )
     return _PageScope(
@@ -179,7 +197,7 @@ def _anchor(scope: _PageScope) -> tuple[str, int] | None:
 
     candidates: list[str] = []
     for paragraph in scope.paragraphs:
-        raw = paragraph.text
+        raw = paragraph.anchor_text
         if raw.strip():
             candidates.append(raw)
 
@@ -238,13 +256,20 @@ def _required_fields(payload: Mapping[str, Any]) -> tuple[_RequiredField, ...]:
     ]
     for index, supervisor in enumerate(payload["supervisors"], start=1):
         role = str(supervisor["role"])
-        fields.append(
-            _RequiredField(
-                f"supervisor_{index}",
-                f"ФИО, учёная степень и звание ({role})",
-                str(supervisor["display"]),
+        # The generator stores a structured person's display as comma-separated
+        # components. GOST requires the facts, not this local presentation order,
+        # so the critic checks each component independently.
+        components = [part.strip() for part in str(supervisor["display"]).split(",") if part.strip()]
+        component_labels = ("ФИО", "учёная степень", "учёное звание", "должность")
+        for component_index, component in enumerate(components, start=1):
+            label = component_labels[min(component_index - 1, len(component_labels) - 1)]
+            fields.append(
+                _RequiredField(
+                    f"supervisor_{index}_{component_index}",
+                    f"{label} ({role})",
+                    component,
+                )
             )
-        )
     fields.extend(
         (
             _RequiredField("place", "место написания", str(payload["city"])),

@@ -1,0 +1,29 @@
+{
+  "journal_sha256": "ad73542f645a88379a19fc85c14c841b79a89869c00580e769b6033841fdca6a",
+  "counts": {
+    "findings": 6,
+    "normative_violation": 4,
+    "recommendation": 1,
+    "evidence_gap": 1
+  },
+  "adjudication": [
+    {
+      "issue_ids": [
+        "TITLE-REQ-007-001",
+        "TITLE-REQ-007-002",
+        "TITLE-REQ-007-003",
+        "TITLE-REQ-007-004"
+      ],
+      "verdict": "rejected",
+      "reason": "Visible Word line breaks were concatenated without whitespace, and supervisor components were incorrectly required in generator display order. Rendered page 1 shows all four fact groups."
+    },
+    {
+      "issue_ids": [
+        "TOC-FIELD-001",
+        "TOC-SOURCE-CACHE-001"
+      ],
+      "verdict": "accepted",
+      "reason": "The document has a manual contents representation, no real TOC field, and therefore no refreshed cache; neither finding is classified as a normative violation."
+    }
+  ]
+}

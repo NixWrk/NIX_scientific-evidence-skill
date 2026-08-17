@@ -143,6 +143,23 @@ def test_no_field_is_only_a_non_normative_recommendation(tmp_path: Path) -> None
     assert field_finding["word_action"] == "none"
 
 
+def test_unique_manual_toc_title_anchors_non_normative_field_recommendation(tmp_path: Path) -> None:
+    source = tmp_path / "manual-toc.docx"
+    _write_docx(
+        source,
+        headings=[("ОГЛАВЛЕНИЕ", "Normal"), ("Введение", "Heading1")],
+        cached=None,
+        field=False,
+    )
+
+    findings = toc_audit.audit(source)
+    item = next(finding for finding in findings if finding["rule_id"] == toc_audit.RULE_FIELD)
+    assert item["issue_class"] == "recommendation"
+    assert item["authority_ids"] == []
+    assert item["word_action"] == "comment"
+    assert item["locator"] == {"kind": "text", "exact_text": "ОГЛАВЛЕНИЕ", "occurrence": 1}
+
+
 def test_no_styles_and_no_cached_result_are_not_assessed(tmp_path: Path) -> None:
     source = tmp_path / "not-assessed.docx"
     _write_docx(

@@ -161,6 +161,21 @@ def _simple_toc_fields(document_root) -> Iterable[dict]:
         }
 
 
+def _toc_title_anchor(document_root) -> tuple[str, int] | None:
+    """Return a unique visible TOC-title word safe for the Word adapter."""
+
+    matches: list[str] = []
+    pattern = re.compile(r"^(оглавление|содержание)(?:\s*стр\.?)?$", re.IGNORECASE)
+    for paragraph in _body_paragraphs(document_root):
+        visible = _normalise(_text_from_paragraph(paragraph))
+        match = pattern.fullmatch(visible)
+        if match:
+            matches.append(match.group(1))
+    if len(matches) == 1:
+        return matches[0], 1
+    return None
+
+
 def _toc_fields(document_root) -> list[dict]:
     fields = [
         field
@@ -212,6 +227,7 @@ def audit(docx_path: str | Path) -> list[dict]:
     if not fields:
         # A missing field is a technical recommendation, not a GOST
         # violation.  Without it there is also no cached result to compare.
+        toc_anchor = _toc_title_anchor(document_root)
         findings.append(
             finding(
                 "TOC-FIELD-001",
@@ -219,13 +235,15 @@ def audit(docx_path: str | Path) -> list[dict]:
                 MODULE,
                 {"toc_field_count": 0},
                 "a real Word TOC field is present when automatic refresh is required",
+                exact_text=toc_anchor[0] if toc_anchor else None,
+                occurrence=toc_anchor[1] if toc_anchor else 1,
                 severity="note",
                 issue_class="recommendation",
                 suggested_fix=(
                     "При необходимости автоматического обновления вставить настоящее поле TOC; "
                     "само отсутствие поля не является нарушением ГОСТ."
                 ),
-                word_action="none",
+                word_action="comment" if toc_anchor else "none",
             )
         )
         findings.append(

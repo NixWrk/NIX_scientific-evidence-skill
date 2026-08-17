@@ -1,0 +1,23 @@
+{
+  "experiment_id": "EXP-0029",
+  "title": "Title page and Word TOC critic forward test",
+  "standard": "PSES-DISS-001/0.2.0",
+  "stage": "holdout_then_regression",
+  "run_date": "2026-08-17",
+  "frozen_before_exposure": {
+    "commit": "90237f9",
+    "implementation_changed_after_exposure": true
+  },
+  "blind_policy": {
+    "work_used_in_pattern_memory": false,
+    "prior_experiment_outputs_available_to_critic": false,
+    "source_file_modified": false,
+    "independent_agent": "gpt-5.6-luna/max"
+  },
+  "modules": [
+    "title-page-critic",
+    "dissertation-word-toc",
+    "word-review-adapter"
+  ],
+  "status": "complete_with_post_holdout_fix"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "PSES-DISS-001/v1",
+  "findings": [
+    {
+      "issue_id": "TOC-FIELD-001",
+      "rule_id": "DISS-TOC-FIELD-001",
+      "module": "dissertation-word-toc",
+      "severity": "note",
+      "issue_class": "recommendation",
+      "locator": {
+        "kind": "text",
+        "exact_text": "ОГЛАВЛЕНИЕ",
+        "occurrence": 1
+      },
+      "observed": {
+        "toc_field_count": 0
+      },
+      "expected": "a real Word TOC field is present when automatic refresh is required",
+      "authority_ids": [],
+      "evidence_ids": [],
+      "suggested_fix": "При необходимости автоматического обновления вставить настоящее поле TOC; само отсутствие поля не является нарушением ГОСТ.",
+      "confidence": 1.0,
+      "autofix_safe": false,
+      "word_action": "comment"
+    },
+    {
+      "issue_id": "TOC-SOURCE-CACHE-001",
+      "rule_id": "DISS-TOC-SOURCE-QUALITY-001",
+      "module": "dissertation-word-toc",
+      "severity": "note",
+      "issue_class": "evidence_gap",
+      "locator": null,
+      "observed": {
+        "toc_field_count": 0,
+        "cached_result_present": false
+      },
+      "expected": "a non-empty cached result from an externally refreshed Word TOC field",
+      "authority_ids": [],
+      "evidence_ids": [],
+      "suggested_fix": "Вставить и обновить настоящее поле оглавления в Word перед проверкой его согласованности с заголовками. Номера страниц не проверяются.",
+      "confidence": 1.0,
+      "autofix_safe": false,
+      "word_action": "none"
+    }
+  ]
+}

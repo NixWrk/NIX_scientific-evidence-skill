@@ -1,0 +1,11 @@
+{
+  "valid": true,
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "findings": 2,
+    "valid_findings": 2,
+    "errors": 0,
+    "warnings": 0
+  }
+}

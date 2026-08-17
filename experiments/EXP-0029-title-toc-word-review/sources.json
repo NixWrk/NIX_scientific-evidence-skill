@@ -1,0 +1,17 @@
+{
+  "sources": [
+    {
+      "source_id": "HOLDOUT-BELYAEV-1996",
+      "title": "Беляев К. Р. Биотехническая система для диагностики и биосинхронизированной электромагнитной терапии сердечно-сосудистой системы",
+      "zotero_storage_key": "7BGQ5R47",
+      "original_format": "doc",
+      "original_sha256": "5f82a7506473c75e32fe2f029c026c959805f123e02b60c5c6bd81a4b19d9c18",
+      "converted_docx_sha256": "63a1769a5541fd901c4d7a01e8885873021c177c9ac14951db2053a60fcff803",
+      "reviewed_docx_sha256": "7fba77338d194fc34dcccd76a60d87adce9168a823f8cc30dd0ca3a953a74866",
+      "rendered_pages": 152,
+      "previously_used": false,
+      "title_fact_source": "self_derived_from_visible_first_page",
+      "source_modified": false
+    }
+  ]
+}

@@ -82,12 +82,15 @@ verdicts:
       - visual_docx_render_requires_available_office_engine
       - title_page_requires_resolved_authorities_and_complete_credentials
       - existing_title_page_critic_requires_explicit_first_page_boundary
+      - title_page_critic_separates_layout_whitespace_from_exact_word_anchors
+      - supervisor_fact_presence_is_order_independent_without_local_rule
       - final_toc_uses_word_heading_styles_and_refreshed_field
       - existing_toc_critic_respects_field_range_and_avoids_page_number_claims
       - corrupt_text_layer_gates_dependent_critic_checks
-    experiment: EXP-0028
-    prior_static_experiment: EXP-0027
-    next_action: extend_record_type_validators_and_run_fresh_holdout
+    experiment: EXP-0029
+    prior_static_experiment: EXP-0028
+    experiments: [EXP-0027, EXP-0028, EXP-0029]
+    next_action: run_modern_title_toc_holdout_with_external_fact_sheet
 
   - id: literature-triage-matrix
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix

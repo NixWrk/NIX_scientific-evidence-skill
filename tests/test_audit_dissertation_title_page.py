@@ -37,11 +37,15 @@ def _xml(root: etree._Element) -> bytes:
 
 def _paragraph(body: etree._Element, text: str = "", *, page_break: bool = False) -> None:
     paragraph = etree.SubElement(body, _w("p"))
-    run = etree.SubElement(paragraph, _w("r"))
-    if text:
+    parts = text.split("\n") if text else []
+    for index, part in enumerate(parts):
+        run = etree.SubElement(paragraph, _w("r"))
+        if index:
+            etree.SubElement(run, _w("br"))
         text_node = etree.SubElement(run, _w("t"))
-        text_node.text = text
+        text_node.text = part
     if page_break:
+        run = etree.SubElement(paragraph, _w("r"))
         br = etree.SubElement(run, _w("br"))
         br.set(_w("type"), "page")
 
@@ -52,6 +56,7 @@ def _minimal_docx(
     omit: set[str] | None = None,
     page_break: bool = True,
     signature: bool = False,
+    split_layout: bool = False,
 ) -> None:
     omitted = omit or set()
     document = etree.Element(_w("document"), nsmap={"w": W_NS})
@@ -67,6 +72,11 @@ def _minimal_docx(
         "signature": "Подпись соискателя: ____________",
         "place_year": "Москва, 2026",
     }
+    if split_layout:
+        values["organization"] = "МГТУ им. Н. Э.\nБаумана"
+        values["title"] = "Контроль параметров\nмедицинской системы"
+        values["specialty"] = "Шифр и наименование специальности: 2.2.12 — Приборы, системы и изделия\nмедицинского назначения"
+        values["supervisor"] = "кандидат технических наук,\nдоцент, Иванов Иван Иванович"
     for key in ("status", "organization", "author", "title", "specialty", "degree", "supervisor"):
         if key not in omitted:
             _paragraph(body, values[key])
@@ -154,6 +164,13 @@ def test_clean_title_page_has_no_findings_and_source_is_unchanged(tmp_path: Path
 
     assert findings == []
     assert source.read_bytes() == before
+
+
+def test_line_breaks_and_supervisor_component_order_do_not_create_false_violations(tmp_path: Path) -> None:
+    source = tmp_path / "split-layout.docx"
+    _minimal_docx(source, split_layout=True)
+
+    assert title_page_audit.audit_title_page(source, _payload()) == []
 
 
 def test_missing_required_field_is_normative_comment_with_unique_anchor(tmp_path: Path) -> None:

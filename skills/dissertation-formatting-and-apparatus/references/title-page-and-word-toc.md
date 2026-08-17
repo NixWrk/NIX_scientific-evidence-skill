@@ -26,7 +26,11 @@ auditor checks only the text before an explicit Word page boundary. If neither
 `w:br type=page` nor `w:lastRenderedPageBreak` proves that boundary, it returns
 a source-quality recommendation and does not convert absent text into a
 normative violation. It does not infer layout, field order, or typography from
-the standard.
+the standard. Visible line breaks and tabs are whitespace for fact-presence
+comparisons, while exact Word anchors retain the real text-node sequence.
+Supervisor and consultant name, degree, title, and optional position are
+checked as components; their display order is not normative unless a selected
+local authority explicitly makes it so.
 
 ## Final Word TOC
 
