@@ -1,0 +1,30 @@
+{
+  "experiment_id": "EXP-0030",
+  "date": "2026-08-17",
+  "kind": "fresh-agent-forward-test",
+  "skill": "candidate-dissertation-workflow",
+  "input": "input/project.json",
+  "agent_output": "output/agent-report.md",
+  "blindness": {
+    "fresh_context": true,
+    "gold_supplied_to_agent": false,
+    "repository_write_allowed": false
+  },
+  "checks": {
+    "manifest_validated": "pass",
+    "one_primary_stage_selected": "pass",
+    "correct_child_skill_mode_genre": "pass",
+    "missing_approved_results_blocks_drafting": "pass",
+    "protocol_not_promoted_to_result": "pass",
+    "independent_approbation_gap_detected": "pass",
+    "downstream_dependencies_reported": "pass",
+    "not_assessed_preserved": "pass",
+    "scientific_data_invented": "pass"
+  },
+  "overall": "pass",
+  "limitations": [
+    "One holdout state was tested.",
+    "No live Zotero acquisition, DOCX generation, Word open-save, or visual rendering was in scope.",
+    "The test evaluates routing and stop behavior, not scientific truth."
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: scientific-evidence-workflow
-description: Process only user-supplied scientific publications and research results into source-traceable Q&A, literature reviews, manuscript text, dissertation outlines, candidate-dissertation introductions, and methods chapters. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or draft a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
+description: Process only user-supplied scientific publications and research records into source-traceable Q&A, literature reviews, manuscript text, and the scientific genres of a Russian candidate dissertation, including outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, and synopsis. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or generate or criticise a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
 ---
 
 # Scientific Evidence Workflow
@@ -67,6 +67,27 @@ reference:
 - `dissertation-methods-chapter`: a reproducible account of objects, procedures,
   processing, and quality control from protocol/data records —
   `references/genres/dissertation-methods-chapter.md`, mode `manuscript`.
+- `dissertation-results-chapter`: task-ordered reporting from approved result
+  records without literature or invented interpretation —
+  `references/genres/dissertation-results-chapter.md`, mode `manuscript`.
+- `dissertation-synthesis-chapter`: bounded interpretation and comparison of
+  approved results with a frozen literature corpus —
+  `references/genres/dissertation-synthesis-chapter.md`, mode `manuscript`.
+- `dissertation-conclusion`: task-linked closure without a new result, source,
+  method, or stronger claim — `references/genres/dissertation-conclusion.md`,
+  mode `manuscript`.
+- `defense-propositions`: numbered falsifiable assertions anchored to approved
+  results and dissertation sections — `references/genres/defense-propositions.md`,
+  mode `manuscript`.
+- `novelty-statement`: corpus-bounded novelty plus distinct theoretical and
+  practical significance anchored to own results —
+  `references/genres/novelty-statement.md`, mode `manuscript`.
+- `thesis-synopsis`: a claim-preserving compression of a frozen dissertation
+  with verified author works — `references/genres/thesis-synopsis.md`, mode
+  `manuscript`.
+- `approbation-record`: verified conferences, publications, registrations, and
+  implementation acts that remain organizational rather than scientific
+  evidence — `references/genres/approbation-record.md`, mode `record`.
 - `normative-pattern-analysis`: one normative document turned into a card —
   `references/genres/normative-pattern-analysis.md`. This genre produces a card
   rather than an evidence bundle and is validated by
@@ -185,6 +206,16 @@ For `dissertation-literature-review-chapter`, freeze the corpus before synthesis
 retain conflicts, and require every research-gap claim to name its boundary.
 For `dissertation-methods-chapter`, require protocol/data records, keep all five
 control sections addressable, and never reconstruct a procedure from results.
+For `dissertation-results-chapter`, use only approved result records and keep
+observation distinct from interpretation. For `dissertation-synthesis-chapter`,
+require both approved results and frozen literature, test comparability, and
+retain conflicts and limits. For `dissertation-conclusion`, close every task
+without adding a result or source. For `defense-propositions`, require an
+atomic falsifiable assertion with result and structure anchors. For
+`novelty-statement`, bound every priority claim to the actual corpus and own
+result. For `thesis-synopsis`, map every claim back to the frozen dissertation.
+For `approbation-record`, verify organizational facts without promoting them to
+scientific support.
 
 ### 6. Run the evidence gate
 
@@ -251,6 +282,17 @@ Stop and request input instead of guessing when:
 - the requested claim lacks supplied evidence;
 - a manuscript Results value lacks an approved result record;
 - Methods lacks a protocol or record of what was actually done;
+- a Results claim lacks an approved result record or a complete numeric
+  boundary;
+- synthesis lacks either approved results or a frozen comparable literature
+  corpus;
+- a conclusion introduces a claim, result, method, or recommendation absent
+  from the approved ledgers;
+- a proposition lacks a falsifiable predicate, approved result, or dissertation
+  section anchor;
+- novelty lacks a bounded literature corpus or own-result anchor;
+- a synopsis source dissertation is not frozen or contains an unmatched claim;
+- an approbation fact lacks an organizational record;
 - source versions conflict and no authoritative version is identified;
 - a full systematic-review claim lacks real search and screening provenance;
 - the requested action would create research plans or publication strategy

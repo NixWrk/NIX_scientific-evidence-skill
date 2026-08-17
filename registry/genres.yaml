@@ -367,7 +367,8 @@ genres:
 
   - id: dissertation
     family: qualification
-    status: new
+    status: existing
+    implemented_in: candidate-dissertation-workflow
     normativity: mandated
     depth: document
     purpose: obtain_qualification
@@ -476,8 +477,12 @@ genres:
   - id: dissertation-results-chapter
     family: qualification
     parent: dissertation
-    status: new
-    normativity: mandated
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 1, max: null}
+    source_representations: null
+    normativity: conventional
     depth: chapter
     purpose: obtain_qualification
     audience: [council, opponent]
@@ -486,12 +491,17 @@ genres:
     invariants: [INV-NUMBER-RESULT, INV-FIGURE-SOURCE, INV-CROSSREF-RESOLVABLE, INV-TASK-CONCLUSION-COVERAGE]
     render_targets: [docx, obsidian]
     language_profile: genre-dissertation
+    notes: Отдельная глава результатов и её внутренний порядок не предписаны ГОСТ; обязательна прослеживаемость содержания основной части к утверждённым результатам.
 
   - id: dissertation-synthesis-chapter
     family: qualification
     parent: dissertation
-    status: new
-    normativity: mandated
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 1, max: null}
+    source_representations: null
+    normativity: conventional
     depth: chapter
     purpose: obtain_qualification
     audience: [council, opponent]
@@ -500,11 +510,16 @@ genres:
     invariants: [INV-CROSSREF-RESOLVABLE, INV-NUMBER-RESULT, INV-TERM-CONSISTENCY]
     render_targets: [docx, obsidian]
     language_profile: genre-dissertation
+    notes: Отдельная глава синтеза или обсуждения не предписана ГОСТ; жанр является конвенциональной архитектурой сопоставления результатов с литературой.
 
   - id: dissertation-conclusion
     family: qualification
     parent: dissertation
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 1, max: null}
+    source_representations: null
     normativity: mandated
     depth: chapter
     purpose: obtain_qualification
@@ -518,7 +533,11 @@ genres:
   - id: defense-propositions
     family: qualification
     parent: dissertation
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 1, max: null}
+    source_representations: null
     normativity: mandated
     depth: paragraph
     purpose: obtain_qualification
@@ -533,7 +552,11 @@ genres:
   - id: novelty-statement
     family: qualification
     parent: dissertation
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 1, max: null}
+    source_representations: null
     normativity: mandated
     depth: paragraph
     purpose: obtain_qualification
@@ -547,7 +570,11 @@ genres:
   - id: thesis-synopsis
     family: qualification
     parent: dissertation
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: manuscript
+    source_count: {min: 1, max: null}
+    source_representations: [organizational]
     normativity: mandated
     depth: document
     purpose: obtain_qualification
@@ -562,7 +589,11 @@ genres:
   - id: approbation-record
     family: qualification
     parent: dissertation
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: record
+    source_count: {min: 1, max: null}
+    source_representations: [organizational]
     normativity: mandated
     depth: section
     purpose: obtain_qualification
@@ -723,7 +754,8 @@ genres:
 
   - id: dissertation-apparatus
     family: format
-    status: new
+    status: existing
+    implemented_in: dissertation-formatting-and-apparatus
     normativity: mandated
     depth: document
     purpose: record_format
@@ -733,12 +765,13 @@ genres:
     invariants: [INV-TOC-STRUCTURE, INV-ABBREVIATION-CLOSED, INV-GLOSSARY-CONSISTENT, INV-CITATION-RESOLVABLE, INV-BIBLIOGRAPHY-PROFILE, INV-APPARATUS-CROSSREF, INV-WORD-REVIEW-TRACEABLE]
     render_targets: [docx, plain]
     language_profile: genre-dissertation
-    notes: Планируемый отдельный скилл оформления поверх научно выверенного текста.
+    notes: Отдельный скилл оформления поверх научно выверенного текста; нормативные и внутренние замечания не смешиваются.
 
   - id: dissertation-title-page
     family: format
     parent: dissertation-apparatus
-    status: new
+    status: existing
+    implemented_in: dissertation-formatting-and-apparatus
     normativity: mandated
     depth: section
     purpose: record_format
@@ -752,7 +785,8 @@ genres:
   - id: dissertation-rendered-toc
     family: format
     parent: dissertation-apparatus
-    status: new
+    status: existing
+    implemented_in: dissertation-formatting-and-apparatus
     normativity: mandated
     depth: section
     purpose: record_format
@@ -766,7 +800,8 @@ genres:
   - id: dissertation-abbreviations-list
     family: format
     parent: dissertation-apparatus
-    status: new
+    status: existing
+    implemented_in: dissertation-formatting-and-apparatus
     normativity: mandated
     depth: section
     purpose: record_format
@@ -781,7 +816,8 @@ genres:
   - id: dissertation-terminology-glossary
     family: format
     parent: dissertation-apparatus
-    status: new
+    status: existing
+    implemented_in: dissertation-formatting-and-apparatus
     normativity: mandated
     depth: section
     purpose: record_format
@@ -796,7 +832,8 @@ genres:
   - id: dissertation-bibliography
     family: format
     parent: dissertation-apparatus
-    status: new
+    status: existing
+    implemented_in: dissertation-formatting-and-apparatus
     normativity: mandated
     depth: section
     purpose: record_format
@@ -813,7 +850,8 @@ genres:
   - id: dissertation-illustration-list
     family: format
     parent: dissertation-apparatus
-    status: new
+    status: existing
+    implemented_in: dissertation-formatting-and-apparatus
     normativity: mandated
     depth: section
     purpose: record_format
@@ -828,7 +866,8 @@ genres:
   - id: dissertation-appendix-register
     family: format
     parent: dissertation-apparatus
-    status: new
+    status: existing
+    implemented_in: dissertation-formatting-and-apparatus
     normativity: mandated
     depth: section
     purpose: record_format

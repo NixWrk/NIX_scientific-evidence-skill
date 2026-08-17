@@ -207,6 +207,180 @@ GENRES: dict[str, dict[str, Any]] = {
             "chapter_conclusions",
         },
     },
+    "dissertation-results-chapter": {
+        "bundle_mode": "manuscript",
+        "literature": "forbidden",
+        "own_results": "required",
+        "internal_crossref": "required",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": None,
+        "required_structure_types": {"chapter", "section"},
+        "required_output_sections": {
+            "result_scope",
+            "reported_results",
+            "negative_results",
+            "result_traceability",
+            "chapter_conclusions",
+        },
+        "allowed_output_sections": {
+            "result_scope",
+            "reported_results",
+            "negative_results",
+            "result_traceability",
+            "chapter_conclusions",
+        },
+    },
+    "dissertation-synthesis-chapter": {
+        "bundle_mode": "manuscript",
+        "literature": "required",
+        "own_results": "required",
+        "internal_crossref": "required",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": None,
+        "required_structure_types": {"chapter", "section"},
+        "required_output_sections": {
+            "synthesis_scope",
+            "result_interpretation",
+            "literature_comparison",
+            "conflicts_and_explanations",
+            "limitations",
+            "chapter_conclusions",
+        },
+        "allowed_output_sections": {
+            "synthesis_scope",
+            "result_interpretation",
+            "literature_comparison",
+            "conflicts_and_explanations",
+            "limitations",
+            "chapter_conclusions",
+        },
+    },
+    "dissertation-conclusion": {
+        "bundle_mode": "manuscript",
+        "literature": "forbidden",
+        "own_results": "required",
+        "internal_crossref": "required",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": None,
+        "required_structure_types": {"task", "conclusion"},
+        "required_output_sections": {
+            "conclusion_scope",
+            "task_conclusions",
+            "practical_recommendations",
+            "future_work",
+            "aim_closure",
+        },
+        "allowed_output_sections": {
+            "conclusion_scope",
+            "task_conclusions",
+            "practical_recommendations",
+            "future_work",
+            "aim_closure",
+        },
+    },
+    "defense-propositions": {
+        "bundle_mode": "manuscript",
+        "literature": "forbidden",
+        "own_results": "required",
+        "internal_crossref": "required",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": None,
+        "required_structure_types": {"proposition"},
+        "required_output_sections": {
+            "proposition_statement",
+            "proposition_boundary",
+            "proposition_result_anchor",
+            "proposition_section_anchor",
+        },
+        "allowed_output_sections": {
+            "proposition_statement",
+            "proposition_boundary",
+            "proposition_result_anchor",
+            "proposition_section_anchor",
+        },
+    },
+    "novelty-statement": {
+        "bundle_mode": "manuscript",
+        "literature": "required",
+        "own_results": "required",
+        "internal_crossref": "required",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": None,
+        "required_output_sections": {
+            "novelty_boundary",
+            "novelty_claim",
+            "theoretical_significance",
+            "practical_significance",
+            "novelty_traceability",
+        },
+        "allowed_output_sections": {
+            "novelty_boundary",
+            "novelty_claim",
+            "theoretical_significance",
+            "practical_significance",
+            "novelty_traceability",
+        },
+    },
+    "thesis-synopsis": {
+        "bundle_mode": "manuscript",
+        "literature": "allowed",
+        "own_results": "required",
+        "internal_crossref": "required",
+        "organizational": "required",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": ["organizational"],
+        "required_output_sections": {
+            "synopsis_scope",
+            "general_characteristics",
+            "main_content",
+            "synopsis_conclusion",
+            "author_publications",
+            "synopsis_traceability",
+        },
+        "allowed_output_sections": {
+            "synopsis_scope",
+            "general_characteristics",
+            "main_content",
+            "synopsis_conclusion",
+            "author_publications",
+            "synopsis_traceability",
+        },
+    },
+    "approbation-record": {
+        "bundle_mode": "record",
+        "literature": "forbidden",
+        "own_results": "forbidden",
+        "internal_crossref": "allowed",
+        "organizational": "required",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": ["organizational"],
+        "required_output_sections": {
+            "conference_reports",
+            "publication_records",
+            "registration_records",
+            "implementation_records",
+            "approbation_crossrefs",
+        },
+        "allowed_output_sections": {
+            "conference_reports",
+            "publication_records",
+            "registration_records",
+            "implementation_records",
+            "approbation_crossrefs",
+        },
+    },
     # Produces a normative card, not an evidence bundle. Validated by
     # scripts/validate_normative_card.py.
     "normative-pattern-analysis": {
@@ -811,6 +985,218 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                 errors.append(
                     f"bundle.claims: {genre!r} requires output_section {section!r}"
                 )
+
+            allowed_sections = rules.get("allowed_output_sections")
+            if allowed_sections is not None:
+                for claim_id, item in claims.items():
+                    section = item.get("output_section")
+                    if section not in allowed_sections:
+                        errors.append(
+                            f"claim[{claim_id}].output_section: {genre!r} does not define "
+                            f"section {section!r}; expected one of {sorted(allowed_sections)}"
+                        )
+
+            # These dissertation genres exclude administrative records from
+            # their scientific input. This is checked only where the source
+            # representation makes the exclusion directly observable.
+            if genre in {
+                "dissertation-results-chapter",
+                "dissertation-synthesis-chapter",
+                "dissertation-conclusion",
+                "defense-propositions",
+                "novelty-statement",
+            }:
+                for source_id in input_scope:
+                    if sources.get(source_id, {}).get("representation") == "organizational":
+                        errors.append(
+                            f"source[{source_id}].representation: {genre!r} forbids "
+                            "organizational input"
+                        )
+                for evidence_id, item in evidence.items():
+                    source = sources.get(item.get("source_id"), {})
+                    if source.get("representation") == "organizational":
+                        errors.append(
+                            f"evidence[{evidence_id}].source_id: {genre!r} forbids "
+                            "organizational evidence"
+                        )
+
+            if genre == "dissertation-results-chapter":
+                for claim_id, item in claims.items():
+                    if (
+                        item.get("status") in {"supported", "bounded"}
+                        and item.get("claim_type") != "structural"
+                        and not item.get("result_ids")
+                    ):
+                        errors.append(
+                            f"claim[{claim_id}]: dissertation-results-chapter requires "
+                            "result_ids for every supported or bounded result statement"
+                        )
+
+            if genre == "dissertation-synthesis-chapter":
+                scoped_literature_ids = {
+                    evidence_id
+                    for evidence_id, record in evidence.items()
+                    if record.get("source_id") in input_scope
+                    and sources.get(record.get("source_id"), {}).get("representation")
+                    in {"html", "pdf", "markdown", "text"}
+                }
+                if not scoped_literature_ids:
+                    errors.append(
+                        "bundle.evidence: dissertation-synthesis-chapter requires "
+                        "in-scope literature evidence"
+                    )
+                for claim_id, item in claims.items():
+                    if item.get("status") not in {"supported", "bounded"}:
+                        continue
+                    if item.get("claim_type") == "structural":
+                        continue
+                    section = item.get("output_section")
+                    if section in {"result_interpretation", "chapter_conclusions"} and not item.get(
+                        "result_ids"
+                    ):
+                        errors.append(
+                            f"claim[{claim_id}]: synthesis section {section!r} requires "
+                            "result_ids"
+                        )
+                    if section == "literature_comparison" and (
+                        not (set(item.get("evidence_ids", [])) & scoped_literature_ids)
+                        or not item.get("result_ids")
+                    ):
+                        errors.append(
+                            f"claim[{claim_id}]: synthesis literature_comparison requires "
+                            "in-scope literature evidence_ids and result_ids"
+                        )
+
+            if genre == "dissertation-conclusion":
+                for claim_id, item in claims.items():
+                    if item.get("status") == "unsupported":
+                        errors.append(
+                            f"claim[{claim_id}]: dissertation-conclusion cannot introduce "
+                            "an unsupported claim"
+                        )
+                    if (
+                        item.get("status") in {"supported", "bounded"}
+                        and item.get("claim_type") != "structural"
+                        and not item.get("result_ids")
+                    ):
+                        errors.append(
+                            f"claim[{claim_id}]: dissertation-conclusion requires result_ids "
+                            "for every supported or bounded conclusion statement"
+                        )
+
+                task_conclusion_claims = [
+                    item
+                    for item in claims.values()
+                    if item.get("output_section") == "task_conclusions"
+                ]
+                covered_units = {
+                    identifier
+                    for item in task_conclusion_claims
+                    for identifier in item.get("structure_ids", [])
+                }
+                for claim in task_conclusion_claims:
+                    anchored_types = {
+                        structure.get(identifier, {}).get("unit_type")
+                        for identifier in claim.get("structure_ids", [])
+                    }
+                    if not {"task", "conclusion"}.issubset(anchored_types):
+                        errors.append(
+                            f"claim[{claim.get('claim_id')}]: task_conclusions requires both "
+                            "task and conclusion structure_ids"
+                        )
+                for unit_id, unit in structure.items():
+                    if unit.get("unit_type") in {"task", "conclusion"} and unit_id not in covered_units:
+                        errors.append(
+                            f"structure[{unit_id}]: dissertation-conclusion requires coverage "
+                            "by a task_conclusions claim"
+                        )
+
+            if genre == "defense-propositions":
+                covered_propositions: set[str] = set()
+                for claim_id, item in claims.items():
+                    if item.get("status") not in {"supported", "bounded"}:
+                        continue
+                    if item.get("claim_type") == "structural":
+                        continue
+                    proposition_units = {
+                        identifier
+                        for identifier in item.get("structure_ids", [])
+                        if structure.get(identifier, {}).get("unit_type") == "proposition"
+                    }
+                    covered_propositions.update(proposition_units)
+                    if not item.get("result_ids") or not proposition_units:
+                        errors.append(
+                            f"claim[{claim_id}]: defense proposition requires result_ids and "
+                            "a proposition structure_id"
+                        )
+                for unit_id, unit in structure.items():
+                    if unit.get("unit_type") == "proposition" and unit_id not in covered_propositions:
+                        errors.append(
+                            f"structure[{unit_id}]: defense-propositions requires coverage by "
+                            "a supported or bounded proposition claim"
+                        )
+
+            if genre == "novelty-statement":
+                scoped_literature_ids = {
+                    evidence_id
+                    for evidence_id, record in evidence.items()
+                    if record.get("source_id") in input_scope
+                    and sources.get(record.get("source_id"), {}).get("representation")
+                    in {"html", "pdf", "markdown", "text"}
+                }
+                for claim_id, item in claims.items():
+                    if item.get("status") in {"supported", "bounded"} and item.get(
+                        "claim_type"
+                    ) != "structural":
+                        if not (
+                            set(item.get("evidence_ids", [])) & scoped_literature_ids
+                        ) or not item.get("result_ids"):
+                            errors.append(
+                                f"claim[{claim_id}]: novelty-statement requires in-scope "
+                                "literature evidence_ids and result_ids"
+                            )
+                    if (
+                        item.get("status") == "bounded"
+                        or item.get("output_section") in {"novelty_boundary", "novelty_claim"}
+                    ) and not _nonempty_string(item.get("boundary")):
+                        errors.append(
+                            f"claim[{claim_id}].boundary: novelty or bounded claim requires "
+                            "an explicit comparison boundary"
+                        )
+
+            if genre == "thesis-synopsis":
+                for claim_id, item in claims.items():
+                    if item.get("status") == "unsupported":
+                        errors.append(
+                            f"claim[{claim_id}]: thesis-synopsis cannot introduce an "
+                            "unsupported claim"
+                        )
+
+            if genre == "approbation-record":
+                for source_id in input_scope:
+                    if sources.get(source_id, {}).get("representation") != "organizational":
+                        errors.append(
+                            f"source[{source_id}].representation: approbation-record accepts "
+                            "only organizational inputs"
+                        )
+                for evidence_id, item in evidence.items():
+                    source = sources.get(item.get("source_id"), {})
+                    if source.get("representation") != "organizational":
+                        errors.append(
+                            f"evidence[{evidence_id}].source_id: approbation-record evidence "
+                            "must come from an organizational source"
+                        )
+                for claim_id, item in claims.items():
+                    if item.get("result_ids"):
+                        errors.append(
+                            f"claim[{claim_id}].result_ids: approbation-record does not use "
+                            "scientific results as organizational evidence"
+                        )
+                    if item.get("claim_type") in {"causal", "synthesis", "method"}:
+                        errors.append(
+                            f"claim[{claim_id}].claim_type: approbation-record records an "
+                            "organizational fact, not a scientific result claim"
+                        )
 
             if genre == "dissertation-introduction":
                 aims = [

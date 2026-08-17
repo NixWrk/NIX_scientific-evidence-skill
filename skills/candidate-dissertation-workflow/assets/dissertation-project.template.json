@@ -1,0 +1,41 @@
+{
+  "schema_version": "CDW-001/v1",
+  "project_id": "DISS-PROJECT-001",
+  "specialty": {
+    "code": null,
+    "name": null
+  },
+  "sources": [],
+  "artifacts": [],
+  "stages": [
+    {"stage_id": "source_search", "status": "pending", "required": false, "genre": null, "artifact_ids": [], "depends_on": []},
+    {"stage_id": "corpus_freeze", "status": "pending", "required": true, "genre": null, "artifact_ids": [], "depends_on": []},
+    {"stage_id": "outline", "status": "pending", "required": true, "genre": "dissertation-outline", "artifact_ids": [], "depends_on": ["corpus_freeze"]},
+    {"stage_id": "introduction", "status": "pending", "required": true, "genre": "dissertation-introduction", "artifact_ids": [], "depends_on": ["outline"]},
+    {"stage_id": "literature_review", "status": "pending", "required": true, "genre": "dissertation-literature-review-chapter", "artifact_ids": [], "depends_on": ["corpus_freeze", "outline"]},
+    {"stage_id": "methods", "status": "pending", "required": true, "genre": "dissertation-methods-chapter", "artifact_ids": [], "depends_on": ["outline"]},
+    {"stage_id": "results", "status": "pending", "required": true, "genre": "dissertation-results-chapter", "artifact_ids": [], "depends_on": ["methods"]},
+    {"stage_id": "synthesis", "status": "pending", "required": false, "genre": "dissertation-synthesis-chapter", "artifact_ids": [], "depends_on": ["results", "literature_review"]},
+    {"stage_id": "conclusion", "status": "pending", "required": true, "genre": "dissertation-conclusion", "artifact_ids": [], "depends_on": ["results"]},
+    {"stage_id": "propositions", "status": "pending", "required": true, "genre": "defense-propositions", "artifact_ids": [], "depends_on": ["results"]},
+    {"stage_id": "novelty", "status": "pending", "required": true, "genre": "novelty-statement", "artifact_ids": [], "depends_on": ["literature_review", "results"]},
+    {"stage_id": "approbation", "status": "pending", "required": true, "genre": "approbation-record", "artifact_ids": [], "depends_on": []},
+    {"stage_id": "synopsis", "status": "pending", "required": false, "genre": "thesis-synopsis", "artifact_ids": [], "depends_on": ["conclusion", "propositions", "novelty", "approbation"]},
+    {"stage_id": "apparatus", "status": "pending", "required": true, "genre": "dissertation-apparatus", "artifact_ids": [], "depends_on": ["conclusion"]},
+    {"stage_id": "final_review", "status": "pending", "required": true, "genre": null, "artifact_ids": [], "depends_on": ["apparatus"]},
+    {"stage_id": "release", "status": "pending", "required": true, "genre": "dissertation", "artifact_ids": [], "depends_on": ["final_review"]}
+  ],
+  "gates": {
+    "normative_profile": "not_assessed",
+    "corpus_frozen": "not_assessed",
+    "evidence": "not_assessed",
+    "numbers_units": "not_assessed",
+    "task_conclusion": "not_assessed",
+    "terminology": "not_assessed",
+    "cross_references": "not_assessed",
+    "bibliography": "not_assessed",
+    "word_structure": "not_assessed",
+    "rendered_pages": "not_assessed"
+  },
+  "blockers": []
+}

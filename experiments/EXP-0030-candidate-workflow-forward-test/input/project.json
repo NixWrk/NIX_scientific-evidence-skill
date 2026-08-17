@@ -1,0 +1,48 @@
+{
+  "schema_version": "CDW-001/v1",
+  "project_id": "DISS-HOLDOUT-001",
+  "specialty": {"code": "2.2.12", "name": "Радиотехника"},
+  "sources": [
+    {"source_id": "LIT-001", "role": "literature", "local_ref": "corpus/lit-001.txt", "content_hash": "sha256:lit001", "frozen": true},
+    {"source_id": "LIT-002", "role": "literature", "local_ref": "corpus/lit-002.txt", "content_hash": "sha256:lit002", "frozen": true},
+    {"source_id": "LIT-003", "role": "literature", "local_ref": "corpus/lit-003.txt", "content_hash": "sha256:lit003", "frozen": true},
+    {"source_id": "PROT-001", "role": "protocol", "local_ref": "records/protocol.json", "content_hash": "sha256:protocol001", "frozen": true}
+  ],
+  "artifacts": [
+    {"artifact_id": "ART-OUTLINE", "genre": "dissertation-outline", "path": "draft/outline.md", "version": "v2", "status": "final", "source_ids": ["LIT-001"]},
+    {"artifact_id": "ART-INTRO", "genre": "dissertation-introduction", "path": "draft/introduction.md", "version": "v3", "status": "validated", "source_ids": ["LIT-001", "LIT-002", "LIT-003"]},
+    {"artifact_id": "ART-REVIEW", "genre": "dissertation-literature-review-chapter", "path": "draft/review.md", "version": "v4", "status": "validated", "source_ids": ["LIT-001", "LIT-002", "LIT-003"]},
+    {"artifact_id": "ART-METHODS", "genre": "dissertation-methods-chapter", "path": "draft/methods.md", "version": "v2", "status": "validated", "source_ids": ["PROT-001"]}
+  ],
+  "stages": [
+    {"stage_id": "source_search", "status": "not_applicable", "required": false, "reason": "Корпус передан автором и заморожен", "genre": null, "artifact_ids": [], "depends_on": []},
+    {"stage_id": "corpus_freeze", "status": "complete", "required": true, "genre": null, "artifact_ids": [], "depends_on": []},
+    {"stage_id": "outline", "status": "complete", "required": true, "genre": "dissertation-outline", "artifact_ids": ["ART-OUTLINE"], "depends_on": ["corpus_freeze"]},
+    {"stage_id": "introduction", "status": "complete", "required": true, "genre": "dissertation-introduction", "artifact_ids": ["ART-INTRO"], "depends_on": ["outline"]},
+    {"stage_id": "literature_review", "status": "complete", "required": true, "genre": "dissertation-literature-review-chapter", "artifact_ids": ["ART-REVIEW"], "depends_on": ["corpus_freeze", "outline"]},
+    {"stage_id": "methods", "status": "complete", "required": true, "genre": "dissertation-methods-chapter", "artifact_ids": ["ART-METHODS"], "depends_on": ["outline"]},
+    {"stage_id": "results", "status": "pending", "required": true, "genre": "dissertation-results-chapter", "artifact_ids": [], "depends_on": ["methods"]},
+    {"stage_id": "synthesis", "status": "pending", "required": false, "genre": "dissertation-synthesis-chapter", "artifact_ids": [], "depends_on": ["results", "literature_review"]},
+    {"stage_id": "conclusion", "status": "pending", "required": true, "genre": "dissertation-conclusion", "artifact_ids": [], "depends_on": ["results"]},
+    {"stage_id": "propositions", "status": "pending", "required": true, "genre": "defense-propositions", "artifact_ids": [], "depends_on": ["results"]},
+    {"stage_id": "novelty", "status": "pending", "required": true, "genre": "novelty-statement", "artifact_ids": [], "depends_on": ["literature_review", "results"]},
+    {"stage_id": "approbation", "status": "pending", "required": true, "genre": "approbation-record", "artifact_ids": [], "depends_on": []},
+    {"stage_id": "synopsis", "status": "pending", "required": false, "genre": "thesis-synopsis", "artifact_ids": [], "depends_on": ["conclusion", "propositions", "novelty", "approbation"]},
+    {"stage_id": "apparatus", "status": "pending", "required": true, "genre": "dissertation-apparatus", "artifact_ids": [], "depends_on": ["conclusion"]},
+    {"stage_id": "final_review", "status": "pending", "required": true, "genre": null, "artifact_ids": [], "depends_on": ["apparatus"]},
+    {"stage_id": "release", "status": "pending", "required": true, "genre": "dissertation", "artifact_ids": [], "depends_on": ["final_review"]}
+  ],
+  "gates": {
+    "normative_profile": "pass",
+    "corpus_frozen": "pass",
+    "evidence": "not_assessed",
+    "numbers_units": "not_assessed",
+    "task_conclusion": "not_assessed",
+    "terminology": "not_assessed",
+    "cross_references": "not_assessed",
+    "bibliography": "not_assessed",
+    "word_structure": "not_assessed",
+    "rendered_pages": "not_assessed"
+  },
+  "blockers": []
+}

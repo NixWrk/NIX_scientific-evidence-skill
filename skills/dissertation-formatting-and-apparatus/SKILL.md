@@ -71,6 +71,13 @@ changes automatically.
   insert a real field, and refresh externally. Audit an existing refreshed copy
   with `scripts/audit_existing_word_toc.py`. Do not treat a missing Word field as
   a GOST violation and do not claim that cached page numbers were verified.
+- Illustrations and tables: run `scripts/audit_illustration_register.py`
+  against an approved registry; check unique numbers, matching captions, and a
+  separate main-text reference. Treat declared pages as a final-render concern.
+- Appendices: run `scripts/audit_appendix_register.py` against an approved
+  registry; check unique designations, matching titles, and references from the
+  main text before the first appendix. If the appendix boundary or final page
+  cannot be established, return `not_assessed` rather than infer it.
 
 ## Critic and benchmark contract
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Кандидатская диссертация"
+  short_description: "Маршрутизация написания и проверки диссертации"
+  default_prompt: "Используй $candidate-dissertation-workflow, чтобы выбрать и выполнить следующий доказательный этап кандидатской диссертации."

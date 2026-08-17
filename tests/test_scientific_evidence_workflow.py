@@ -1081,7 +1081,10 @@ def test_implemented_genres_accept_their_own_shape() -> None:
         genre for genre, rules in VALIDATOR.GENRES.items() if rules["bundle_mode"] is not None
     }
 
-    assert len(builders) == len(bundle_genres)
+    # Historical builders remain regression fixtures. Dissertation genres added
+    # later have their own focused builders in test_remaining_dissertation_genres.py.
+    built_genres = {build()["task"]["genre"] for build in builders}
+    assert built_genres <= bundle_genres
     for build in builders:
         report = VALIDATOR.validate_bundle(build())
         assert report["valid"] is True, f"{build.__name__}: {report['errors']}"
