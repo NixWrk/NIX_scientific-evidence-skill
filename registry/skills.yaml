@@ -12,8 +12,8 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.13"
-    skill_sha256: b7001afc84381b4ed94d5ba61a21514449f8bf0db7f214fd71bcb7304f813160
+    version: "0.14"
+    skill_sha256: 44d1f2fd7ea2c342fcf77f9b54aa7c9e7da349e433c2ca61bb5c727eb5a3fce7
     task: [qa, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass
@@ -64,13 +64,16 @@ verdicts:
       - input_scope_is_unique_and_closes_every_evidence_and_result_source
       - extracted_evidence_cannot_release_a_supported_claim
       - qualification_result_records_require_explicit_approval
+      - skill_owned_technical_editorial_and_evidential_critic_layers
+      - evidence_verification_is_conditional_not_universal
+      - exp_0031_raw_findings_expert_adjudicated_not_gold
     experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025, EXP-0026, EXP-0031]
-    next_action: build_pdf_html_to_claim_evidence_result_adapter
+    next_action: run_blind_zotero_holdout_with_independent_adjudication
 
   - id: candidate-dissertation-workflow
     source: local:skills/candidate-dissertation-workflow
-    version: "0.2"
-    skill_sha256: c79a43e10f0bf22c58d4db81eaff8189970aec921bdf11deb44aca7273284267
+    version: "0.3"
+    skill_sha256: a16211cea61528f619416d818574865e50842010e6304c76bffff795733272d1
     task: [qualification_work, literature_review, manuscript, document_review]
     license: not_declared
     spec_subset: pass
@@ -87,13 +90,15 @@ verdicts:
       - every_release_gate_requires_a_hashed_validation_report
       - optional_stages_are_resolved_before_release
       - one_artifact_id_belongs_to_one_stage
+      - critic_routes_to_owning_skill_rules
+      - word_and_delivery_format_are_optional
     experiments: [EXP-0030, EXP-0031]
-    next_action: run_release_holdout_with_real_docx_protocol_data_and_result_ledgers
+    next_action: run_skill_owned_critic_holdout_then_optional_delivery_adapter_tests
 
   - id: dissertation-formatting-and-apparatus
     source: local:skills/dissertation-formatting-and-apparatus
-    version: "0.5"
-    skill_sha256: b2db052054b2d1e458d3a8281a43bf37298245dbd2c24b456a27c421176e9e67
+    version: "0.6"
+    skill_sha256: 28ae1f40b16688ef5c82cce3255ea5b7dc344621e4d793dd65a13c32222e6568
     task: [qualification_work, document_formatting, bibliography, document_review]
     license: not_declared
     spec_subset: pass
@@ -123,10 +128,12 @@ verdicts:
       - illustration_and_table_registers_close_captions_numbers_and_text_references
       - appendix_register_closes_designations_titles_and_main_text_references
       - pagination_remains_not_assessed_until_final_render
+      - word_is_optional_delivery_adapter
+      - technical_findings_remain_separate_from_scientific_editorial_judgment
     experiment: EXP-0029
     prior_static_experiment: EXP-0028
     experiments: [EXP-0027, EXP-0028, EXP-0029, EXP-0031]
-    next_action: run_real_final_docx_register_and_pagination_holdout
+    next_action: run_apparatus_holdout_then_test_only_the_selected_delivery_adapters
 
   - id: literature-triage-matrix
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix

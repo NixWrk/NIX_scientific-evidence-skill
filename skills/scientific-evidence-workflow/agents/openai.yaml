@@ -1,4 +1,4 @@
 interface:
   display_name: "Scientific Evidence Workflow"
-  short_description: "Evidence-bound science and dissertation writing"
-  default_prompt: "Use $scientific-evidence-workflow to build a source-traceable dissertation outline, introduction, methods chapter, or other scientific artifact from only the supplied materials."
+  short_description: "Evidence-bound writing and dissertation criticism"
+  default_prompt: "Use $scientific-evidence-workflow to generate or criticise a source-traceable dissertation artifact from only the supplied materials; check the owning genre rules and verify evidence only when the finding depends on it."

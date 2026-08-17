@@ -1,6 +1,6 @@
 ---
 name: scientific-evidence-workflow
-description: Process only user-supplied scientific publications and research records into source-traceable Q&A, literature reviews, manuscript text, and the scientific genres of a Russian candidate dissertation, including outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, and synopsis. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or generate or criticise a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
+description: Process only user-supplied scientific publications and research records into source-traceable Q&A, literature reviews, manuscript text, critic reports, and the scientific genres of a Russian candidate dissertation, including outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, and synopsis. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or generate or criticise a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
 ---
 
 # Scientific Evidence Workflow
@@ -30,6 +30,9 @@ Always read `references/evidence-contract.md` first. Then load exactly one mode:
   `references/literature-review-workflow.md`.
 - Manuscript drafting, audit, or revision from supplied literature and research
   records: `references/manuscript-workflow.md`.
+- Scientific criticism of a supplied work: manuscript mode plus
+  `references/critic-workflow.md`. Load `references/critic-verification-protocol.md`
+  only for an evidence-dependent finding.
 - A record of the author's own work in a bounded stage: mode `record`, with the
   genre reference below.
 
@@ -217,6 +220,14 @@ result. For `thesis-synopsis`, map every claim back to the frozen dissertation.
 For `approbation-record`, verify organizational facts without promoting them to
 scientific support.
 
+For a critic task, check the artifact first against the owning skill and genre:
+required parts, logic, scientific formulation, narrative progression,
+consistency, and formatting. Use the lightweight finding record from
+`references/critic-workflow.md`. Escalate only factual, numeric, source,
+absence, citation-coverage, or normative assertions to the evidence-verification
+protocol. Do not require source machinery for a technical or reasoned editorial
+finding.
+
 ### 6. Run the evidence gate
 
 Before release, verify:
@@ -229,7 +240,9 @@ Before release, verify:
 6. conflicting evidence is visible;
 7. unsupported claims are removed or explicitly blocked;
 8. every accepted semantic wording correction is traceable;
-9. no scientific source was introduced from model memory.
+9. no scientific source was introduced from model memory;
+10. every evidence-dependent critic finding was checked against the relevant
+    source, calculation, coverage record, or applicable authority.
 
 When a bundle is available, run:
 
@@ -293,6 +306,8 @@ Stop and request input instead of guessing when:
 - novelty lacks a bounded literature corpus or own-result anchor;
 - a synopsis source dissertation is not frozen or contains an unmatched claim;
 - an approbation fact lacks an organizational record;
+- an evidence-dependent critic finding cannot be checked against its source,
+  calculation, declared coverage, or applicable authority;
 - source versions conflict and no authoritative version is identified;
 - a full systematic-review claim lacks real search and screening provenance;
 - the requested action would create research plans or publication strategy
@@ -335,3 +350,9 @@ Stop and request input instead of guessing when:
 - `references/russian/`: genre language profiles.
 - `scripts/audit_russian_style.py`: dependency-free heuristic style audit.
 - `scripts/russian/`: machine-readable core, genre, and domain rule profiles.
+- `references/critic-workflow.md`: lightweight technical, editorial, and
+  evidential critic workflow.
+- `references/critic-verification-protocol.md`: conditional verification for
+  source-, number-, absence-, citation-, and authority-dependent findings.
+- `references/scientific-judgment-calibration.md`: optional calibration for
+  inference, sample roles, units of analysis, hierarchy, and severity.

@@ -1,6 +1,6 @@
 ---
 name: candidate-dissertation-workflow
-description: Orchestrate the complete evidence-bound workflow for a Russian candidate dissertation, from literature and similar-work acquisition handoff through corpus freezing, outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, synopsis, apparatus, Word review, and final release. Use when an LLM must decide what dissertation task comes next, resume a dissertation project, coordinate multiple dissertation skills, audit whole-work readiness, or prevent scientific writing and formatting stages from being run with missing inputs.
+description: Orchestrate the complete evidence-bound workflow for a Russian candidate dissertation, from literature and similar-work acquisition handoff through corpus freezing, outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, synopsis, apparatus, optional delivery adapters, and final release. Use when an LLM must decide what dissertation task comes next, resume a dissertation project, coordinate multiple dissertation skills, audit whole-work readiness, or prevent scientific writing and formatting stages from being run with missing inputs.
 ---
 
 # Candidate dissertation workflow
@@ -30,10 +30,12 @@ named child skill and only its relevant genre/reference files:
 
 - scientific content, evidence, chapters and qualification statements:
   `scientific-evidence-workflow`;
-- title page, Word TOC, abbreviations, terminology, bibliography, illustration
-  and appendix registers, critic journals and Word review copies:
+- title page, rendered TOC, abbreviations, terminology, bibliography,
+  illustration and appendix registers, and delivery adapters including an
+  optional Word review copy:
   `dissertation-formatting-and-apparatus`;
-- final DOCX rendering and visual QA: the host document capability.
+- final rendering and visual QA for the selected output format: the relevant
+  host document capability.
 
 Search and Zotero/web retrieval belong only to acquisition. Freeze every
 selected source before evidence extraction or drafting. Once drafting starts,
@@ -81,10 +83,16 @@ passing report, every referenced file and SHA-256 verifies, and no blocker
 remains open. A conditional stage may be `not_applicable` only with a recorded
 reason and may not be marked required.
 
-Run the apparatus critic on the final manuscript, materialize the same journal
-as Word comments/tracked changes when requested, open-save the copy in Word or
-a compatible engine, structurally audit its OOXML, and inspect every rendered
-page. Do not claim that a cached TOC proves current page numbers.
+Run the relevant skill critics on the final manuscript: scientific content
+against its genre rules and apparatus against its technical rules. Resolve or
+explicitly accept every critical/major finding. Technical and editorial
+findings need a locator and rationale; only evidence-dependent findings require
+source, calculation, coverage, or authority verification.
+
+Return the same findings as a report or through a requested delivery adapter.
+When DOCX is selected, comments/tracked changes, OOXML inspection and rendered
+page review apply. These are DOCX-specific checks, not universal release
+requirements. Do not claim that a cached TOC proves current page numbers.
 
 ## Return status
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Dissertation Formatting and Apparatus"
-  short_description: "Audit and format Russian dissertations"
-  default_prompt: "Use $dissertation-formatting-and-apparatus to audit and format this dissertation apparatus."
+  short_description: "Audit apparatus and deliver critic findings"
+  default_prompt: "Use $dissertation-formatting-and-apparatus to audit this dissertation apparatus or deliver critic findings in the requested format; Word is optional."

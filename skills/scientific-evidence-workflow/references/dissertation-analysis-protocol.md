@@ -1,8 +1,8 @@
 ---
 protocol_id: PSAD-2.2.12
-version: 0.1.0
+version: 0.2.0
 status: preliminary
-effective_date: 2026-08-16
+effective_date: 2026-08-17
 scope: Russian candidate dissertations and synopses used as evidence of writing practice
 ---
 
@@ -12,7 +12,10 @@ This protocol fixes the method used to analyse defended dissertations before
 their recurring textual patterns enter skill memory. It is a preliminary
 standard: later corpus evidence may change the observation vocabulary,
 thresholds, or comparison axes. A defended work is evidence of accepted
-practice in one case, never a normative requirement.
+practice in one case, never a normative requirement. Critic observations
+remain lightweight unless they assert a source fact, number, absence, citation
+coverage, scientific inference, or normative requirement; only those assertions
+use `critic-verification-protocol.md`.
 
 ## Authority boundary
 
@@ -148,7 +151,7 @@ A completed analysis produces:
 7. a revision ledger when scientific wording was corrected;
 8. validator and test results.
 
-## Known limits of version 0.1
+## Known limits of version 0.2
 
 The validator counts proposed-name locators but cannot determine whether they
 are semantically independent or transferable; that decision remains a recorded
@@ -165,6 +168,10 @@ Use semantic versions for this protocol. Increment:
 - patch for clarification that changes no decision;
 - minor for a new observation field, comparison axis, or promotion rule;
 - major when existing records would be interpreted differently.
+
+Version 0.2 separates lightweight technical/editorial observations from
+evidence-dependent assertions after the EXP-0031 adjudication exposed false
+factual premises. Existing analysis logs require no migration.
 
 Every revision must name the corpus evidence or failure that motivated it,
 state whether older logs require migration, update validators and tests when

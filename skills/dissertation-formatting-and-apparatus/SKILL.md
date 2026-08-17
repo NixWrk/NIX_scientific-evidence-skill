@@ -1,6 +1,6 @@
 ---
 name: dissertation-formatting-and-apparatus
-description: Format and audit the document apparatus of Russian candidate dissertations, including abbreviations, terminology glossaries, bibliographic citations and reference lists, title matter, rendered tables of contents, illustration lists, appendices, and Word review copies with comments or tracked changes. Use for deterministic dissertation-format checks, apparatus generation from an approved manuscript, bibliography reconciliation, or criticism delivered as a report or reviewed .docx.
+description: Format and audit the document apparatus of Russian candidate dissertations, including abbreviations, terminology glossaries, bibliographic citations and reference lists, title matter, rendered tables of contents, illustration lists, appendices, and optional review artifacts such as Word copies with comments or tracked changes. Use for deterministic dissertation-format checks, apparatus generation from an approved manuscript, bibliography reconciliation, or delivery of criticism in a requested representation.
 ---
 
 # Dissertation formatting and apparatus
@@ -42,13 +42,20 @@ Run deterministic scripts first. Emit findings using
 inconsistencies, evidence gaps, observed-practice differences, and
 recommendations. Keep the original artifact unchanged.
 
-### Produce a Word review copy
+Scientific-content criticism belongs to `scientific-evidence-workflow`.
+This skill checks technical apparatus rules and may deliver findings from other
+skills, but it must not rewrite their rationale or severity.
 
-Read `references/word-review.md`. Use `scripts/apply_word_review.py` to
-materialize the same findings as comments, tracked changes, or a hybrid copy.
-Use comments for ambiguity, evidence gaps, structural problems, and alternative
-solutions. Use tracked changes only for exact local replacements. Do not accept
-changes automatically.
+### Deliver a review
+
+Choose a delivery representation after the criticism is complete. Plain JSON,
+Markdown or a report needs no Word dependency.
+
+For a Word review copy, read `references/word-review.md`. Use
+`scripts/apply_word_review.py` to materialize the same findings as comments,
+tracked changes, or a hybrid copy. Use comments for ambiguity, evidence gaps,
+structural problems, and alternative solutions. Use tracked changes only for
+exact local replacements. Do not accept changes automatically.
 
 ## Audit modules
 
@@ -92,6 +99,8 @@ the critic.
 - Preserve the original file and source hashes.
 - Resolve every normative finding to a card and requirement identifier.
 - Resolve every Word annotation to one `issue_id`.
+- Require an evidence-verification record only when a delivered finding makes
+  a factual, numeric, absence, citation-coverage, or normative assertion.
 - Fail on missing or ambiguous exact-text locators; never guess an anchor.
 - Mark unsupported bibliography source types `not_assessed`.
 - Gate source quality before language or structure criticism; if the text

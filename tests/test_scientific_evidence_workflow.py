@@ -1508,7 +1508,7 @@ def test_preliminary_dissertation_protocol_is_versioned() -> None:
     ).read_text(encoding="utf-8")
 
     assert "protocol_id: PSAD-2.2.12" in protocol
-    assert "version: 0.1.0" in protocol
+    assert "version: 0.2.0" in protocol
     assert "status: preliminary" in protocol
     assert "Three independent locators" in protocol
     assert "source file" in protocol

@@ -1,18 +1,145 @@
 {
   "experiment_id": "EXP-0031",
-  "standard": "PSES-DISS-001/0.2.2",
+  "standard": "PSES-DISS-001/0.3.0",
   "stage": "independent_corpus",
   "blind": true,
   "source_status_after_disclosure": "regression",
+  "gold_status": "not_gold",
+  "gold_status_reason": "Expert adjudication documents a regression reference; no separate gold-set construction or status was established.",
+  "artifacts": {
+    "raw_critic_report": {
+      "path": "critic-report.md",
+      "role": "raw",
+      "immutable": true
+    },
+    "adjudicated_report": {
+      "path": "adjudicated-report.md",
+      "role": "expert_adjudication",
+      "raw_replacement": false
+    }
+  },
   "scientific_critic": {
     "finding_classes": 12,
-    "expert_adjudication": "pending",
+    "expert_adjudication": "completed",
     "critical_numeric_consistency_check": {
       "observed": "12/15",
       "computed_percent": 80.0,
       "reported_percent": 75.0,
       "status": "confirmed_internal_inconsistency"
     }
+  },
+  "adjudication": {
+    "status": "completed",
+    "method": "independent_manual_recheck_of_raw_findings",
+    "basis": [
+      "visual PDF for printed form, contents, page facts and layout",
+      "HTML for semantic text, DOM locators and bibliography coverage",
+      "independent arithmetic and diagnostic recalculation"
+    ],
+    "summary": {
+      "accepted": 7,
+      "narrowed": 3,
+      "corrected": 2,
+      "gold_status": "not_gold"
+    },
+    "decisions": [
+      {
+        "item": 1,
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "critical",
+        "reason": "12/15 is 80% sensitivity; Fisher p=0.25 is not sensitivity or probability of the null hypothesis."
+      },
+      {
+        "item": 2,
+        "adjudication": "narrowed",
+        "raw_claim_status": "partially_supported",
+        "release_status": "partially_verified",
+        "severity": "major",
+        "reason": "Threshold selection used 10 healthy volunteers and application used patients; the groups are distinct, but external validation is not reported and the raw same-group claim is too broad."
+      },
+      {
+        "item": 3,
+        "adjudication": "accepted",
+        "raw_claim_status": "supported_with_scope_limit",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "Clinical tables use four leads although the system claims ten channels; this limits clinical evidence for the full configuration."
+      },
+      {
+        "item": 4,
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "The 95% accuracy claim lacks the sample, reference, error definition, split and interval needed for reproduction."
+      },
+      {
+        "item": 5,
+        "adjudication": "narrowed",
+        "raw_claim_status": "partially_supported",
+        "release_status": "partially_verified",
+        "severity": "major",
+        "reason": "Age imbalance and unreported transition among participants, records and cycles are supported; misuse of Fisher is not established without aggregation/model details."
+      },
+      {
+        "item": 6,
+        "adjudication": "narrowed",
+        "raw_claim_status": "partially_supported",
+        "release_status": "partially_verified",
+        "severity": "major",
+        "reason": "MCA is a branch of ICA; the supported limitation is cross-level comparison without proof of exact localization, not anatomical incomparability."
+      },
+      {
+        "item": 7,
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "A general therapeutic conclusion is drawn from one uncontrolled before/after case."
+      },
+      {
+        "item": 8,
+        "adjudication": "accepted",
+        "raw_claim_status": "supported_as_reporting_gap",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "Required methods and reproducibility details are not reported in the checked scope; this does not prove ethics or consent were absent."
+      },
+      {
+        "item": 9,
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "minor",
+        "reason": "The internal table reference is inconsistent, but raw P1 severity is reduced because the scientific interpretation is not changed."
+      },
+      {
+        "item": 10,
+        "adjudication": "corrected",
+        "raw_claim_status": "rejected_as_stated",
+        "release_status": "partially_verified",
+        "severity": "minor",
+        "reason": "The contents says классификации, not the raw-claimed классифицикации; the heading mismatch and иследований typo remain valid replacement findings."
+      },
+      {
+        "item": 11,
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "minor",
+        "reason": "The visual PDF contains ампитудно-фазовая instead of амплитудно-фазовая."
+      },
+      {
+        "item": 12,
+        "adjudication": "corrected",
+        "raw_claim_status": "rejected_as_stated",
+        "release_status": "partially_verified",
+        "severity": "note",
+        "reason": "Record 20 is cited in [19, 20, 41]; records 2, 34 and 44 remain potential coverage gaps, and absent HTML anchors do not prove absent citations."
+      }
+    ]
   },
   "deterministic_audits_before_fix": {
     "abbreviation_findings": 177,
