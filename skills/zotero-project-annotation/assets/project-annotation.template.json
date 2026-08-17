@@ -1,0 +1,56 @@
+{
+  "schema_version": "ZPA-001/v1",
+  "annotation_id": "ANN-001",
+  "record_type": "derived_project_annotation",
+  "status": "current",
+  "remake_required": false,
+  "stale_reason": null,
+  "block_reason": null,
+  "metadata_only": false,
+  "source_content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "project_context_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "source": {
+    "zotero_item_key": "ABCD1234",
+    "title": "Publication title",
+    "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "read_scope": "full_text",
+    "locators_read": ["Abstract", "Methods", "Results", "Discussion"]
+  },
+  "project": {
+    "project_id": "PRJ-001",
+    "title": "Research project",
+    "goal": "Project goal",
+    "objectives": [
+      {"id": "OBJ-001", "text": "Project objective"}
+    ],
+    "research_questions": [
+      {"id": "RQ-001", "text": "Research question"}
+    ]
+  },
+  "relevance_target_ids": ["RQ-001", "OBJ-001"],
+  "annotation": {
+    "summary": "Concise neutral summary of the publication.",
+    "source_voice": {
+      "what_work_did": "Object, task, method, design, and sample as reported by the source.",
+      "reported_outcomes": [
+        {
+          "claim_id": "CL-001",
+          "statement": "Reported outcome.",
+          "value": "Exact value, unit, groups, and uncertainty.",
+          "locator": "zotero:ABCD1234#Results"
+        }
+      ],
+      "stated_boundaries": ["Boundary stated by the authors."]
+    },
+    "author_conclusion": "What the publication's authors conclude from their results.",
+    "project_judgement": {
+      "why_useful_here": "Reader judgement tied to RQ-001 and OBJ-001.",
+      "what_it_does_not_settle": "Open question for this project."
+    }
+  },
+  "evidence_role": "derived_annotation_not_evidence",
+  "provenance": {
+    "created_at": "2026-08-17",
+    "machine_record_path": "derived/annotations/ANN-001.json"
+  }
+}

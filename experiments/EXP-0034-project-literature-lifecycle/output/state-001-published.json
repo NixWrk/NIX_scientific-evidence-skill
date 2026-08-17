@@ -1,0 +1,70 @@
+{
+  "collection": {
+    "collection_key": "OFF0034A",
+    "collection_name": "EXP-0034 project literature",
+    "library_id": "user:offline"
+  },
+  "corpus_id": "CORP-0034",
+  "current_artifact": {
+    "artifact_id": "ART-LR-0034-SNAP-995badaa3bf8988c",
+    "artifact_path": "output/literature-review-v1.md",
+    "content_hash": "sha256:0217ccba751f9211f6bf7e0527a680e0935093ebbe9507b614ad8ba1042fae2d",
+    "resynthesis_required": false,
+    "snapshot_id": "SNAP-995badaa3bf8988c",
+    "status": "published",
+    "version": 1
+  },
+  "items": {
+    "PUB001": {
+      "annotation_hash": "sha256:b2b6b89dcdbb8c4e985903c598cab72c4578eea9034b44743b6a5910f3354273",
+      "annotation_status": "validated",
+      "first_seen_snapshot_id": "SNAP-995badaa3bf8988c",
+      "history": [
+        {
+          "annotation_hash": "sha256:b2b6b89dcdbb8c4e985903c598cab72c4578eea9034b44743b6a5910f3354273",
+          "annotation_status": "validated",
+          "event": "added",
+          "snapshot_id": "SNAP-995badaa3bf8988c",
+          "source_content_hash": "sha256:97754fd8580a3ffdaa72083c8978af94d4c18ceeeb3158b453396427c130b9f1"
+        }
+      ],
+      "last_seen_snapshot_id": "SNAP-995badaa3bf8988c",
+      "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+      "source_content_hash": "sha256:97754fd8580a3ffdaa72083c8978af94d4c18ceeeb3158b453396427c130b9f1",
+      "status": "active",
+      "title": "Retrieval practice in a short online module",
+      "zotero_key": "PUB001"
+    }
+  },
+  "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+  "project_id": "PRJ-0034-ARTICLE-REVIEW",
+  "review_id": "LR-0034",
+  "schema_version": "ZLR-001/v1",
+  "snapshots": [
+    {
+      "collection": {
+        "collection_key": "OFF0034A",
+        "collection_name": "EXP-0034 project literature",
+        "library_id": "user:offline"
+      },
+      "corpus_id": "CORP-0034",
+      "immutable": true,
+      "inventory_hash": "sha256:995badaa3bf8988c5d64b13cbf3b1cf0aa7286d09a3393d5b6fd15a26dde6797",
+      "item_keys": [
+        "PUB001"
+      ],
+      "items": [
+        {
+          "annotation_hash": "sha256:b2b6b89dcdbb8c4e985903c598cab72c4578eea9034b44743b6a5910f3354273",
+          "annotation_status": "validated",
+          "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+          "source_content_hash": "sha256:97754fd8580a3ffdaa72083c8978af94d4c18ceeeb3158b453396427c130b9f1",
+          "title": "Retrieval practice in a short online module",
+          "zotero_key": "PUB001"
+        }
+      ],
+      "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+      "snapshot_id": "SNAP-995badaa3bf8988c"
+    }
+  ]
+}

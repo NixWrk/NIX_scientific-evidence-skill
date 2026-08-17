@@ -1,0 +1,15 @@
+{
+  "collection": {
+    "collection_key": "OFF0034A",
+    "collection_name": "EXP-0034 project literature",
+    "library_id": "user:offline"
+  },
+  "corpus_id": "CORP-0034",
+  "current_artifact": null,
+  "items": {},
+  "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+  "project_id": "PRJ-0034-ARTICLE-REVIEW",
+  "review_id": "LR-0034",
+  "schema_version": "ZLR-001/v1",
+  "snapshots": []
+}

@@ -2,6 +2,29 @@
 
 Use this contract in every mode. Keep identifiers stable across revisions.
 
+## Optional project context
+
+An evidence bundle may include one optional top-level `project_context`. When
+present, it contains exactly these fields:
+
+| Field | Requirement |
+|---|---|
+| `project_id` | Stable identifier of the owning research project. |
+| `manifest_ref` | Reference to the authoritative `RP-001/v1` project manifest. |
+| `context_hash` | `sha256:<64 lowercase hex digits>` for the manifest's current project context. |
+| `objective_ids` | Project objective identifiers used to route this task. |
+| `question_ids` | Research-question identifiers used to route this task. |
+
+This block is context and routing metadata only. It is not a source record, an
+evidence record, a result, or support for a claim. Claims still cite the
+publication or approved research record through stable locators.
+
+If `context_hash` changes, invalidate project-relative outputs produced under
+the previous context, including applicability judgements, usefulness notes,
+thematic routing, and synthesis. Rebuild them against the new manifest. The
+context change does not invalidate facts extracted from an unchanged source;
+those facts retain their source and locator provenance.
+
 ## Source record
 
 | Field | Requirement |

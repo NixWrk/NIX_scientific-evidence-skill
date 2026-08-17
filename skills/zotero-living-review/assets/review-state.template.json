@@ -1,0 +1,15 @@
+{
+  "schema_version": "ZLR-001/v1",
+  "review_id": "LR-001",
+  "project_id": "PRJ-001",
+  "corpus_id": "COR-001",
+  "collection": {
+    "library_id": "user",
+    "collection_key": "COLLECTIONKEY",
+    "collection_name": "Project literature"
+  },
+  "project_context_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "items": {},
+  "snapshots": [],
+  "current_artifact": null
+}

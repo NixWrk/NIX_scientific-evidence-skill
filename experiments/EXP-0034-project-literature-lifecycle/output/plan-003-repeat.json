@@ -1,0 +1,33 @@
+{
+  "blocking_reasons": [],
+  "changes": {
+    "added": [],
+    "annotation_changed": [],
+    "context_changed": false,
+    "initial": false,
+    "removed": [],
+    "source_changed": [],
+    "unchanged": [
+      "PUB001",
+      "PUB002"
+    ]
+  },
+  "corpus_id": "CORP-0034",
+  "current_artifact": {
+    "artifact_id": "ART-LR-0034-SNAP-78e9607b58c8e36f",
+    "artifact_path": "output/literature-review-v2.md",
+    "content_hash": "sha256:6ef81e3f97508e1ca461e48083b33e1a6c3b8c328dfac5637a575c2f513bf416",
+    "resynthesis_required": false,
+    "snapshot_id": "SNAP-78e9607b58c8e36f",
+    "status": "published",
+    "version": 3
+  },
+  "project_id": "PRJ-0034-ARTICLE-REVIEW",
+  "relevant_change": false,
+  "resynthesis_required": false,
+  "review_id": "LR-0034",
+  "schema_version": "ZLR-PLAN-001/v1",
+  "snapshot_id": "SNAP-78e9607b58c8e36f",
+  "snapshot_required": false,
+  "synthesis_blocked": false
+}

@@ -73,6 +73,18 @@
         }
       ]
     },
+    "project_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project_id", "manifest_ref", "context_hash", "objective_ids", "question_ids"],
+      "properties": {
+        "project_id": {"$ref": "#/$defs/identifier"},
+        "manifest_ref": {"type": "string", "minLength": 1},
+        "context_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "objective_ids": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true},
+        "question_ids": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true}
+      }
+    },
     "sources": {
       "type": "array",
       "items": {

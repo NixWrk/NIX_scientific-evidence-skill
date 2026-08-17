@@ -1,0 +1,38 @@
+{
+  "blocking_reasons": [
+    {
+      "code": "annotation_not_validated",
+      "message": "added item has no validated annotation",
+      "zotero_key": "PUB002"
+    }
+  ],
+  "changes": {
+    "added": [
+      "PUB002"
+    ],
+    "annotation_changed": [],
+    "context_changed": false,
+    "initial": false,
+    "removed": [],
+    "source_changed": [],
+    "unchanged": [
+      "PUB001"
+    ]
+  },
+  "corpus_id": "CORP-0034",
+  "current_artifact": {
+    "artifact_id": "ART-LR-0034-SNAP-4f9d27fa9f1e9480",
+    "resynthesis_required": true,
+    "snapshot_id": "SNAP-4f9d27fa9f1e9480",
+    "status": "blocked",
+    "version": 2
+  },
+  "project_id": "PRJ-0034-ARTICLE-REVIEW",
+  "relevant_change": true,
+  "resynthesis_required": true,
+  "review_id": "LR-0034",
+  "schema_version": "ZLR-PLAN-001/v1",
+  "snapshot_id": "SNAP-4f9d27fa9f1e9480",
+  "snapshot_required": true,
+  "synthesis_blocked": true
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Project Workflow"
+  short_description: "Keep research project context and links consistent"
+  default_prompt: "Use $research-project-workflow to define or validate a research project manifest."

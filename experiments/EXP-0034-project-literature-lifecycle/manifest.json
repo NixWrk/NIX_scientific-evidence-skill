@@ -1,0 +1,32 @@
+{
+  "experiment_id": "EXP-0034",
+  "task": "project_literature_lifecycle",
+  "input": "offline_synthetic",
+  "project_id": "PRJ-0034-ARTICLE-REVIEW",
+  "corpus_id": "CORP-0034",
+  "skills": [
+    {
+      "id": "research-project-workflow",
+      "version": "0.1"
+    },
+    {
+      "id": "zotero-project-annotation",
+      "version": "0.1"
+    },
+    {
+      "id": "zotero-living-review",
+      "version": "0.1"
+    }
+  ],
+  "executor": {
+    "model": "gpt-5.6-luna",
+    "reasoning": "max"
+  },
+  "started": "2026-08-17",
+  "completed": "2026-08-17",
+  "network": false,
+  "zotero_live": false,
+  "result": "pass",
+  "report_ref": "report.md",
+  "evaluation_ref": "evaluation.md"
+}

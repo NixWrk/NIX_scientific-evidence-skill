@@ -82,6 +82,34 @@ candidates:
     tasks: [qa, literature_review, manuscript]
     role: output_audit
 
+  - id: research-project-workflow
+    category: portable_skill
+    status: smoke_tested
+    tasks: [project_context, literature_review, manuscript, qualification_work]
+    role: project_context_manifest_and_routing
+    implementation: skills/research-project-workflow
+    current_agent_smoke: offline_forward_lifecycle_exp_0034_pass
+    live_zotero_roundtrip: not_assessed
+
+  - id: zotero-project-annotation
+    category: portable_skill
+    status: smoke_tested
+    tasks: [annotation, literature_review]
+    role: zotero_project_annotation_adapter
+    implementation: skills/zotero-project-annotation
+    dependencies: [zotero-mcp, research-project-workflow]
+    current_agent_smoke: offline_forward_lifecycle_exp_0034_pass
+    live_zotero_roundtrip: not_assessed
+
+  - id: zotero-living-review
+    category: portable_skill
+    status: smoke_tested
+    tasks: [literature_review, annotation]
+    role: zotero_living_review_state_engine
+    implementation: skills/zotero-living-review
+    dependencies: [zotero-mcp, research-project-workflow, zotero-project-annotation]
+    current_agent_smoke: offline_forward_lifecycle_exp_0034_pass
+    live_zotero_roundtrip: not_assessed
 status_values:
   - not_started
   - environment_ready

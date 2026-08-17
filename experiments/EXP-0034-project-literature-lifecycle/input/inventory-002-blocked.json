@@ -1,0 +1,30 @@
+{
+  "collection": {
+    "collection_key": "OFF0034A",
+    "collection_name": "EXP-0034 project literature",
+    "library_id": "user:offline"
+  },
+  "corpus_id": "CORP-0034",
+  "items": [
+    {
+      "annotation_hash": "sha256:b2b6b89dcdbb8c4e985903c598cab72c4578eea9034b44743b6a5910f3354273",
+      "annotation_status": "validated",
+      "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+      "source_content_hash": "sha256:97754fd8580a3ffdaa72083c8978af94d4c18ceeeb3158b453396427c130b9f1",
+      "title": "Retrieval practice in a short online module",
+      "zotero_key": "PUB001"
+    },
+    {
+      "annotation_hash": "sha256:44fcb6fa6ee6b376e4a64f74b97044aed241f2d0561c670671eb3142ced9828b",
+      "annotation_status": "missing",
+      "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+      "source_content_hash": "sha256:e90105041c078ec3b0b8e1150bf159bf0c4c27dff4eb20f4a510d567fa7dc278",
+      "title": "Worked examples for introductory laboratory reasoning",
+      "zotero_key": "PUB002"
+    }
+  ],
+  "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+  "project_id": "PRJ-0034-ARTICLE-REVIEW",
+  "review_id": "LR-0034",
+  "schema_version": "ZLR-INV-001/v1"
+}

@@ -11,6 +11,7 @@ from typing import Any, Iterable
 
 
 ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]*$")
+SHA256_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
 MODES = {"qa", "literature_review", "manuscript", "record"}
 FIGURE_MODES = {"with_figures", "without_figures"}
 FORMATTING_MODES = {"journal_example", "section_only"}
@@ -451,6 +452,7 @@ TOP_LEVEL_FIELDS = {
     "schema_version",
     "bundle_id",
     "task",
+    "project_context",
     "sources",
     "evidence",
     "results",
@@ -460,6 +462,16 @@ TOP_LEVEL_FIELDS = {
 }
 TOP_LEVEL_REQUIRED_STRINGS = ("schema_version", "bundle_id")
 TOP_LEVEL_REQUIRED = TOP_LEVEL_REQUIRED_STRINGS + ("task", "sources", "evidence", "claims")
+
+PROJECT_CONTEXT_FIELDS = {
+    "project_id",
+    "manifest_ref",
+    "context_hash",
+    "objective_ids",
+    "question_ids",
+}
+PROJECT_CONTEXT_REQUIRED_STRINGS = ("project_id", "manifest_ref", "context_hash")
+PROJECT_CONTEXT_REQUIRED = PROJECT_CONTEXT_REQUIRED_STRINGS + ("objective_ids", "question_ids")
 
 TASK_FIELDS = {
     "mode",
@@ -617,6 +629,38 @@ def _index_records(
     return indexed
 
 
+def _validate_project_context(value: Any, path: str, errors: list[str]) -> None:
+    """Validate optional project routing context without treating it as evidence."""
+
+    if not isinstance(value, dict):
+        errors.append(f"{path}: expected an object")
+        return
+    _check_allowed_keys(value, PROJECT_CONTEXT_FIELDS, path, errors)
+    _check_required_strings(value, PROJECT_CONTEXT_REQUIRED_STRINGS, path, errors)
+    project_id = value.get("project_id")
+    if _nonempty_string(project_id) and not ID_PATTERN.fullmatch(project_id):
+        errors.append(f"{path}.project_id: invalid identifier")
+    context_hash = value.get("context_hash")
+    if not isinstance(context_hash, str) or not SHA256_PATTERN.fullmatch(context_hash):
+        errors.append(
+            f"{path}.context_hash: expected sha256:<64 lowercase hex digits>"
+        )
+
+    for field in ("objective_ids", "question_ids"):
+        identifiers = _as_list(value.get(field), f"{path}.{field}", errors)
+        if not all(_nonempty_string(identifier) for identifier in identifiers):
+            errors.append(f"{path}.{field}: expected a list of non-empty strings")
+        valid_ids = [
+            identifier
+            for identifier in identifiers
+            if _nonempty_string(identifier) and ID_PATTERN.fullmatch(identifier)
+        ]
+        if len(set(valid_ids)) != len(valid_ids):
+            errors.append(f"{path}.{field}: duplicate identifiers are forbidden")
+        for index, identifier in enumerate(identifiers):
+            if not _nonempty_string(identifier) or not ID_PATTERN.fullmatch(identifier):
+                errors.append(f"{path}.{field}[{index}]: invalid identifier")
+
 def validate_bundle(data: Any) -> dict[str, Any]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -628,6 +672,9 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     _check_required_strings(data, TOP_LEVEL_REQUIRED_STRINGS, "bundle", errors)
     if data.get("schema_version") != "1.0":
         errors.append("bundle.schema_version: expected '1.0'")
+
+    if "project_context" in data:
+        _validate_project_context(data["project_context"], "bundle.project_context", errors)
 
     task = data.get("task")
     if not isinstance(task, dict):

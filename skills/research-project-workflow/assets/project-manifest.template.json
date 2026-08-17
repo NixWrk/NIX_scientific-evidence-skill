@@ -1,0 +1,59 @@
+{
+  "schema_version": "RP-001/v1",
+  "project_id": "PRJ-001",
+  "context_hash": "sha256:2de7558dcda1844ab9862fcccbd5765c04d7bfffa3605316c8de2f5eaf9b10f7",
+  "project_kind": "candidate_dissertation",
+  "parent_project_id": null,
+  "title": "Research project title",
+  "status": "draft",
+  "context": {
+    "problem": "State the research problem in one precise sentence.",
+    "goal": "State the intended research outcome.",
+    "objectives": [
+      {
+        "objective_id": "OBJ-001",
+        "text": "Describe the first concrete objective."
+      }
+    ],
+    "research_questions": [
+      {
+        "question_id": "RQ-001",
+        "text": "State the question that the project will answer."
+      }
+    ],
+    "scope": "Define the population, period, materials, or other boundaries.",
+    "exclusions": [
+      "Record a material boundary that is intentionally out of scope."
+    ]
+  },
+  "zotero_collection_bindings": [],
+  "corpora": [
+    {
+      "corpus_id": "CORP-001",
+      "label": "Living literature corpus",
+      "policy": "dynamic",
+      "binding_ids": [],
+      "objective_ids": ["OBJ-001"],
+      "question_ids": ["RQ-001"],
+      "snapshots": [],
+      "active_snapshot_id": null
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "ART-001",
+      "kind": "literature-review",
+      "path": "artifacts/literature-review.md",
+      "status": "draft",
+      "linked_manifest_ids": ["MAN-001"]
+    }
+  ],
+  "linked_manifests": [
+    {
+      "manifest_id": "MAN-001",
+      "kind": "article-annotation",
+      "path": "artifacts/annotations/article-001.json",
+      "relation": "derived"
+    }
+  ]
+}

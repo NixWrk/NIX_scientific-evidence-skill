@@ -92,6 +92,7 @@ def test_skill_references_and_assets_exist() -> None:
 SCHEMA_SECTIONS = (
     ((), VALIDATOR.TOP_LEVEL_FIELDS, VALIDATOR.TOP_LEVEL_REQUIRED),
     (("task",), VALIDATOR.TASK_FIELDS, VALIDATOR.TASK_REQUIRED),
+    (("project_context",), VALIDATOR.PROJECT_CONTEXT_FIELDS, VALIDATOR.PROJECT_CONTEXT_REQUIRED),
     (("sources",), VALIDATOR.SOURCE_FIELDS, VALIDATOR.SOURCE_REQUIRED),
     (("evidence",), VALIDATOR.EVIDENCE_FIELDS, VALIDATOR.EVIDENCE_REQUIRED),
     (("results",), VALIDATOR.RESULT_FIELDS, VALIDATOR.RESULT_REQUIRED),
@@ -202,6 +203,40 @@ def test_schema_accepts_a_bundle_carrying_structure_records() -> None:
 
     assert VALIDATOR.validate_bundle(bundle)["valid"] is True
     jsonschema.validate(bundle, SCHEMA)
+
+
+def test_optional_project_context_is_valid_and_schema_synced() -> None:
+    jsonschema = pytest.importorskip("jsonschema")
+    bundle = load_template()
+    bundle["project_context"] = {
+        "project_id": "PRJ-001",
+        "manifest_ref": "projects/PRJ-001/project.json",
+        "context_hash": "sha256:" + "a" * 64,
+        "objective_ids": ["OBJ-001"],
+        "question_ids": ["RQ-001"],
+    }
+
+    assert VALIDATOR.validate_bundle(bundle)["valid"] is True
+    jsonschema.validate(bundle, SCHEMA)
+
+
+def test_project_context_rejects_bad_hash_duplicate_ids_and_unknown_fields() -> None:
+    bundle = load_template()
+    bundle["project_context"] = {
+        "project_id": "PRJ-001",
+        "manifest_ref": "projects/PRJ-001/project.json",
+        "context_hash": "sha256:" + "A" * 64,
+        "objective_ids": ["OBJ-001", "OBJ-001"],
+        "question_ids": ["RQ-001"],
+        "evidence_ids": ["EV-001"],
+    }
+
+    report = VALIDATOR.validate_bundle(bundle)
+    errors = error_text(report)
+    assert report["valid"] is False
+    assert "context_hash: expected sha256:<64 lowercase hex digits>" in errors
+    assert "objective_ids: duplicate identifiers are forbidden" in errors
+    assert "unexpected field 'evidence_ids'" in errors
 
 
 CARD_SPEC = importlib.util.spec_from_file_location(

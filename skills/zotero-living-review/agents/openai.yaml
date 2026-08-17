@@ -1,0 +1,15 @@
+interface:
+  display_name: "Zotero Living Review"
+  short_description: "Update immutable-snapshot literature reviews"
+  default_prompt: "Use $zotero-living-review to update a literature review from a Zotero subcollection inventory."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "zotero"
+      description: "Zotero MCP server for reading project collection inventories and annotations"
+      transport: "streamable_http"
+      url: "http://127.0.0.1:23120/mcp"
+
+policy:
+  allow_implicit_invocation: true

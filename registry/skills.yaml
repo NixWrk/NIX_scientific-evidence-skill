@@ -12,8 +12,8 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.16"
-    skill_sha256: 3631efbb16d28ac3d87301cd3a13d87b0c717a0b4e2f59123caef6dd07776a13
+    version: "0.17"
+    skill_sha256: 340591af68c6ca43a84395b5e4f61ad79c193c112a8a35c49278d4de83a7cbe9
     task: [qa, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass
@@ -74,13 +74,14 @@ verdicts:
       - five_notebook_scenarios_pass_regression_contract
       - experiment_description_covers_planned_performed_observed_and_interpreted_states
       - expected_outcomes_are_not_accepted_as_observed_results
+      - optional_project_context_is_routing_not_evidence
     experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025, EXP-0026, EXP-0031, EXP-0032]
     next_action: validate_notebook_narrative_on_real_mixed_research_repository
 
   - id: candidate-dissertation-workflow
     source: local:skills/candidate-dissertation-workflow
-    version: "0.3"
-    skill_sha256: a16211cea61528f619416d818574865e50842010e6304c76bffff795733272d1
+    version: "0.4"
+    skill_sha256: f07cecc627ed308415ccad86b0533d8e2932cc01b1fbb20a7ca8e19a5805f74b
     task: [qualification_work, literature_review, manuscript, document_review]
     license: not_declared
     spec_subset: pass
@@ -99,6 +100,7 @@ verdicts:
       - one_artifact_id_belongs_to_one_stage
       - critic_routes_to_owning_skill_rules
       - word_and_delivery_format_are_optional
+      - generic_rp_manifest_links_cdw_without_context_duplication
     experiments: [EXP-0030, EXP-0031, EXP-0032]
     next_action: paused_after_exp_0032_resume_on_real_candidate_project_or_new_failure
 
@@ -565,6 +567,63 @@ verdicts:
     experiment: EXP-0018
     next_action: none
 
+  - id: research-project-workflow
+    source: local:skills/research-project-workflow
+    version: "0.1"
+    skill_sha256: e85a33d8563c8fe3268fdac2aa2da290493c95cd9dc5cf1d3b4e6ab44c0bd461
+    task: [project_context, literature_review, manuscript, qualification_work]
+    license: not_declared
+    spec_subset: pass
+    portability: pass_with_offline_profile
+    corpus_policy: pass
+    reasons:
+      - project_manifest_is_genre_agnostic_context_and_routing_record
+      - records_supplied_context_without_inventing_research_plan
+      - stable_project_context_ids_and_context_hash
+      - dependency_free_fail_closed_validator
+      - offline_deterministic_tests_pass
+      - live_zotero_roundtrip_not_assessed
+      - offline_forward_lifecycle_exp_0034_pass
+    experiment: EXP-0034
+    next_action: assess_on_a_real_project_manifest_before_live_zotero_roundtrip
+
+  - id: zotero-project-annotation
+    source: local:skills/zotero-project-annotation
+    version: "0.1"
+    skill_sha256: 8ac765a1f660d9481ec9c7bf0966a07729a387c2f285dabb5b968f03d5bc7533
+    task: [annotation, literature_review]
+    license: not_declared
+    spec_subset: pass
+    portability: pass_with_offline_profile
+    corpus_policy: pass_with_offline_profile
+    reasons:
+      - thin_zotero_adapter_over_article_annotation_genre
+      - source_author_reader_voices_remain_separate
+      - project_context_and_source_hash_staleness_gate
+      - offline_deterministic_tests_pass
+      - live_zotero_roundtrip_not_assessed
+      - offline_forward_lifecycle_exp_0034_pass
+    experiment: EXP-0034
+    next_action: assess_one_real_zotero_item_note_roundtrip_before_live_release
+
+  - id: zotero-living-review
+    source: local:skills/zotero-living-review
+    version: "0.1"
+    skill_sha256: 42df2d4445ebba5489705c4cfb2b8bef1f84c97b64f428da94b192ace540db16
+    task: [literature_review, annotation]
+    license: not_declared
+    spec_subset: pass
+    portability: pass_with_offline_profile
+    corpus_policy: pass_with_offline_profile
+    reasons:
+      - immutable_snapshot_per_review_version
+      - deterministic_inventory_diff_and_invalidation
+      - removed_items_are_retained_in_history
+      - offline_deterministic_state_engine_tests_pass
+      - live_zotero_roundtrip_not_assessed
+      - offline_forward_lifecycle_exp_0034_pass
+    experiment: EXP-0034
+    next_action: assess_one_real_zotero_subcollection_roundtrip_before_live_release
 status_values:
   - pass
   - pass_with_offline_profile

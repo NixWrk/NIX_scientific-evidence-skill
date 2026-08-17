@@ -1,0 +1,11 @@
+Publication 001: Retrieval practice in a short online module
+
+Methods: A small randomized classroom study compared retrieval-practice prompts
+with rereading after a two-week module. The source reports the assignment and
+the assessment window in its Methods section.
+
+Results: The retrieval-practice group scored higher on the delayed quiz than
+the rereading group. The paper reports the group comparison in Results.
+
+Discussion: The authors interpret the result as support for retrieval prompts
+in this narrow module, while noting that the sample and follow-up are limited.

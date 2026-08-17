@@ -15,6 +15,12 @@ question the annotation is written against. Without that question the
 usefulness statement has nothing to be relative to; ask for it instead of
 inventing a generic summary.
 
+When the publication is a Zotero item and project relevance comes from a
+project manifest, use `zotero-project-annotation` as the adapter. Read the
+generic manifest's top-level `context_hash` and store it as
+`project_context_hash` in the derived annotation record. Project context and
+routing identifiers guide the usefulness judgement; they are not evidence.
+
 ## Procedure
 
 1. Record the source identity: identifier, version or hash, and what portion was
@@ -45,6 +51,11 @@ and the date. An annotation is a derived record. It never becomes a source for
 a later review or manuscript, and a claim may not cite it in place of the
 publication. When the source version changes, the annotation is re-made rather
 than silently reused.
+
+When the project `context_hash` changes, the project-relative annotation is
+also stale and must be re-made. The publication remains the evidence source;
+the changed project context only invalidates derived relevance and usefulness
+judgements.
 
 ## Gates
 

@@ -1,0 +1,22 @@
+{
+  "schema_version": "ZLR-INV-001/v1",
+  "review_id": "LR-001",
+  "project_id": "PRJ-001",
+  "corpus_id": "COR-001",
+  "collection": {
+    "library_id": "user",
+    "collection_key": "COLLECTIONKEY",
+    "collection_name": "Project literature"
+  },
+  "project_context_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "items": [
+    {
+      "zotero_key": "AAAA1111",
+      "source_content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000001",
+      "annotation_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000002",
+      "annotation_status": "validated",
+      "project_context_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "title": "Example article"
+    }
+  ]
+}

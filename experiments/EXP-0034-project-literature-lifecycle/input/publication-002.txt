@@ -1,0 +1,12 @@
+Publication 002: Worked examples for introductory laboratory reasoning
+
+Methods: A controlled teaching study compared worked examples with unguided
+problem solving during an introductory laboratory unit. Outcomes were measured
+with a post-unit reasoning task.
+
+Results: Students receiving worked examples completed the reasoning task with
+fewer procedural errors. The publication reports the comparison in its Results.
+
+Discussion: The authors conclude that worked examples can support novice
+laboratory reasoning in this setting, while cautioning that transfer beyond the
+unit was not established.

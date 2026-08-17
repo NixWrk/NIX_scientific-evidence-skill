@@ -11,9 +11,18 @@ orchestrator as evidence.
 
 ## Start from project state
 
-Load an existing `CDW-001/v1` project manifest or copy
-`assets/dissertation-project.template.json`. Read
-`references/project-manifest.md`, then validate it with:
+Load and validate the authoritative generic `RP-001/v1` manifest through
+`research-project-workflow` first. It owns the problem, goal, objectives,
+research questions, scope, Zotero bindings, corpora, artifact links, and
+`context_hash`.
+
+Then load the linked `CDW-001/v1` dissertation-stage manifest or copy
+`assets/dissertation-project.template.json`. Keep the link between the generic
+manifest and `CDW-001` through the stable `project_id` and the generic
+manifest's linked-manifest reference. Do not copy generic project context into
+`CDW-001`, and never use `CDW-001` as a replacement for `RP-001`. Read
+`references/project-manifest.md`, then validate the dissertation-stage manifest
+with:
 
 ```text
 python scripts/validate_dissertation_project.py dissertation-project.json

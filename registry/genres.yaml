@@ -341,8 +341,12 @@ genres:
     render_targets: [obsidian, plain]
     language_profile: genre-micro-report
     notes: >-
-      Предназначена для заметки в Zotero. Скилл готовит текст; запись в Zotero
-      выполняет человек или адаптер. Производная запись не подменяет публикацию.
+      Предназначена для заметки в Zotero. Скилл
+      scientific-evidence-workflow задаёт жанровый контракт, а
+      zotero-project-annotation выполняет адаптацию к одному item и сохраняет
+      project_id, project_context_hash и relevance_target_ids. Запись в Zotero
+      выполняет адаптер; live roundtrip пока не оценён. Производная запись не
+      подменяет публикацию.
 
   - id: reviewer-response
     family: publication

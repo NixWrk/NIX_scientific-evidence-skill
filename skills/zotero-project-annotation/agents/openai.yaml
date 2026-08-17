@@ -1,0 +1,15 @@
+interface:
+  display_name: "Zotero Project Annotation"
+  short_description: "Annotate Zotero papers for projects"
+  default_prompt: "Use $zotero-project-annotation to annotate one Zotero publication against a project."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "zotero"
+      description: "Zotero MCP server"
+      transport: "streamable_http"
+      url: "http://127.0.0.1:23120/mcp"
+
+policy:
+  allow_implicit_invocation: true

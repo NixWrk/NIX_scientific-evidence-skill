@@ -1,0 +1,82 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "ART-0034-REVIEW-V1",
+      "kind": "literature-review",
+      "linked_manifest_ids": [
+        "MAN-0034-ANN-001",
+        "MAN-0034-ANN-002"
+      ],
+      "path": "output/literature-review-v1.md",
+      "status": "planned"
+    }
+  ],
+  "context": {
+    "exclusions": [
+      "No causal claims beyond the publications' reported evidence.",
+      "No live web or Zotero synchronization in this offline test."
+    ],
+    "goal": "Produce a compact evidence-grounded review of two learning studies with explicit project relevance.",
+    "objectives": [
+      {
+        "objective_id": "OBJ-0034-01",
+        "text": "Compare the reported learning outcomes and stated boundaries of the included studies."
+      }
+    ],
+    "problem": "An early-stage article review needs a stable and traceable literature corpus before synthesis.",
+    "research_questions": [
+      {
+        "question_id": "RQ-0034-01",
+        "text": "What outcomes and limitations are reported by the included learning studies?"
+      }
+    ],
+    "scope": "Two offline publication records selected for a short article-level literature review."
+  },
+  "context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+  "corpora": [
+    {
+      "active_snapshot_id": null,
+      "binding_ids": [
+        "ZCB-0034"
+      ],
+      "corpus_id": "CORP-0034",
+      "label": "Living article literature corpus",
+      "objective_ids": [
+        "OBJ-0034-01"
+      ],
+      "policy": "dynamic",
+      "question_ids": [
+        "RQ-0034-01"
+      ],
+      "snapshots": []
+    }
+  ],
+  "linked_manifests": [
+    {
+      "kind": "article-annotation",
+      "manifest_id": "MAN-0034-ANN-001",
+      "path": "input/annotation-001.json",
+      "relation": "derived"
+    },
+    {
+      "kind": "article-annotation",
+      "manifest_id": "MAN-0034-ANN-002",
+      "path": "input/annotation-002-valid.json",
+      "relation": "derived"
+    }
+  ],
+  "parent_project_id": null,
+  "project_id": "PRJ-0034-ARTICLE-REVIEW",
+  "project_kind": "article",
+  "schema_version": "RP-001/v1",
+  "status": "active",
+  "title": "Offline evidence review of small-scale learning studies",
+  "zotero_collection_bindings": [
+    {
+      "binding_id": "ZCB-0034",
+      "collection_key": "OFF0034A",
+      "label": "EXP-0034 project literature",
+      "library": "user:offline"
+    }
+  ]
+}

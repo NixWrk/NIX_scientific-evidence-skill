@@ -7,8 +7,15 @@
 Этап активной разработки скиллов кандидатской диссертации приостановлен после
 независимого EXP-0032; история, границы критика и условия возобновления
 зафиксированы в [закрытии этапа](docs/candidate-dissertation-stage-closeout.md).
-Текущий следующий контур — [исследовательский notebook как малый расчётный
-отчёт](docs/research-notebook-architecture.md), затем небольшие отчёты и статьи.
+Текущий приоритет — завершить и проверить скиллы по всей
+[карте жанров](docs/genre-taxonomy.md): от аннотации и литературного обзора до
+статьи, отчёта, исследовательской тетради и кандидатской диссертации.
+Проектный манифест, проектная аннотация и обновляемый обзор уже имеют
+[офлайн-контракт первого среза](docs/project-literature-architecture.md).
+Многопроектная память, живой адаптер Zotero, автоматическое обновление всего
+проекта и поиск литературы сохранены только как
+[возможная дальнейшая реализация](docs/possible-project-workspace-architecture.md),
+а не как обязательный план.
 
 Репозиторий для воспроизводимого тестирования библиотек, инструментов, приложений и skills, которые обрабатывают **уже имеющийся** корпус научных публикаций.
 
@@ -22,21 +29,31 @@ Zotero MCP является штатным слоем доступа к мате
 - Сеть можно использовать только для получения и аудита исходного кода, документации и skills. Содержимое Zotero в такие запросы не включается.
 - Любой скрытый сетевой вызов во время обработки корпуса считается критической ошибкой.
 
-## Допустимые задачи
+## Целевые типы результатов
 
-1. Вопрос/ответ по заданной коллекции Zotero.
-2. Литературный обзор по заданному корпусу.
-3. Итоговая научная статья по предоставленным результатам исследования и литературному корпусу.
+1. Аннотация публикации, развёрнутое резюме и оценка полезности для проекта.
+2. Вопрос/ответ, микрообзор, тематический или систематический обзор корпуса.
+3. Этапный отчёт, описание эксперимента, запись процедуры и журнал решений.
+4. Исследовательский скрипт или вычислительная тетрадь с воспроизводимым
+   описанием входов, среды, метода и результата.
+5. Научная статья и другие публикационные жанры.
+6. Кандидатская диссертация, её разделы, автореферат и оформительский аппарат.
+7. Критика, рецензирование, презентация и выпуск перечисленных артефактов.
+
+Фактическое покрытие каждого типа отмечено в
+[карте жанров](docs/genre-taxonomy.md); наличие типа в этом списке не означает,
+что его скилл уже завершён.
 
 ## Основной принцип
 
 ```text
-Zotero MCP
+Проектный контекст (если результат относится к проекту)
+→ Zotero MCP и привязанные коллекции
 → HTML/PDF и метаданные
-→ нормализация
-→ извлечение проверяемых фрагментов
-→ evidence table
-→ ответ, обзор или статья
+→ аннотация публикации с хешем проектного контекста
+→ неизменяемый снимок корпуса
+→ таблица свидетельств и реестр утверждений
+→ обзор, отчёт или статья
 → независимый аудит
 ```
 
@@ -67,7 +84,7 @@ tools/          локальные нормализаторы, валидато�
 
 - [x] Зафиксирована область проекта.
 - [x] Zotero MCP принят как штатный вход.
-- [x] Определены три класса выходов и критические ошибки.
+- [x] Зафиксирована расширенная карта жанров и критические ошибки.
 - [x] Подготовлен контрольный корпус Zotero (`EXP-0001`, коллекция `ААР`, 8 публикаций).
 - [x] Выполнен статический аудит переносимых skills (`EXP-0002`).
 - [x] Выполнен первый offline-прогон `literature-triage-matrix` (`EXP-0003`, 3 публикации).
@@ -95,6 +112,14 @@ tools/          локальные нормализаторы, валидато�
 - [x] Добавлен слой русского научно-технического языка (`EXP-0023`): на обзоре `EXP-0022` число предусмотренных аудитором срабатываний уменьшено с 236 до нуля без изменения 12 утверждений, 28 используемых доказательных записей и 12 числовых групп.
 - [ ] Создан baseline прямого вопрос/ответ по Zotero HTML.
 - [ ] Создан evidence-first baseline.
+- [x] Добавлен project manifest как root entity с context_hash, корпусами и артефактами.
+- [x] Добавлен Zotero annotation adapter с разделением голосов и project-specific relevance.
+- [x] Добавлен living-review state engine с diff, invalidation и immutable snapshots.
+- [x] Офлайн lifecycle [EXP-0034](experiments/EXP-0034-project-literature-lifecycle/report.md) прошёл: publish → блокировка без аннотации → republish → byte-stable no-op.
+- [ ] Live Zotero note roundtrip и внешний планировщик ещё не оценены.
+
+Обсуждённые, но не принятые расширения вынесены в
+[ненормативную архитектурную записку](docs/possible-project-workspace-architecture.md).
 
 Текущие эксперименты: [EXP-0001 — Direct Q&A over Zotero source HTML](experiments/EXP-0001-zotero-direct-qa/task.md), [EXP-0002 — аудит переносимых skills](experiments/EXP-0002-portable-skill-audit/task.md), [EXP-0003 — offline literature matrix](experiments/EXP-0003-literature-matrix-offline/task.md), [EXP-0004 — аудит K-Dense hypothesis-generation](experiments/EXP-0004-kdense-hypothesis-generation/task.md), [EXP-0005 — critical Q&A](experiments/EXP-0005-kdense-critical-thinking/task.md), [EXP-0006 — аудит scholar-evaluation](experiments/EXP-0006-kdense-scholar-evaluation/task.md), [EXP-0007 — адаптированный FOCUS Q&A](experiments/EXP-0007-focus-detailed-qa/task.md), [EXP-0008 — аудит paper_skills](experiments/EXP-0008-paper-skills-reader/task.md), [EXP-0009 — аудит borghei litreview](experiments/EXP-0009-borghei-litreview/task.md), [EXP-0010 — правка Abstract](experiments/EXP-0010-master-cai-abstract/task.md), [EXP-0011 — парная YSLAB-правка](experiments/EXP-0011-yslab-manuscript-writing/task.md), [EXP-0012 — scope-аудит journal-adapt](experiments/EXP-0012-wantongc-journal-adapt/task.md), [EXP-0013 — offline-ядро paper-writing-suite](experiments/EXP-0013-jins13-paper-writing-suite/task.md), [EXP-0014 — source grounding и claim gate](experiments/EXP-0014-ngtiendong-source-grounding/task.md), [EXP-0015 — reviewer-mode research-mentor](experiments/EXP-0015-haoyangjin-research-mentor/task.md), [EXP-0016 — PRISMA audit-only](experiments/EXP-0016-keemanxp-slr-prisma/task.md), [EXP-0017 — аудит DeerFlow SLR](experiments/EXP-0017-deerflow-systematic-literature-review/task.md), [EXP-0018 — аудит academic-paper-strategist](experiments/EXP-0018-lishix520-strategist/task.md), [EXP-0019 — claim–evidence benchmark](experiments/EXP-0019-wenyuchiou-academic-writing-skills/task.md), [EXP-0020 — qualitative scholar evaluation](experiments/EXP-0020-kdense-scholar-evaluation-content/task.md), [EXP-0021 — portable scientific evidence workflow](experiments/EXP-0021-scientific-evidence-workflow/task.md), [EXP-0022 — direct vs evidence-first literature review](experiments/EXP-0022-intercostal-ultrasound-review/task.md) и [EXP-0023 — русскоязычное научное редактирование](experiments/EXP-0023-russian-scientific-style/task.md). Корпус EXP-0001 нормализован, gold-набор готов; следующий Q&A-запуск должен выполняться без доступа runner к `gold.jsonl`. Очередь кандидатов описана в [дорожной карте](docs/skill-testing-roadmap.md).
 

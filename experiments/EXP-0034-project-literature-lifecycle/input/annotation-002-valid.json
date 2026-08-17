@@ -1,0 +1,71 @@
+{
+  "annotation": {
+    "author_conclusion": "The authors conclude that worked examples can support novice laboratory reasoning in this setting.",
+    "project_judgement": {
+      "what_it_does_not_settle": "The synthetic source does not settle whether fewer procedural errors persist after the unit.",
+      "why_useful_here": "Adds a second bounded outcome for the project's cross-study comparison."
+    },
+    "source_voice": {
+      "reported_outcomes": [
+        {
+          "claim_id": "CL-PUB002-OUTCOME",
+          "locator": "zotero:PUB002#Results",
+          "statement": "Students receiving worked examples completed the post-unit reasoning task with fewer procedural errors.",
+          "value": "Directional comparison; the synthetic source supplies no numeric estimate."
+        }
+      ],
+      "stated_boundaries": [
+        "The authors caution that transfer beyond the unit was not established."
+      ],
+      "what_work_did": "Compared worked examples with unguided problem solving in a controlled introductory laboratory teaching study."
+    },
+    "summary": "Students receiving worked examples completed the post-unit reasoning task with fewer procedural errors."
+  },
+  "annotation_id": "ANN-0034-002",
+  "block_reason": null,
+  "evidence_role": "derived_annotation_not_evidence",
+  "metadata_only": false,
+  "project": {
+    "goal": "Produce a compact evidence-grounded review of two learning studies with explicit project relevance.",
+    "objectives": [
+      {
+        "id": "OBJ-0034-01",
+        "text": "Compare the reported learning outcomes and stated boundaries of the included studies."
+      }
+    ],
+    "project_id": "PRJ-0034-ARTICLE-REVIEW",
+    "research_questions": [
+      {
+        "id": "RQ-0034-01",
+        "text": "What outcomes and limitations are reported by the included learning studies?"
+      }
+    ],
+    "title": "Offline evidence review of small-scale learning studies"
+  },
+  "project_context_hash": "sha256:d58e67cac76c1fc44452471e6fc4de3981d20c6afadd4bd72847fed82726aa93",
+  "provenance": {
+    "created_at": "2026-08-17",
+    "machine_record_path": "input/annotation-002-valid.json"
+  },
+  "record_type": "derived_project_annotation",
+  "relevance_target_ids": [
+    "RQ-0034-01",
+    "OBJ-0034-01"
+  ],
+  "remake_required": false,
+  "schema_version": "ZPA-001/v1",
+  "source": {
+    "content_hash": "sha256:e90105041c078ec3b0b8e1150bf159bf0c4c27dff4eb20f4a510d567fa7dc278",
+    "locators_read": [
+      "Methods",
+      "Results",
+      "Discussion"
+    ],
+    "read_scope": "full_text",
+    "title": "Worked examples for introductory laboratory reasoning",
+    "zotero_item_key": "PUB002"
+  },
+  "source_content_hash": "sha256:e90105041c078ec3b0b8e1150bf159bf0c4c27dff4eb20f4a510d567fa7dc278",
+  "stale_reason": null,
+  "status": "current"
+}

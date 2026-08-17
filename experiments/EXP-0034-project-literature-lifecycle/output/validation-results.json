@@ -1,0 +1,69 @@
+{
+  "annotation_001": {
+    "counts": {
+      "relevance_targets": 2,
+      "reported_outcomes": 1,
+      "stated_boundaries": 1
+    },
+    "errors": [],
+    "valid": true,
+    "warnings": []
+  },
+  "annotation_002": {
+    "counts": {
+      "relevance_targets": 2,
+      "reported_outcomes": 1,
+      "stated_boundaries": 1
+    },
+    "errors": [],
+    "valid": true,
+    "warnings": []
+  },
+  "inventories": {
+    "inventory_001": {
+      "counts": {
+        "items": 1
+      },
+      "errors": [],
+      "valid": true
+    },
+    "inventory_002_blocked": {
+      "counts": {
+        "items": 2
+      },
+      "errors": [],
+      "valid": true
+    },
+    "inventory_003": {
+      "counts": {
+        "items": 2
+      },
+      "errors": [],
+      "valid": true
+    }
+  },
+  "project": {
+    "counts": {
+      "artifacts": 1,
+      "corpora": 1,
+      "linked_manifests": 2,
+      "objectives": 1,
+      "research_questions": 1,
+      "snapshots": 0,
+      "zotero_bindings": 1
+    },
+    "errors": [],
+    "valid": true,
+    "warnings": []
+  },
+  "states": {
+    "state_000_empty": {
+      "counts": {
+        "items": 0,
+        "snapshots": 0
+      },
+      "errors": [],
+      "valid": true
+    }
+  }
+}

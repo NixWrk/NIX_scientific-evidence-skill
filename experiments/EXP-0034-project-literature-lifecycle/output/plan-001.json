@@ -1,0 +1,30 @@
+{
+  "blocking_reasons": [],
+  "changes": {
+    "added": [
+      "PUB001"
+    ],
+    "annotation_changed": [],
+    "context_changed": false,
+    "initial": true,
+    "removed": [],
+    "source_changed": [],
+    "unchanged": []
+  },
+  "corpus_id": "CORP-0034",
+  "current_artifact": {
+    "artifact_id": "ART-LR-0034-SNAP-995badaa3bf8988c",
+    "resynthesis_required": true,
+    "snapshot_id": "SNAP-995badaa3bf8988c",
+    "status": "needs_resynthesis",
+    "version": 1
+  },
+  "project_id": "PRJ-0034-ARTICLE-REVIEW",
+  "relevant_change": true,
+  "resynthesis_required": true,
+  "review_id": "LR-0034",
+  "schema_version": "ZLR-PLAN-001/v1",
+  "snapshot_id": "SNAP-995badaa3bf8988c",
+  "snapshot_required": true,
+  "synthesis_blocked": false
+}

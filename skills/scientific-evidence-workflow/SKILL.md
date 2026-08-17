@@ -21,13 +21,22 @@ tools. Accept local UTF-8 text, JSON, JSONL, HTML, Markdown, CSV, or extracted
 PDF content. An adapter may obtain these records from Zotero, but Zotero is not
 required by the skill.
 
+An evidence bundle may carry an optional top-level `project_context` with
+`project_id`, `manifest_ref`, `context_hash`, `objective_ids`, and
+`question_ids`. This block scopes and routes work against the authoritative
+project manifest; it is never a source, evidence, or support for a claim. When
+`context_hash` changes, invalidate and regenerate every project-relative
+output derived under the old context while leaving source evidence unchanged.
+
 ## Select one output mode
 
 Always read `references/evidence-contract.md` first. Then load exactly one mode:
 
 - Q&A from a fixed corpus: `references/qa-workflow.md`.
 - Literature review from a fixed corpus:
-  `references/literature-review-workflow.md`.
+  `references/literature-review-workflow.md`. For a changing Zotero collection,
+  route snapshot management through `zotero-living-review`; each published
+  version still uses one immutable corpus snapshot.
 - Manuscript drafting, audit, or revision from supplied literature and research
   records: `references/manuscript-workflow.md`.
 - Scientific criticism of a supplied work: manuscript mode plus
@@ -43,7 +52,9 @@ gates. When the request matches one, set `task.genre` and also load its
 reference:
 
 - `article-annotation`: one publication annotated for the reference library —
-  `references/genres/article-annotation.md`, mode `qa`.
+  `references/genres/article-annotation.md`, mode `qa`; when the item is in
+  Zotero and relevance is project-relative, route the adapter work through
+  `zotero-project-annotation`.
 - `stage-report`: what was done, produced, opened, and blocked in one stage —
   `references/genres/stage-report.md`, mode `record`.
 - `micro-review`: one review question across two to five sources —
@@ -126,6 +137,11 @@ machine-readable field names, identifiers, code, or exact source fragments.
 Record the requested mode, question or artifact, allowed source identifiers,
 input versions, language, audience, and requested output format. State any
 missing requirement that affects the result.
+
+If `project_context` is supplied, verify its manifest reference and context
+hash before project-relative synthesis. Use its objective and question IDs for
+routing only. Never cite the project context, an annotation, or routing state
+as evidence.
 
 For a notebook, identify one principal research question, its scope, completion
 criterion, inputs, method, observable outputs, limitations, and final
