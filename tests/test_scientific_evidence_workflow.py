@@ -793,8 +793,56 @@ def record_bundle(genre: str, representation: str = "protocol") -> dict:
 
 
 def experiment_bundle() -> dict:
-    return record_bundle("experiment-description")
-
+    bundle = record_bundle("experiment-description")
+    sections = (
+        "rationale",
+        "objective",
+        "planned_method",
+        "expected_outcomes",
+        "planned_use",
+        "execution_context",
+        "performed_method",
+        "observations_results",
+        "limits",
+    )
+    template_claim = bundle["claims"][0]
+    claims = []
+    for index, section in enumerate(sections, 1):
+        claim = copy.deepcopy(template_claim)
+        claim.update({"claim_id": f"CL-EXP-{index}", "output_section": section})
+        if section == "expected_outcomes":
+            claim.update(
+                {
+                    "certainty": "uncertain",
+                    "evidence_ids": [],
+                    "result_ids": [],
+                    "status": "unsupported",
+                    "disposition": "request_input",
+                }
+            )
+        elif section == "observations_results":
+            claim.update(
+                {
+                    "evidence_ids": [],
+                    "result_ids": ["RES-EXP-001"],
+                }
+            )
+        else:
+            claim.update({"result_ids": []})
+        claims.append(claim)
+    bundle["claims"] = claims
+    bundle["results"] = [
+        {
+            "result_id": "RES-EXP-001",
+            "source_id": "SRC-EXAMPLE-001",
+            "locator": "run-log:observation-1",
+            "value": "recorded run",
+            "unit": None,
+            "version": "v1",
+            "analysis": "source-recorded observation",
+        }
+    ]
+    return bundle
 
 def procedure_bundle() -> dict:
     return record_bundle("procedure-record")
@@ -1141,8 +1189,30 @@ def test_experiment_description_refuses_a_reconstruction() -> None:
     report = VALIDATOR.validate_bundle(bundle)
 
     assert report["valid"] is False
-    assert "requires a source with representation ['data', 'protocol']" in error_text(report)
+    assert "requires a source with representation ['data', 'note', 'protocol']" in error_text(report)
 
+
+def test_experiment_description_accepts_a_note_as_lifecycle_record() -> None:
+    bundle = experiment_bundle()
+    bundle["sources"][0]["representation"] = "note"
+
+    report = VALIDATOR.validate_bundle(bundle)
+    assert report["valid"] is True, report["errors"]
+
+def test_experiment_description_distinguishes_expected_from_actual_result() -> None:
+    bundle = experiment_bundle()
+    expected = next(
+        item for item in bundle["claims"] if item["output_section"] == "expected_outcomes"
+    )
+    expected.update(
+        {"status": "supported", "disposition": "keep", "certainty": "direct", "evidence_ids": ["EV-001"]}
+    )
+    assert VALIDATOR.validate_bundle(bundle)["valid"] is True
+
+    expected["result_ids"] = ["RES-EXP-001"]
+    report = VALIDATOR.validate_bundle(bundle)
+    assert report["valid"] is False
+    assert "expected_outcomes cannot reference actual result_ids" in error_text(report)
 
 def test_procedure_record_accepts_a_note_but_not_literature_context() -> None:
     bundle = record_bundle("procedure-record", representation="note")

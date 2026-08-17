@@ -12,8 +12,8 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.15"
-    skill_sha256: 92f9ab8c7a328d059d6c0f97f091dd27e2968d01e64c10351d7fe10632454f61
+    version: "0.16"
+    skill_sha256: 3631efbb16d28ac3d87301cd3a13d87b0c717a0b4e2f59123caef6dd07776a13
     task: [qa, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass
@@ -72,6 +72,8 @@ verdicts:
       - notebook_static_lint_does_not_claim_clean_kernel_execution
       - notebook_split_gate_is_semantic_not_cell_count_based
       - five_notebook_scenarios_pass_regression_contract
+      - experiment_description_covers_planned_performed_observed_and_interpreted_states
+      - expected_outcomes_are_not_accepted_as_observed_results
     experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025, EXP-0026, EXP-0031, EXP-0032]
     next_action: validate_notebook_narrative_on_real_mixed_research_repository
 

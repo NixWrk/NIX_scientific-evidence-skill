@@ -48,8 +48,12 @@ reference:
   `references/genres/stage-report.md`, mode `record`.
 - `micro-review`: one review question across two to five sources —
   `references/genres/micro-review.md`, mode `literature_review`.
-- `experiment-description`: what was set up and performed in one experiment —
-  `references/genres/experiment-description.md`, mode `record`.
+- `experiment-description`: the lifecycle dossier of one bounded experiment from supplied
+  protocol, data, or note sources — from rationale and planned/approved procedure
+  through performed work, observed and interpreted results, and explicit
+  `not_assessed` fields — `references/genres/experiment-description.md`, mode
+  `record`; keep expected outcomes separate from result records and use
+  `assets/experiment-description.template.md`.
 - `procedure-record`: one performed procedure, its deviations and outputs —
   `references/genres/procedure-record.md`, mode `record`.
 - `decision-log`: why a choice was made, against what was known then —

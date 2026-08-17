@@ -115,29 +115,40 @@ genres:
     implemented_in: scientific-evidence-workflow
     bundle_mode: record
     source_count: {min: 1, max: null}
-    source_representations: [protocol, data]
+    source_representations: [protocol, data, note]
     normativity: conventional
     depth: section
     purpose: record_procedure
     audience: [self, supervisor, coauthors]
     evidence_regime: {literature: allowed, own_results: allowed, internal_crossref: allowed, organizational: allowed}
     required_components:
-      - объект и материалы
-      - приборы, версии и настройки
-      - выполненная процедура
-      - условия и контролируемые факторы
-      - измеряемые величины и единицы
-      - выборка, отбраковка и контроль качества
-      - этические условия, если применимо
-    invariants: [INV-NUMBER-RESULT, INV-CROSSREF-RESOLVABLE]
+      - обоснование и триггер эксперимента
+      - вопрос, гипотеза, цель, целевая величина и критерий завершения
+      - ожидаемые наблюдаемые исходы
+      - предполагаемое использование результатов и правило решения
+      - раздельные состояния planned, approved, performed, observed, interpreted и not_assessed
+      - место, время, организация и роли
+      - объект, выборка и материалы, включая включение, исключение и отбраковку
+      - приборы, программное обеспечение, версии, настройки, калибровка и валидация
+      - планируемая и фактически выполненная процедуры в отдельных блоках
+      - условия, контролируемые и неконтролируемые факторы
+      - данные, переменные, операционные определения, единицы и точки измерения
+      - контроль качества, отбраковка, этические условия и область одобрения
+      - отклонения от утверждённого или планируемого порядка
+      - наблюдённые результаты со ссылками на данные или записи результатов
+      - отдельная интерпретация, ограничения и поля not_assessed
+      - downstream-использование результатов и разрешимые внутренние ссылки
+    invariants: [INV-METHOD-RECORD, INV-CROSSREF-RESOLVABLE]
     render_targets: [obsidian, ipynb, docx]
     language_profile: genre-experiment
     notes: >-
-      Обязательный этап. Служит единственным входом для методов статьи и главы
-      методов. При участии людей нельзя автоматически требовать заключение
-      этического комитета своей организации: устанавливается организация, на
-      базе которой эксперимент фактически выполнялся, и её локальный комитет.
-      См. BMSTU-ETHICS в registry/normative-base.yaml.
+      Lifecycle-запись одного bounded experiment. Ожидаемые исходы не являются
+      результатами; approved не означает performed, observed не означает
+      interpreted, а отсутствие проверки помечается not_assessed. Запись служит
+      входом для методов статьи, главы методов, result records и notebook narrative.
+      При участии людей устанавливается организация, на базе которой эксперимент
+      фактически выполнялся, и её локальный комитет; одобрение не выводится из
+      аффилиации автора. См. BMSTU-ETHICS в registry/normative-base.yaml.
 
   - id: procedure-record
     family: working

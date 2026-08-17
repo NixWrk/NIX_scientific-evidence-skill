@@ -105,7 +105,29 @@ GENRES: dict[str, dict[str, Any]] = {
         "organizational": "allowed",
         "source_min": 1,
         "source_max": None,
-        "source_representations": ["protocol", "data"],
+        "source_representations": ["protocol", "data", "note"],
+        "required_output_sections": {
+            "rationale",
+            "objective",
+            "planned_method",
+            "expected_outcomes",
+            "planned_use",
+            "execution_context",
+            "performed_method",
+            "observations_results",
+            "limits",
+        },
+        "allowed_output_sections": {
+            "rationale",
+            "objective",
+            "planned_method",
+            "expected_outcomes",
+            "planned_use",
+            "execution_context",
+            "performed_method",
+            "observations_results",
+            "limits",
+        },
     },
     "procedure-record": {
         "bundle_mode": "record",
@@ -1066,6 +1088,16 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                         errors.append(
                             f"claim[{claim_id}].output_section: {genre!r} does not define "
                             f"section {section!r}; expected one of {sorted(allowed_sections)}"
+                        )
+
+            if genre == "experiment-description":
+                for claim_id, item in claims.items():
+                    if item.get("output_section") != "expected_outcomes":
+                        continue
+                    path = f"claim[{claim_id}]"
+                    if item.get("result_ids"):
+                        errors.append(
+                            f"{path}: expected_outcomes cannot reference actual result_ids"
                         )
 
             # These dissertation genres exclude administrative records from
