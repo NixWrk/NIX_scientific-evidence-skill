@@ -61,10 +61,16 @@ changes automatically.
   and resolved normative profile; check resolution, duplicates, numbering,
   selected order, and supported record rules. Do not enforce an unspecified
   sort strategy.
-- Title page: require all GOST fields and structured supervisor/consultant
+- Title page: generate with `scripts/apply_dissertation_title_page.py`; audit an
+  existing DOCX with `scripts/audit_dissertation_title_page.py` against the same
+  approved facts. Require all GOST fields and structured supervisor/consultant
   credentials; enforce a local signature only when its authority is selected.
+  If the first-page boundary is not explicit, return a source-quality
+  recommendation instead of inferring missing normative fields.
 - Final TOC: derive entries from Word heading styles, reject hierarchy jumps,
-  insert a real field, refresh externally, and inspect its cached result.
+  insert a real field, and refresh externally. Audit an existing refreshed copy
+  with `scripts/audit_existing_word_toc.py`. Do not treat a missing Word field as
+  a GOST violation and do not claim that cached page numbers were verified.
 
 ## Critic and benchmark contract
 

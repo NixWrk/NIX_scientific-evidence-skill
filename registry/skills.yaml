@@ -62,8 +62,8 @@ verdicts:
 
   - id: dissertation-formatting-and-apparatus
     source: local:skills/dissertation-formatting-and-apparatus
-    version: "0.2"
-    skill_sha256: 69f71d41bedf1fcb26bcafb79e4d038a2aab7ff5034d3479b96d980242282b89
+    version: "0.3"
+    skill_sha256: c2759ff1b17c141723235807b23db99d304b6e226d272343abefcb8fbfbf34dd
     task: [qualification_work, document_formatting, bibliography, document_review]
     license: not_declared
     spec_subset: pass
@@ -81,7 +81,9 @@ verdicts:
       - word_review_has_structural_ooxml_audit
       - visual_docx_render_requires_available_office_engine
       - title_page_requires_resolved_authorities_and_complete_credentials
+      - existing_title_page_critic_requires_explicit_first_page_boundary
       - final_toc_uses_word_heading_styles_and_refreshed_field
+      - existing_toc_critic_respects_field_range_and_avoids_page_number_claims
       - corrupt_text_layer_gates_dependent_critic_checks
     experiment: EXP-0028
     prior_static_experiment: EXP-0027
