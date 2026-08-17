@@ -1,0 +1,42 @@
+{
+  "experiment_id": "EXP-0033",
+  "title": "Read-only critic run on the Kalmykov notebook repository",
+  "date": "2026-08-17",
+  "mode": "critic",
+  "genre": "notebook-narrative",
+  "source": {
+    "path": "D:\\Git_Code\\Kardio_respiratory_dudes\\Калмыков\\Colab Notebooks",
+    "git_root": "D:\\Git_Code\\Kardio_respiratory_dudes",
+    "git_commit": "441b71c7f0453aec7f1ae1159cc72ca2bb8ca0dc",
+    "dirty_before_and_after": [
+      "Калмыков/Colab Notebooks/09_Статическая_оценка_параметров.ipynb"
+    ],
+    "mutated_by_experiment": false
+  },
+  "skill": {
+    "repository_commit": "950f67248610a883393a1571e9769034b2789cac",
+    "skill_id": "scientific-evidence-workflow",
+    "references": [
+      "references/genres/notebook-narrative.md",
+      "references/reproducibility-contract.md",
+      "references/evidence-contract.md",
+      "references/critic-workflow.md"
+    ]
+  },
+  "scope": {
+    "notebooks": 9,
+    "markdown_documents": 8,
+    "json_artifacts": 22,
+    "code_and_supporting_files_inspected": true,
+    "fresh_kernel_execution": false,
+    "external_data_available": false,
+    "literature_corpus_available_in_scope": false
+  },
+  "raw_lint": {
+    "status": "fail",
+    "errors": 59,
+    "warnings": 103,
+    "accepted_without_adjudication": false,
+    "path": "raw-notebook-lint.json"
+  }
+}
