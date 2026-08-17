@@ -80,6 +80,7 @@ def test_template_is_valid_notebook_with_working_report_metadata():
         "artifact_status": "working",
         "execution_status": "not_run",
         "schema_version": "1.0",
+        "study_type": "computational",
     }
     tags = {
         tag
@@ -164,3 +165,51 @@ def test_notebook_evidence_bundle_accepts_its_canonical_shape():
     ]
     report = validator.validate_bundle(bundle)
     assert report["valid"] is True, report["errors"]
+
+
+def empirical_notebook(*, complete_arc: bool = True) -> dict:
+    path = FIXTURES / "clean-single-task.ipynb"
+    notebook = json.loads(path.read_text(encoding="utf-8"))
+    notebook["metadata"]["scientific_report"]["study_type"] = "empirical"
+    if complete_arc:
+        notebook["cells"][3]["source"] = [
+            "**Наблюдение:** базовый импеданс составил 42,043 Ом.\n",
+            "**Интерпретация:** результат относится только к EXP-001.\n",
+            "**Ограничение:** повторяемость не установлена.",
+        ]
+        notebook["cells"][0]["metadata"]["tags"].append("experiment-context")
+        notebook["cells"][1]["metadata"]["tags"].append("experiment-procedure")
+        notebook["cells"][3]["metadata"]["tags"].extend(
+            ["experimental-observation", "experimental-analysis"]
+        )
+    return notebook
+
+
+def test_empirical_notebook_requires_and_accepts_complete_experimental_arc():
+    report = LINTER.lint_notebook(empirical_notebook())
+    assert report["status"] == "pass"
+    assert not {f"NB-EXP-00{index}" for index in range(1, 5)} & rule_ids(report)
+
+
+def test_empirical_notebook_reports_each_missing_experimental_function():
+    report = LINTER.lint_notebook(empirical_notebook(complete_arc=False))
+    assert report["status"] == "fail"
+    assert {f"NB-EXP-00{index}" for index in range(1, 5)} <= rule_ids(report)
+
+
+def test_unknown_study_type_is_rejected():
+    notebook = empirical_notebook()
+    notebook["metadata"]["scientific_report"]["study_type"] = "observationalish"
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+
+
+def test_impedance_units_ohm_and_ohm_meter_are_recognized():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][3]["source"] = [
+        "**Observation:** Z = 42,043 " + "\u041e\u043c" + "; rho = 6,934304 " + "\u041e\u043c\u00b7\u043c.\n",
+        "**Limitation:** one measurement.",
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "pass"
+    assert "NB-NUMBER-001" not in rule_ids(report)

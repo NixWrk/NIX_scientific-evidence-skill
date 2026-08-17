@@ -46,6 +46,34 @@ Use the local arc `purpose/input → action/assumption → observable output →
 interpretation/limit` for a logical calculation stage. Do not create four
 headings around imports, display settings, or trivial helper cells.
 
+## Empirical and mixed notebooks
+
+When measured or observed data come from an experiment, the computational arc
+does not replace the experimental account. Set
+`scientific_report.study_type` to `empirical` or `mixed` and cover four tagged
+functions:
+
+1. `experiment-context`: stable experiment or study identifier, link to the
+   supplied description or protocol, purpose and planned quantity, object or
+   sample, conditions, recorded signals or variables, units, and channel roles;
+2. `experiment-procedure`: intended method, what was actually performed,
+   selection or exclusion steps, manual operations, and material deviations;
+3. `experimental-observation`: what was actually obtained from the recorded
+   data, with a source locator and without replacing the observation by a model
+   interpretation;
+4. `experimental-analysis`: analysis of those observations against the planned
+   quantity, including uncertainty, failed steps, alternatives, and what the
+   experiment did not establish.
+
+Do not copy a long protocol into every notebook. Link to one versioned
+experiment description and retain only the notebook-specific subset. If the
+description, raw data, or result is absent, state that absence; do not silently
+turn a planned calculation into a performed experiment or a saved legacy
+output into a reproduced result.
+
+Keep these states linguistically distinct: `planned`, `performed`, `observed`,
+`interpreted`, and `not assessed`.
+
 ## Generate
 
 1. Start from `assets/notebook-narrative.template.ipynb` or preserve the user's
@@ -71,6 +99,8 @@ generic preferences. Report:
 - hidden state, stale/error output, missing randomness control, or an undeclared
   manual step;
 - a negative result, problem, or limitation hidden by a positive summary;
+- an empirical notebook that omits the experiment source, purpose, procedure,
+  recorded variables, actual observations, or analysis of those observations;
 - independent questions that should be split.
 
 Do not claim clean execution from stored outputs. Do not require a split merely
@@ -102,6 +132,8 @@ Cell or line count is only a prompt to inspect these boundaries.
 - Claims cover all five canonical output sections above.
 - Every supported numerical claim points to an evidence value or result record.
 - A hypothesis stays unsupported, attributed, and marked for later checking.
+- An `empirical` or `mixed` notebook covers all four experiment tags and links
+  its observed result to the supplied experiment or data source.
 
 ## Technical lint
 

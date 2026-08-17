@@ -29,6 +29,13 @@ when available, units, and confidentiality boundary. Distinguish generated,
 measured, manually entered, and externally obtained data. A local path is not
 provenance by itself.
 
+For measured data, link the computation to a stable experiment or study
+description. Record the object or sample, acquisition conditions, recorded
+signals or variables, channel roles, units, and the intended quantity. Keep the
+planned protocol separate from what was actually performed and from what was
+actually observed. A notebook that only names a CSV, DICOM series, or device
+has not documented the experiment that produced the input.
+
 ### Environment and execution
 
 Link to the shared lock, environment, container, or dependency file. Record only
@@ -77,10 +84,17 @@ The lint understands this small notebook-level object:
   "scientific_report": {
     "schema_version": "1.0",
     "artifact_status": "working",
+    "study_type": "computational",
     "execution_status": "not_run"
   }
 }
 ```
+
+Use `study_type: empirical` when the notebook directly analyses experimental
+observations and `study_type: mixed` when experiment and simulation are both
+material to its conclusion. In those modes the notebook narrative must carry
+the experiment-context, experiment-procedure, experimental-observation, and
+experimental-analysis functions defined by the notebook genre.
 
 For `artifact_status: frozen`, also provide non-empty `run_id`, `executed_at`,
 `code_version`, `environment`, and `significant_outputs`; set

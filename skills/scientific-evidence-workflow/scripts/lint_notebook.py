@@ -47,7 +47,8 @@ NUMBER_RE = re.compile(r"(?<![\w.])\d+(?:[.,]\d+)?(?!\w)")
 STABLE_ID_RE = re.compile(r"\b[A-Z][A-Z0-9_-]*-\d+(?:[._-]\d+)*\b", re.IGNORECASE)
 UNIT_AFTER_NUMBER_RE = re.compile(
     r"^\s*(?:%|°[CFКС]|мкс|мс|с|мин|ч|Гц|кГц|МГц|ГГц|мм|см|м|км|"
-    r"мВ|В|кВ|мА|А|Па|кПа|МПа|мВт|Вт|кВт|мДж|Дж|мг|г|кг|мкл|мл|л|"
+    r"мВ|В|кВ|мА|А|мОм|Ом(?:[·⋅]м)?|кОм|МОм|Па|кПа|МПа|мВт|Вт|кВт|"
+    r"мДж|Дж|мг|г|кг|мкл|мл|л|"
     r"раз(?:а|ов)?|объект\w*|наблюден\w*|образц\w*|единиц\w*)\b",
     re.IGNORECASE,
 )
@@ -64,6 +65,25 @@ REPORT_TAGS = {
 FROZEN_FIELDS = ("run_id", "executed_at", "code_version", "environment")
 VALID_ARTIFACT_STATUSES = {"working", "frozen"}
 VALID_EXECUTION_STATUSES = {"not_run", "partial", "clean_kernel_pass", "failed"}
+VALID_STUDY_TYPES = {"computational", "empirical", "mixed"}
+EXPERIMENT_TAG_REQUIREMENTS = {
+    "experiment-context": (
+        "NB-EXP-001",
+        "Experiment source, purpose, object, conditions, and recorded variables are not identified.",
+    ),
+    "experiment-procedure": (
+        "NB-EXP-002",
+        "Planned and actually performed experimental procedure are not distinguished.",
+    ),
+    "experimental-observation": (
+        "NB-EXP-003",
+        "Actual experimental observation or result is not identified.",
+    ),
+    "experimental-analysis": (
+        "NB-EXP-004",
+        "Analysis and limits of the experimental result are not identified.",
+    ),
+}
 
 
 def _source_text(cell: dict[str, Any]) -> str:
@@ -154,6 +174,7 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
     question_cells: set[int] = set()
     summary_cells: set[int] = set()
     observable_cells: set[int] = set()
+    all_tags: set[str] = set()
 
     for index, cell in enumerate(cells):
         if not isinstance(cell, dict):
@@ -164,6 +185,7 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
         cell_type = cell.get("cell_type")
         text = _source_text(cell)
         tags = _tags(cell)
+        all_tags.update(tags)
         if cell_type == "markdown":
             markdown_cells.append((index, cell, text))
             if "research-question" in tags or QUESTION_RE.search(text):
@@ -376,6 +398,25 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                     f"Unknown execution_status {execution_status!r}.",
                 )
             )
+        study_type = report_metadata.get("study_type")
+        if study_type is not None and study_type not in VALID_STUDY_TYPES:
+            findings.append(
+                _finding(
+                    "NB-REPRO-002",
+                    "error",
+                    f"Unknown study_type {study_type!r}.",
+                )
+            )
+
+        empirical_tags = set(EXPERIMENT_TAG_REQUIREMENTS)
+        empirical_account = study_type in {"empirical", "mixed"} or bool(
+            empirical_tags & all_tags
+        )
+        if empirical_account:
+            for tag, (rule_id, message) in EXPERIMENT_TAG_REQUIREMENTS.items():
+                if tag not in all_tags:
+                    findings.append(_finding(rule_id, "error", message))
+
         if artifact_status == "frozen":
             for field in FROZEN_FIELDS:
                 value = report_metadata.get(field)
