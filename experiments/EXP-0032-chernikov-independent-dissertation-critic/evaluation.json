@@ -1,0 +1,208 @@
+{
+  "experiment_id": "EXP-0032",
+  "standard": "PSES-DISS-001/0.3.0",
+  "stage": "independent_corpus",
+  "blind": true,
+  "source_status_after_disclosure": "regression",
+  "gold_status": "not_gold",
+  "gold_status_reason": "Manual adjudication checks the raw run but is not an independently constructed gold set.",
+  "adjudicator": "root-agent-manual-source-recheck",
+  "reviewed_at": "2026-08-17T15:42:48+03:00",
+  "artifacts": {
+    "raw_critic_report": {
+      "path": "critic-report.md",
+      "role": "raw",
+      "immutable": true
+    },
+    "raw_run_manifest": {
+      "path": "run-manifest.json",
+      "role": "raw",
+      "immutable": true
+    },
+    "adjudicated_report": {
+      "path": "adjudicated-report.md",
+      "role": "expert_adjudication",
+      "raw_replacement": false
+    }
+  },
+  "adjudication": {
+    "status": "completed",
+    "method": "manual_recheck_of_each_finding_against_the_frozen_full_pdf_text_and_selected_rendered_pages",
+    "summary": {
+      "accepted": 9,
+      "narrowed": 6,
+      "corrected": 0,
+      "rejected": 0,
+      "gold_status": "not_gold"
+    },
+    "released_severity": {
+      "critical": 1,
+      "major": 10,
+      "minor": 4,
+      "note": 0
+    },
+    "decisions": [
+      {
+        "item": 1,
+        "finding_id": "EXP0032-F001",
+        "claim_domain": "mathematical_semantics",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "critical",
+        "reason": "Formula (1.6) is the arithmetic mean of individual lambda values while the text calls it the probability of at least one event; the two-event counterexample is valid."
+      },
+      {
+        "item": 2,
+        "finding_id": "EXP0032-F002",
+        "claim_domain": "reproducibility_and_probability_bounds",
+        "adjudication": "narrowed",
+        "raw_claim_status": "partially_supported",
+        "release_status": "partially_verified",
+        "severity": "major",
+        "reason": "An untruncated normal law is incompatible with a bounded probability and run parameters are absent. The PDF alone does not prove that the stored realizations actually left [0,1], so critical severity is reduced."
+      },
+      {
+        "item": 3,
+        "finding_id": "EXP0032-F003",
+        "claim_domain": "construct_validity",
+        "adjudication": "narrowed",
+        "raw_claim_status": "supported_with_scope_limit",
+        "release_status": "partially_verified",
+        "severity": "major",
+        "reason": "The title-level construct of operability is broader than the implemented security indicator, but the work explicitly chooses information protection as its modeling focus. The supported defect is missing construct validation and overbroad conclusions, not proof that the focus is impermissible."
+      },
+      {
+        "item": 4,
+        "finding_id": "EXP0032-F004",
+        "claim_domain": "task_result_traceability",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "Section 4.2 describes a future 40-50-run procedure, while no executed error matrix or resulting type-I/type-II rates are reported; the stated practical adequacy task is not closed."
+      },
+      {
+        "item": 5,
+        "finding_id": "EXP0032-F005",
+        "claim_domain": "causal_claim_strength",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "The defense proposition attributes 15-20% and 8-10% reductions to the developed means, but the first value is literature-derived and the second is a difference between object categories, not a before-after intervention effect."
+      },
+      {
+        "item": 6,
+        "finding_id": "EXP0032-F006",
+        "claim_domain": "expert_method_reporting",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported_as_reporting_gap",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "The full protocol and data for the 15-specialist expert stage are not reported; a four-expert local example cannot establish agreement for all databases or universality."
+      },
+      {
+        "item": 7,
+        "finding_id": "EXP0032-F007",
+        "claim_domain": "novelty_boundary",
+        "adjudication": "narrowed",
+        "raw_claim_status": "supported_as_internal_reporting_gap",
+        "release_status": "partially_verified",
+        "severity": "major",
+        "reason": "The dissertation does not connect each novelty claim to a bounded nearest comparison. This supports weak internal substantiation only; it does not establish absence of novelty in the external literature."
+      },
+      {
+        "item": 8,
+        "finding_id": "EXP0032-F008",
+        "claim_domain": "internal_consistency",
+        "adjudication": "narrowed",
+        "raw_claim_status": "ambiguous_not_contradictory",
+        "release_status": "partially_verified",
+        "severity": "minor",
+        "reason": "Pages 135 and 137 name different weakest entities, but one is called a structural element and the other a component. Without the numeric table they may be different hierarchy levels; the verified defect is unresolved ambiguity in the conclusion."
+      },
+      {
+        "item": 9,
+        "finding_id": "EXP0032-F009",
+        "claim_domain": "applicability_boundary",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "The explicit assumptions on topology, channel, environment, failures and personnel do not accompany the universal wording of propositions and conclusions."
+      },
+      {
+        "item": 10,
+        "finding_id": "EXP0032-F010",
+        "claim_domain": "required_genre_element",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "The complete introduction contains practical significance but no separately identifiable theoretical significance, which the loaded dissertation-introduction contract requires."
+      },
+      {
+        "item": 11,
+        "finding_id": "EXP0032-F011",
+        "claim_domain": "technical_cross_references",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "minor",
+        "reason": "The missing chapter-3 TOC line, duplicate Table 3.2, Figure .4.2, and the section 2.2.5 reference to Table 3.7 instead of the connectivity matrix in Table 2.6 are all present in the full text."
+      },
+      {
+        "item": 12,
+        "finding_id": "EXP0032-F012",
+        "claim_domain": "defense_proposition_formulation",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported",
+        "release_status": "verified",
+        "severity": "major",
+        "reason": "Propositions 1-2 combine multiple predicates and use universality, sufficiency and improvement without an explicit object-metric-condition boundary."
+      },
+      {
+        "item": 13,
+        "finding_id": "EXP0032-F013",
+        "claim_domain": "conclusion_traceability",
+        "adjudication": "narrowed",
+        "raw_claim_status": "supported_with_action_correction",
+        "release_status": "partially_verified",
+        "severity": "major",
+        "reason": "Task-to-result closure is not explicit and the model statement is duplicated. Numbered conclusions are a possible repair, not an independently mandatory form."
+      },
+      {
+        "item": 14,
+        "finding_id": "EXP0032-F014",
+        "claim_domain": "literature_synthesis",
+        "adjudication": "accepted",
+        "raw_claim_status": "supported_editorial_judgment",
+        "release_status": "verified",
+        "severity": "minor",
+        "reason": "The state-of-art passage is predominantly a sequence of source summaries and provides little cross-source comparison. A matrix is optional; thematic synthesis is the actual requirement."
+      },
+      {
+        "item": 15,
+        "finding_id": "EXP0032-F015",
+        "claim_domain": "narrative_progression",
+        "adjudication": "narrowed",
+        "raw_claim_status": "supported_as_narrative_risk",
+        "release_status": "partially_verified",
+        "severity": "minor",
+        "reason": "The task is refined after algorithms are presented, which weakens progression. A preliminary model in chapter 1 is not inherently invalid if explicitly framed, so relocation is only one repair."
+      }
+    ]
+  },
+  "overall_assessment": {
+    "critic_honesty": "substantially_valid_with_calibration_needed",
+    "strength": "It detected source-grounded mathematical, causal, traceability and cross-reference defects and kept unavailable checks in not_assessed.",
+    "weakness": "It sometimes promoted ambiguity or a preferred repair into a stronger finding and overused major severity for genre-level defects.",
+    "safe_use": "Use raw findings only after expert adjudication for scientific or evidential claims; technical and bounded editorial findings can use the lightweight path."
+  },
+  "release_validation": {
+    "attempted": false,
+    "status": "blocked_not_assessed",
+    "reason": "No project manifest, primary databases, code, DOCX, applicable institutional profile, or approved result ledger."
+  }
+}

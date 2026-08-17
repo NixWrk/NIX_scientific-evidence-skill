@@ -1,0 +1,31 @@
+{
+  "experiment_id": "EXP-0032",
+  "holdout_id": "HOLDOUT-CHERNIKOV-2023",
+  "status_after_disclosure": "regression",
+  "document_type": "candidate_dissertation",
+  "title": "Модели и алгоритмы оценки работоспособности телекоммуникационной сети централизованной охраны объектов",
+  "author": "Черников Роман Сергеевич",
+  "year": 2023,
+  "specialty": "2.2.15",
+  "official_page": "https://diss.vlsu.ru/index.php?id=371",
+  "requested_pdf_url": "https://diss.vlsu.ru/uploads/media/ChernikovRS_2-2-15Dissertatsia20.06.23.pdf",
+  "representations": [
+    {
+      "kind": "pdf",
+      "acquisition": "google_viewer_cache_of_same_official_url",
+      "content_hash": "sha256:14c997ec93e9bcab3aa3db9c990b32496938577ab7e31ea3c6583656d448a4c5",
+      "size_bytes": 6105851,
+      "pages": 178,
+      "text_layer": "complete",
+      "used_for": ["semantic_text", "page_locators", "selected_visual_checks"],
+      "suitability": "usable_with_provenance_limit"
+    }
+  ],
+  "raw_source_committed": false,
+  "provenance_limit": "The frozen cached PDF could not be hash-compared with a direct download from the unavailable official host.",
+  "contamination_check": {
+    "in_work_pattern_memory_before_run": false,
+    "in_previous_holdout_experiments_before_run": false,
+    "previous_experiments_and_expected_reviews_read_by_critic": false
+  }
+}

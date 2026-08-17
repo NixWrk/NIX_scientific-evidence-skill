@@ -1,0 +1,185 @@
+{
+  "run_id": "exp0032",
+  "run_type": "blind_critic",
+  "date": "2026-08-17",
+  "timezone": "Europe/Moscow",
+  "language": "ru",
+  "task": {
+    "mode": "critic",
+    "genre": null,
+    "artifact": "full_candidate_dissertation_pdf",
+    "audience": "independent_adjudication",
+    "output_format": [
+      "markdown_raw_report",
+      "json_run_manifest"
+    ]
+  },
+  "source": {
+    "source_id": "SRC-DISS-CHERNIKOV-2023",
+    "title": "Модели и алгоритмы оценки работоспособности телекоммуникационной сети централизованной охраны объектов",
+    "author": "Черников Роман Сергеевич",
+    "requested_url": "https://diss.vlsu.ru/uploads/media/ChernikovRS_2-2-15Dissertatsia20.06.23.pdf",
+    "representation": "pdf",
+    "acquisition": {
+      "direct_official_url": "failed_connection_timeout",
+      "http_variant_same_host": "failed_connection_timeout",
+      "google_viewer_cache_of_same_url": "success",
+      "mirror_used_as_scientific_source": false
+    },
+    "local_ref": "D:/Elvis_projects/Science_Skills/tmp/exp0032-source.pdf",
+    "content_hash_sha256": "14c997ec93e9bcab3aa3db9c990b32496938577ab7e31ea3c6583656d448a4c5",
+    "file_size_bytes": 6105851,
+    "pdf_version": "1.5",
+    "pages": 178,
+    "page_size": "A4",
+    "encrypted": false,
+    "has_forms": false,
+    "has_javascript": false,
+    "creation_date": "2023-06-21T15:22:07+03:00",
+    "modification_date": "2023-06-21T15:23:48+03:00",
+    "source_quality_status": "usable_with_provenance_limit",
+    "source_quality_limit": "The cached PDF is frozen and internally coherent, but its hash could not be compared with a direct download from the unavailable official host."
+  },
+  "extraction_quality": {
+    "engine": "PyMuPDF 1.26.0",
+    "total_characters": 336927,
+    "total_words": 36462,
+    "replacement_characters": 0,
+    "empty_text_pages": [],
+    "low_text_pages_under_100_chars": [
+      163,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178
+    ],
+    "visually_checked_pdf_pages": [
+      1,
+      2,
+      36,
+      58,
+      118,
+      136,
+      178
+    ]
+  },
+  "constraints": {
+    "allowed_skill": "D:/Elvis_projects/Science_Skills/skills/scientific-evidence-workflow/SKILL.md",
+    "external_scientific_sources_added": false,
+    "forbidden_materials_read": false,
+    "word_ooxml_checked": false,
+    "invented_normative_profile": false,
+    "tracked_files_changed": false,
+    "commit_created": false
+  },
+  "skill_references_loaded": [
+    "references/evidence-contract.md",
+    "references/manuscript-workflow.md",
+    "references/critic-workflow.md",
+    "references/critic-verification-protocol.md",
+    "references/scientific-judgment-calibration.md",
+    "references/russian-scientific-style.md",
+    "references/russian/genre-dissertation.md",
+    "references/russian/genre-experiment.md",
+    "references/literature-review-workflow.md",
+    "references/genres/dissertation-outline.md",
+    "references/genres/dissertation-introduction.md",
+    "references/genres/dissertation-literature-review-chapter.md",
+    "references/genres/dissertation-methods-chapter.md",
+    "references/genres/dissertation-results-chapter.md",
+    "references/genres/dissertation-synthesis-chapter.md",
+    "references/genres/dissertation-conclusion.md",
+    "references/genres/defense-propositions.md",
+    "references/genres/novelty-statement.md",
+    "references/genres/approbation-record.md"
+  ],
+  "checks_performed": [
+    "official_source_provenance_and_pdf_signature",
+    "sha256_freeze",
+    "pdf_metadata_page_count_encryption_forms_javascript",
+    "page_by_page_text_extraction_quality",
+    "selected_pdf_visual_rendering",
+    "required_dissertation_parts_and_introduction_elements",
+    "aim_task_chapter_conclusion_traceability",
+    "defense_proposition_atomicity_and_result_anchors",
+    "novelty_boundary_and_comparison_logic",
+    "literature_review_narrative_structure",
+    "methods_reproducibility_and_expert_sample_reporting",
+    "central_probability_formula_semantics_and_counterexample",
+    "numeric_claim_search_for_15_20_and_8_10_percent",
+    "cross_section_internal_consistency",
+    "table_figure_heading_and_cross_reference_numbering",
+    "russian_scientific_style_surface_audit"
+  ],
+  "deterministic_audits": {
+    "bundle_validator": {
+      "run": false,
+      "reason": "No evidence bundle was created for this critic report."
+    },
+    "russian_style_genre_dissertation": {
+      "run": true,
+      "errors": 45,
+      "warnings": 172,
+      "issues": 217,
+      "interpretation": "surface leads only; not released one-for-one as findings"
+    },
+    "russian_style_genre_experiment": {
+      "run": true,
+      "errors": 45,
+      "warnings": 182,
+      "issues": 227,
+      "interpretation": "surface leads only; not released one-for-one as findings"
+    }
+  },
+  "finding_counts": {
+    "total": 15,
+    "by_class": {
+      "evidential": 10,
+      "editorial": 4,
+      "technical": 1
+    },
+    "by_severity": {
+      "critical": 2,
+      "major": 10,
+      "minor": 3,
+      "note": 0
+    },
+    "class_by_severity": {
+      "evidential": {
+        "critical": 2,
+        "major": 8,
+        "minor": 0,
+        "note": 0
+      },
+      "editorial": {
+        "critical": 0,
+        "major": 2,
+        "minor": 2,
+        "note": 0
+      },
+      "technical": {
+        "critical": 0,
+        "major": 0,
+        "minor": 1,
+        "note": 0
+      }
+    }
+  },
+  "not_assessed": [
+    "word_ooxml",
+    "external_bibliography_truth",
+    "external_novelty",
+    "institutional_specialty_or_council_normative_compliance_beyond_loaded_genre_references",
+    "plagiarism_or_originality_systems",
+    "external_organizational_fact_verification",
+    "full_numeric_recalculation_without_primary_databases_or_code",
+    "full_visual_page_by_page_layout",
+    "cryptographic_identity_against_direct_official_download"
+  ],
+  "outputs": {
+    "raw_report": "D:/Elvis_projects/Science_Skills/tmp/exp0032-raw-critic.md",
+    "manifest": "D:/Elvis_projects/Science_Skills/tmp/exp0032-run-manifest.json"
+  }
+}

@@ -67,8 +67,8 @@ verdicts:
       - skill_owned_technical_editorial_and_evidential_critic_layers
       - evidence_verification_is_conditional_not_universal
       - exp_0031_raw_findings_expert_adjudicated_not_gold
-    experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025, EXP-0026, EXP-0031]
-    next_action: run_blind_zotero_holdout_with_independent_adjudication
+    experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025, EXP-0026, EXP-0031, EXP-0032]
+    next_action: implement_notebook_narrative_then_validate_small_report_and_article
 
   - id: candidate-dissertation-workflow
     source: local:skills/candidate-dissertation-workflow
@@ -92,8 +92,8 @@ verdicts:
       - one_artifact_id_belongs_to_one_stage
       - critic_routes_to_owning_skill_rules
       - word_and_delivery_format_are_optional
-    experiments: [EXP-0030, EXP-0031]
-    next_action: run_skill_owned_critic_holdout_then_optional_delivery_adapter_tests
+    experiments: [EXP-0030, EXP-0031, EXP-0032]
+    next_action: paused_after_exp_0032_resume_on_real_candidate_project_or_new_failure
 
   - id: dissertation-formatting-and-apparatus
     source: local:skills/dissertation-formatting-and-apparatus
@@ -133,7 +133,7 @@ verdicts:
     experiment: EXP-0029
     prior_static_experiment: EXP-0028
     experiments: [EXP-0027, EXP-0028, EXP-0029, EXP-0031]
-    next_action: run_apparatus_holdout_then_test_only_the_selected_delivery_adapters
+    next_action: paused_resume_only_for_selected_delivery_adapter_or_normative_change
 
   - id: literature-triage-matrix
     source: https://github.com/WenyuChiou/research-hub/tree/3143d2d62f798960731cae5a2b4f91aeaca25e75/skills/literature-triage-matrix
