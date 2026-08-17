@@ -123,7 +123,8 @@
           "value": {"not": {"type": "null"}},
           "unit": {"type": ["string", "null"]},
           "version": {"type": "string", "minLength": 1},
-          "analysis": {"type": ["string", "null"]}
+          "analysis": {"type": ["string", "null"]},
+          "approved": {"type": "boolean"}
         }
       }
     },

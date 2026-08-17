@@ -29,6 +29,12 @@
 
 ## Word and release gates
 
+- Every `validated` or `final` artifact has a matching genre, a verifiable file
+  SHA-256 and a hashed passing child-validator report.
+- Every compact gate status resolves to one `gate_reports` record with the same
+  status, validator/review procedure permitted for that gate, existing report
+  file and matching SHA-256. The JSON report has a consistent passing signal
+  and no declared errors.
 - The original DOCX and source hashes are preserved.
 - Critic findings pass the PSES validator; every Word annotation has an exact
   anchor and one issue ID.
@@ -37,6 +43,6 @@
 - The final DOCX opens and saves in Word or a compatible layout engine.
 - Every rendered page is inspected; OOXML comments/revisions are audited
   structurally because rendering alone cannot prove their presence.
-- No required stage is pending or blocked and no gate remains `not_assessed` at
-  release. A consciously inapplicable stage is recorded as `not_applicable`,
-  never silently omitted.
+- No required stage is pending or blocked, no optional stage is unresolved, and
+  no gate remains `not_assessed` at release. A consciously inapplicable stage
+  is recorded as `not_applicable`, never silently omitted.

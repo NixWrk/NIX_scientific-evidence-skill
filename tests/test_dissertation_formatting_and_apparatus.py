@@ -29,8 +29,12 @@ def assert_valid(findings: list[dict]) -> None:
 
 
 def test_abbreviation_audit_detects_undefined_and_conflicting_meaning() -> None:
-    text = "Метод спектрального анализа (МСА) применён. МСА устойчив. Малая система анализа (МСА) описана. НЛО отмечено."
-    findings = ABBR.audit(text)
+    text = "МСА применён. НЛО отмечено."
+    declared = {"abbreviations": [
+        {"abbreviation": "МСА", "expansion": "метод спектрального анализа"},
+        {"abbreviation": "МСА", "expansion": "малая система анализа"},
+    ]}
+    findings = ABBR.audit(text, declared)
     assert {item["rule_id"] for item in findings} >= {"ABBR-001", "ABBR-003"}
     assert_valid(findings)
 

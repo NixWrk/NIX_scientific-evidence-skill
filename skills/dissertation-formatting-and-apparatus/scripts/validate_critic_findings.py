@@ -262,6 +262,23 @@ def validate_finding(finding: Any, *, path: str = "finding") -> dict[str, Any]:
                     "tracked changes require non-empty exact old and new strings",
                 )
             )
+        else:
+            if fix["old"] == fix["new"]:
+                errors.append(
+                    _error(
+                        "TRACKED_CHANGE_NOOP",
+                        f"{path}.suggested_fix",
+                        "tracked change old and new text must differ",
+                    )
+                )
+            if isinstance(locator, dict) and _nonempty_string(locator.get("exact_text")) and fix["old"] != locator["exact_text"]:
+                errors.append(
+                    _error(
+                        "TRACKED_CHANGE_LOCATOR_MISMATCH",
+                        f"{path}.suggested_fix.old",
+                        "tracked change old text must equal locator.exact_text",
+                    )
+                )
 
     if finding.get("issue_class") == "normative_violation":
         authorities = finding.get("authority_ids")

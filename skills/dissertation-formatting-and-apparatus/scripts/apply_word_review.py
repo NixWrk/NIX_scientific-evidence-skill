@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import importlib.util
 import json
 import os
 import re
@@ -30,7 +31,7 @@ import sys
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import Any, Iterable, Iterator, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 from lxml import etree
 
@@ -70,6 +71,15 @@ WORD_ACTIONS = {
     "tracked_change_with_comment",
 }
 PROFILES = {"comments", "track-changes", "hybrid"}
+
+
+_VALIDATOR_SPEC = importlib.util.spec_from_file_location(
+    "dissertation_critic_findings_validator",
+    Path(__file__).resolve().with_name("validate_critic_findings.py"),
+)
+assert _VALIDATOR_SPEC and _VALIDATOR_SPEC.loader
+_VALIDATOR = importlib.util.module_from_spec(_VALIDATOR_SPEC)
+_VALIDATOR_SPEC.loader.exec_module(_VALIDATOR)
 
 
 def qn(namespace: str, local: str) -> str:
@@ -189,12 +199,11 @@ def load_journal(path: str | os.PathLike[str] | None) -> list[dict[str, Any]]:
             raise ReviewError(f"duplicate issue_id: {issue_id}")
         seen.add(issue_id)
 
-        action = item.get("word_action", "none")
+        action = item.get("word_action")
         if action not in WORD_ACTIONS:
             raise ReviewError(
-                f"{issue_id}: word_action must be one of {sorted(WORD_ACTIONS)}"
+                f"{issue_id}: word_action must be explicitly set to one of {sorted(WORD_ACTIONS)}"
             )
-        item["word_action"] = action
         result.append(item)
     return result
 
@@ -926,12 +935,21 @@ def apply_review(
             if not isinstance(issue_id, str) or not issue_id.strip() or issue_id in seen:
                 raise ReviewError(f"invalid or duplicate issue_id at issue {index}")
             seen.add(issue_id)
-            action = item.get("word_action", "none")
+            action = item.get("word_action")
             if action not in WORD_ACTIONS:
-                raise ReviewError(f"{issue_id}: unsupported word_action {action!r}")
-            item["word_action"] = action
+                raise ReviewError(
+                    f"{issue_id}: word_action must be explicitly set to one of {sorted(WORD_ACTIONS)}"
+                )
             normalized.append(item)
         issues = normalized
+    validation_report = _VALIDATOR.validate_findings({"findings": issues})
+    if not validation_report["valid"]:
+        details = "; ".join(
+            f"{error['code']} at {error['path']}: {error['detail']}"
+            for error in validation_report["errors"]
+        )
+        raise ReviewError(f"PSES journal validation failed: {details}")
+
     return _write_derived_docx(
         Path(source_docx),
         Path(output_docx),

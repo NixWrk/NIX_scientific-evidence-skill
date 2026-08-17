@@ -1,0 +1,71 @@
+{
+  "experiment_id": "EXP-0031",
+  "standard": "PSES-DISS-001/0.2.2",
+  "stage": "independent_corpus",
+  "blind": true,
+  "source_status_after_disclosure": "regression",
+  "scientific_critic": {
+    "finding_classes": 12,
+    "expert_adjudication": "pending",
+    "critical_numeric_consistency_check": {
+      "observed": "12/15",
+      "computed_percent": 80.0,
+      "reported_percent": 75.0,
+      "status": "confirmed_internal_inconsistency"
+    }
+  },
+  "deterministic_audits_before_fix": {
+    "abbreviation_findings": 177,
+    "abbreviation_rule_counts": {
+      "ABBR-001": 167,
+      "ABBR-003": 2,
+      "ABBR-004": 1,
+      "ABBR-005": 7
+    },
+    "russian_style_warnings": 102,
+    "russian_style_rule_counts": {
+      "latin_prose": 88,
+      "empty_metaphrase": 4,
+      "unsupported_booster": 1,
+      "vague_calque": 9
+    }
+  },
+  "deterministic_abbreviation_audit_after_fix": {
+    "findings": 44,
+    "rule_counts": {
+      "ABBR-001": 36,
+      "ABBR-004": 1,
+      "ABBR-005": 7
+    },
+    "repeated_findings_removed": 124,
+    "false_conflict_findings_removed": 2,
+    "remaining_findings_require_manual_adjudication": true,
+    "lowercase_definition_false_findings_removed": 8
+  },
+  "release_validation": {
+    "attempted": false,
+    "reason": "No DOCX, protocol/data records, approved result ledger, or applicable normative profile",
+    "status": "blocked_not_assessed"
+  },
+  "skill_defects_exposed": [
+    "missing_pdf_html_to_evidence_bundle_adapter",
+    "project_release_accepted_unverified_status_strings",
+    "evidence_scope_was_not_universally_closed",
+    "abbreviation_auditor_duplicated_occurrences",
+    "abbreviation_conflict_regex_captured_grammar",
+    "bibliography_ledger_allowed_malformed_records",
+    "word_adapter_did_not_validate_the_pses_journal_on_direct_call",
+    "style_auditor_confuses_latin_terms_and_variables_with_prose"
+  ],
+  "fixed_in_same_change": [
+    "project_release_file_hash_child_report_and_gate_report_checks",
+    "dependency_and_optional_stage_resolution",
+    "evidence_and_result_input_scope_closure",
+    "verified_evidence_gate",
+    "qualification_results_require_explicit_approval",
+    "one_artifact_id_belongs_to_one_stage",
+    "abbreviation_deduplication_and_registry_only_conflicts",
+    "bibliography_minimum_shape_duplicate_id_display_and_strategy_checks",
+    "word_adapter_pses_and_exact_replacement_validation"
+  ]
+}

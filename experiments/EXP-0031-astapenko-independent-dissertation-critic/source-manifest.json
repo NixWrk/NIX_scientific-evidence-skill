@@ -1,0 +1,36 @@
+{
+  "experiment_id": "EXP-0031",
+  "holdout_id": "HOLDOUT-ASTAPENKO-2012",
+  "status_after_disclosure": "regression",
+  "document_type": "candidate_dissertation",
+  "title": "Биотехническая система многоканальных электроимпедансных исследований параметров гемодинамики головного мозга",
+  "author": "Астапенко Елена Михайловна",
+  "year": 2012,
+  "specialty": "05.11.17",
+  "representations": [
+    {
+      "kind": "pdf",
+      "zotero_attachment_key": "7HYIFW4G",
+      "content_hash": "sha256:cbe68ab69a864843667c4dbb124872bf9abef3c1b4aea6c35e9af586d0587215",
+      "pages": 130,
+      "text_layer": "legacy_encoding_unreliable",
+      "used_for": ["visual_structure", "page_locators"]
+    },
+    {
+      "kind": "html",
+      "zotero_attachment_key": "2ESXK6MA",
+      "content_hash": "sha256:35b71f1b8dfbb104f318a0259dde0cb7f8adc38b9692d8a28739a6d4a4afe2b6",
+      "charset_override": "utf-8",
+      "paragraphs_in_source_dom": 587,
+      "tables": 23,
+      "images": 60,
+      "bibliography_records_observed": 72,
+      "used_for": ["semantic_text", "html_locators"]
+    }
+  ],
+  "raw_source_committed": false,
+  "contamination_check": {
+    "in_work_pattern_memory_before_run": false,
+    "in_previous_holdout_experiments_before_run": false
+  }
+}

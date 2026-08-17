@@ -12,15 +12,16 @@ orchestrator as evidence.
 ## Start from project state
 
 Load an existing `CDW-001/v1` project manifest or copy
-`assets/dissertation-project.template.json`. Validate it with:
+`assets/dissertation-project.template.json`. Read
+`references/project-manifest.md`, then validate it with:
 
 ```text
 python scripts/validate_dissertation_project.py dissertation-project.json
 ```
 
-Preserve source and artifact hashes. Update a stage only after its artifact and
-gate result exist. Record a missing input as an open blocker; do not hide it in
-prose.
+Preserve source and artifact hashes. Update a stage only after its artifact,
+child-validator report and gate report exist. A status string is not validation
+evidence. Record a missing input as an open blocker; do not hide it in prose.
 
 ## Route the current request
 
@@ -74,10 +75,11 @@ profiles; never merge prose by convenience.
 
 ## Release the dissertation
 
-Read `references/release-gates.md`. Release only when all required stages are
-complete, every gate is `pass`, and no blocker remains open. A conditional
-stage may be `not_applicable` only with a recorded reason and may not be marked
-required.
+Read `references/release-gates.md`. Release only when all required stages are complete, every optional stage is
+resolved as `complete` or reasoned `not_applicable`, every gate has a hashed
+passing report, every referenced file and SHA-256 verifies, and no blocker
+remains open. A conditional stage may be `not_applicable` only with a recorded
+reason and may not be marked required.
 
 Run the apparatus critic on the final manuscript, materialize the same journal
 as Word comments/tracked changes when requested, open-save the copy in Word or

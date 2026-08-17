@@ -455,7 +455,7 @@ EVIDENCE_REQUIRED = (
     "verification_status",
 )
 
-RESULT_FIELDS = {"result_id", "source_id", "locator", "value", "unit", "version", "analysis"}
+RESULT_FIELDS = {"result_id", "source_id", "locator", "value", "unit", "version", "analysis", "approved"}
 RESULT_REQUIRED_STRINGS = ("result_id", "source_id", "locator", "version")
 RESULT_REQUIRED = RESULT_REQUIRED_STRINGS + ("value",)
 
@@ -645,6 +645,8 @@ def validate_bundle(data: Any) -> dict[str, Any]:
     if not isinstance(input_scope, list) or not all(_nonempty_string(item) for item in input_scope):
         errors.append("bundle.task.input_scope: expected a list of source identifiers")
         input_scope = []
+    elif len(set(input_scope)) != len(input_scope):
+        errors.append("bundle.task.input_scope: duplicate source identifiers are forbidden")
 
     source_records = _as_list(data.get("sources"), "bundle.sources", errors)
     evidence_records = _as_list(data.get("evidence"), "bundle.evidence", errors)
@@ -702,6 +704,10 @@ def validate_bundle(data: Any) -> dict[str, Any]:
         _check_required_strings(item, EVIDENCE_REQUIRED, path, errors)
         if item.get("source_id") not in sources:
             errors.append(f"{path}.source_id: unknown source {item.get('source_id')!r}")
+        elif item.get("source_id") not in input_scope:
+            errors.append(
+                f"{path}.source_id: source {item.get('source_id')!r} is outside input_scope"
+            )
         if item.get("support_type") not in SUPPORT_TYPES:
             errors.append(f"{path}.support_type: expected one of {sorted(SUPPORT_TYPES)}")
         if item.get("verification_status") not in VERIFICATION_STATUSES:
@@ -718,8 +724,14 @@ def validate_bundle(data: Any) -> dict[str, Any]:
         _check_required_strings(item, RESULT_REQUIRED_STRINGS, path, errors)
         if item.get("source_id") not in sources:
             errors.append(f"{path}.source_id: unknown source {item.get('source_id')!r}")
+        elif item.get("source_id") not in input_scope:
+            errors.append(
+                f"{path}.source_id: source {item.get('source_id')!r} is outside input_scope"
+            )
         if "value" not in item or item.get("value") is None:
             errors.append(f"{path}.value: frozen result value is required")
+        if "approved" in item and not isinstance(item.get("approved"), bool):
+            errors.append(f"{path}.approved: expected boolean")
 
     for unit_id, item in structure.items():
         path = f"structure[{unit_id}]"
@@ -876,7 +888,12 @@ def validate_bundle(data: Any) -> dict[str, Any]:
         ) and not result_ids:
             errors.append(f"{path}: supported claim cannot rely only on contrary or limitation evidence")
         if any(record.get("verification_status") == "extracted" for record in cited_evidence):
-            warnings.append(f"{path}: claim uses evidence that has not been verified")
+            if status in {"supported", "bounded"}:
+                errors.append(
+                    f"{path}: unverified extracted evidence cannot support a supported or bounded claim"
+                )
+            else:
+                warnings.append(f"{path}: claim uses evidence that has not been verified")
 
         if item.get("claim_type") == "numeric":
             has_evidence_value = any(record.get("value") is not None for record in cited_evidence)
@@ -929,6 +946,20 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                     f"bundle.task.input_scope: {genre!r} is defined for at most "
                     f"{rules['source_max']} source(s); consider a wider genre"
                 )
+            organizational_inputs = {
+                source_id
+                for source_id in input_scope
+                if sources.get(source_id, {}).get("representation") == "organizational"
+            }
+            if rules["organizational"] == "forbidden" and organizational_inputs:
+                errors.append(
+                    f"bundle.task.input_scope: {genre!r} forbids organizational input"
+                )
+            if rules["organizational"] == "required" and not organizational_inputs:
+                errors.append(
+                    f"bundle.task.input_scope: {genre!r} requires organizational input"
+                )
+
             required_reps = rules["source_representations"]
             if required_reps:
                 present = {
@@ -955,6 +986,23 @@ def validate_bundle(data: Any) -> dict[str, Any]:
                         )
             if rules["own_results"] == "required" and not results:
                 errors.append(f"bundle.results: {genre!r} requires own research results")
+            if results and genre in {
+                "dissertation-outline",
+                "dissertation-introduction",
+                "dissertation-methods-chapter",
+                "dissertation-results-chapter",
+                "dissertation-synthesis-chapter",
+                "dissertation-conclusion",
+                "defense-propositions",
+                "novelty-statement",
+                "thesis-synopsis",
+            }:
+                for result_id, result in results.items():
+                    if result.get("approved") is not True:
+                        errors.append(
+                            f"result[{result_id}].approved: {genre!r} requires approved=true "
+                            "for every own result"
+                        )
             if rules["own_results"] == "forbidden" and results:
                 errors.append(f"bundle.results: {genre!r} does not report own research results")
             if rules["internal_crossref"] == "forbidden":

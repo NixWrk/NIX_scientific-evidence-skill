@@ -19,7 +19,30 @@ def audit(ledger: dict) -> list[dict]:
     profile = ledger.get("profile", {})
     records = ledger.get("records", [])
     citations = ledger.get("in_text_citations", [])
+    record_ids = [record.get("record_id") for record in records if record.get("record_id")]
     by_id = {record.get("record_id"): record for record in records if record.get("record_id")}
+    for index, record in enumerate(records):
+        missing = [field for field in ("record_id", "type", "title") if not str(record.get(field, "")).strip()]
+        if missing:
+            findings.append(
+                finding(
+                    f"BIB-MALFORMED-{len(findings)+1:03d}", "BIB-007", "bibliography",
+                    {"index": index, "record_id": record.get("record_id"), "missing": missing},
+                    "ledger record has record_id, type, and title", word_action="none",
+                    severity="major", issue_class="internal_inconsistency",
+                    suggested_fix="Дополнить структурные поля записи до нормативной проверки.",
+                )
+            )
+    for record_id, count in Counter(record_ids).items():
+        if count > 1:
+            findings.append(
+                finding(
+                    f"BIB-DUPLICATE-ID-{len(findings)+1:03d}", "BIB-008", "bibliography",
+                    {"record_id": record_id, "count": count}, "record_id is unique",
+                    word_action="none", severity="critical", issue_class="internal_inconsistency",
+                    suggested_fix="Назначить уникальные record_id до сверки ссылок.",
+                )
+            )
     cited_order: list[str] = []
     for citation in sorted(citations, key=lambda item: item.get("order", 0)):
         record_id = citation.get("record_id")
@@ -34,8 +57,22 @@ def audit(ledger: dict) -> list[dict]:
                     suggested_fix="Связать ссылку с существующей записью или добавить проверенное описание.",
                 )
             )
-        elif record_id not in cited_order:
-            cited_order.append(record_id)
+        else:
+            display = str(citation.get("display", "")).strip()
+            numeric_display = re.fullmatch(r"\[(\d+)\]", display)
+            record_number = by_id[record_id].get("number")
+            if numeric_display and record_number is not None and int(numeric_display.group(1)) != record_number:
+                findings.append(
+                    finding(
+                        f"BIB-DISPLAY-{len(findings)+1:03d}", "BIB-009", "bibliography",
+                        display, f"[{record_number}]", exact_text=display,
+                        occurrence=int(citation.get("occurrence", 1)), severity="critical",
+                        issue_class="internal_inconsistency",
+                        suggested_fix="Синхронизировать отображаемый номер со связанной записью.",
+                    )
+                )
+            if record_id not in cited_order:
+                cited_order.append(record_id)
 
     if profile.get("uncited_record_policy", "report") == "report":
         for record_id in sorted(set(by_id) - set(cited_order)):
@@ -90,6 +127,15 @@ def audit(ledger: dict) -> list[dict]:
             )
 
     strategy = profile.get("sorting_strategy", "unspecified")
+    if strategy not in {"unspecified", "citation_order", "alphabetical"}:
+        findings.append(
+            finding(
+                f"BIB-STRATEGY-{len(findings)+1:03d}", "BIB-010", "bibliography",
+                strategy, "unspecified, citation_order, or alphabetical", word_action="none",
+                severity="major", issue_class="evidence_gap",
+                suggested_fix="Выбрать поддерживаемую стратегию и зафиксировать применимое основание.",
+            )
+        )
     actual_ids = [record.get("record_id") for record in records]
     expected_ids: list[str] | None = None
     if strategy == "citation_order":

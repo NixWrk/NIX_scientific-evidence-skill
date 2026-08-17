@@ -108,6 +108,7 @@ def result(result_id: str = "RES-1") -> dict:
         "unit": "a.u.",
         "version": "v1",
         "analysis": "frozen-analysis-v1",
+        "approved": True,
     }
 
 

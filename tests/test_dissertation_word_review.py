@@ -84,6 +84,31 @@ def read_part(path: Path, name: str) -> etree._Element:
         return etree.fromstring(archive.read(name))
 
 
+def canonical_journal(issues: list[dict]) -> list[dict]:
+    result = []
+    for issue in issues:
+        item = {
+            "rule_id": "TEST-RULE",
+            "module": "word-review-test",
+            "severity": "major",
+            "issue_class": "internal_inconsistency",
+            "observed": None,
+            "expected": None,
+            "authority_ids": [],
+            "evidence_ids": [],
+            "suggested_fix": None,
+            "confidence": 1.0,
+            "autofix_safe": False,
+            **issue,
+        }
+        result.append(item)
+    return result
+
+
+def apply_review(source: Path, journal: list[dict], output: Path, **kwargs):
+    return review.apply_review(source, canonical_journal(journal), output, **kwargs)
+
+
 def test_comments_preserve_source_and_wire_true_comments(tmp_path: Path) -> None:
     source = tmp_path / "source.docx"
     output = tmp_path / "comments.docx"
@@ -93,12 +118,12 @@ def test_comments_preserve_source_and_wire_true_comments(tmp_path: Path) -> None
         {
             "issue_id": "ISSUE-0001",
             "word_action": "comment",
-            "locator": {"exact_text": "Second sentence."},
+            "locator": {"exact_text": "Second sentence.", "occurrence": 1},
             "observed": "A sentence requiring evidence.",
         }
     ]
 
-    result = review.apply_review(source, journal, output, profile="comments", author="Tester")
+    result = apply_review(source, journal, output, profile="comments", author="Tester")
 
     assert result["comments_added"] == 1
     assert source.read_bytes() == before
@@ -129,7 +154,7 @@ def test_track_changes_adds_real_redline_and_enables_tracking(tmp_path: Path) ->
         }
     ]
 
-    result = review.apply_review(source, journal, output, profile="track-changes")
+    result = apply_review(source, journal, output, profile="track-changes")
 
     assert result["tracked_changes_added"] == 1
     document = read_part(output, "word/document.xml")
@@ -164,7 +189,7 @@ def test_hybrid_keeps_comment_and_redline_for_same_journal(tmp_path: Path) -> No
         },
     ]
 
-    result = review.apply_review(source, journal, output, profile="hybrid")
+    result = apply_review(source, journal, output, profile="hybrid")
 
     assert result["comments_added"] == 2
     assert result["tracked_changes_added"] == 1
@@ -177,18 +202,18 @@ def test_hybrid_keeps_comment_and_redline_for_same_journal(tmp_path: Path) -> No
     assert review.audit_document(output, journal)["valid"] is True
 
 
-def test_locator_missing_or_ambiguous_fails_without_output(tmp_path: Path) -> None:
+def test_locator_missing_or_out_of_range_fails_without_output(tmp_path: Path) -> None:
     source = tmp_path / "source.docx"
     make_fixture(source)
     missing_output = tmp_path / "missing.docx"
-    with pytest.raises(review.ReviewError, match="not found"):
-        review.apply_review(
+    with pytest.raises(review.ReviewError, match="out of range"):
+        apply_review(
             source,
             [
                 {
                     "issue_id": "ISSUE-MISSING",
                     "word_action": "comment",
-                    "locator": {"exact_text": "No such text"},
+                    "locator": {"exact_text": "No such text", "occurrence": 1},
                 }
             ],
             missing_output,
@@ -210,14 +235,14 @@ def test_locator_missing_or_ambiguous_fails_without_output(tmp_path: Path) -> No
         for name, content in entries.items():
             archive.writestr(name, _xml(document) if name == "word/document.xml" else content)
 
-    with pytest.raises(review.ReviewError, match="ambiguous"):
-        review.apply_review(
+    with pytest.raises(review.ReviewError, match="out of range"):
+        apply_review(
             ambiguous_source,
             [
                 {
                     "issue_id": "ISSUE-AMBIGUOUS",
                     "word_action": "comment",
-                    "locator": {"exact_text": "Same phrase."},
+                    "locator": {"exact_text": "Same phrase.", "occurrence": 3},
                 }
             ],
             tmp_path / "ambiguous-output.docx",

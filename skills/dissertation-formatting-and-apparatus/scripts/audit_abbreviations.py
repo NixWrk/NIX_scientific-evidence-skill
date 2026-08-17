@@ -16,6 +16,7 @@ DEF_RE = re.compile(
     r"\((?P<abbr>[A-ZА-ЯЁ]{2,}[A-ZА-ЯЁ0-9-]{0,10})\)"
 )
 DEFAULT_ALLOW = {"ГОСТ", "РФ", "СССР", "ООН", "DOI", "URL", "ISBN", "ISSN"}
+ROMAN_RE = re.compile(r"^[IVXLCDMХІ]+$")
 
 
 def audit(text: str, declared: dict | None = None, allow: set[str] | None = None) -> list[dict]:
@@ -25,23 +26,28 @@ def audit(text: str, declared: dict | None = None, allow: set[str] | None = None
         definitions[match.group("abbr")].append((match.group("expansion").strip(), match.start("abbr")))
 
     declared_map: dict[str, str] = {}
+    declared_values: dict[str, set[str]] = defaultdict(set)
     for item in (declared or {}).get("abbreviations", []):
         abbreviation = str(item.get("abbreviation", "")).strip()
         expansion = str(item.get("expansion", "")).strip()
         if abbreviation:
-            declared_map[abbreviation] = expansion
+            declared_map.setdefault(abbreviation, expansion)
+            if expansion:
+                declared_values[abbreviation].add(expansion.casefold())
 
     findings: list[dict] = []
     occurrences: dict[str, int] = defaultdict(int)
     uses: dict[str, list[int]] = defaultdict(list)
+    reported_undefined: set[str] = set()
     for match in TOKEN_RE.finditer(text):
         token = match.group(0)
         occurrences[token] += 1
         uses[token].append(match.start())
-        if token in allowed:
+        if token in allowed or ROMAN_RE.fullmatch(token) or any(character.isdigit() for character in token):
             continue
         known = token in definitions or token in declared_map
-        if not known:
+        if not known and token not in reported_undefined:
+            reported_undefined.add(token)
             findings.append(
                 finding(
                     f"ABBR-UNDEFINED-{len(findings)+1:03d}", "ABBR-001", "abbreviations",
@@ -60,11 +66,10 @@ def audit(text: str, declared: dict | None = None, allow: set[str] | None = None
                 )
             )
 
-    for abbreviation, values in definitions.items():
-        expansions = {value.casefold() for value, _ in values}
-        declared_expansion = declared_map.get(abbreviation)
-        if declared_expansion:
-            expansions.add(declared_expansion.casefold())
+    # Parenthesized prose is not a safe deterministic source for semantic
+    # conflict detection: grammatical context is easily captured as part of an
+    # expansion. Treat the approved list as the authoritative conflict surface.
+    for abbreviation, expansions in declared_values.items():
         if len(expansions) > 1:
             findings.append(
                 finding(

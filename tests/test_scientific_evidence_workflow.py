@@ -868,6 +868,7 @@ def dissertation_introduction_bundle() -> dict:
             "unit": None,
             "version": "v1",
             "analysis": "approved analysis",
+            "approved": True,
         }
     ]
     bundle["structure"] = [
