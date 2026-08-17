@@ -175,7 +175,7 @@ genres:
 
   - id: reproducibility-note
     family: working
-    status: new
+    status: reserved
     normativity: conventional
     depth: section
     purpose: record_procedure
@@ -185,6 +185,7 @@ genres:
     invariants: [INV-CROSSREF-RESOLVABLE, INV-NUMBER-RESULT]
     render_targets: [obsidian, ipynb]
     language_profile: genre-notebook
+    notes: Сквозной контракт или раздел; самостоятельный жанр только по явному запросу на отдельный пакет воспроизводимости.
 
   # --- B. review -------------------------------------------------------------
 
@@ -667,21 +668,25 @@ genres:
 
   - id: notebook-narrative
     family: computational
-    status: new
+    status: existing
+    implemented_in: scientific-evidence-workflow
+    bundle_mode: record
+    source_count: {min: 1, max: null}
+    source_representations: [data, protocol, note]
     normativity: free
     depth: section
     purpose: record_procedure
     audience: [self, coauthors]
     evidence_regime: {literature: allowed, own_results: required, internal_crossref: required, organizational: forbidden}
-    required_components: [задача ячейки, вход, выполняемое действие, наблюдаемый выход, вывод]
+    required_components: [исследовательский вопрос и границы, входы и происхождение, метод и допущения, наблюдаемые выходы, интерпретация и ограничения, ограниченный итог и артефакты]
     invariants: [INV-NUMBER-RESULT, INV-CROSSREF-RESOLVABLE, INV-FIGURE-SOURCE]
     render_targets: [ipynb, obsidian]
     language_profile: genre-notebook
-    notes: Двойные квадратные скобки в тетради не разрешаются, ссылка выводится обычной.
+    notes: Малый исполняемый расчётный отчёт. Заголовки не фиксированы; один основной вопрос, локальная смысловая дуга и семантические критерии разделения обязательны.
 
   - id: code-commentary
     family: computational
-    status: new
+    status: reserved
     normativity: free
     depth: paragraph
     purpose: record_procedure
@@ -692,8 +697,9 @@ genres:
     render_targets: [ipynb, plain]
     language_profile: genre-notebook
     notes: >-
-      Правила применяются только к прозаическим областям — текстовым ячейкам,
-      строкам документации и комментариям. Исполняемый код не редактируется.
+      Микроуровень, а не самостоятельный артефакт. Правила применяются только
+      к прозаическим областям — текстовым ячейкам, строкам документации и
+      комментариям. Исполняемый код не редактируется.
 
   # --- G. format -------------------------------------------------------------
 

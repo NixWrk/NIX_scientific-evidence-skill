@@ -1,4 +1,4 @@
 interface:
   display_name: "Scientific Evidence Workflow"
-  short_description: "Evidence-bound writing and dissertation criticism"
-  default_prompt: "Use $scientific-evidence-workflow to generate or criticise a source-traceable dissertation artifact from only the supplied materials; check the owning genre rules and verify evidence only when the finding depends on it."
+  short_description: "Evidence-bound scientific writing and notebooks"
+  default_prompt: "Use $scientific-evidence-workflow to generate or criticise source-traceable scientific text or a bounded research notebook from only the supplied materials; load the owning genre and reproducibility rules, and state what deterministic checks do not assess."

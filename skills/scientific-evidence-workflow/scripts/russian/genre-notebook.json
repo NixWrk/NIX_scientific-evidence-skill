@@ -1,0 +1,25 @@
+{
+  "profile_id": "genre-notebook",
+  "description": "Russian narrative cells in research notebooks. The rules flag visual or computational output presented as self-proving and vague positive evaluation of a result.",
+  "latin_allow": ["DataFrame", "NumPy", "pandas", "Matplotlib", "Jupyter", "Git"],
+  "rules": [
+    {
+      "code": "output_as_proof",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:график|диаграмма|расч[её]т|код|ноутбук)\\s+(?:однозначно\\s+)?(?:доказывает|подтверждает)(?![а-яё])",
+      "message": "Separate the observed output from the inference; a plot or calculation is not self-validating proof."
+    },
+    {
+      "code": "self_evident_plot",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:на\\s+графике\\s+вс[её]\\s+видно|видно\\s+невооруж[её]нным\\s+глазом|как\\s+легко\\s+видеть)(?![а-яё])",
+      "message": "Name the observable feature, comparison, and criterion instead of appealing to self-evidence."
+    },
+    {
+      "code": "vague_computational_result",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:получен|получили|наблюдается)\\s+(?:хороший|интересный|приемлемый|ожидаемый)\\s+(?:результат|эффект|график)(?![а-яё])",
+      "message": "State the measured result and comparison criterion instead of a qualitative approval."
+    }
+  ]
+}

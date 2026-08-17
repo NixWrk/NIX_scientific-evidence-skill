@@ -1631,7 +1631,7 @@ def test_hypothesis_cannot_be_asserted_or_left_unattributed() -> None:
 
 
 def test_genre_references_and_templates_exist() -> None:
-    """A card genre ships a JSON scaffold; a bundle genre ships a Markdown one."""
+    """Each genre ships a scaffold in its native artifact format."""
 
     skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
 
@@ -1639,10 +1639,12 @@ def test_genre_references_and_templates_exist() -> None:
         assert (SKILL_DIR / "references" / "genres" / f"{genre_id}.md").is_file(), genre_id
         assert f"`{genre_id}`" in skill, genre_id
         if rules["bundle_mode"] is None:
-            assert (SKILL_DIR / "assets" / "normative-pattern.template.json").is_file(), genre_id
+            template = SKILL_DIR / "assets" / "normative-pattern.template.json"
+        elif genre_id == "notebook-narrative":
+            template = SKILL_DIR / "assets" / "notebook-narrative.template.ipynb"
         else:
-            assert (SKILL_DIR / "assets" / f"{genre_id}.template.md").is_file(), genre_id
-
+            template = SKILL_DIR / "assets" / f"{genre_id}.template.md"
+        assert template.is_file(), genre_id
 
 def test_unknown_fields_fail_closed() -> None:
     bundle = load_template()

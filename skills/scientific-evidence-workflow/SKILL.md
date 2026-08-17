@@ -1,6 +1,6 @@
 ---
 name: scientific-evidence-workflow
-description: Process only user-supplied scientific publications and research records into source-traceable Q&A, literature reviews, manuscript text, critic reports, and the scientific genres of a Russian candidate dissertation, including outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, and synopsis. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or generate or criticise a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
+description: Process only user-supplied scientific publications, research records, and notebooks into source-traceable Q&A, literature reviews, manuscript text, critic reports, and the scientific genres of a Russian candidate dissertation, including outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, and synopsis. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or generate or criticise a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
 ---
 
 # Scientific Evidence Workflow
@@ -54,6 +54,9 @@ reference:
   `references/genres/procedure-record.md`, mode `record`.
 - `decision-log`: why a choice was made, against what was known then —
   `references/genres/decision-log.md`, mode `record`.
+- `notebook-narrative`: one bounded research question expressed as a small
+  executable calculation report — `references/genres/notebook-narrative.md`,
+  mode `record`; also load `references/reproducibility-contract.md`.
 - `stage-presentation`: what a stage produced, shown and spoken over —
   `references/genres/stage-presentation.md`, mode `record`, figure control
   applies as it does to a manuscript.
@@ -119,6 +122,13 @@ machine-readable field names, identifiers, code, or exact source fragments.
 Record the requested mode, question or artifact, allowed source identifiers,
 input versions, language, audience, and requested output format. State any
 missing requirement that affects the result.
+
+For a notebook, identify one principal research question, its scope, completion
+criterion, inputs, method, observable outputs, limitations, and final
+artifacts. Do not impose fixed headings or a cell-count threshold. Split by
+independent questions, data or execution boundaries, reusable intermediate
+artifacts, or independently changing preparation, computation, and
+interpretation stages.
 
 For a manuscript, separate literature sources from research records. Literature
 may support context and interpretation. Only approved protocol and result
@@ -321,6 +331,13 @@ Stop and request input instead of guessing when:
   structure plus the semantic rules and stays authoritative for release.
 - `assets/qa-output.template.md`: Q&A output scaffold.
 - `references/genres/`: genre references with their required parts and gates.
+- `references/reproducibility-contract.md`: shared working-versus-frozen
+  reproducibility contract for notebooks, procedures, and experiments.
+- `assets/notebook-narrative.template.ipynb`: minimal editable notebook
+  scaffold with report metadata and semantic cell tags.
+- `scripts/lint_notebook.py`: dependency-free static notebook audit. It does
+  not prove clean-kernel execution, scientific validity, or absence of all
+  hidden state.
 - `assets/<genre>.template.md`: genre output scaffolds.
 - `assets/literature-review-output.template.md`: review scaffold.
 - `assets/manuscript-output.template.md`: manuscript scaffold.

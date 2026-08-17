@@ -12,8 +12,8 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.14"
-    skill_sha256: 44d1f2fd7ea2c342fcf77f9b54aa7c9e7da349e433c2ca61bb5c727eb5a3fce7
+    version: "0.15"
+    skill_sha256: 92f9ab8c7a328d059d6c0f97f091dd27e2968d01e64c10351d7fe10632454f61
     task: [qa, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass
@@ -67,8 +67,13 @@ verdicts:
       - skill_owned_technical_editorial_and_evidential_critic_layers
       - evidence_verification_is_conditional_not_universal
       - exp_0031_raw_findings_expert_adjudicated_not_gold
+      - notebook_narrative_is_a_bounded_executable_calculation_report
+      - reproducibility_contract_separates_working_and_frozen_snapshots
+      - notebook_static_lint_does_not_claim_clean_kernel_execution
+      - notebook_split_gate_is_semantic_not_cell_count_based
+      - five_notebook_scenarios_pass_regression_contract
     experiments: [EXP-0021, EXP-0022, EXP-0023, EXP-0024, EXP-0025, EXP-0026, EXP-0031, EXP-0032]
-    next_action: implement_notebook_narrative_then_validate_small_report_and_article
+    next_action: validate_notebook_narrative_on_real_mixed_research_repository
 
   - id: candidate-dissertation-workflow
     source: local:skills/candidate-dissertation-workflow

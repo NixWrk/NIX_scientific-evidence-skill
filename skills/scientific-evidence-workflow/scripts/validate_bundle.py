@@ -127,7 +127,31 @@ GENRES: dict[str, dict[str, Any]] = {
         "source_max": None,
         "source_representations": None,
     },
-    "stage-presentation": {
+    "notebook-narrative": {
+        "bundle_mode": "record",
+        "literature": "allowed",
+        "own_results": "required",
+        "internal_crossref": "required",
+        "organizational": "forbidden",
+        "source_min": 1,
+        "source_max": None,
+        "source_representations": ["data", "protocol", "note"],
+        "required_structure_types": {"task", "conclusion"},
+        "required_output_sections": {
+            "notebook_scope",
+            "method_and_assumptions",
+            "observed_outputs",
+            "interpretation_and_limits",
+            "notebook_summary",
+        },
+        "allowed_output_sections": {
+            "notebook_scope",
+            "method_and_assumptions",
+            "observed_outputs",
+            "interpretation_and_limits",
+            "notebook_summary",
+        },
+    },    "stage-presentation": {
         "bundle_mode": "record",
         "literature": "allowed",
         "own_results": "required",
