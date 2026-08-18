@@ -115,7 +115,9 @@ adoption requires a competing proposal or a review decision.
 supersedes. Until the successor is accepted, the predecessor remains current.
 The current canonical project-state projection contains accepted items for
 which no accepted successor applies. Historical content and decisions remain
-available.
+available. The directed `supersedes` graph is acyclic. If multiple accepted
+successors compete for the same effective role and scope, the canonical
+projection exposes the ambiguity and does not choose one implicitly.
 
 An accepted item's exact content must be identifiable by the acceptance
 decision. Changing accepted meaning creates a successor rather than rewriting

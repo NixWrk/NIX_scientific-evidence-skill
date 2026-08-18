@@ -103,12 +103,16 @@ its own:
   judgement into accepted knowledge or evidence;
 - require heavyweight infrastructure for a task that does not need it.
 
-These activities may be supported when the user explicitly initiates them or a
-separate workflow owns them, but they are outside the kernel and product
-boundary defined here. New evidence triggers ingestion and impact review; it
-does not automatically publish, accept state, or regenerate every artifact.
-Full resynthesis remains the safe operational fallback until selective update
-is validated by benchmark.
+The listed activities are outside the grounding kernel's responsibility. Where
+an activity can be supported without violating this package, it may be provided
+only by an explicitly selected specialized workflow or integration whose own
+contract defines the capability. Suite-wide prohibitions, including silent
+acceptance and unnecessary mandatory infrastructure, remain in force. New or
+changed source content within a workflow's declared monitored corpus or
+workspace source scope triggers the applicable ingestion and relevance/impact
+review; it does not automatically publish, accept state, or regenerate every
+artifact. Full resynthesis remains the safe operational fallback until
+selective update is validated by benchmark.
 
 ## Progressive formalization
 

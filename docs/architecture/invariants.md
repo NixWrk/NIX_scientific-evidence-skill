@@ -22,10 +22,14 @@ until an explicit migration changes them. A mismatch between an operational
 contract and this package is a migration requirement, not permission to change
 current data or behaviour implicitly.
 
-## 1. Minimum necessary context
+## 1. Proportionate and sufficient context
 
-1. A workflow MUST load only the context, sources, and project state required
-   for the task.
+1. A workflow MUST select context, sources, and project state proportionately
+   to the task and MUST NOT load unrelated state without a defined retrieval or
+   discovery purpose. It SHOULD use the minimum context sufficient to perform
+   the task reliably. A declared discovery purpose MAY widen the context beyond
+   already known project dependencies, including to identify candidate
+   cross-project relevance.
 2. A local language edit or other low-rigour task MUST NOT require a workspace
    scan, corpus inventory, project manifest, or evidence bundle unless the user
    asks for project alignment or evidential checking.
@@ -87,11 +91,15 @@ current data or behaviour implicitly.
    identify the item it supersedes. The predecessor remains historically
    accepted and becomes non-current only after the successor is accepted.
    `superseded` MUST NOT be encoded as an acceptance value.
-5. `contested` MUST NOT be a universal state. Conflicting evidence belongs in an
+5. The directed `supersedes` graph MUST be acyclic.
+6. If multiple accepted successors compete for the same effective role and
+   scope, the canonical project-state projection MUST expose the ambiguity and
+   MUST NOT silently select one.
+7. `contested` MUST NOT be a universal state. Conflicting evidence belongs in an
    evidence assessment; changed dependencies belong in a reassessment or
    freshness decision; disagreement about project adoption requires a competing
    proposal or explicit review decision.
-6. Membership in project state alone MUST NOT confer evidential force.
+8. Membership in project state alone MUST NOT confer evidential force.
    Evidential use depends on entity type, basis, provenance, scope, and
    verification. A traceable and verified project result MAY support a claim;
    a goal, hypothesis, convention, or methodological decision does not become
@@ -134,8 +142,13 @@ current data or behaviour implicitly.
 
 ## 7. Change, impact, and regeneration
 
-1. New or changed project-scoped source content MUST pass ingestion and impact
-   assessment before a dependent corpus-derived artifact is considered current.
+1. New or changed source content within a workflow's declared monitored corpus
+   or workspace source scope MUST pass the applicable ingestion and
+   relevance/impact assessment before a dependent corpus-derived artifact is
+   considered current. The declared scope MAY be a project corpus or a workspace
+   collection evaluated against selected active projects; an existing
+   `SOURCE_PROJECT_RELATION` MUST NOT be required for a source to enter this
+   process.
 2. Impact assessment MUST precede rewriting. It MAY identify candidate affected
    regions, but it MUST NOT publish changes or accept project state.
 3. A conclusion of no impact MUST be supported by the declared dependency scope
