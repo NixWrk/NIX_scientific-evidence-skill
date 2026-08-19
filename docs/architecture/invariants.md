@@ -169,10 +169,19 @@ current data or behaviour implicitly.
    transport, or application-specific orchestration.
 2. The kernel MUST NOT require Zotero, literature search, MCP, a vector database,
    Word, a scheduler, or another online service.
-3. Task workflows MUST own composition. For Russian scientific output they MAY
-   compose grounding with a separate Russian scientific expression skill. The
-   expression step MUST preserve claims, modality, numbers, units, terminology,
-   locators, uncertainty, causal force, and scope.
+3. Task workflows MUST own composition. Every workflow run whose working
+   language is Russian MUST compose grounding with the separate Russian
+   scientific expression layer and MUST apply it to every natural-language
+   text created during the run. This includes chat, progress and diagnostic
+   messages, plans, intermediate drafts, final artifacts, headings, captions,
+   labels, comments, and natural-language string values in machine-readable
+   records; the obligation is not limited to final or explicitly user-facing
+   prose. Exact source titles, quotations, schema keys, stable identifiers,
+   hashes, paths, commands, and code MAY remain exact, but they do not exempt
+   surrounding prose from the expression layer and MUST NOT be exposed in a
+   reader-facing artifact unless required by the task or requested by the user.
+   The expression step MUST preserve claims, modality, numbers, units,
+   terminology, locators, uncertainty, causal force, and scope.
 4. Literature acquisition and search MUST remain an external workflow and be
    selected by benchmark rather than embedded in the kernel.
 5. Accepted state changes and publication transitions MUST be traceable and

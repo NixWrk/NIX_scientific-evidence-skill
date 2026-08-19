@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-08-17
+updated: 2026-08-19
 
 policy:
   input_scope: supplied_corpus_only
@@ -13,7 +13,7 @@ verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
     version: "0.17"
-    skill_sha256: 340591af68c6ca43a84395b5e4f61ad79c193c112a8a35c49278d4de83a7cbe9
+    skill_sha256: 1317884096aa9dc84cd2a0c5a42985b3ba116fbe352182a24f94328379ea454d
     task: [qa, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass
@@ -570,7 +570,7 @@ verdicts:
   - id: research-project-workflow
     source: local:skills/research-project-workflow
     version: "0.1"
-    skill_sha256: e85a33d8563c8fe3268fdac2aa2da290493c95cd9dc5cf1d3b4e6ab44c0bd461
+    skill_sha256: 009216dc4fb08839837ece12ff1660325868f0bf72de37f95835630a0b9cbd6a
     task: [project_context, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass
@@ -590,7 +590,7 @@ verdicts:
   - id: zotero-project-annotation
     source: local:skills/zotero-project-annotation
     version: "0.1"
-    skill_sha256: 8ac765a1f660d9481ec9c7bf0966a07729a387c2f285dabb5b968f03d5bc7533
+    skill_sha256: b48042252150169585c38aa8c61c5f7e7fbd524358c7b10ae46cf626982120e3
     task: [annotation, literature_review]
     license: not_declared
     spec_subset: pass

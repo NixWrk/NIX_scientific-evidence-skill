@@ -7,6 +7,18 @@ description: Define, link, and validate a project manifest that supplies stable 
 
 Use a project manifest as the routing record above document genres. Keep the project identity and research context in one small JSON file; let genre-specific skills own annotations, evidence, methods, and prose.
 
+Set the working language before filling the manifest. For Russian work, load
+`../scientific-evidence-workflow/references/russian-scientific-style.md` and
+apply it to every natural-language text created by this skill: chat, progress
+messages, plans, diagnostics, project title, problem, goal, objectives,
+questions, scope, exclusions, labels, and report text. The rule also applies to
+natural-language string values stored in JSON; it is not limited to a final
+document.
+
+Preserve schema keys and stable IDs exactly, but never use an ID or an English
+placeholder as a human-readable project name. A Russian project requires an
+accepted Russian title before a readable project-relative artifact is rendered.
+
 ## Workflow
 
 1. Copy `assets/project-manifest.template.json` and assign a durable `project_id`; do not replace it with a run ID or a random UUID.

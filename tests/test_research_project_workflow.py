@@ -9,6 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR_PATH = ROOT / "skills" / "research-project-workflow" / "scripts" / "validate_project_manifest.py"
 TEMPLATE_PATH = ROOT / "skills" / "research-project-workflow" / "assets" / "project-manifest.template.json"
+SKILL_PATH = ROOT / "skills" / "research-project-workflow" / "SKILL.md"
+CONTRACT_PATH = ROOT / "skills" / "research-project-workflow" / "references" / "project-manifest-contract.md"
 
 spec = importlib.util.spec_from_file_location("project_manifest_validator", VALIDATOR_PATH)
 assert spec and spec.loader
@@ -31,6 +33,24 @@ def snapshot(snapshot_id: str, captured_at: str) -> dict:
         "item_keys": [f"ITEM-{snapshot_id}"],
         "content_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
     }
+
+
+def test_russian_template_and_contract_require_human_readable_project_language() -> None:
+    manifest = valid_manifest()
+    skill = SKILL_PATH.read_text(encoding="utf-8")
+    contract = CONTRACT_PATH.read_text(encoding="utf-8")
+
+    assert manifest["title"] == "Название исследовательского проекта"
+    assert manifest["context"]["problem"].startswith("Сформулируйте научную проблему")
+    assert manifest["context"]["goal"].startswith("Сформулируйте планируемый")
+    assert manifest["corpora"][0]["label"] == "Пополняемый корпус научной литературы"
+    assert "every natural-language text created by this skill" in skill
+    assert "A Russian project requires an" in skill
+    assert "accepted Russian title" in skill
+    assert "working language" in contract
+    assert "English placeholder" in contract
+    assert "Research project title" not in json.dumps(manifest, ensure_ascii=False)
+    assert "Living literature corpus" not in json.dumps(manifest, ensure_ascii=False)
 
 
 def test_template_is_valid_and_hash_is_current() -> None:

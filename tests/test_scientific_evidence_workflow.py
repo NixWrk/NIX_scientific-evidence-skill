@@ -1766,10 +1766,55 @@ def test_russian_style_reference_is_required_for_russian_output() -> None:
     reference = (SKILL_DIR / "references" / "russian-scientific-style.md").read_text(
         encoding="utf-8"
     )
+    product_boundary = (ROOT / "docs" / "architecture" / "product-boundary.md").read_text(
+        encoding="utf-8"
+    )
+    invariants = (ROOT / "docs" / "architecture" / "invariants.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "references/russian-scientific-style.md" in skill
+    assert "every natural-language text" in skill
+    assert "created during the run" in skill
+    assert "not limited to final or explicitly" in skill
+    assert "user-facing prose" in skill
     assert "Не добавляй и не удаляй научные утверждения" in reference
     assert "отсутствие срабатываний не подтверждает" in reference
+    assert "ответы и промежуточные сообщения в чате" in reference
+    assert "естественно-языковые строковые значения" in reference
+    assert "Every workflow run whose working language is Russian MUST use both" in product_boundary
+    assert "MUST apply the Russian scientific expression requirements" in product_boundary
+    assert "Every workflow run whose working\n   language is Russian MUST compose" in invariants
+    assert "the obligation is not limited to final or explicitly user-facing" in invariants.replace("\n   ", " ")
+
+
+def test_russian_article_annotation_template_is_reader_facing() -> None:
+    template = (SKILL_DIR / "assets" / "article-annotation.template.md").read_text(
+        encoding="utf-8"
+    )
+
+    for heading in (
+        "# Аннотация к статье:",
+        "**Исходный вопрос проекта к статье:**",
+        "## Краткое содержание",
+        "## Исследовательский вопрос публикации",
+        "## Что исследовали и как проводили работу",
+        "## Основные результаты",
+        "## Вывод авторов",
+        "## Значение для проекта",
+        "## Ограничения и нерешённые вопросы",
+    ):
+        assert heading in template
+
+    for machine_or_english_text in (
+        "# Annotation",
+        "Source: `SRC-",
+        "Version or hash",
+        "Claim ID",
+        "Evidence ID",
+        "## Validation",
+    ):
+        assert machine_or_english_text not in template
 
 
 def test_russian_style_auditor_accepts_normative_prose() -> None:

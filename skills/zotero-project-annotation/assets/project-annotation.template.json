@@ -11,46 +11,47 @@
   "project_context_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
   "source": {
     "zotero_item_key": "ABCD1234",
-    "title": "Publication title",
+    "title": "Название публикации на языке источника",
     "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
     "read_scope": "full_text",
     "locators_read": ["Abstract", "Methods", "Results", "Discussion"]
   },
   "project": {
     "project_id": "PRJ-001",
-    "title": "Research project",
-    "goal": "Project goal",
+    "title": "Название исследовательского проекта",
+    "goal": "Цель исследовательского проекта",
     "objectives": [
-      {"id": "OBJ-001", "text": "Project objective"}
+      {"id": "OBJ-001", "text": "Задача исследовательского проекта"}
     ],
     "research_questions": [
-      {"id": "RQ-001", "text": "Research question"}
+      {"id": "RQ-001", "text": "Исследовательский вопрос"}
     ]
   },
   "relevance_target_ids": ["RQ-001", "OBJ-001"],
   "annotation": {
-    "summary": "Concise neutral summary of the publication.",
+    "summary": "Краткое нейтральное содержание публикации.",
     "source_voice": {
-      "what_work_did": "Object, task, method, design, and sample as reported by the source.",
+      "what_work_did": "Объект, задача, метод, схема исследования и выборка в изложении источника.",
       "reported_outcomes": [
         {
           "claim_id": "CL-001",
-          "statement": "Reported outcome.",
-          "value": "Exact value, unit, groups, and uncertainty.",
+          "statement": "Результат, сообщаемый авторами публикации.",
+          "value": "Точное значение, единица измерения, группы и неопределённость.",
           "locator": "zotero:ABCD1234#Results"
         }
       ],
-      "stated_boundaries": ["Boundary stated by the authors."]
+      "stated_boundaries": ["Ограничение, указанное авторами публикации."]
     },
-    "author_conclusion": "What the publication's authors conclude from their results.",
+    "author_conclusion": "Вывод авторов публикации по полученным результатам.",
     "project_judgement": {
-      "why_useful_here": "Reader judgement tied to RQ-001 and OBJ-001.",
-      "what_it_does_not_settle": "Open question for this project."
+      "why_useful_here": "Оценка значения публикации для вопроса и задачи проекта.",
+      "what_it_does_not_settle": "Вопрос проекта, который публикация не решает."
     }
   },
   "evidence_role": "derived_annotation_not_evidence",
   "provenance": {
     "created_at": "2026-08-17",
-    "machine_record_path": "derived/annotations/ANN-001.json"
+    "machine_record_path": "derived/annotations/ANN-001.json",
+    "zotero_note_key": null
   }
 }

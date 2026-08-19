@@ -42,7 +42,7 @@ ANNOTATION_FIELDS = {"summary", "source_voice", "author_conclusion", "project_ju
 SOURCE_VOICE_FIELDS = {"what_work_did", "reported_outcomes", "stated_boundaries"}
 OUTCOME_FIELDS = {"claim_id", "statement", "value", "locator"}
 JUDGEMENT_FIELDS = {"why_useful_here", "what_it_does_not_settle"}
-PROVENANCE_FIELDS = {"created_at", "machine_record_path", "supersedes_annotation_id"}
+PROVENANCE_FIELDS = {"created_at", "machine_record_path", "supersedes_annotation_id", "zotero_note_key"}
 
 
 def _nonempty(value: Any) -> bool:
@@ -88,8 +88,8 @@ def _record_list(value: Any, path: str, errors: list[str]) -> list[dict[str, Any
     return result
 
 
-def _project_targets(project: dict[str, Any], errors: list[str]) -> set[str]:
-    declared: set[str] = set()
+def _project_targets(project: dict[str, Any], errors: list[str]) -> dict[str, str]:
+    declared: dict[str, str] = {}
     for field, prefix in (("objectives", "OBJ-"), ("research_questions", "RQ-")):
         records = _record_list(project.get(field), f"project.{field}", errors)
         seen: set[str] = set()
@@ -104,16 +104,16 @@ def _project_targets(project: dict[str, Any], errors: list[str]) -> set[str]:
             if identifier in seen:
                 errors.append(f"{path}.id: duplicate {identifier!r}")
             seen.add(identifier)
-            declared.add(identifier)
             _required(item, ("text",), path, errors)
+            declared[identifier] = item.get("text") if isinstance(item.get("text"), str) else ""
     return declared
 
 
-def _manifest_targets(manifest: Any) -> tuple[str | None, str | None, set[str]]:
-    """Collect RP targets and context hash, while tolerating legacy shapes."""
+def _manifest_targets(manifest: Any) -> tuple[str | None, str | None, dict[str, str]]:
+    """Collect RP target texts and context hash, while tolerating legacy shapes."""
 
     if not isinstance(manifest, dict):
-        return None, None, set()
+        return None, None, {}
     project_id = manifest.get("project_id")
     context_hash = next(
         (
@@ -123,7 +123,7 @@ def _manifest_targets(manifest: Any) -> tuple[str | None, str | None, set[str]]:
         ),
         None,
     )
-    targets: set[str] = set()
+    targets: dict[str, str] = {}
     containers = [manifest]
     for key in ("context", "project"):
         if isinstance(manifest.get(key), dict):
@@ -147,7 +147,8 @@ def _manifest_targets(manifest: Any) -> tuple[str | None, str | None, set[str]]:
                     continue
                 identifier = item.get("id") or item.get("objective_id") or item.get("question_id")
                 if isinstance(identifier, str) and any(identifier.startswith(prefix) for prefix in prefixes):
-                    targets.add(identifier)
+                    text = item.get("text")
+                    targets.setdefault(identifier, text if isinstance(text, str) else "")
     return project_id if isinstance(project_id, str) else None, context_hash, targets
 
 
@@ -175,11 +176,14 @@ def validate_annotation(
     project_manifest: dict[str, Any] | None = None,
     source_content_hash: str | None = None,
     project_context_hash: str | None = None,
+    require_project_manifest: bool = False,
 ) -> dict[str, Any]:
     """Return a machine-readable validation report for one derived annotation."""
 
     errors: list[str] = []
     warnings: list[str] = []
+    if require_project_manifest and project_manifest is None:
+        errors.append("project_manifest: required for operational annotation validation")
     if not isinstance(data, dict):
         return {"valid": False, "errors": ["annotation: expected an object"], "warnings": [], "counts": {}}
 
@@ -281,6 +285,13 @@ def validate_annotation(
         seen_targets.add(target)
         if target not in declared_targets:
             errors.append(f"{path}: {target!r} is not declared in annotation.project")
+    if (
+        require_project_manifest
+        and not any(target.startswith("RQ-") for target in seen_targets)
+    ):
+        errors.append(
+            "annotation.relevance_target_ids: operational annotation requires at least one RQ- target"
+        )
 
     annotation = data.get("annotation")
     if not isinstance(annotation, dict):
@@ -344,6 +355,10 @@ def validate_annotation(
     _required(provenance, ("created_at", "machine_record_path"), "annotation.provenance", errors)
     if _nonempty(provenance.get("supersedes_annotation_id")):
         _id(provenance["supersedes_annotation_id"], "annotation.provenance.supersedes_annotation_id", errors)
+    note_key = provenance.get("zotero_note_key")
+    if note_key not in (None, ""):
+        _id(note_key, "annotation.provenance.zotero_note_key", errors)
+
 
     _check_expected_hash(stored_source_hash, source_content_hash, "source.content_hash", status, errors)
     _check_expected_hash(stored_context_hash, project_context_hash, "project_context_hash", status, errors)
@@ -362,6 +377,13 @@ def validate_annotation(
             for target in seen_targets:
                 if target not in manifest_targets:
                     errors.append(f"annotation.relevance_target_ids: {target!r} is absent from project manifest")
+        for target, accepted_text in manifest_targets.items():
+            recorded_text = declared_targets.get(target)
+            if _nonempty(accepted_text) and recorded_text is not None and recorded_text != accepted_text:
+                errors.append(
+                    f"annotation.project target {target!r}: text differs from the accepted project manifest; "
+                    "preserve the project question or objective instead of reshaping it around the source"
+                )
 
     counts = {
         "relevance_targets": len(seen_targets),
@@ -374,21 +396,20 @@ def validate_annotation(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("annotation", type=Path)
-    parser.add_argument("--project-manifest", type=Path)
+    parser.add_argument("--project-manifest", type=Path, required=True)
     parser.add_argument("--source-content-hash")
     parser.add_argument("--project-context-hash")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     try:
         data = json.loads(args.annotation.read_text(encoding="utf-8-sig"))
-        manifest = None
-        if args.project_manifest:
-            manifest = json.loads(args.project_manifest.read_text(encoding="utf-8-sig"))
+        manifest = json.loads(args.project_manifest.read_text(encoding="utf-8-sig"))
         report = validate_annotation(
             data,
             project_manifest=manifest,
             source_content_hash=args.source_content_hash,
             project_context_hash=args.project_context_hash,
+            require_project_manifest=True,
         )
     except (OSError, json.JSONDecodeError) as error:
         report = {"valid": False, "errors": [str(error)], "warnings": [], "counts": {}}

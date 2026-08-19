@@ -13,7 +13,7 @@ The JSON root must be an object with exactly these keys:
 | `context_hash` | Required lowercase `sha256:<64 hex digits>` for the project-relative context described below. |
 | `project_kind` | Required one of `candidate_dissertation`, `article`, `study`, `report`, `exploratory`, `other`. |
 | `parent_project_id` | Optional string identifier or JSON `null`; it must not equal `project_id`. The parent need not be present in the same file. |
-| `title` | Required non-empty string. |
+| `title` | Required human-readable title in the project's working language; an ID, English placeholder, or untranslated technical label does not substitute for a Russian project title. |
 | `status` | Required one of `draft`, `active`, `paused`, `completed`, `archived`. |
 | `context` | Required object with the six fields below and no others. |
 | `zotero_collection_bindings` | Required list of Zotero binding objects; it may be empty. |
@@ -37,6 +37,15 @@ Every collection binding, corpus, snapshot, artifact, and linked manifest has a 
   "exclusions": ["non-empty string"]
 }
 ```
+
+Write every natural-language value in the project's working language. For a
+Russian project, apply the Russian scientific-language rules to `title`, all
+six context fields, collection and corpus labels, artifact explanations, chat
+messages, diagnostics, and any other natural-language text created during the
+workflow. Machine keys and stable IDs remain unchanged, but they must not leak
+into a readable artifact as substitutes for labels. If a Russian project has
+no accepted Russian title, block the readable projection instead of inventing
+or exposing a code-like name.
 
 `objectives` and `research_questions` must each contain at least one item. Their IDs are stable so annotations and review sections can point to the same objective or question after a manifest is edited. `exclusions` may be empty.
 

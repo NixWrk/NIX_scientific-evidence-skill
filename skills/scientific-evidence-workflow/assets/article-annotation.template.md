@@ -1,38 +1,40 @@
-# Annotation — <source short title>
+# Аннотация к статье: <краткое название>
 
-<!-- Derived record. Never cite this note in place of the publication. -->
+<!-- Производная рабочая запись. В научном тексте следует ссылаться на публикацию, а не на аннотацию. -->
 
-- Source: `SRC-...`
-- Version or hash: ...
-- Read: full text / sections ... / metadata only
-- Annotated against: <current research question>
-- Date: ...
+- **Библиографическое описание:** <авторы, название на языке источника, год, DOI при наличии>
+- **Изученный материал:** <полный текст или конкретные разделы>
+- **Исходный вопрос проекта к статье:** <вопрос, заданный до анализа статьи; не формулируй его по результатам чтения>
+- **Дата аннотирования:** ...
 
-## What the work did
+## Краткое содержание
 
-<!-- Object, task, method, design, sample. Source voice only. -->
+<!-- Нейтрально изложи задачу, подход и основной результат публикации. -->
 
-## What it reports
+## Исследовательский вопрос публикации
 
-| Claim ID | Reported outcome | Value and unit | Evidence ID and locator |
-|---|---|---|---|
-| CL-001 | ... | ... | EV-001 — locator |
+<!-- Изложи вопрос или задачу авторов. Не выдавай её за исходный вопрос проекта к статье. -->
 
-<!-- Exact numbers only. Omit what cannot be quoted exactly. -->
+## Что исследовали и как проводили работу
 
-## Boundaries stated by the authors
+<!-- Укажи объект, задачу, метод, схему исследования и выборку только по тексту источника. -->
 
-<!-- Limits the authors themselves declare. Still source voice. -->
+## Основные результаты
 
-## Why it is useful here
+| Результат | Значение и единица | Место в публикации |
+|---|---|---|
+| ... | ... | ... |
 
-<!-- Reader voice. Judgement relative to the research question above.
-     Never attribute this section to the authors. -->
+<!-- Приводи только точные числа. Не включай значение, которое нельзя проверить по источнику. -->
 
-## What it does not settle
+## Вывод авторов
 
-<!-- Questions this source leaves open for the current work. -->
+<!-- Отдельно изложи вывод, который формулируют авторы публикации. -->
 
-## Validation
+## Значение для проекта «<понятное русское название проекта>»
 
-<!-- Structural validator status and any manual checks. -->
+<!-- Укажи, отвечает ли статья на исходный вопрос полностью, частично, не отвечает или даёт противоречащие сведения. Не сужай исходный вопрос под содержание статьи и не приписывай эту оценку авторам. -->
+
+## Ограничения и нерешённые вопросы
+
+<!-- Укажи заявленные авторами ограничения и вопросы, которые публикация не решает для проекта. -->

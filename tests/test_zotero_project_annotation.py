@@ -7,7 +7,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "skills" / "zotero-project-annotation" / "scripts" / "validate_project_annotation.py"
+SKILL_DIR = ROOT / "skills" / "zotero-project-annotation"
+SCRIPT = SKILL_DIR / "scripts" / "validate_project_annotation.py"
+TEMPLATE = SKILL_DIR / "assets" / "project-annotation.template.json"
 RP_MANIFEST_TEMPLATE = ROOT / "skills" / "research-project-workflow" / "assets" / "project-manifest.template.json"
 SPEC = spec_from_file_location("zotero_project_annotation_validator", SCRIPT)
 assert SPEC and SPEC.loader
@@ -128,6 +130,50 @@ def test_project_manifest_is_used_for_target_validation():
     assert not result["valid"]
     assert any("absent from project manifest" in error for error in result["errors"])
 
+def test_project_question_text_cannot_be_reshaped_around_the_source():
+    manifest = {
+        "project_id": "PRJ-001",
+        "project_context_hash": PROJECT_HASH,
+        "objectives": [{"id": "OBJ-001", "text": "Measure the target."}],
+        "research_questions": [{"id": "RQ-001", "text": "What is the target?"}],
+    }
+    record = valid_record()
+    record["project"]["research_questions"][0]["text"] = (
+        "Can this publication's method reconstruct the target?"
+    )
+
+    result = report(record, project_manifest=manifest)
+
+    assert not result["valid"]
+    assert any(
+        "preserve the project question or objective" in error
+        for error in result["errors"]
+    )
+
+
+def test_operational_validation_requires_manifest_and_research_question_target():
+    record = valid_record()
+    result = report(record, require_project_manifest=True)
+
+    assert not result["valid"]
+    assert any("required for operational annotation" in error for error in result["errors"])
+
+    manifest = {
+        "project_id": "PRJ-001",
+        "project_context_hash": PROJECT_HASH,
+        "objectives": [{"id": "OBJ-001", "text": "Measure the target."}],
+        "research_questions": [{"id": "RQ-001", "text": "What is the target?"}],
+    }
+    record["relevance_target_ids"] = ["OBJ-001"]
+    result = report(
+        record,
+        project_manifest=manifest,
+        require_project_manifest=True,
+    )
+
+    assert not result["valid"]
+    assert any("at least one RQ- target" in error for error in result["errors"])
+
 
 def test_annotation_derived_from_rp_template_matches_canonical_context_hash():
     manifest = json.loads(RP_MANIFEST_TEMPLATE.read_text(encoding="utf-8"))
@@ -211,3 +257,81 @@ def test_annotation_is_never_evidence():
     result = report(record)
     assert not result["valid"]
     assert any("cannot stand in for the publication" in error for error in result["errors"])
+
+def test_zotero_note_key_is_optional_machine_provenance():
+    record = valid_record()
+    record["provenance"]["zotero_note_key"] = "ABCD1234"
+    assert report(record)["valid"]
+
+    invalid = valid_record()
+    invalid["provenance"]["zotero_note_key"] = "not a key?"
+    result = report(invalid)
+    assert not result["valid"]
+    assert any("provenance.zotero_note_key" in error for error in result["errors"])
+
+
+
+def test_russian_note_contract_is_reader_facing_and_machine_metadata_is_hidden():
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    layout = (SKILL_DIR / "references" / "zotero-note-layout.md").read_text(
+        encoding="utf-8"
+    )
+    language_core = (
+        ROOT
+        / "skills"
+        / "scientific-evidence-workflow"
+        / "references"
+        / "russian-scientific-style.md"
+    ).read_text(encoding="utf-8")
+
+    assert "every natural-language fragment produced by this skill" in skill
+    assert "Do not limit the language gate to the visible note" in skill
+    for heading in (
+        "Аннотация к статье",
+        "Исходный вопрос проекта к статье",
+        "Краткое содержание",
+        "Исследовательский вопрос публикации",
+        "Что исследовали и как проводили работу",
+        "Основные результаты",
+        "Вывод авторов",
+        "Значение для проекта",
+        "Ограничения и нерешённые вопросы",
+    ):
+        assert heading in layout
+
+    assert "Annotation —" not in layout
+    assert "Source content hash" not in layout
+    assert "Project context hash" not in layout
+    assert "Relevance targets" not in layout
+    assert "Derived-record pointer" not in layout
+    assert "Do not render them in the note" in layout
+    assert all(token in layout for token in ("project_id", "OBJ-*", "RQ-*"))
+    assert "reject a candidate Russian note" in skill
+    assert "terms copied from project or source fields" in skill
+    for foreign, russian in (("TMS", "ТМС"), ("MRI", "МРТ"), ("mm", "мм"), ("cm²", "см²"), ("dB", "дБ")):
+        assert foreign in layout
+        assert russian in layout
+        assert foreign in language_core
+        assert russian in language_core
+    assert "et al." in layout
+    assert "и соавт." in layout
+    assert "machine record\nwithout adaptation" in layout
+    assert "Refuse the write while an unexplained" in layout
+    assert "Freeze the project question before interpreting the publication" in layout
+    assert "Never generate that question retrospectively" in layout.replace("\n", " ")
+    assert "partial, null, or contrary" in skill
+
+    assert "provenance.zotero_note_key" in layout
+    assert "Zotero normalizes note HTML" in layout
+    assert "<!-- zpa:" not in layout
+    assert "stable note-key mapping" in skill
+
+def test_russian_machine_template_uses_russian_natural_language_values():
+    template = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+
+    assert template["project"]["title"] == "Название исследовательского проекта"
+    assert template["project"]["goal"] == "Цель исследовательского проекта"
+    assert template["annotation"]["summary"] == "Краткое нейтральное содержание публикации."
+    assert "Reader judgement" not in json.dumps(template, ensure_ascii=False)
+    assert "Research project" not in json.dumps(template, ensure_ascii=False)
+    assert template["provenance"]["zotero_note_key"] is None

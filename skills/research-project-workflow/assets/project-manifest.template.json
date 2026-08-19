@@ -1,36 +1,36 @@
 {
   "schema_version": "RP-001/v1",
   "project_id": "PRJ-001",
-  "context_hash": "sha256:2de7558dcda1844ab9862fcccbd5765c04d7bfffa3605316c8de2f5eaf9b10f7",
+  "context_hash": "sha256:812f241841c8b5b3c632b563f24be76d2b009ce903601368280bb3dfb3b4f6fb",
   "project_kind": "candidate_dissertation",
   "parent_project_id": null,
-  "title": "Research project title",
+  "title": "Название исследовательского проекта",
   "status": "draft",
   "context": {
-    "problem": "State the research problem in one precise sentence.",
-    "goal": "State the intended research outcome.",
+    "problem": "Сформулируйте научную проблему одним точным предложением.",
+    "goal": "Сформулируйте планируемый научный результат.",
     "objectives": [
       {
         "objective_id": "OBJ-001",
-        "text": "Describe the first concrete objective."
+        "text": "Опишите первую конкретную задачу исследования."
       }
     ],
     "research_questions": [
       {
         "question_id": "RQ-001",
-        "text": "State the question that the project will answer."
+        "text": "Сформулируйте вопрос, на который должно ответить исследование."
       }
     ],
-    "scope": "Define the population, period, materials, or other boundaries.",
+    "scope": "Укажите границы исследования: объект, период, материалы или иные существенные условия.",
     "exclusions": [
-      "Record a material boundary that is intentionally out of scope."
+      "Укажите существенное ограничение, которое намеренно исключено из исследования."
     ]
   },
   "zotero_collection_bindings": [],
   "corpora": [
     {
       "corpus_id": "CORP-001",
-      "label": "Living literature corpus",
+      "label": "Пополняемый корпус научной литературы",
       "policy": "dynamic",
       "binding_ids": [],
       "objective_ids": ["OBJ-001"],

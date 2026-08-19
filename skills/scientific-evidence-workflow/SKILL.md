@@ -126,9 +126,23 @@ for what a dissertation must contain.
 Read `references/local-model-compatibility.md` when preparing context or a run
 for a local model.
 
-When the requested output is Russian scientific or technical prose, also read
-`references/russian-scientific-style.md`. Apply it to user-facing prose, not to
-machine-readable field names, identifiers, code, or exact source fragments.
+When the working language is Russian or the user requests Russian scientific
+or technical expression, read `references/russian-scientific-style.md` before
+producing any natural-language text. Apply it to every natural-language text
+created during the run: chat replies and progress updates, plans, diagnostics,
+intermediate drafts, final artifacts, headings, captions, table text, comments,
+notes, reports, and natural-language string values in JSON, YAML, or other
+machine-readable records. It is not limited to final or explicitly
+user-facing prose.
+
+Preserve exact machine syntax: schema keys, stable identifiers, hashes, file
+paths, commands, code, exact bibliographic titles, and exact source fragments.
+Keep such syntax in the machine layer and do not surface it in a readable
+artifact unless the task requires it or the user asks for it. Explain every
+surfaced identifier or necessary foreign term in the reader's language.
+Machine syntax never exempts the surrounding natural-language text from the
+language gate. Treat bundled templates as structural scaffolds: localize their
+headings and explanatory text before using them in a Russian artifact.
 
 ## Required workflow
 
@@ -285,10 +299,13 @@ source behind every high-impact claim even when validation passes.
 
 ### 7. Run the language gate
 
-When writing in Russian, revise the evidence-checked draft using
-`references/russian-scientific-style.md`. Lock claims, numbers, units,
-citations, locators, uncertainty, and causal strength before revising. Improve
-only terminology, syntax, cohesion, and concision.
+For every run whose working language is Russian, apply
+`references/russian-scientific-style.md` to each natural-language fragment
+before it is emitted, displayed, or persisted. This includes intermediate
+chat and diagnostic text and natural-language values inside machine records,
+not only the final artifact. Lock claims, numbers, units, citations, locators,
+uncertainty, and causal strength before revising. Improve only terminology,
+syntax, cohesion, and concision.
 
 The language rules layer: the core file always applies, a genre profile under
 `references/russian/` describes how this kind of text typically fails, and a

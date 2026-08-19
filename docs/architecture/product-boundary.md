@@ -52,8 +52,13 @@ parts required for its task and records the applicable contract and checks.
 | Benchmarks and development lab | Contract tests, validators, comparisons, reports, and experiments for quality and regression control | Evaluation/development support, not hidden runtime state or semantic authority |
 
 The grounding kernel and Russian expression layer are independent but
-composable. Russian scientific output normally uses both through a task
-workflow; neither layer absorbs the other layer's responsibilities.
+composable. Every workflow run whose working language is Russian MUST use both
+and MUST apply the Russian scientific expression requirements to every
+natural-language text it creates. This scope includes chat, progress and
+diagnostic messages, plans, intermediate drafts, final artifacts, headings,
+captions, labels, comments, and natural-language string values stored in
+machine-readable records; it is not limited to final or explicitly
+user-facing prose. Neither layer absorbs the other layer's responsibilities.
 
 ## Workspace and project boundary
 
