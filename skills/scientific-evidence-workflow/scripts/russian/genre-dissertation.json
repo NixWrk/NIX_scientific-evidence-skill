@@ -1,31 +1,31 @@
 {
   "profile_id": "genre-dissertation",
-  "description": "Russian candidate dissertation prose. Flags unbounded novelty, a topic presented as a defence proposition, and improvement claims that require frozen comparative results.",
+  "description": "Языковые риски частей кандидатской диссертации: безграничная новизна, абсолютный приоритет, непроверяемые положения и улучшения без сравнения.",
   "latin_allow": [],
   "rules": [
     {
       "code": "absolute_novelty",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:не имеет аналогов|аналогов не существует|единственн\\w+ в мире)(?![а-яё])",
-      "message": "Remove the absolute novelty claim or cite a separately established comparison corpus and boundary."
+      "message": "Удали абсолютное утверждение о новизне либо укажи отдельно установленный корпус сравнения и его границы."
     },
     {
       "code": "unbounded_first_claim",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])впервые (?:разработан\\w*|предложен\\w*|получен\\w*|установлен\\w*|выявлен\\w*|показан\\w*)(?![а-яё])",
-      "message": "Name the comparison corpus or prior capability that bounds the novelty claim."
+      "message": "Назови корпус сравнения или прежнюю возможность, относительно которой установлена новизна."
     },
     {
       "code": "topic_as_proposition",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:на защиту выносится|положением,? выносимым на защиту,? является) (?:метод|методика|модель|алгоритм|система|устройство)(?![а-яё])",
-      "message": "State a falsifiable assertion supported by a result, not only the topic or artifact name."
+      "message": "Сформулируй проверяемое утверждение с опорой на результат, а не только тему или название разработки."
     },
     {
       "code": "untraced_improvement",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:повышает|увеличивает|снижает|улучшает) (?:эффективность|точность|качество|над[её]жность|погрешность|время)(?![а-яё])",
-      "message": "Link the improvement to a frozen comparative result with value, conditions, and unit."
+      "message": "Свяжи улучшение с зафиксированным сравнительным результатом, указав значение, условия и единицу."
     }
   ]
 }

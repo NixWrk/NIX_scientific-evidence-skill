@@ -34,7 +34,10 @@ Always read `references/evidence-contract.md` first. Then load exactly one mode:
 
 - Q&A from a fixed corpus: `references/qa-workflow.md`.
 - Literature review from a fixed corpus:
-  `references/literature-review-workflow.md`. For a changing Zotero collection,
+  `references/literature-review-workflow.md` and
+  `references/literature-review-patterns.md`. The first controls evidence;
+  the second selects a synthesis architecture from the review question and
+  source types. For a changing Zotero collection,
   route snapshot management through `zotero-living-review`; each published
   version still uses one immutable corpus snapshot.
 - Manuscript drafting, audit, or revision from supplied literature and research
@@ -307,6 +310,22 @@ not only the final artifact. Lock claims, numbers, units, citations, locators,
 uncertainty, and causal strength before revising. Improve only terminology,
 syntax, cohesion, and concision.
 
+A complete Russian-language gate has three independent passes:
+
+1. Rebuild headings, sentences, and paragraph transitions as original Russian
+   prose. Reject translation-shaped rhetoric such as non-literal `From X to Y`
+   headings, repeated negative contrasts, stock English summary frames, and
+   Cyrillic English calques.
+2. Apply the core manual checklist plus the selected genre and domain profiles.
+3. Run the deterministic surface audit and resolve every finding. A clean
+   report never waives the first two passes.
+
+Apply all three passes to every natural-language fragment covered above. When
+Python is available, pass each proposed standalone fragment to
+`audit_text()` before emitting it; use the command-line form for files and
+persisted artifacts. Do not postpone the check until after chat text has
+already been shown or a note has been saved.
+
 The language rules layer: the core file always applies, a genre profile under
 `references/russian/` describes how this kind of text typically fails, and a
 domain profile carries subject vocabulary. Genre and subject area are
@@ -377,6 +396,8 @@ Stop and request input instead of guessing when:
   hidden state.
 - `assets/<genre>.template.md`: genre output scaffolds.
 - `assets/literature-review-output.template.md`: review scaffold.
+- `references/literature-review-patterns.md`: review-profile selection,
+  comparison units, paragraph architecture, and conclusion gates.
 - `assets/manuscript-output.template.md`: manuscript scaffold.
 - `assets/journal-pattern.template.json`: journal-pattern memory scaffold.
 - `scripts/validate_bundle.py`: dependency-free structural validator.

@@ -65,6 +65,7 @@ def test_skill_references_and_assets_exist() -> None:
         "references/evidence-contract.md",
         "references/qa-workflow.md",
         "references/literature-review-workflow.md",
+        "references/literature-review-patterns.md",
         "references/manuscript-workflow.md",
         "references/local-model-compatibility.md",
         "references/journal-pattern-memory.md",
@@ -1848,6 +1849,88 @@ def test_russian_style_auditor_reports_cliches_as_warnings() -> None:
     assert report["counts"] == {"errors": 0, "warnings": 2, "issues": 2}
 
 
+def test_russian_style_auditor_flags_translation_shaped_prose() -> None:
+    text = (
+        "# От модели к применению\n"
+        "## От офлайнового расчёта к полю в реальном времени\n"
+        "Использован механизм-ориентированный обзор. "
+        "В совокупности эти данные поддерживают использование метода."
+    )
+
+    report = STYLE_AUDITOR.audit_text(text)
+
+    assert report["valid"] is True
+    assert {issue["code"] for issue in report["issues"]} == {
+        "translated_heading_arc",
+        "cyrillic_online_offline",
+        "translated_oriented_compound",
+        "stock_translation_frame",
+    }
+
+
+def test_russian_style_auditor_flags_dense_contrastive_scaffolding() -> None:
+    text = (
+        "Расчёт начинается не с сетки, а с модели источника. "
+        "Сравнивали положение максимума, а не физиологический ответ. "
+        "Метод оценивает поле, но не активность нейронов. "
+        "Учитывали не только амплитуду, но и направление."
+    )
+
+    report = STYLE_AUDITOR.audit_text(text)
+
+    assert any(
+        issue["code"] == "contrastive_scaffolding" for issue in report["issues"]
+    )
+
+
+def test_russian_style_auditor_allows_one_necessary_contrast() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "В опыте измеряли амплитуду сигнала, а не его частоту."
+    )
+
+    assert not any(
+        issue["code"] == "contrastive_scaffolding" for issue in report["issues"]
+    )
+
+
+def test_russian_style_auditor_flags_repeated_focus_particles() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Именно эта модель использована в расчёте. Именно её параметры сохранены."
+    )
+
+    assert any(
+        issue["code"] == "focus_particle_density" for issue in report["issues"]
+    )
+
+
+def test_translationese_pass_applies_to_every_russian_fragment() -> None:
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    reference = (
+        SKILL_DIR / "references" / "russian-scientific-style.md"
+    ).read_text(encoding="utf-8")
+
+    assert "A complete Russian-language gate has three independent passes" in skill
+    assert "pass each proposed standalone fragment to" in skill
+    assert "## Устраняй переводной синтаксис" in reference
+    assert "Перед выпуском любого русского текста" in reference
+    assert "От X к Y" in reference
+
+
+def test_russian_style_profiles_emit_russian_diagnostics() -> None:
+    cyrillic = set(
+        "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+        "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+    )
+    profile_dir = SKILL_DIR / "scripts" / "russian"
+
+    for path in profile_dir.glob("*.json"):
+        profile = json.loads(path.read_text(encoding="utf-8"))
+        assert any(char in cyrillic for char in profile["description"])
+        for rule in profile["rules"]:
+            assert any(char in cyrillic for char in rule["message"])
+
+
+
 def test_russian_style_auditor_warns_about_unlisted_latin_prose() -> None:
     report = STYLE_AUDITOR.audit_text(
         "Метод оценивает respiratory drive при вдохе."
@@ -1929,6 +2012,56 @@ def test_review_profile_flags_uncounted_support_and_prestige() -> None:
         "prestige_as_evidence",
         "absence_as_agreement",
     }
+
+
+def test_review_profile_flags_absolute_and_null_overstatement() -> None:
+    text = "Доказано, что метод универсален. Эффект отсутствует."
+
+    without = STYLE_AUDITOR.audit_text(text)
+    with_genre = STYLE_AUDITOR.audit_text(text, ["genre-review"])
+
+    assert without["counts"]["issues"] == 0
+    assert {issue["code"] for issue in with_genre["issues"]} == {
+        "absolute_certainty",
+        "null_as_nonexistence",
+    }
+
+
+def test_literature_review_patterns_define_profile_aware_synthesis() -> None:
+    patterns = (SKILL_DIR / "references" / "literature-review-patterns.md").read_text(
+        encoding="utf-8"
+    )
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    workflow = (SKILL_DIR / "references" / "literature-review-workflow.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "`references/literature-review-patterns.md`" in skill
+    assert "Select one profile from `literature-review-patterns.md`" in workflow
+    for profile in (
+        "protocol_quantitative",
+        "protocol_thematic",
+        "conceptual_thematic",
+        "mechanism_application",
+    ):
+        assert f"`{profile}`" in patterns
+    for comparison in ("direct", "qualified", "contextual", "not_comparable"):
+        assert f"`{comparison}`" in patterns
+    assert "positive, null, contrary, and missing" in patterns
+    assert "relation table is optional" in patterns
+    assert "conclusion contains no new source" in patterns
+
+
+def test_literature_review_template_is_reader_facing_and_russian() -> None:
+    template = (SKILL_DIR / "assets" / "literature-review-output.template.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "# [Название обзора]" in template
+    assert "## Заключение" in template
+    assert "аналитическое утверждение -> сопоставимые основания" in template
+    assert "## Convergence" not in template
+    assert "## Claim–evidence ledger" not in template
 
 
 def test_dissertation_profile_flags_unbounded_scientific_formulations() -> None:

@@ -1,6 +1,6 @@
 {
   "profile_id": "core",
-  "description": "General rules for Russian scientific and technical prose. Applied to every run.",
+  "description": "Общие правила русского научного и технического текста. Применяются при каждом запуске.",
   "latin_allow": [
     "a", "ad", "al", "cf", "de", "e", "et", "etc", "g", "hoc", "i", "ibid",
     "in", "m", "n", "novo", "p", "posteriori", "priori", "r", "rho", "sic",
@@ -11,37 +11,61 @@
       "code": "mixed_english",
       "severity": "error",
       "pattern": "(?i)(?<![\\w-])(?:narrative review|journal articles?|full texts?|evidence|meta-analysis|cut-?offs?|thresholds?|reproducibility|workflow|fallback|retries|production-ready|performance|claims?|sites?|tasks?|populations?|eligible|supported|bounded|unsupported)(?![\\w-])",
-      "message": "Use a precise Russian equivalent or introduce the foreign term once."
+      "message": "Используй точный русский эквивалент или один раз введи необходимый иностранный термин."
     },
     {
       "code": "hybrid_verb",
       "severity": "error",
       "pattern": "(?i)(?<![а-яё])(?:ретра(?:ить|ится|ил[аи]?|ено)|фетч(?:ить|ится|ил[аи]?|ено)|кэшировать|мерж(?:ить|ится|ил[аи]?|ено)|пуш(?:ить|ится|ил[аи]?|ено)|парс(?:ить|ится|ил[аи]?|ено)|логировать|депло(?:ить|ится|ил[аи]?|ено))(?![а-яё])",
-      "message": "Replace the hybrid verb with a Russian description of the action."
+      "message": "Замени гибридный глагол русским описанием действия."
     },
     {
       "code": "mixed_script_word",
       "severity": "error",
       "pattern": "(?<![A-Za-zА-Яа-яЁё])(?:(?:[A-Z][a-z]+|[a-z]+)-[А-Яа-яЁё]+|[А-Яа-яЁё]+-(?:[A-Z][a-z]+|[a-z]+))(?![A-Za-zА-Яа-яЁё])",
-      "message": "Replace mixed-script word formation with a normative Russian phrase."
+      "message": "Замени слово со смешением алфавитов нормативным русским выражением."
     },
     {
       "code": "empty_metaphrase",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:важно отметить|следует отметить|нельзя не отметить|очевидно|в целом)(?![а-яё])",
-      "message": "Remove the metaphrase if the sentence keeps its meaning."
+      "message": "Удали вводную формулу, если смысл предложения сохраняется."
     },
     {
       "code": "unsupported_booster",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:критически важно|ключев(?:ая роль|ую роль)|значительно улучшает|оптимальн(?:ый|ая|ое|ые)|высокоэффективн(?:ый|ая|ое|ые))(?![а-яё])",
-      "message": "Give a criterion or replace the evaluation with an exact observation."
+      "message": "Укажи критерий оценки или замени усилитель точным наблюдением."
     },
     {
       "code": "vague_calque",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:это про|в части|на уровне|в рамках)(?![а-яё])",
-      "message": "Name the exact action, object, relation, or condition."
+      "message": "Назови точное действие, объект, отношение или условие."
+    },
+    {
+      "code": "translated_heading_arc",
+      "severity": "warning",
+      "pattern": "(?i)^\\s{0,3}#{1,6}\\s+от\\s+[^.!?\\n]{2,120}\\s+(?:к|до)\\s+[^.!?\\n]{2,120}\\s*$",
+      "message": "Назови предмет или результат раздела; сохраняй форму «От X к/до Y» только для буквального маршрута, диапазона или интервала."
+    },
+    {
+      "code": "cyrillic_online_offline",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:онлайн\\w*|офлайн\\w*|реалтайм\\w*)(?![а-яё])",
+      "message": "Замени кириллический англицизм точным условием: в реальном времени, после эксперимента, при последующей обработке или без подключения к сети."
+    },
+    {
+      "code": "translated_oriented_compound",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])[а-яё]+-ориентированн[а-яё]*(?![а-яё])",
+      "message": "Раскрой отношение по-русски: обзор механизмов, метод на основе данных или другое точное выражение."
+    },
+    {
+      "code": "stock_translation_frame",
+      "severity": "warning",
+      "pattern": "(?i)(?<![а-яё])(?:в совокупности (?:эти|полученные) (?:данные|результаты)|(?:эти|полученные) (?:данные|результаты) (?:поддержива\\w+|демонстриру\\w+)|(?:работа|исследование) демонстриру\\w+ (?:возможность|достижимость)|оста[её]тся наиболее [^.!?\\n]{1,50} звеном)(?![а-яё])",
+      "message": "Замени шаблонную переводную формулу конкретным результатом, сравнением или условием вывода."
     }
   ]
 }

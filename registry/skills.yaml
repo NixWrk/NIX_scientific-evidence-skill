@@ -13,7 +13,7 @@ verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
     version: "0.17"
-    skill_sha256: 1317884096aa9dc84cd2a0c5a42985b3ba116fbe352182a24f94328379ea454d
+    skill_sha256: 8c37941d80867ffe560f56ac6db4e93d98f79599a5a4baf5ff676fa097fccb1f
     task: [qa, literature_review, manuscript, qualification_work]
     license: not_declared
     spec_subset: pass

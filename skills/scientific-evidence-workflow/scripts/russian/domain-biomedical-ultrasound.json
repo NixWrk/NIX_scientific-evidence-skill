@@ -1,13 +1,13 @@
 {
   "profile_id": "domain-biomedical-ultrasound",
-  "description": "Terminology observed in respiratory-mechanics and thoracic-ultrasound sources. Domain vocabulary is a separate layer: it belongs to a subject area, not to a genre, and must not travel to an unrelated topic.",
+  "description": "Предметная лексика биомедицинского ультразвука и дыхательной механики.",
   "latin_allow": [],
   "rules": [
     {
       "code": "mixed_english",
       "severity": "error",
       "pattern": "(?i)(?<![\\w-])(?:endpoints?|respiratory effort|pressure support|ventilatory settings?|prospective substudies?|derivation cohorts?|accessory muscles?|load/capacity balance|diaphragm dysfunction|skin-to-(?:pleura|liver|rhomboid)(?: distance| depth)?|mid-axillary(?: line)?|breathing phase|respiratory phase|procedural acoustic window|treatment decisions?|consensus guidelines?)(?![\\w-])",
-      "message": "Use the Russian term for this subject area or introduce the foreign term once."
+      "message": "Используй русский термин этой предметной области или один раз введи необходимый иностранный термин."
     }
   ]
 }

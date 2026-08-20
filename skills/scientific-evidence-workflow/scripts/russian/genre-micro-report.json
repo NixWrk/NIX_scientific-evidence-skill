@@ -1,31 +1,31 @@
 {
   "profile_id": "genre-micro-report",
-  "description": "Short internal records: annotation, stage report, procedure record, decision log. The characteristic failure is a softened state of affairs, so the added rules look for progress and deviation described without a number.",
+  "description": "Языковые риски краткой записи: размытая готовность, неисчисленное отклонение, действие без состояния и препятствие без условия снятия.",
   "latin_allow": [],
   "rules": [
     {
       "code": "softened_state",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:почти|практически|в основном|по большей части)\\s+(?:готов\\w*|заверш\\w+|законч\\w+|работает|сдел\\w+|реализован\\w*)(?![а-яё])",
-      "message": "State what is finished and what is not, instead of a degree of completion."
+      "message": "Назови завершённую и незавершённую часть вместо степени готовности."
     },
     {
       "code": "unquantified_deviation",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:незначительн\\w+|небольш\\w+|некритичн\\w+|минимальн\\w+)\\s+(?:расхожден\\w+|отклонен\\w+|погрешност\\w+|ошибк\\w+|проблем\\w+|задержк\\w+)(?![а-яё])",
-      "message": "Give the value and the threshold it is compared against."
+      "message": "Укажи значение и порог, с которым оно сопоставляется."
     },
     {
       "code": "vague_progress",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:ведётся работа|идёт работа|в процессе доработки|на финальной стадии|осталось немного)(?![а-яё])",
-      "message": "Name the performed step and the remaining step."
+      "message": "Назови выполненный и оставшийся этап."
     },
     {
       "code": "unconditioned_obstacle",
       "severity": "warning",
       "pattern": "(?i)(?<![а-яё])(?:пока не получается|не удалось разобраться|есть сложности|возникли трудности)(?![а-яё])",
-      "message": "Name what is blocked and the condition under which it would be cleared."
+      "message": "Назови заблокированное действие и условие снятия препятствия."
     }
   ]
 }

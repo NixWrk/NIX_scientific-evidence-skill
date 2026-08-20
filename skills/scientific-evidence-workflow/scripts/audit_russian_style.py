@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""Heuristic audit for recurrent problems in Russian scientific prose.
+"""Эвристическая проверка типичных недостатков русского научного текста.
 
-Rules are data, not code. `russian/core.json` always applies; genre and domain
-profiles layer on top of it. Genre and subject area are independent axes: a
-review written about ultrasound needs `genre-review` and a domain profile, and
-neither one implies the other. Keeping them apart is what lets the audit move
-to another topic without carrying someone else's vocabulary along.
+Правила хранятся в данных. Профиль `russian/core.json` применяется всегда;
+жанровые и предметные профили дополняют его независимо друг от друга.
 """
 
 from __future__ import annotations
@@ -21,6 +18,12 @@ PROFILE_DIR = Path(__file__).resolve().parent / "russian"
 CORE_PROFILE = "core"
 
 LATIN_WORD = re.compile(r"(?<![\w-])[A-Za-z][A-Za-z/-]*(?![\w-])")
+WORD = re.compile(r"[A-Za-zА-Яа-яЁё]+")
+CONTRASTIVE_SCAFFOLD = re.compile(
+    r"(?i)(?:\bне\b[^.!?\n]{0,120},?\s+\bа\b|\bа\s+не\b|"
+    r"\bно\s+не\b|\bне\s+только\b[^.!?\n]{0,120}\bно\s+и\b)"
+)
+FOCUS_PARTICLE = re.compile(r"(?i)(?<![а-яё])(?:именно|как раз)(?![а-яё])")
 SEVERITIES = {"error", "warning"}
 
 
@@ -42,7 +45,7 @@ def load_profile(profile_id: str, directory: Path = PROFILE_DIR) -> dict:
     path = directory / f"{profile_id}.json"
     if not path.is_file():
         available = sorted(item.stem for item in directory.glob("*.json"))
-        raise FileNotFoundError(f"unknown profile {profile_id!r}; available: {available}")
+        raise FileNotFoundError(f"неизвестный профиль {profile_id!r}; доступны: {available}")
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -59,7 +62,7 @@ def build_ruleset(profile_ids: Sequence[str] = (), directory: Path = PROFILE_DIR
     for profile_id in applied:
         profile = load_profile(profile_id, directory)
         if profile.get("profile_id") != profile_id:
-            raise ValueError(f"{profile_id}: profile_id field does not match the file name")
+            raise ValueError(f"{profile_id}: поле profile_id не совпадает с именем файла")
         latin_allow.update(profile.get("latin_allow", []))
         for entry in profile["rules"]:
             if entry["severity"] not in SEVERITIES:
@@ -93,10 +96,21 @@ def visible_lines(text: str) -> Iterable[tuple[int, str]]:
         yield number, line
 
 
+def find_occurrences(
+    lines: Sequence[tuple[int, str]], pattern: re.Pattern[str]
+) -> list[tuple[int, str]]:
+    return [
+        (line_number, match.group(0))
+        for line_number, line in lines
+        for match in pattern.finditer(line)
+    ]
+
+
 def audit_text(text: str, profile_ids: Sequence[str] = (), directory: Path = PROFILE_DIR) -> dict:
     ruleset = build_ruleset(profile_ids, directory)
+    visible = list(visible_lines(text))
     issues = []
-    for line_number, line in visible_lines(text):
+    for line_number, line in visible:
         covered_spans = []
         for rule in ruleset.rules:
             for match in rule.pattern.finditer(line):
@@ -127,11 +141,47 @@ def audit_text(text: str, profile_ids: Sequence[str] = (), directory: Path = PRO
                         "line": line_number,
                         "match": token,
                         "message": (
-                            "Translate the word or verify that it is a necessary "
-                            "introduced term or identifier."
+                            "Переведи слово или проверь, что это необходимый и ранее "
+                            "введённый термин либо идентификатор."
                         ),
                     }
                 )
+
+    word_count = sum(len(WORD.findall(line)) for _, line in visible)
+    aggregate_rules = (
+        (
+            "contrastive_scaffolding",
+            CONTRASTIVE_SCAFFOLD,
+            4,
+            250,
+            "Слишком много фраз построено через отрицательное противопоставление. "
+            "Сохрани необходимые контрасты, остальные утверждения сформулируй прямо.",
+        ),
+        (
+            "focus_particle_density",
+            FOCUS_PARTICLE,
+            2,
+            300,
+            "Частицы фокуса повторяются слишком часто. Оставь их только для выбора "
+            "одного объекта из нескольких явно названных.",
+        ),
+    )
+    for code, pattern, minimum, words_per_hit, message in aggregate_rules:
+        occurrences = find_occurrences(visible, pattern)
+        if len(occurrences) < minimum:
+            continue
+        if len(occurrences) * words_per_hit < max(word_count, 1):
+            continue
+        issues.append(
+            {
+                "code": code,
+                "severity": "warning",
+                "profile": CORE_PROFILE,
+                "line": occurrences[0][0],
+                "match": f"{len(occurrences)} случаев на {word_count} слов",
+                "message": message,
+            }
+        )
 
     errors = sum(issue["severity"] == "error" for issue in issues)
     warnings = sum(issue["severity"] == "warning" for issue in issues)
@@ -141,34 +191,35 @@ def audit_text(text: str, profile_ids: Sequence[str] = (), directory: Path = PRO
         "counts": {"errors": errors, "warnings": warnings, "issues": len(issues)},
         "issues": issues,
         "limitations": (
-            "Surface-pattern audit only; it does not verify facts, terminology, "
-            "syntax, cohesion, or scientific quality."
+            "Эвристическая проверка распознаёт только часть поверхностных признаков; "
+            "она не подтверждает факты, терминологию, синтаксис, связность или "
+            "научное качество текста."
         ),
     }
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("path", type=Path, help="UTF-8 Markdown or text file")
-    parser.add_argument("--json", action="store_true", help="emit JSON")
+    parser.add_argument("path", type=Path, help="текстовый файл или Markdown в UTF-8")
+    parser.add_argument("--json", action="store_true", help="вывести отчёт JSON")
     parser.add_argument(
         "--profile",
         action="append",
         default=[],
         metavar="PROFILE_ID",
-        help="additional profile, repeatable; genre-* and domain-* ids are resolved "
-        "under scripts/russian/ (the core profile always applies)",
+        help="дополнительный профиль; параметр можно повторять. Профили genre-* "
+        "и domain-* загружаются из scripts/russian/, профиль core действует всегда",
     )
     parser.add_argument(
         "--list-profiles",
         action="store_true",
-        help="list available profiles and exit",
+        help="показать доступные профили и завершить работу",
     )
     parser.add_argument(
         "--fail-on",
         choices=("never", "error", "warning"),
         default="never",
-        help="select findings that produce exit status 1 (default: never)",
+        help="выбрать находки, при которых программа завершается с кодом 1",
     )
     return parser.parse_args()
 

@@ -3,8 +3,10 @@
 ## Input
 
 Require a fixed corpus, topic or review question, intended review type, and
-desired structure. Do not call a review systematic unless real search,
-screening, extraction, and eligibility provenance is supplied.
+delivery constraints. Select the synthesis profile in
+`literature-review-patterns.md` before accepting or proposing a reader-facing
+structure. Do not call a review systematic unless real search, screening,
+extraction, and eligibility provenance is supplied.
 
 An optional `project_context` may route themes to project objective and
 question IDs. It is not evidence. A project-context hash change invalidates the
@@ -19,17 +21,24 @@ full resynthesis; never update a published review by appending prose only.
 
 ## Procedure
 
-1. Create one study card per source with question, design, sample, method,
-   results, limitations, and applicability.
-2. Normalize comparable outcomes without changing units or denominators.
-3. Build a cross-study matrix using the same fields for every study.
-4. Group evidence by themes or review subquestions, not by source order.
-5. Deduplicate by study and source before counting support.
-6. Separate convergence, disagreement, missing evidence, and inapplicable
-   comparisons.
-7. Preserve internal conflicts inside an individual publication.
-8. Draft synthesis claims only after the matrix and claim ledger exist.
-9. Attach limitations to every synthesis claim they constrain.
+1. Select one profile from `literature-review-patterns.md` using the question,
+   source types, and actual corpus provenance.
+2. Convert the question into analytical dimensions that can organize the body.
+3. Create one profile-aware source card per source. Use the common core plus
+   only the fields relevant to that profile; never force every discipline into
+   a population-sample-outcome card.
+4. Normalize genuinely comparable quantities without changing units,
+   denominators, definitions, or time points.
+5. Build a cross-source matrix around the analytical dimensions and mark each
+   comparison `direct`, `qualified`, `contextual`, or `not_comparable` with a
+   reason.
+6. Deduplicate by underlying study and source before counting support.
+7. Keep positive, null, contrary, missing, and inapplicable evidence visible;
+   preserve internal conflicts inside a publication.
+8. Draft synthesis claims only after the matrix and claim ledger exist. Attach
+   every constraining limitation to the claim it bounds.
+9. Plan analytical paragraphs and the profile-specific conclusion before
+   producing continuous prose.
 
 An annotation may route or reuse study-card extraction, but it never becomes
 evidence. Downstream claims cite the publication and its locators. A new or
@@ -48,13 +57,19 @@ Describe the actual pattern instead of assigning an opaque quality score. Name:
 Do not use venue prestige, citation counts, or recency as substitutes for
 methodological relevance to a claim.
 
-## Output order
+## Output structure
 
-1. Scope and corpus boundary.
-2. Thematic synthesis.
-3. Areas of convergence.
-4. Conflicts and heterogeneity.
-5. Evidence limitations.
-6. Claim–evidence ledger.
+Use the selected profile and subject matter to determine reader-facing
+headings. Do not impose separate chapters for convergence, conflicts,
+limitations, or the ledger when those functions belong inside thematic
+sections. The introduction always establishes the question and boundary. A
+methods section is explicit for a protocol-based review; a non-systematic
+review must not imply exhaustive selection. The analytical body compares
+sources by dimension. The conclusion answers the question at the certainty
+supported by the body and adds no new evidence.
+
+Keep the comparison matrix and claim-evidence ledger as verification artifacts.
+Include them in the delivered document only when the user or delivery contract
+requests them.
 
 Use `assets/literature-review-output.template.md` for a file artifact.
