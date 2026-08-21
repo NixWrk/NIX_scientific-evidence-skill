@@ -86,7 +86,14 @@ addressable in the claim and structure ledgers.
   evidence in this chapter.
 - Conclusions introduce neither new literature nor a stronger claim than the
   reviewed body supports.
+- Every in-text reference resolves to one bibliographic record formatted under
+  the selected GOST-permitted form.
+- Publication titles match the source and are not translated or replaced by a
+  Russian paraphrase.
 
-Apply `references/literature-review-workflow.md` and
-`references/russian/genre-dissertation.md` after the evidence gate. Use
+Apply `references/literature-review-workflow.md`,
+`references/bibliography-gost.md`, and
+`references/russian/genre-dissertation.md` after the evidence gate. Preserve
+publication titles in their source language and form; do not translate them in
+the bibliography. Use
 `assets/dissertation-literature-review-chapter.template.md` for the artifact.

@@ -66,6 +66,7 @@ def test_skill_references_and_assets_exist() -> None:
         "references/qa-workflow.md",
         "references/literature-review-workflow.md",
         "references/literature-review-patterns.md",
+        "references/bibliography-gost.md",
         "references/manuscript-workflow.md",
         "references/local-model-compatibility.md",
         "references/journal-pattern-memory.md",
@@ -1827,6 +1828,16 @@ def test_russian_style_auditor_accepts_normative_prose() -> None:
     assert report["counts"] == {"errors": 0, "warnings": 0, "issues": 0}
 
 
+def test_russian_style_auditor_ignores_latin_commands_inside_math() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Импеданс вычисляют по формуле $Z=\\frac{\\rho}{\\pi r}$.\n"
+        "$$\\Delta Z = \\sum_i \\frac{a_i}{b_i}.$$\n"
+        "После расчёта результат выражают в омах."
+    )
+
+    assert report["counts"] == {"errors": 0, "warnings": 0, "issues": 0}
+
+
 def test_russian_style_auditor_flags_mixed_english_and_hybrid_verbs() -> None:
     report = STYLE_AUDITOR.audit_text(
         "Это narrative review. Затем данные нужно парсить и выполнить workflow."
@@ -2062,6 +2073,29 @@ def test_literature_review_template_is_reader_facing_and_russian() -> None:
     assert "аналитическое утверждение -> сопоставимые основания" in template
     assert "## Convergence" not in template
     assert "## Claim–evidence ledger" not in template
+
+
+def test_literature_review_uses_gost_and_preserves_source_titles() -> None:
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    workflow = (SKILL_DIR / "references" / "literature-review-workflow.md").read_text(
+        encoding="utf-8"
+    )
+    gost = (SKILL_DIR / "references" / "bibliography-gost.md").read_text(encoding="utf-8")
+    template = (SKILL_DIR / "assets" / "literature-review-output.template.md").read_text(
+        encoding="utf-8"
+    )
+    dissertation = (
+        SKILL_DIR / "references" / "genres" / "dissertation-literature-review-chapter.md"
+    ).read_text(encoding="utf-8")
+
+    assert "`references/bibliography-gost.md`" in skill
+    assert "apply `bibliography-gost.md`" in workflow
+    assert "ГОСТ Р 7.0.5–2008" in gost
+    assert "ГОСТ Р 7.0.100–2018" in gost
+    assert "Не переводи название публикации" in gost
+    assert "## Список литературы" in template
+    assert "не переводить" in template
+    assert "`references/bibliography-gost.md`" in dissertation
 
 
 def test_dissertation_profile_flags_unbounded_scientific_formulations() -> None:

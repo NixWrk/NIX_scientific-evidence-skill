@@ -4,8 +4,8 @@
 
 ## Purpose
 
-Create or criticise a research notebook as a self-contained executable
-technical report. The `.ipynb` format does not determine the applied role. A
+Create or criticise an `.ipynb` artifact as a self-contained executable
+scientific and technical report. The `.ipynb` format does not determine the applied role. A
 notebook may validate a method, analyse data, justify a choice, document an
 experiment, prepare a later experiment, or transfer a result into an
 engineering artifact. In every case it must expose the calculations, data,
@@ -15,6 +15,11 @@ One notebook answers one main research question, or several dependent subtasks
 that form one computational chain and support one bounded summary. State the
 applied role explicitly; do not route or criticise a notebook only by its file
 extension.
+
+`Notebook narrative` is an internal genre identifier. Do not use “research
+notebook”, “research diary”, or “passport” as a reader-facing document type or
+opening rubric. The artifact is a report whose executable calculations are
+part of the evidence.
 
 The genre controls the scientific narrative in Markdown cells and the relation
 between code, observable output, and conclusion. It does not prescribe a fixed
@@ -36,14 +41,37 @@ Fix the notebook file/version, applied role, main question, scope, completion
 criterion, inputs, expected outputs, and intended audience. Identify upstream
 facts, numerical results, and hypotheses that the notebook inherits. Resolve
 them from current versioned artifacts rather than copying their values into
-prose. If the notebook is already executed, preserve the original cells and
+prose. This state is an internal provenance requirement, not a reader-facing
+heading. If the notebook is already executed, preserve the original cells and
 outputs during criticism.
 
 ## Executable technical-report contract
 
-Organise the notebook into meaningful report blocks. The first block states
-the task, practical purpose, inputs and their provenance, scope, assumptions,
-limitations known in advance, completion criterion, and retained outputs.
+Organise the notebook into meaningful report blocks with subject-specific
+headings. The opening states the task and practical purpose, then describes the
+source material in scientific terms. For empirical data, name the experiment
+or observation, its purpose, object or sample, place and date when supplied,
+conditions, equipment or recording scheme when material, measured signals and
+units, and the subset analysed. For simulated or derived data, name the model
+or preceding calculation, parameters, conditions, scientific status, and the
+quantity transferred to the current task. A filename, directory, item key, or
+table identifier may be given only as a secondary locator; it is not an input
+description.
+
+Do not expose a generic passport, execution environment, inherited-state
+register, run manifest, or file inventory as part of the readable report.
+Retain paths, hashes, library versions, kernel information, and upstream
+identifiers in notebook metadata, loader code, or a separate machine-readable
+run record. Surface one of them in prose only when it changes the meaning,
+validity, or reproducibility of the scientific result, and explain that effect.
+
+Before a material calculation, introduce the investigated object and the
+measurement, physical, mathematical, statistical, or computational model used
+to represent it. Explain necessary terms and distinctions, geometry or causal
+relations, variables and units, equations, boundary and initial conditions,
+assumptions, expected limiting behaviour, applicability domain, and claims the
+model cannot support. When a term or model is unfamiliar or spatial, add a
+labelled explanatory scheme derived from supplied information.
 
 Before a material calculation or choice, explain the terms, quantities,
 formulae, comparison basis, and decision rule needed to read it. Define every
@@ -82,8 +110,13 @@ the operation or check performed, the observable output, the bounded statement
 supported by that output, and the reason for the next operation. A link or a
 matching heading does not establish this relation by itself.
 
+Do not satisfy these requirements by adding a generic introductory wrapper
+while leaving the original code and outputs unexplained. Each material
+calculation must be integrated into the report's reasoning, and every retained
+section must contribute to the same bounded question.
+
 Across a sequence of notebooks, preserve the same chain through versioned
-artifacts and inherited-state records. The downstream notebook must identify
+artifacts and machine-readable handoff records. The downstream notebook must identify
 which accepted fact, number, hypothesis, or artifact it consumes, its resolved
 version and scientific status, and the operation for which it is needed. A
 reader must be able to reconstruct the path from source data through checks and
@@ -156,17 +189,20 @@ threshold, validation check, and the conclusion that will become possible.
 Cover these functions, using headings, labels, semantic cell metadata, or
 another clear arrangement appropriate to the notebook:
 
-1. `notebook_scope`: applied role, question, included and excluded scope,
-   completion criterion, inputs, inherited state, and expected outputs;
-2. `method_and_assumptions`: method, material parameters, assumptions, units,
-   interpretation criterion, calculation chain, and applicable verification
-   checks before the result;
-3. `observed_outputs`: observable numbers, tables, figures, errors, and negative
+1. `notebook_scope`: task, practical purpose, included and excluded scope,
+   completion criterion, semantically described inputs, and expected outputs;
+2. `technical-background`: investigated object, experimental or computational
+   model, terms, quantities, equations, units, conditions, assumptions,
+   applicability limits, and any required explanatory scheme;
+3. `method_and_assumptions`: method, material parameters, interpretation
+   criterion, calculation chain, and applicable verification checks before the
+   result;
+4. `observed_outputs`: observable numbers, tables, figures, errors, and negative
    or inconclusive outcomes produced by the executed steps, with result status;
-4. `interpretation_and_limits`: interpretation separated from observation,
+5. `interpretation_and_limits`: interpretation separated from observation,
    uncertainty, applicability boundary, unresolved problem, or attributed
    hypothesis;
-5. `notebook_summary`: what was established, what was not established, retained
+6. `notebook_summary`: what was established, what was not established, retained
    artifacts, and a next action only when a decision was actually made.
 
 Use the local arc `purpose/input → concepts/method/assumptions → calculation or
@@ -206,25 +242,30 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
 
 1. Start from `assets/notebook-narrative.template.ipynb` or preserve the user's
    existing notebook structure.
-2. Resolve inherited facts, numbers, and hypotheses from the current approved
+2. Write a scientific title and an ordinary report introduction; do not expose
+   a passport, environment form, inherited-state register, or file inventory.
+3. Describe inputs by scientific origin and meaning before giving technical
+   locators.
+4. Resolve inherited facts, numbers, and hypotheses from the current approved
    upstream artifacts and retain their versions.
-3. Put reusable algorithms in modules when they are no longer part of the
+5. Put reusable algorithms in modules when they are no longer part of the
    report's explanatory path.
-4. Describe terms, formulae, method, comparison basis, assumptions, and
-   decision rule before interpreting outputs.
-5. State the traceable calculation chain and run every applicable model,
+6. Describe the object and model, then terms, formulae, method, comparison
+   basis, assumptions, applicability limits, and decision rule before
+   interpreting outputs.
+7. State the traceable calculation chain and run every applicable model,
    identifiability, data-identity, and consistency check.
-6. Keep observations, interpretations, hypotheses, decisions, and limitations
+8. Keep observations, interpretations, hypotheses, decisions, and limitations
    linguistically distinct.
-7. Assign material results a scientific status and preserve it through every
+9. Assign material results a scientific status and preserve it through every
    inheritance or handoff.
-8. Render material result numbers in Markdown from variables or result objects;
-   never maintain a second manually typed copy.
-9. Caption every material figure and interpret it in the following report block.
-10. Preserve negative and uncertain results. Attribute a new hypothesis and state
-   how it could be checked; never convert it into the current conclusion.
-11. Record every downstream artifact handoff and its acceptance criterion.
-12. Complete the reproducibility account, run the notebook lint, extract all
+10. Render material result numbers in Markdown from variables or result objects;
+    never maintain a second manually typed copy.
+11. Caption every material figure and interpret it in the following report block.
+12. Preserve negative and uncertain results. Attribute a new hypothesis and state
+    how it could be checked; never convert it into the current conclusion.
+13. Record every downstream artifact handoff and its acceptance criterion.
+14. Complete the reproducibility account, run the notebook lint, extract all
     Russian narrative including rendered Markdown, and pass the mandatory core
     and `genre-notebook` Russian language gate.
 
@@ -234,6 +275,14 @@ Check the notebook against its declared question and this genre before applying
 generic preferences. Report:
 
 - a missing or drifting question, scope, or completion criterion;
+- a generic wrapper or metadata form substituted for a scientific and
+  technical report;
+- “passport”, environment, inherited state, file inventory, or the internal
+  genre name exposed as reader-facing content without scientific necessity;
+- input described only by filename, path, item key, or table identifier;
+- a missing account of the investigated object, model, terms, equations,
+  variables, units, conditions, assumptions, or applicability limits needed to
+  understand the calculation;
 - a conclusion without an observable output;
 - an unstated applied role or a role inferred only from the file extension;
 - inherited facts, numbers, or hypotheses copied without a current source

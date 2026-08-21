@@ -1,4 +1,4 @@
-"""Lint research notebooks as self-contained executable technical reports.
+"""Lint `.ipynb` artifacts as self-contained scientific and technical reports.
 
 The lint is deliberately static and dependency-free.  It checks the saved
 notebook structure and selected reproducibility signals; it never claims that a
@@ -30,6 +30,16 @@ INPUT_RE = re.compile(
     r"(?im)(?:^\s*(?:#{1,4}\s*)?(?:данные|inputs?)\b|"
     r"\b(?:входные\s+данные|исходные\s+данные|inputs?)\b)"
 )
+SEMANTIC_INPUT_RE = re.compile(
+    r"(?i)\b(?:эксперимент\w*|измерен\w*|наблюден\w*|результат\w*|"
+    r"сигнал\w*|выборк\w*|расч[её]т\w*|модел\w*|объект\w*|образц\w*|"
+    r"протокол\w*|испытан\w*|регистрац\w*|measurement\w*|experiment\w*|"
+    r"simulation\w*|model\w*|result\w*)\b"
+)
+PASSPORT_HEADING_RE = re.compile(r"(?im)^\s*#{1,4}\s*паспорт(?:\s|$)")
+READER_METADATA_RE = re.compile(
+    r"(?im)^\s*(?:#{1,4}\s*)?(?:\*\*)?(?:среда(?:\s+выполнения)?|"
+    r"наследуемое\s+состояние|манифест\s+запуска)(?:\*\*)?\s*:?")
 METHOD_RE = re.compile(r"(?i)\b(?:метод\w*|method|допущен\w*|assumptions?)\b")
 SUMMARY_RE = re.compile(r"(?im)^\s*#{1,4}\s*(?:итог|выводы?|summary|conclusions?)\b")
 LIMIT_RE = re.compile(
@@ -133,10 +143,24 @@ def _has_plot_output(cell: dict[str, Any]) -> bool:
 
 
 def _output_size(cell: dict[str, Any]) -> tuple[int, int]:
+    """Measure textual payloads while ignoring expected binary figure data."""
     outputs = cell.get("outputs", [])
     if not isinstance(outputs, list):
         return 0, 0
-    rendered = json.dumps(outputs, ensure_ascii=False)
+    parts: list[str] = []
+    for output in outputs:
+        if not isinstance(output, dict):
+            continue
+        if output.get("output_type") == "stream":
+            parts.append(str(output.get("text", "")))
+        if output.get("output_type") == "error":
+            parts.extend(str(item) for item in output.get("traceback", []))
+        data = output.get("data", {})
+        if isinstance(data, dict):
+            for mime, value in data.items():
+                if mime.startswith("text/") or mime in {"application/json", "application/latex"}:
+                    parts.append(json.dumps(value, ensure_ascii=False))
+    rendered = "\n".join(parts)
     return len(rendered), rendered.count("\\n") + rendered.count("\n")
 
 
@@ -182,6 +206,7 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
         "notebook-scope": set(),
         "completion-criterion": set(),
         "material-inputs": set(),
+        "technical-background": set(),
         "method-and-assumptions": set(),
         "observable-output": set(),
         "calculation-chain": set(),
@@ -292,6 +317,7 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
     scope_cells = function_cells["notebook-scope"]
     completion_cells = function_cells["completion-criterion"]
     input_cells = function_cells["material-inputs"]
+    background_cells = function_cells["technical-background"]
     method_cells = function_cells["method-and-assumptions"]
     observable_cells = function_cells["observable-output"]
     calculation_cells = function_cells["calculation-chain"]
@@ -317,6 +343,11 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             input_cells or INPUT_RE.search(markdown),
             "NB-NARR-004",
             "Material inputs are not identified.",
+        ),
+        (
+            background_cells,
+            "NB-NARR-016",
+            "Investigated object, model, terms, quantities, equations, conditions, or applicability limits are not identified.",
         ),
         (
             method_cells or METHOD_RE.search(markdown),
@@ -354,9 +385,40 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
         if not observed:
             findings.append(_finding(rule_id, "error", message))
 
+    for index, _, text in markdown_cells:
+        if PASSPORT_HEADING_RE.search(text):
+            findings.append(
+                _finding(
+                    "NB-NARR-014",
+                    "error",
+                    "A reader-facing passport is a metadata form, not a scientific and technical report opening.",
+                    cell_index=index,
+                )
+            )
+        if READER_METADATA_RE.search(text):
+            findings.append(
+                _finding(
+                    "NB-NARR-017",
+                    "error",
+                    "Environment, inherited state, or run-manifest metadata must not be a reader-facing report rubric.",
+                    cell_index=index,
+                )
+            )
+
+    if input_cells:
+        input_text = "\n".join(_source_text(cells[index]) for index in input_cells)
+        if not SEMANTIC_INPUT_RE.search(input_text):
+            findings.append(
+                _finding(
+                    "NB-NARR-015",
+                    "error",
+                    "Material inputs are described only by technical locators; identify the experiment, observation, model, or calculation that produced them.",
+                )
+            )
+
     ordered_stage_sets = (
         input_cells,
-        method_cells | calculation_cells,
+        background_cells | method_cells | calculation_cells,
         observable_cells,
         summary_cells,
     )

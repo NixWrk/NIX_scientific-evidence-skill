@@ -76,6 +76,10 @@ def test_template_is_valid_notebook_with_working_report_metadata():
     notebook = json.loads(path.read_text(encoding="utf-8"))
     report = notebook["metadata"]["scientific_report"]
     assert notebook["nbformat"] == 4
+    rendered = "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"])
+    assert "Паспорт" not in rendered
+    assert "Наследуемое состояние" not in rendered
+    assert "**Среда:**" not in rendered
     assert report == {
         "artifact_status": "working",
         "execution_status": "not_run",
@@ -96,6 +100,7 @@ def test_template_is_valid_notebook_with_working_report_metadata():
         "notebook-scope",
         "completion-criterion",
         "material-inputs",
+        "technical-background",
         "calculation-chain",
         "verification-checks",
         "computed-narrative",
@@ -106,6 +111,18 @@ def test_template_is_valid_notebook_with_working_report_metadata():
         "report-summary",
         "artifact-handoff",
     } <= tags
+
+
+def test_output_size_ignores_binary_figures_but_counts_text() -> None:
+    figure = {
+        "outputs": [{"output_type": "display_data", "data": {"image/png": "x" * 200_000}}]
+    }
+    text_dump = {
+        "outputs": [{"output_type": "stream", "name": "stdout", "text": "x" * 200_000}]
+    }
+
+    assert LINTER._output_size(figure) == (0, 0)
+    assert LINTER._output_size(text_dump)[0] > 100_000
 
 
 def test_frozen_snapshot_requires_release_identity_fields():
@@ -162,6 +179,7 @@ def test_notebook_evidence_bundle_accepts_its_canonical_shape():
     ]
     sections = (
         "notebook_scope",
+        "technical_background",
         "method_and_assumptions",
         "observed_outputs",
         "interpretation_and_limits",
@@ -244,10 +262,53 @@ def test_static_result_number_in_markdown_is_rejected():
 
 def test_semantic_tags_allow_natural_russian_headings():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
-    notebook["cells"][0]["source"] = ["# Паспорт вычисления\n", "Краткое описание отчёта."]
-    notebook["cells"][1]["source"] = ["## Схема вычисления\n", "Описание принятой процедуры."]
+    notebook["cells"][0]["source"] = [
+        "# Оценка длительности операции\n",
+        "Результаты стендового измерительного эксперимента используются для расчёта среднего.",
+    ]
+    notebook["cells"][1]["source"] = [
+        "## Длительность операции и расчётная модель\n",
+        "Описание объекта, величины, единицы и принятой процедуры.",
+    ]
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "pass"
+
+
+def test_reader_facing_passport_is_rejected():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][0]["source"] = [
+        "# Паспорт расчёта\n",
+        "Результаты стендового измерительного эксперимента используются для расчёта.",
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NARR-014" in rule_ids(report)
+
+
+def test_reader_facing_environment_and_inherited_state_are_rejected():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][0]["source"].extend(
+        ["\n", "**Среда:** requirements.lock.\n", "**Наследуемое состояние:** DATA-001."]
+    )
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NARR-017" in rule_ids(report)
+
+
+def test_file_identifier_alone_is_not_a_material_input_description():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][0]["source"] = ["# Задача\n", "DATA-001; input.csv."]
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NARR-015" in rule_ids(report)
+
+
+def test_technical_background_is_required():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["metadata"]["tags"].remove("technical-background")
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NARR-016" in rule_ids(report)
 
 
 def test_computed_narrative_must_render_dynamic_markdown():

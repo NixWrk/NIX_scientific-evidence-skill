@@ -35,9 +35,11 @@ Always read `references/evidence-contract.md` first. Then load exactly one mode:
 - Q&A from a fixed corpus: `references/qa-workflow.md`.
 - Literature review from a fixed corpus:
   `references/literature-review-workflow.md` and
-  `references/literature-review-patterns.md`. The first controls evidence;
-  the second selects a synthesis architecture from the review question and
-  source types. For a changing Zotero collection,
+  `references/literature-review-patterns.md`. Also load
+  `references/bibliography-gost.md` for a Russian-language review. The first
+  controls evidence; the second selects a synthesis architecture from the
+  review question and source types; the third controls references and the
+  reference list without changing the source corpus. For a changing Zotero collection,
   route snapshot management through `zotero-living-review`; each published
   version still uses one immutable corpus snapshot.
 - Manuscript drafting, audit, or revision from supplied literature and research
@@ -176,6 +178,22 @@ from the `.ipynb` extension, impose fixed headings, or use a cell-count
 threshold. Split by independent questions, data or execution boundaries,
 reusable intermediate artifacts, or independently changing preparation,
 computation, and interpretation stages.
+
+The reader-facing notebook must be a scientific and technical report, not a
+metadata form. Do not call it a "research notebook" or open it with a
+"passport", environment, inherited-state, file-list, or run-manifest section.
+Describe inputs by scientific meaning: which experiment or calculation
+produced them, for what object, under which conditions, where and when it was
+performed when those facts are supplied, what quantities were recorded, and
+which subset is analysed. Keep filenames, paths, hashes, software versions,
+and upstream identifiers in technical metadata or loader code unless one of
+them materially affects scientific interpretation.
+
+Before calculation, explain the investigated object, measurement or
+computational model, necessary terms, geometry or causal relations, variables
+and units, equations, boundary or initial conditions, assumptions, expected
+limiting behaviour, and applicability limits. Do not satisfy the genre by
+prepending generic narrative cells to an otherwise unexplained notebook.
 
 Require a traceable narrative at both scales. Within one notebook, every
 material operation must follow from an identified input, premise, or preceding

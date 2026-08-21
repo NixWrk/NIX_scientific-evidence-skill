@@ -45,6 +45,19 @@ evidence. Downstream claims cite the publication and its locators. A new or
 changed item without a current validated annotation blocks synthesis in the
 living-review route.
 
+## Bibliographic apparatus
+
+For a Russian-language review, apply `bibliography-gost.md` to every in-text
+reference and every record in the reference list. Select one GOST-permitted
+reference form and use it consistently. Resolve each in-text reference to one
+publication record; cite the publication, not its annotation or Zotero note.
+
+Reproduce a publication title exactly in the language and form supplied by the
+publication. Do not translate the title or replace it with a Russian paraphrase.
+Add a parallel title only when the source itself supplies it as a parallel
+title. Verify Zotero metadata against the publication when possible and retain
+an explicit incompleteness status instead of inventing a missing field.
+
 ## Evidence-strength language
 
 Describe the actual pattern instead of assigning an opaque quality score. Name:
@@ -72,4 +85,6 @@ Keep the comparison matrix and claim-evidence ledger as verification artifacts.
 Include them in the delivered document only when the user or delivery contract
 requests them.
 
-Use `assets/literature-review-output.template.md` for a file artifact.
+Use `assets/literature-review-output.template.md` for a file artifact. Before
+release, verify the one-to-one resolution of citations, the consistency of the
+chosen GOST form, and the exact, untranslated titles in the reference list.

@@ -162,6 +162,7 @@ GENRES: dict[str, dict[str, Any]] = {
         "required_structure_types": {"task", "conclusion"},
         "required_output_sections": {
             "notebook_scope",
+            "technical_background",
             "method_and_assumptions",
             "observed_outputs",
             "interpretation_and_limits",
@@ -169,6 +170,7 @@ GENRES: dict[str, dict[str, Any]] = {
         },
         "allowed_output_sections": {
             "notebook_scope",
+            "technical_background",
             "method_and_assumptions",
             "observed_outputs",
             "interpretation_and_limits",

@@ -80,8 +80,9 @@ def build_ruleset(profile_ids: Sequence[str] = (), directory: Path = PROFILE_DIR
 
 
 def visible_lines(text: str) -> Iterable[tuple[int, str]]:
-    """Yield prose lines with fenced code, inline code, and URLs masked."""
+    """Yield prose lines with code, links, and mathematical notation masked."""
     in_fence = False
+    in_display_math = False
     for number, original in enumerate(text.splitlines(), start=1):
         if re.match(r"^\s*```", original):
             in_fence = not in_fence
@@ -90,7 +91,27 @@ def visible_lines(text: str) -> Iterable[tuple[int, str]]:
         if in_fence:
             yield number, ""
             continue
-        line = re.sub(r"`[^`]*`", "", original)
+
+        line = original
+        if in_display_math:
+            if "$$" not in line:
+                yield number, ""
+                continue
+            _, _, line = line.partition("$$")
+            in_display_math = False
+        if "$$" in line:
+            before, _, after = line.partition("$$")
+            if "$$" in after:
+                _, _, after = after.partition("$$")
+                line = before + " " + after
+            else:
+                line = before
+                in_display_math = True
+
+        line = re.sub(r"`[^`]*`", "", line)
+        line = re.sub(r"\$[^$\n]+\$", "", line)
+        line = re.sub(r"\\\([^\n]*?\\\)", "", line)
+        line = re.sub(r"\\\[[^\n]*?\\\]", "", line)
         line = re.sub(r"https?://\S+", "", line)
         line = re.sub(r"\]\([^)]*\)", "]", line)
         yield number, line
