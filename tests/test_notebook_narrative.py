@@ -513,3 +513,18 @@ def test_plot_requires_connected_post_figure_analysis():
     report = LINTER.lint_notebook(notebook)
     assert "NB-FIGURE-003" in rule_ids(report)
 
+def test_control_character_corrupting_latex_is_rejected():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["source"].append("\nПараметры: \x08eta и \rho_1.")
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-TEXT-001" in rule_ids(report)
+
+
+def test_form_like_input_and_assumption_labels_are_rejected():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["source"].append(
+        "\n**Входные данные.** Значения длительности.\n**Допущения.** Наблюдения независимы."
+    )
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-020" in rule_ids(report)
+

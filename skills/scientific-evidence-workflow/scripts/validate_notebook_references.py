@@ -1,4 +1,4 @@
-"""Check local links, equation references, citations, and bibliography in notebooks."""
+"""Check links, equation references, citations, and bibliography in notebooks and companion Markdown."""
 
 from __future__ import annotations
 
@@ -49,6 +49,7 @@ def _finding(
     message: str,
     *,
     cell_index: int | None = None,
+    line_number: int | None = None,
 ) -> dict[str, Any]:
     finding: dict[str, Any] = {
         "rule_id": rule_id,
@@ -57,6 +58,8 @@ def _finding(
     }
     if cell_index is not None:
         finding["cell_index"] = cell_index
+    if line_number is not None:
+        finding["line_number"] = line_number
     return finding
 
 
@@ -334,7 +337,51 @@ def _report(path: str | Path, findings: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+
+def validate_markdown_references(text: str, *, path: str | Path) -> dict[str, Any]:
+    findings: list[dict[str, Any]] = []
+    document_path = Path(path)
+    anchors = {
+        anchor
+        for anchor in (
+            [_heading_anchor(heading) for heading in HEADING_RE.findall(text)]
+            + EXPLICIT_ANCHOR_RE.findall(text)
+        )
+        if anchor
+    }
+    for match in MARKDOWN_LINK_RE.finditer(text):
+        target = _link_target(match.group(2))
+        line_number = text.count("\n", 0, match.start()) + 1
+        if _is_external(target) or target.startswith("data:"):
+            continue
+        if target.startswith("#"):
+            anchor = unquote(target[1:]).lower()
+            if anchor not in anchors:
+                findings.append(
+                    _finding(
+                        "DOC-REF-LINK-002",
+                        "error",
+                        f"Internal anchor does not exist: #{anchor}.",
+                        line_number=line_number,
+                    )
+                )
+        elif not _local_target_exists(target, document_path):
+            findings.append(
+                _finding(
+                    "DOC-REF-LINK-001",
+                    "error",
+                    f"Local link target does not exist: {target!r}.",
+                    line_number=line_number,
+                )
+            )
+    return _report(path, findings)
+
 def lint_path(path: Path) -> dict[str, Any]:
+    if path.suffix.lower() == ".md":
+        try:
+            return validate_markdown_references(path.read_text(encoding="utf-8-sig"), path=path)
+        except OSError as error:
+            return _report(path, [_finding("DOC-REF-STRUCT-001", "error", f"Cannot read Markdown: {error}")])
     try:
         data = json.loads(path.read_text(encoding="utf-8-sig"))
     except (OSError, json.JSONDecodeError) as error:
@@ -354,7 +401,8 @@ def _expand_paths(paths: list[Path]) -> list[Path]:
                 for item in path.rglob("*.ipynb")
                 if ".ipynb_checkpoints" not in item.parts
             )
-        elif path.suffix.lower() == ".ipynb":
+            targets.update(path.glob("*.md"))
+        elif path.suffix.lower() in {".ipynb", ".md"}:
             targets.add(path)
     return sorted(targets, key=lambda item: str(item).lower())
 

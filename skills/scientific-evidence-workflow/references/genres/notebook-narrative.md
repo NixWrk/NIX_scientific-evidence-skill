@@ -160,7 +160,10 @@ prose between successive equations: explain what the previous relation
 establishes and why the next relation is now needed. Later stages refer to the
 first numbered occurrence instead of repeating the equation.
 
-Every relative link must resolve in the frozen corpus. Every equation reference
+Reject embedded control characters that can corrupt prose or LaTeX commands.
+Validate relative links in companion Markdown reports as well as notebooks, and
+exclude generated checkpoint copies from the canonical corpus. Every relative
+link must resolve in the frozen corpus. Every equation reference
 must resolve to one equation label. Every in-text citation must resolve to one
 bibliography entry, and exact publication titles must remain in the source
 language. Use stable machine identifiers beneath reader-facing numbering.

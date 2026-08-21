@@ -54,6 +54,8 @@ SUMMARY_RE = re.compile(r"(?im)^\s*#{1,4}\s*(?:итог|выводы?|summary|co
 LIMIT_RE = re.compile(
     r"(?i)\b(?:ограничен\w*|не\s+установлено|не\s+проверено|limitations?|not\s+established)\b"
 )
+CONTROL_CHARACTER_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]|\r")
+READER_BLOCK_LABEL_RE = re.compile(r"(?i)\*\*(?:входные\s+данные|допущения)\.\*\*")
 TELEGRAPHIC_RESULT_RE = re.compile(
     r"(?im)(?:^\s*(?:[rubf]*[\"']{0,3})?\s*[-*]\s+\*\*[^*\n]+\*\*\s*[—–:]\s*\S|"
     r"^\s*(?:[rubf]*[\"']{0,3})?\s*[-*]\s+\*\*(?:сильнее|слабее|больше|меньше|главн\w*|итог\w*|вывод\w*)[^*\n]*[—–][^*\n]*\*\*|"
@@ -491,6 +493,24 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             )
 
     for index, _, text in markdown_cells + code_cells:
+        if CONTROL_CHARACTER_RE.search(text):
+            findings.append(
+                _finding(
+                    "NB-TEXT-001",
+                    "error",
+                    "Reader-facing source contains a control character that can corrupt text or a LaTeX command.",
+                    cell_index=index,
+                )
+            )
+        if READER_BLOCK_LABEL_RE.search(text):
+            findings.append(
+                _finding(
+                    "NB-NARR-020",
+                    "error",
+                    "Input and assumption labels are used as repeated form fields; integrate their content into connected report prose.",
+                    cell_index=index,
+                )
+            )
         if RUSSIAN_RE.search(text) and TELEGRAPHIC_RESULT_RE.search(text):
             findings.append(
                 _finding(

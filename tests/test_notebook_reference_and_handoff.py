@@ -233,3 +233,21 @@ def test_reference_audit_discloses_semantic_and_gost_limits():
     assert "semantic_support_of_citations" in report["not_assessed"]
     assert "exact_bibliographic_title_against_source" in report["not_assessed"]
     assert "gost_punctuation_and_required_fields" in report["not_assessed"]
+
+def test_companion_markdown_local_links_are_validated(tmp_path):
+    path = tmp_path / "report.md"
+    path.write_text("# Отчёт\n\n[Отсутствующее приложение](missing.md)", encoding="utf-8")
+    report = REFERENCES.lint_path(path)
+    assert report["status"] == "fail"
+    assert "DOC-REF-LINK-001" in rule_ids(report)
+
+
+def test_directory_expansion_includes_top_level_markdown_but_not_generated_subfolders(tmp_path):
+    (tmp_path / "report.md").write_text("# Отчёт", encoding="utf-8")
+    generated = tmp_path / "checks"
+    generated.mkdir()
+    (generated / "mirror.md").write_text("[Ошибка](missing.md)", encoding="utf-8")
+    targets = REFERENCES._expand_paths([tmp_path])
+    assert tmp_path / "report.md" in targets
+    assert generated / "mirror.md" not in targets
+
