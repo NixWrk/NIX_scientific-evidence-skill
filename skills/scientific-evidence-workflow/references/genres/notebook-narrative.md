@@ -154,7 +154,11 @@ belongs immediately before the calculation, transformation, check, or
 interpretation that uses it.
 
 State the local need in prose before displaying the equation. Number each
-material equation, define its symbols and units, apply it, and then cite its
+material equation and treat it as part of the surrounding sentence: put a comma
+immediately after the display, begin the following clause with lowercase `где`,
+and define every symbol in that clause, including units and conditions when
+applicable. A reference to a remote glossary does not replace the local
+definitions. Apply the equation and then cite its
 number in the prose that transforms, compares, or interprets the result. Keep
 prose between successive equations: explain what the previous relation
 establishes and why the next relation is now needed. Later stages refer to the
@@ -313,8 +317,9 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
 6. Describe the object and model, then introduce only the terms, assumptions,
    and conditions needed to begin the first calculation stage. Introduce and
    number each material equation at its first actual use, define its symbols
-   and units, apply it, and cite it in the prose that interprets or transforms
-   the result. Do not place a formula catalogue in the opening sections.
+   and units in an immediately following `, где ...` clause, apply it, and cite
+   it in the prose that interprets or transforms the result. Do not place a
+   formula catalogue in the opening sections.
 7. State the traceable calculation chain and run every applicable model,
    identifiability, data-identity, and consistency check.
 8. Keep observations, interpretations, hypotheses, decisions, and limitations

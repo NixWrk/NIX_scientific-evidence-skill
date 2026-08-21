@@ -41,7 +41,8 @@ def notebook_with_references() -> dict:
                 "metadata": {},
                 "source": [
                     "Величина определяется по формуле (1) с параметрами из [1].\n",
-                    "\\[y = ax \\tag{1}\\]\n",
+                    "\\[y = ax \\tag{1}\\],\n",
+                    "где $y$ — зависимая величина; $a$ — коэффициент; $x$ — независимая величина.\n",
                     "Исходная таблица: [локальные данные](input.md). "
                     "Запись источника приведена в [списке](#список-литературы).",
                 ],
@@ -203,8 +204,10 @@ def test_one_phrase_can_reference_multiple_numbered_equations(tmp_path):
     notebook = notebook_with_references()
     notebook["cells"][0]["source"] = [
         "Величины определяются по формулам (1) и (2) с параметрами из [1].\n",
-        "\\[y = ax \\tag{1}\\]\n",
-        "\\[z = by \\tag{2}\\]\n",
+        "\\[y = ax \\tag{1}\\],\n",
+        "где $y$ — первая величина; $a$ — первый коэффициент; $x$ — аргумент.\n",
+        "\\[z = by \\tag{2}\\],\n",
+        "где $z$ — вторая величина; $b$ — второй коэффициент; $y$ — первая величина.\n",
         "Исходная таблица: [локальные данные](input.md).",
     ]
     (tmp_path / "input.md").write_text("fixture", encoding="utf-8")
@@ -250,4 +253,51 @@ def test_directory_expansion_includes_top_level_markdown_but_not_generated_subfo
     targets = REFERENCES._expand_paths([tmp_path])
     assert tmp_path / "report.md" in targets
     assert generated / "mirror.md" not in targets
+
+
+def test_numbered_equation_requires_comma_and_lowercase_where_clause(tmp_path):
+    notebook = notebook_with_references()
+    notebook["cells"][0]["source"][1] = "\\[y = ax \\tag{1}\\]\n"
+    (tmp_path / "input.md").write_text("fixture", encoding="utf-8")
+    report = REFERENCES.validate_notebook_references(
+        notebook, path=tmp_path / "report.ipynb"
+    )
+    assert "NB-REF-EQ-004" in rule_ids(report)
+
+
+def test_where_clause_requires_every_equation_symbol(tmp_path):
+    notebook = notebook_with_references()
+    notebook["cells"][0]["source"][2] = "где $y$ — зависимая величина; $x$ — аргумент.\n"
+    (tmp_path / "input.md").write_text("fixture", encoding="utf-8")
+    report = REFERENCES.validate_notebook_references(
+        notebook, path=tmp_path / "report.ipynb"
+    )
+    assert "NB-REF-EQ-005" in rule_ids(report)
+
+
+def test_companion_markdown_checks_equation_definition_clause(tmp_path):
+    path = tmp_path / "report.md"
+    path.write_text(
+        "$$y=ax \\tag{1}$$,\nгде $y$ — результат; $a$ — коэффициент; $x$ — аргумент.",
+        encoding="utf-8",
+    )
+    assert REFERENCES.lint_path(path)["status"] == "pass"
+
+
+def test_subscripted_d_is_treated_as_a_variable(tmp_path):
+    path = tmp_path / "report.md"
+    path.write_text(
+        "$$y=d_1+x \\tag{1}$$,\nгде $y$ — результат; $x$ — слагаемое.",
+        encoding="utf-8",
+    )
+    report = REFERENCES.lint_path(path)
+    assert "DOC-REF-EQ-005" in rule_ids(report)
+
+
+def test_latex_product_after_unbraced_subscript_is_split_correctly():
+    symbols = REFERENCES._equation_symbols(r"d_1G_i+\mathbb E_{\theta_j}(Y)")
+    assert "d_1" in symbols
+    assert "G_i" in symbols
+    assert "d_1G" not in symbols
+    assert "E_theta_j" not in symbols
 

@@ -12,6 +12,9 @@ from urllib.parse import unquote
 
 
 EQUATION_TAG_RE = re.compile(r"\\tag\{([^{}]+)\}")
+DISPLAY_EQUATION_RE = re.compile(r"\$\$(.*?)\$\$|\\\[(.*?)\\\]", re.DOTALL)
+COMMA_WHERE_RE = re.compile(r"[ \t]*,[ \t\r\n]*где\b")
+INLINE_MATH_RE = re.compile(r"(?<!\$)\$(?!\$)(.*?)(?<!\$)\$(?!\$)|\\\((.*?)\\\)", re.DOTALL)
 EQUATION_REF_RE = re.compile(
     r"(?i)\b(?:формул\w*|уравнен\w*|соотношен\w*|выражен\w*|"
     r"equation|formula)\s*(?:№\s*)?"
@@ -28,6 +31,29 @@ BIBLIOGRAPHY_ENTRY_RE = re.compile(r"(?m)^\s*(?:[-*]\s*)?\[(\d+)\]\s+\S.+$")
 HEADING_RE = re.compile(r"(?m)^\s*#{1,6}\s+(.+?)\s*#*\s*$")
 EXPLICIT_ANCHOR_RE = re.compile(r"(?i)<a\s+(?:id|name)=[\"']([^\"']+)[\"']")
 VALID_BIBLIOGRAPHY_STATUSES = {"not_applicable", "incomplete", "complete"}
+
+GREEK_VARIABLES = (
+    "alpha|beta|gamma|delta|Delta|epsilon|varepsilon|zeta|eta|theta|vartheta|"
+    "iota|kappa|lambda|mu|nu|xi|Xi|omicron|rho|varrho|sigma|Sigma|tau|"
+    "upsilon|phi|varphi|chi|psi|Psi|omega|Omega|Phi"
+)
+SUBSCRIPT = r"(?:_\{(?:[^{}]|\{[^{}]*\})+\}|_[A-Za-zА-Яа-яЁё0-9])?"
+LATEX_SYMBOL_RE = re.compile(
+    rf"\\(?P<greek>{GREEK_VARIABLES})(?P<greek_sub>{SUBSCRIPT})|"
+    rf"(?<![\\A-Za-z])(?P<latin>[A-Za-z]+)(?P<latin_sub>{SUBSCRIPT})"
+)
+FORMAT_COMMAND_RE = re.compile(
+    r"\\(?:boxed|mathbf|boldsymbol|mathbb|mathit|mathsf|mathtt|hat|widehat|bar|overline|vec)\b"
+)
+SUBSCRIPT_TEXT_STYLE_RE = re.compile(
+    r"_\{\\(?:text|mathrm)\{([^{}]*)\}\}"
+)
+PRESERVED_MATHRM_RE = re.compile(r"\\mathrm\{(FoM|Cov|RMS)\}")
+MATHBB_OPERATOR_RE = re.compile(r"\\mathbb(?:\{(?:E|R)\}|[ \t]*(?:E|R))")
+TEXT_STYLE_RE = re.compile(r"\\(?:text|mathrm)\{(?:[^{}]|\{[^{}]*\})*\}")
+OPERATOR_RE = re.compile(r"\\operatorname\{(?:[^{}]|\{[^{}]*\})*\}")
+ENVIRONMENT_RE = re.compile(r"\\(?:begin|end)\{[^{}]+\}")
+NONVARIABLE_LATIN = {"d", "e", "func", "inf", "nan", "std"}
 
 
 def _source_text(cell: dict[str, Any]) -> str:
@@ -61,6 +87,98 @@ def _finding(
     if line_number is not None:
         finding["line_number"] = line_number
     return finding
+
+
+def _normalise_symbol(name: str, subscript: str = "") -> str:
+    token = name + subscript
+    token = re.sub(r"\\(?:text|mathrm)", "", token)
+    token = re.sub(r"[{}\\\s,]", "", token)
+    return token
+
+
+def _equation_symbols(text: str) -> set[str]:
+    """Extract lexical symbols; the meaning of their definitions remains manual QA."""
+    scrubbed = EQUATION_TAG_RE.sub(" ", text)
+    previous = None
+    while previous != scrubbed:
+        previous = scrubbed
+        scrubbed = SUBSCRIPT_TEXT_STYLE_RE.sub(lambda match: "_{" + match.group(1) + "}", scrubbed)
+    scrubbed = PRESERVED_MATHRM_RE.sub(lambda match: match.group(1), scrubbed)
+    scrubbed = MATHBB_OPERATOR_RE.sub(" ", scrubbed)
+    scrubbed = TEXT_STYLE_RE.sub(" ", scrubbed)
+    scrubbed = OPERATOR_RE.sub(" ", scrubbed)
+    scrubbed = ENVIRONMENT_RE.sub(" ", scrubbed)
+    scrubbed = FORMAT_COMMAND_RE.sub("", scrubbed)
+    symbols: set[str] = set()
+    for match in LATEX_SYMBOL_RE.finditer(scrubbed):
+        if match.group("greek"):
+            symbols.add(
+                _normalise_symbol(
+                    match.group("greek"), match.group("greek_sub") or ""
+                )
+            )
+            continue
+        name = match.group("latin")
+        subscript = match.group("latin_sub") or ""
+        if name.lower() in NONVARIABLE_LATIN and not subscript:
+            continue
+        if len(name) > 1 and name.islower() and not subscript:
+            symbols.update(character for character in name if character not in {"d", "e"})
+        else:
+            symbols.add(_normalise_symbol(name, subscript))
+    return symbols
+
+
+def _definition_symbols(text: str) -> set[str]:
+    symbols: set[str] = set()
+    for match in INLINE_MATH_RE.finditer(text):
+        symbols.update(_equation_symbols(match.group(1) or match.group(2) or ""))
+    return symbols
+
+
+def _equation_narrative_findings(
+    text: str,
+    *,
+    prefix: str,
+    cell_index: int | None = None,
+) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    for match in DISPLAY_EQUATION_RE.finditer(text):
+        body = match.group(1) if match.group(1) is not None else match.group(2)
+        if not body or not EQUATION_TAG_RE.search(body):
+            continue
+        after = text[match.end() :]
+        syntax = COMMA_WHERE_RE.match(after)
+        line_number = text.count("\n", 0, match.start()) + 1 if cell_index is None else None
+        if syntax is None:
+            findings.append(
+                _finding(
+                    f"{prefix}-EQ-004",
+                    "error",
+                    "A numbered displayed equation must end with a comma and be followed by lowercase 'где'.",
+                    cell_index=cell_index,
+                    line_number=line_number,
+                )
+            )
+            continue
+        definition = after[syntax.end() :]
+        definition = re.split(r"\n\s*\n", definition, maxsplit=1)[0][:3000]
+        expected = _equation_symbols(body)
+        defined = _definition_symbols(definition)
+        missing = sorted(expected - defined, key=str.lower)
+        if missing:
+            findings.append(
+                _finding(
+                    f"{prefix}-EQ-005",
+                    "error",
+                    "The 'где' clause does not name every equation symbol: "
+                    + ", ".join(missing)
+                    + ".",
+                    cell_index=cell_index,
+                    line_number=line_number,
+                )
+            )
+    return findings
 
 
 def _link_target(raw: str) -> str:
@@ -136,6 +254,9 @@ def validate_notebook_references(
     }
 
     for index, text in markdown_cells:
+        findings.extend(
+            _equation_narrative_findings(text, prefix="NB-REF", cell_index=index)
+        )
         for label in EQUATION_TAG_RE.findall(text):
             equation_tags.setdefault(label.strip(), []).append(index)
         for group in EQUATION_REF_RE.findall(text):
@@ -331,6 +452,7 @@ def _report(path: str | Path, findings: list[dict[str, Any]]) -> dict[str, Any]:
             "semantic_support_of_citations",
             "exact_bibliographic_title_against_source",
             "gost_punctuation_and_required_fields",
+            "semantic_correctness_of_equation_variable_definitions",
             "validity_of_external_urls",
             "fragment_anchors_in_linked_files",
         ],
@@ -349,6 +471,7 @@ def validate_markdown_references(text: str, *, path: str | Path) -> dict[str, An
         )
         if anchor
     }
+    findings.extend(_equation_narrative_findings(text, prefix="DOC-REF"))
     for match in MARKDOWN_LINK_RE.finditer(text):
         target = _link_target(match.group(2))
         line_number = text.count("\n", 0, match.start()) + 1
