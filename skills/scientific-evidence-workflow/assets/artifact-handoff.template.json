@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "handoff_id": "HANDOFF-001",
+  "record_version": "v1",
+  "supersedes": null,
+  "artifact": {
+    "artifact_id": "ART-001",
+    "artifact_version": "v1",
+    "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "path": "outputs/result.json",
+    "media_type": "application/json",
+    "schema_ref": "schemas/result-v1.json",
+    "units": "dimensionless",
+    "scientific_status": "estimate",
+    "applicability_limits": [
+      "Only the declared input version and operating conditions."
+    ]
+  },
+  "producer": {
+    "notebook_id": "NB-001",
+    "run_id": "RUN-001",
+    "code_version": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "validation": {
+    "technical": "passed",
+    "computational": "passed",
+    "scientific": "bounded"
+  },
+  "selection_policy": {
+    "policy_id": "SEL-001",
+    "policy_version": "v1",
+    "status": "clear",
+    "rule_ids": [
+      "SEL-RULE-001"
+    ],
+    "conflict_refs": [],
+    "resolution_ref": null
+  },
+  "automation_status": "permitted",
+  "consumers": [
+    {
+      "consumer_id": "NB-002",
+      "purpose": "Use the bounded estimate in the next declared calculation.",
+      "acceptance_criterion": "Schema, units, hash, validation statuses, and applicability limits match."
+    }
+  ]
+}

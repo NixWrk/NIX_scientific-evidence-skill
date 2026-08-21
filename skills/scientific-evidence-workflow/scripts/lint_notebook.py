@@ -81,6 +81,48 @@ VALID_ARTIFACT_STATUSES = {"working", "frozen"}
 VALID_EXECUTION_STATUSES = {"not_run", "partial", "clean_kernel_pass", "failed"}
 VALID_STUDY_TYPES = {"computational", "empirical", "mixed"}
 VALID_LANGUAGE_AUDIT_STATUSES = {"not_run", "passed", "failed"}
+VALID_GENRE_PROFILES = {
+    "model-derivation",
+    "computational-verification",
+    "inverse-estimation",
+    "empirical-analysis",
+    "experiment-diagnostic",
+    "synthesis-decision",
+    "engineering-transfer",
+}
+PROFILE_TAG_REQUIREMENTS = {
+    "model-derivation": {"equation-narrative", "verification-checks"},
+    "computational-verification": {"verification-checks"},
+    "inverse-estimation": {"identifiability-check", "verification-checks"},
+    "empirical-analysis": {
+        "experiment-context",
+        "experiment-procedure",
+        "experimental-observation",
+        "experimental-analysis",
+        "selection-policy",
+    },
+    "experiment-diagnostic": {
+        "experiment-context",
+        "experiment-procedure",
+        "experimental-observation",
+        "experimental-analysis",
+        "verification-checks",
+    },
+    "synthesis-decision": {"decision-basis", "artifact-handoff"},
+    "engineering-transfer": {"artifact-handoff", "acceptance-criterion"},
+}
+VALID_TECHNICAL_VALIDATION_STATUSES = {
+    "not_checked", "passed", "failed", "blocked"
+}
+VALID_COMPUTATIONAL_VALIDATION_STATUSES = {
+    "not_checked", "partial", "passed", "failed", "blocked"
+}
+VALID_SCIENTIFIC_VALIDATION_STATUSES = {
+    "not_reviewed", "bounded", "approved", "rejected", "conflicted"
+}
+VALID_BIBLIOGRAPHY_STATUSES = {"not_applicable", "incomplete", "complete"}
+VALID_SELECTION_POLICY_STATUSES = {"not_applicable", "clear", "conflicted", "resolved"}
+VALID_AUTOMATION_STATUSES = {"blocked", "permitted"}
 EXPERIMENT_TAG_REQUIREMENTS = {
     "experiment-context": (
         "NB-EXP-001",
@@ -597,6 +639,132 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 )
             )
 
+        genre_profile = report_metadata.get("genre_profile")
+        if genre_profile not in VALID_GENRE_PROFILES:
+            findings.append(
+                _finding(
+                    "NB-GENRE-001",
+                    "error",
+                    f"Unknown or missing genre_profile {genre_profile!r}.",
+                )
+            )
+        else:
+            missing_profile_tags = sorted(
+                PROFILE_TAG_REQUIREMENTS[genre_profile] - all_tags
+            )
+            if missing_profile_tags:
+                findings.append(
+                    _finding(
+                        "NB-GENRE-002",
+                        "error",
+                        "Genre profile requires semantic tags: "
+                        + ", ".join(missing_profile_tags)
+                        + ".",
+                    )
+                )
+
+        validation_fields = (
+            (
+                "technical_validation_status",
+                VALID_TECHNICAL_VALIDATION_STATUSES,
+            ),
+            (
+                "computational_validation_status",
+                VALID_COMPUTATIONAL_VALIDATION_STATUSES,
+            ),
+            (
+                "scientific_validation_status",
+                VALID_SCIENTIFIC_VALIDATION_STATUSES,
+            ),
+        )
+        for field, allowed in validation_fields:
+            value = report_metadata.get(field)
+            if value not in allowed:
+                findings.append(
+                    _finding(
+                        "NB-VALID-001",
+                        "error",
+                        f"Unknown or missing {field} {value!r}.",
+                    )
+                )
+
+        bibliography_status = report_metadata.get("bibliography_status")
+        if bibliography_status not in VALID_BIBLIOGRAPHY_STATUSES:
+            findings.append(
+                _finding(
+                    "NB-BIB-001",
+                    "error",
+                    f"Unknown or missing bibliography_status {bibliography_status!r}.",
+                )
+            )
+
+        selection_status = report_metadata.get("selection_policy_status")
+        resolution_ref = report_metadata.get("selection_resolution_ref")
+        automation_status = report_metadata.get("automation_status")
+        if selection_status not in VALID_SELECTION_POLICY_STATUSES:
+            findings.append(
+                _finding(
+                    "NB-AUTO-001",
+                    "error",
+                    f"Unknown or missing selection_policy_status {selection_status!r}.",
+                )
+            )
+        if automation_status not in VALID_AUTOMATION_STATUSES:
+            findings.append(
+                _finding(
+                    "NB-AUTO-001",
+                    "error",
+                    f"Unknown or missing automation_status {automation_status!r}.",
+                )
+            )
+        if (
+            selection_status in {"not_applicable", "clear"}
+            and resolution_ref is not None
+        ):
+            findings.append(
+                _finding(
+                    "NB-AUTO-002",
+                    "error",
+                    "A selection policy without a recorded conflict must use "
+                    "selection_resolution_ref null.",
+                )
+            )
+        if selection_status == "resolved" and (
+            not isinstance(resolution_ref, str) or not resolution_ref.strip()
+        ):
+            findings.append(
+                _finding(
+                    "NB-AUTO-002",
+                    "error",
+                    "Resolved selection policy requires selection_resolution_ref.",
+                )
+            )
+        if selection_status == "conflicted" and automation_status != "blocked":
+            findings.append(
+                _finding(
+                    "NB-AUTO-002",
+                    "error",
+                    "Conflicting data-selection rules require automation_status 'blocked'.",
+                )
+            )
+        if automation_status == "permitted":
+            ready_for_automation = (
+                report_metadata.get("technical_validation_status") == "passed"
+                and report_metadata.get("computational_validation_status") == "passed"
+                and report_metadata.get("scientific_validation_status")
+                in {"bounded", "approved"}
+                and selection_status != "conflicted"
+            )
+            if not ready_for_automation:
+                findings.append(
+                    _finding(
+                        "NB-AUTO-003",
+                        "error",
+                        "Automation may be permitted only after all validation axes pass "
+                        "and data-selection rules are not conflicted.",
+                    )
+                )
+
         empirical_tags = set(EXPERIMENT_TAG_REQUIREMENTS)
         if russian_narrative:
             narrative_language = report_metadata.get("narrative_language")
@@ -688,6 +856,22 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                         "Frozen snapshot requires execution_status 'clean_kernel_pass'.",
                     )
                 )
+            if report_metadata.get("technical_validation_status") != "passed":
+                findings.append(
+                    _finding(
+                        "NB-VALID-002",
+                        "error",
+                        "Frozen snapshot requires technical_validation_status 'passed'.",
+                    )
+                )
+            if report_metadata.get("computational_validation_status") != "passed":
+                findings.append(
+                    _finding(
+                        "NB-VALID-002",
+                        "error",
+                        "Frozen snapshot requires computational_validation_status 'passed'.",
+                    )
+                )
 
     return _report(path, findings, len(cells))
 
@@ -713,6 +897,9 @@ def _report(path: str, findings: list[dict[str, Any]], cell_count: int) -> dict[
             "current_upstream_resolution",
             "cross_notebook_chain_truth",
             "russian_language_quality_beyond_heuristics",
+            "bibliographic_semantic_correctness",
+            "selection_policy_truth",
+            "validation_status_attestation",
         ],
     }
 

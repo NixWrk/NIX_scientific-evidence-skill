@@ -79,7 +79,10 @@ reference:
   current upstream state, traceable calculation logic, calculated prose, and
   bounded conclusions —
   `references/genres/notebook-narrative.md`, mode `record`; also load
-  `references/reproducibility-contract.md`. For Russian notebooks, also load
+  `references/notebook-genre-profiles.md` and
+  `references/reproducibility-contract.md`. When the notebook cites external
+  publications, also load `references/bibliography-gost.md` for Russian output.
+  For Russian notebooks, also load
   `references/russian-scientific-style.md` and
   `references/russian/genre-notebook.md`; this language route is mandatory for
   static Markdown and programmatically rendered narrative alike.
@@ -171,8 +174,9 @@ as evidence.
 For a notebook, identify its applied role, one principal research question or
 bounded computational chain, scope, completion criterion, inputs, inherited
 facts/numbers/hypotheses, method, observable outputs, limitations, and final
-artifacts. Treat every notebook as an executable technical report even when its
-applied role is model validation, data analysis, choice justification,
+artifacts. Select one primary notebook genre profile by scientific role, not by
+filename or library. Treat every notebook as an executable technical report
+even when its applied role is model validation, data analysis, choice justification,
 experiment analysis, planning, or engineering transfer. Do not infer the role
 from the `.ipynb` extension, impose fixed headings, or use a cell-count
 threshold. Split by independent questions, data or execution boundaries,
@@ -194,6 +198,12 @@ computational model, necessary terms, geometry or causal relations, variables
 and units, equations, boundary or initial conditions, assumptions, expected
 limiting behaviour, and applicability limits. Do not satisfy the genre by
 prepending generic narrative cells to an otherwise unexplained notebook.
+
+When equations carry the reasoning, introduce the relationship in prose,
+number the material equation, define its symbols and units, and refer to that
+number in the later sentence that applies or transforms it. Preserve stable
+internal equation identifiers beneath human-readable numbering so that
+renumbering does not break the calculation chain.
 
 Require a traceable narrative at both scales. Within one notebook, every
 material operation must follow from an identified input, premise, or preceding
@@ -324,7 +334,14 @@ Before release, verify:
 8. every accepted semantic wording correction is traceable;
 9. no scientific source was introduced from model memory;
 10. every evidence-dependent critic finding was checked against the relevant
-    source, calculation, coverage record, or applicable authority.
+    source, calculation, coverage record, or applicable authority;
+11. technical, computational, and scientific validation statuses are reported
+    separately and no status is inferred from another;
+12. every local link, internal equation reference, in-text citation, and
+    bibliography entry resolves under the selected reference contract;
+13. every cross-notebook artifact has a versioned handoff record;
+14. automation is blocked while data-selection rules or canonical-input
+    decisions remain conflicted.
 
 When a bundle is available, run:
 
@@ -410,6 +427,8 @@ Stop and request input instead of guessing when:
 - an evidence-dependent critic finding cannot be checked against its source,
   calculation, declared coverage, or applicable authority;
 - source versions conflict and no authoritative version is identified;
+- data-selection rules conflict and no versioned resolution record identifies
+  the authoritative policy;
 - a full systematic-review claim lacks real search and screening provenance;
 - the requested action would create research plans or publication strategy
   rather than process the supplied material.
@@ -424,11 +443,20 @@ Stop and request input instead of guessing when:
 - `references/genres/`: genre references with their required parts and gates.
 - `references/reproducibility-contract.md`: shared working-versus-frozen
   reproducibility contract for notebooks, procedures, and experiments.
+- `references/notebook-genre-profiles.md`: scientific-role profiles and their
+  additional notebook gates.
 - `assets/notebook-narrative.template.ipynb`: minimal editable notebook
   scaffold with report metadata and semantic cell tags.
 - `scripts/lint_notebook.py`: dependency-free static notebook audit. It does
   not prove clean-kernel execution, scientific validity, or absence of all
   hidden state.
+- `scripts/validate_notebook_references.py`: local-link, equation-reference,
+  citation-label, and bibliography integrity audit.
+- `assets/artifact-handoff.template.json` and
+  `assets/artifact-handoff.schema.json`: versioned cross-notebook artifact
+  contract.
+- `scripts/validate_artifact_handoff.py`: handoff validator that blocks
+  automated use of unresolved selection conflicts.
 - `assets/<genre>.template.md`: genre output scaffolds.
 - `assets/literature-review-output.template.md`: review scaffold.
 - `references/literature-review-patterns.md`: review-profile selection,

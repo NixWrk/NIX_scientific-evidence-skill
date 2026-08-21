@@ -75,6 +75,25 @@ Use a result record for author-provided research data used in a manuscript.
 Do not calculate or transform a result unless the user explicitly authorizes
 that operation and the transformation is recorded as a new versioned result.
 
+## Versioned artifact handoff
+
+Use a handoff record when one notebook or stage produces an artifact consumed
+by another. Validate it against `assets/artifact-handoff.schema.json` and
+`scripts/validate_artifact_handoff.py`. The record carries:
+
+- stable handoff and artifact identifiers, explicit `vN` record and artifact
+  versions, a content hash, and a predecessor reference;
+- producer notebook, run, and code version;
+- units, scientific status, applicability limits, and consumer acceptance
+  criteria;
+- independent technical, computational, and scientific validation statuses;
+- the versioned data-selection policy and any conflict or resolution records.
+
+Never overwrite a consumed artifact in place. Publish a new version and retain
+the predecessor reference. A syntactically valid handoff does not attest that
+the scientific interpretation is true. If applicable data-selection rules
+conflict, keep automation blocked until an authorized resolution is recorded.
+
 ## Structure record
 
 Use a structure record for an addressable unit of the work being produced, not

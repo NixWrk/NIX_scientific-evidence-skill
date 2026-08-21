@@ -82,12 +82,20 @@ def test_template_is_valid_notebook_with_working_report_metadata():
     assert "**Среда:**" not in rendered
     assert report == {
         "artifact_status": "working",
+        "automation_status": "blocked",
+        "bibliography_status": "not_applicable",
+        "computational_validation_status": "not_checked",
         "execution_status": "not_run",
+        "genre_profile": "model-derivation",
         "language_audit_status": "not_run",
         "language_profile": "genre-notebook",
         "narrative_language": "ru",
+        "scientific_validation_status": "not_reviewed",
         "schema_version": "1.0",
+        "selection_policy_status": "not_applicable",
+        "selection_resolution_ref": None,
         "study_type": "computational",
+        "technical_validation_status": "not_checked",
     }
     tags = {
         tag
@@ -102,6 +110,7 @@ def test_template_is_valid_notebook_with_working_report_metadata():
         "material-inputs",
         "technical-background",
         "calculation-chain",
+        "equation-narrative",
         "verification-checks",
         "computed-narrative",
         "observable-output",
@@ -141,6 +150,9 @@ def test_lint_report_states_what_static_analysis_does_not_assess():
     assert "current_upstream_resolution" in report["not_assessed"]
     assert "cross_notebook_chain_truth" in report["not_assessed"]
     assert "russian_language_quality_beyond_heuristics" in report["not_assessed"]
+    assert "bibliographic_semantic_correctness" in report["not_assessed"]
+    assert "selection_policy_truth" in report["not_assessed"]
+    assert "validation_status_attestation" in report["not_assessed"]
 
 
 def test_notebook_evidence_bundle_accepts_its_canonical_shape():
@@ -209,7 +221,11 @@ def test_notebook_evidence_bundle_accepts_its_canonical_shape():
 def empirical_notebook(*, complete_arc: bool = True) -> dict:
     path = FIXTURES / "clean-single-task.ipynb"
     notebook = json.loads(path.read_text(encoding="utf-8"))
-    notebook["metadata"]["scientific_report"]["study_type"] = "empirical"
+    report = notebook["metadata"]["scientific_report"]
+    report["study_type"] = "empirical"
+    report["genre_profile"] = "empirical-analysis"
+    report["selection_policy_status"] = "clear"
+    notebook["cells"][0]["metadata"]["tags"].append("selection-policy")
     if complete_arc:
         notebook["cells"][3]["source"] = [
             "impedance_ohm = 42.043\n",
@@ -240,6 +256,52 @@ def test_unknown_study_type_is_rejected():
     notebook["metadata"]["scientific_report"]["study_type"] = "observationalish"
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "fail"
+
+
+def test_unknown_genre_profile_is_rejected():
+    notebook = empirical_notebook()
+    notebook["metadata"]["scientific_report"]["genre_profile"] = "generic-report"
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-GENRE-001" in rule_ids(report)
+
+
+def test_genre_profile_requires_its_semantic_functions():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["metadata"]["scientific_report"]["genre_profile"] = "inverse-estimation"
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-GENRE-002" in rule_ids(report)
+
+
+def test_validation_axes_are_independent_required_statuses():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["metadata"]["scientific_report"].pop("scientific_validation_status")
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-VALID-001" in rule_ids(report)
+
+
+def test_conflicting_selection_rules_block_automation():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    report_metadata = notebook["metadata"]["scientific_report"]
+    report_metadata["selection_policy_status"] = "conflicted"
+    report_metadata["automation_status"] = "permitted"
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-AUTO-002" in rule_ids(report)
+
+
+def test_automation_requires_all_validation_axes_to_pass():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    report_metadata = notebook["metadata"]["scientific_report"]
+    report_metadata["computational_validation_status"] = "partial"
+    report_metadata["automation_status"] = "permitted"
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-AUTO-003" in rule_ids(report)
+
+
+def test_resolved_selection_rules_require_resolution_reference():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["metadata"]["scientific_report"]["selection_policy_status"] = "resolved"
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-AUTO-002" in rule_ids(report)
 
 
 def test_impedance_units_ohm_and_ohm_meter_are_recognized():

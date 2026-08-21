@@ -72,6 +72,26 @@ Use these execution statuses:
 Saved outputs do not establish `clean_kernel_pass`. Set that status only from an
 actual fresh-kernel run.
 
+### Independent validation axes
+
+Record validation on three axes. Never derive one axis from another.
+
+- Technical: `not_checked`, `passed`, `failed`, or `blocked`. This axis covers
+  structure, declared files, schemas, hashes, local links, equation references,
+  citation labels, and bibliography integrity.
+- Computational: `not_checked`, `partial`, `passed`, `failed`, or `blocked`.
+  This axis covers actual execution, tests, invariants, numerical checks, and
+  the declared coverage of those checks.
+- Scientific: `not_reviewed`, `bounded`, `approved`, `rejected`, or
+  `conflicted`. This axis covers the method, interpretation, evidence boundary,
+  applicability, and unresolved scientific conflicts.
+
+`clean_kernel_pass` does not imply computational validation: code may execute
+while a required invariant fails or a method branch remains unavailable.
+Computational validation does not approve the scientific interpretation.
+Scientific approval does not repair an unresolved input, broken reference, or
+unreproducible execution.
+
 ### Parameters and randomness
 
 Record parameters that affect a material output. Fix and report a seed for
@@ -118,6 +138,19 @@ effect on the conclusion. A failed check or a completely confounded design
 blocks the unsupported conclusion and requires a changed acquisition or model
 comparison, not a more elaborate post-processing step on the same information.
 
+### Selection policies and automation
+
+Version every material inclusion, exclusion, duplicate-resolution, and
+canonical-input policy. Record the rule identifiers, policy version, source of
+the decision, and affected downstream consumers.
+
+When two supplied records prescribe incompatible selections, mark the policy
+`conflicted`, retain both records, and set automated downstream use to
+`blocked`. Do not choose the rule implemented in code merely because it ran.
+Resume automation only after a versioned resolution record identifies the
+authoritative policy, explains the decision, and invalidates or reruns every
+affected downstream artifact.
+
 ### Deviations and limits
 
 Separate the intended procedure from what was performed. Record failures,
@@ -135,7 +168,15 @@ The lint understands this small notebook-level object:
     "schema_version": "1.0",
     "artifact_status": "working",
     "study_type": "computational",
-    "execution_status": "not_run"
+    "genre_profile": "model-derivation",
+    "execution_status": "not_run",
+    "technical_validation_status": "not_checked",
+    "computational_validation_status": "not_checked",
+    "scientific_validation_status": "not_reviewed",
+    "bibliography_status": "not_applicable",
+    "selection_policy_status": "not_applicable",
+    "selection_resolution_ref": null,
+    "automation_status": "blocked"
   }
 }
 ```
@@ -145,6 +186,13 @@ observations and `study_type: mixed` when experiment and simulation are both
 material to its conclusion. In those modes the notebook narrative must carry
 the experiment-context, experiment-procedure, experimental-observation, and
 experimental-analysis functions defined by the notebook genre.
+
+Use `selection_policy_status: clear`, `conflicted`, or `resolved` when a
+selection policy applies. `resolved` requires `selection_resolution_ref`;
+`conflicted` requires `automation_status: blocked`. Use `not_applicable` only
+when no material selection or canonical-input choice enters the calculation.
+`automation_status: permitted` requires passed technical and computational
+validation plus bounded or approved scientific validation.
 
 For `artifact_status: frozen`, also provide non-empty `run_id`, `executed_at`,
 `code_version`, `environment`, `significant_inputs`, and `significant_outputs`; set
@@ -156,11 +204,18 @@ index, not a substitute for the described inputs, method, outputs, and limits.
 - A fresh-kernel run or an explicit declaration of the unexecuted/manual part.
 - No unrecorded state required from earlier interactive work.
 - Material inputs, parameters, environment, and outputs are identifiable.
+- Technical, computational, and scientific validation statuses are recorded
+  independently; no pass is inferred from execution alone.
+- The selected notebook genre profile is declared and its additional checks are
+  present.
 - Renamed or duplicated inputs are resolved to stable content identities.
+- Material selection policies are versioned. A conflicted policy blocks
+  automation until a versioned resolution is supplied.
 - Inherited facts, results, and hypotheses resolve from versioned upstream
   artifacts; the frozen run records the resolved versions.
 - Material results and handoffs preserve scientific status, schema, units,
   limits, consumer, and acceptance criterion.
+- Local links, equation references, citations, and bibliography entries resolve.
 - The calculation trace is reproducible within the notebook and across every
   declared upstream or downstream notebook boundary.
 - Every released numerical conclusion preserves its unit or dimensionless

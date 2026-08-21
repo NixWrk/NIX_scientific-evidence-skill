@@ -25,8 +25,10 @@ The genre controls the scientific narrative in Markdown cells and the relation
 between code, observable output, and conclusion. It does not prescribe a fixed
 set of headings and does not rewrite executable code for style.
 
-Also load `references/reproducibility-contract.md` and, for Russian text,
-both `references/russian-scientific-style.md` and
+Also load `references/notebook-genre-profiles.md` and
+`references/reproducibility-contract.md`. When external publications are cited,
+load `references/bibliography-gost.md` for Russian output. For Russian text,
+load both `references/russian-scientific-style.md` and
 `references/russian/genre-notebook.md`. The Russian language gate is mandatory
 for static Markdown, captions, research comments, and narrative rendered by
 code.
@@ -44,6 +46,10 @@ them from current versioned artifacts rather than copying their values into
 prose. This state is an internal provenance requirement, not a reader-facing
 heading. If the notebook is already executed, preserve the original cells and
 outputs during criticism.
+
+Select one primary `genre_profile` from `references/notebook-genre-profiles.md`.
+Use its semantic functions and stop rules in addition to this common contract;
+do not infer the profile from a filename, library, or saved output.
 
 ## Executable technical-report contract
 
@@ -127,6 +133,21 @@ Use the semantic function `calculation-chain` to mark where this dependency
 logic is stated. The marker is not proof of coherence; inspect whether the
 declared links match actual variables, artifacts, outputs, and execution order.
 
+## Equation narrative and reference integrity
+
+When equations carry the argument, introduce the physical or mathematical
+relationship in a sentence before displaying the equation. Number each
+material equation, define its symbols and units, and then cite the equation
+number in the prose that applies, transforms, or compares it. Keep the prose
+between equations: explain what the previous relation establishes and why the
+next relation is needed. This connected pattern is preferable to an isolated
+formula catalogue or a generic wrapper around code.
+
+Every relative link must resolve in the frozen corpus. Every equation reference
+must resolve to one equation label. Every in-text citation must resolve to one
+bibliography entry, and exact publication titles must remain in the source
+language. Use stable machine identifiers beneath reader-facing numbering.
+
 ## Scientific status, checks, and stop rules
 
 Assign every material inherited or produced result an explicit scientific
@@ -135,6 +156,19 @@ status appropriate to its role: `measurement`, `estimate`, `bound`, `reference`,
 Use `result-status` on the narrative cell that reports it. Do not promote a
 bound to an estimate, an approximation to a measurement, or a hypothesis to a
 finding without new evidence and an explicit status change.
+
+Report three validation axes independently in notebook metadata:
+
+- `technical_validation_status`: structure, declared inputs, schemas, hashes,
+  local links, internal references, and bibliography integrity;
+- `computational_validation_status`: actual execution, tests, invariants,
+  numerical checks, and declared coverage;
+- `scientific_validation_status`: scientific review of the method,
+  interpretation, evidence boundary, and unresolved conflicts.
+
+A pass on one axis never implies a pass on another. A clean-kernel run does not
+approve the interpretation, and scientific approval does not repair a broken
+link, missing input, or failed calculation.
 
 When the method admits internal checks, make them part of the report rather
 than leaving them implicit in code. Appropriate checks include dimensional
@@ -183,6 +217,11 @@ version or hash, schema, units, scientific status, applicability limits,
 intended consumer, and acceptance criterion. Formulate the next task
 operationally: required quantity, inputs, method, required accuracy or decision
 threshold, validation check, and the conclusion that will become possible.
+Validate the machine record with `scripts/validate_artifact_handoff.py`.
+
+If selection, exclusion, duplicate handling, or canonical-input rules conflict,
+set automation to `blocked`. Permit automated downstream use only after a
+versioned resolution identifies the authoritative policy and its provenance.
 
 ## Minimal narrative arc
 
@@ -241,7 +280,8 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
 ## Generate
 
 1. Start from `assets/notebook-narrative.template.ipynb` or preserve the user's
-   existing notebook structure.
+   existing notebook structure. Select and record one primary notebook genre
+   profile.
 2. Write a scientific title and an ordinary report introduction; do not expose
    a passport, environment form, inherited-state register, or file inventory.
 3. Describe inputs by scientific origin and meaning before giving technical
@@ -252,7 +292,8 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
    report's explanatory path.
 6. Describe the object and model, then terms, formulae, method, comparison
    basis, assumptions, applicability limits, and decision rule before
-   interpreting outputs.
+   interpreting outputs. Introduce and number material equations, define their
+   symbols and units, and cite their numbers in the prose that uses them.
 7. State the traceable calculation chain and run every applicable model,
    identifiability, data-identity, and consistency check.
 8. Keep observations, interpretations, hypotheses, decisions, and limitations
@@ -264,8 +305,11 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
 11. Caption every material figure and interpret it in the following report block.
 12. Preserve negative and uncertain results. Attribute a new hypothesis and state
     how it could be checked; never convert it into the current conclusion.
-13. Record every downstream artifact handoff and its acceptance criterion.
-14. Complete the reproducibility account, run the notebook lint, extract all
+13. Record and validate every downstream artifact handoff and its acceptance
+    criterion. Block automation while selection rules are conflicted.
+14. Validate local links, equation references, citations, and the bibliography.
+15. Record technical, computational, and scientific validation separately.
+16. Complete the reproducibility account, run the notebook lint, extract all
     Russian narrative including rendered Markdown, and pass the mandatory core
     and `genre-notebook` Russian language gate.
 
@@ -352,6 +396,12 @@ Cell or line count is only a prompt to inspect these boundaries.
 - Applicable model checks and identifiability limits are reported; a failed
   stop rule blocks the prohibited conclusion.
 - Every downstream artifact has an addressable handoff contract.
+- Technical, computational, and scientific validation statuses are present and
+  no status is inferred from another.
+- Every local link, equation reference, citation, and bibliography label
+  resolves; external scientific sources have complete records.
+- Conflicted selection or canonical-input rules block automation until a
+  versioned resolution record is supplied.
 - An `empirical` or `mixed` notebook covers all four experiment tags and links
   its observed result to the supplied experiment or data source.
 - Every Russian static or rendered narrative fragment passes the common Russian
@@ -364,9 +414,12 @@ Run:
 
 ```text
 python scripts/lint_notebook.py path/to/notebook.ipynb --json
+python scripts/validate_notebook_references.py path/to/notebook.ipynb --json
+python scripts/validate_artifact_handoff.py path/to/handoff.json --json
 ```
 
-The lint checks notebook structure and selected static signals only. It can
+The notebook lint and reference audit check structure and selected static
+signals only. They can
 verify the `computed-narrative` tag and a dynamic Markdown expression, but it
 cannot prove that the variable came from the current approved upstream artifact
 or that it also produced the displayed table or figure. A clean report does not
