@@ -54,6 +54,23 @@ SUMMARY_RE = re.compile(r"(?im)^\s*#{1,4}\s*(?:итог|выводы?|summary|co
 LIMIT_RE = re.compile(
     r"(?i)\b(?:ограничен\w*|не\s+установлено|не\s+проверено|limitations?|not\s+established)\b"
 )
+TELEGRAPHIC_RESULT_RE = re.compile(
+    r"(?im)(?:^\s*(?:[rubf]*[\"']{0,3})?\s*[-*]\s+\*\*[^*\n]+\*\*\s*[—–:]\s*\S|"
+    r"^\s*(?:[rubf]*[\"']{0,3})?\s*[-*]\s+\*\*(?:сильнее|слабее|больше|меньше|главн\w*|итог\w*|вывод\w*)[^*\n]*[—–][^*\n]*\*\*|"
+    r"^\s*(?:сильнее|слабее|больше|меньше|главн\w*|итог\w*|вывод\w*)"
+    r"[^.\n]{0,100}\s+[—–]\s+\S|"
+    r"[А-Яа-яЁё][^\n]{0,120}[⟹⇒→][^\n]{0,120}[А-Яа-яЁё])"
+)
+FIGURE_INTRO_RE = re.compile(
+    r"(?i)(?:на\s+рисунке\s*\d*\s+(?:представлен|показан|привед[её]н)|"
+    r"ниже\s+(?:представлен|показан|привед[её]н|будет\s+представлен)[^.\n]*(?:график|рисунок|схема)|"
+    r"далее\s+(?:представлен|показан|привед[её]н|будет\s+построен)[^.\n]*(?:график|рисунок|схема))"
+)
+FIGURE_ANALYSIS_RE = re.compile(
+    r"(?i)(?:наблюден\w*|как\s+видно\s+на\s+рисунке|анализ\w*\s+(?:графика|рисунка|крив\w*)|"
+    r"полученн\w+\s+зависимост\w*|результат\w+\s+(?:графика|рисунка|расч[её]та)|"
+    r"из\s+(?:графика|рисунка)\s+следует|интерпретац\w*)"
+)
 
 RANDOM_RE = re.compile(
     r"(?i)\b(?:np\.random|numpy\.random|random\.|torch\.(?:rand|randn|normal)|"
@@ -473,6 +490,17 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 )
             )
 
+    for index, _, text in markdown_cells + code_cells:
+        if RUSSIAN_RE.search(text) and TELEGRAPHIC_RESULT_RE.search(text):
+            findings.append(
+                _finding(
+                    "NB-NARR-019",
+                    "error",
+                    "Reader-facing Russian text uses a telegraphic result fragment, slogan-like dash, or implication arrow instead of a complete scientific sentence.",
+                    cell_index=index,
+                )
+            )
+
     if input_cells:
         input_text = "\n".join(_source_text(cells[index]) for index in input_cells)
         if not SEMANTIC_INPUT_RE.search(input_text):
@@ -556,15 +584,26 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             )
         )
 
-    for index, cell, _ in code_cells:
+    for index, cell, current_text in code_cells:
         if not _has_plot_output(cell):
             continue
+        previous_markdown = next(
+            (_source_text(cells[position]) for position in range(index - 1, -1, -1)
+             if cells[position].get("cell_type") == "markdown"),
+            "",
+        )
         following = cells[index + 1] if index + 1 < len(cells) else None
         following_tags = _tags(following) if isinstance(following, dict) else set()
         following_text = _source_text(following) if isinstance(following, dict) else ""
         current_tags = _tags(cell)
+        has_introduction = bool(FIGURE_INTRO_RE.search(previous_markdown))
+        has_analysis = bool(
+            FIGURE_ANALYSIS_RE.search(current_text)
+            or FIGURE_ANALYSIS_RE.search(following_text)
+        )
         has_account = (
-            "observable-output" in current_tags
+            has_analysis
+            or "observable-output" in current_tags
             or "observable-output" in following_tags
             or bool(
                 re.search(
@@ -592,6 +631,24 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                     "NB-FIGURE-001",
                     "error",
                     "Plot output has no semantically marked figure caption.",
+                    cell_index=index,
+                )
+            )
+        if not has_introduction:
+            findings.append(
+                _finding(
+                    "NB-FIGURE-002",
+                    "error",
+                    "Plot output is not introduced beforehand with its quantities, conditions, and purpose.",
+                    cell_index=index,
+                )
+            )
+        if not has_analysis:
+            findings.append(
+                _finding(
+                    "NB-FIGURE-003",
+                    "error",
+                    "Plot output has no connected post-figure observation and bounded interpretation.",
                     cell_index=index,
                 )
             )

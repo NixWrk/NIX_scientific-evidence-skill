@@ -337,7 +337,7 @@ def test_semantic_tags_allow_natural_russian_headings():
     ]
     notebook["cells"][1]["source"] = [
         "## Длительность операции и расчётная модель\n",
-        "Описание объекта, величины, единицы и принятой процедуры.",
+        "Описание объекта, величины, единицы и принятой процедуры. Ниже представлен график зависимости длительности операции от её номера; он используется для проверки порядка наблюдений.",
     ]
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "pass"
@@ -487,3 +487,29 @@ def test_notebook_rules_require_logic_within_and_between_notebooks():
     assert "Across a sequence of notebooks" in genre
     assert "artifact-handoff" in genre
     assert "identifiability and confounding stop rule" in genre
+
+def test_telegraphic_result_shorthand_is_rejected():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["source"].append(
+        "\n- **Сильнее всего — от размера L.** Увеличение базы снижает ошибку ⟹ сигнал растёт."
+    )
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-019" in rule_ids(report)
+
+
+def test_plot_requires_explicit_pre_figure_introduction():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["source"] = ["## Измеряемая величина\nОписан расчёт среднего времени."]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-FIGURE-002" in rule_ids(report)
+
+
+def test_plot_requires_connected_post_figure_analysis():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][3]["source"] = [
+        "from IPython.display import Markdown, display\n",
+        "display(Markdown(f\"**Рисунок 1.** Значение {mean_ms:.1f} мс.\"))",
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-FIGURE-003" in rule_ids(report)
+

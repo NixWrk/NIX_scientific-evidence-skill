@@ -22,8 +22,11 @@ opening rubric. The artifact is a report whose executable calculations are
 part of the evidence.
 
 The genre controls the scientific narrative in Markdown cells and the relation
-between code, observable output, and conclusion. It does not prescribe a fixed
-set of headings and does not rewrite executable code for style.
+between code, observable output, and conclusion. Use complete scientific
+sentences throughout the notebook, including transitions, captions, and rendered
+Markdown; telegraphic result slogans, conversational fragments, and implication
+arrows do not constitute a narrative. It does not prescribe a fixed set of
+headings and does not rewrite executable code for style.
 
 Also load `references/notebook-genre-profiles.md` and
 `references/reproducibility-contract.md`. When external publications are cited,
@@ -102,11 +105,19 @@ Do not create empty labels for parts that do not apply. Keep the transition to
 the next block explicit when the previous result supplies its input, premise,
 or question.
 
-Give every figure a caption that identifies what is shown, the data and
-selection represented, axes and units, encodings such as colour or line type,
-and the evidential role of the visualisation. Distinguish a data figure from a
-computed geometry, explanatory illustration, simulation, or external
-validation. A caption does not replace the post-output observation and limit.
+Introduce every material figure before it is displayed. State which graph or
+scheme follows, which quantities it relates, the relevant conditions, and the
+question it is intended to answer. Give the figure a caption that identifies
+what is shown, the data and selection represented, axes and units, encodings
+such as colour or line type, and the evidential role of the visualisation.
+Distinguish a data figure from a computed geometry, explanatory illustration,
+simulation, or external validation.
+
+After the figure, write a connected account that separates the direct
+observation from its interpretation, states the bounded conclusion, and records
+the applicable limitation. Add a hypothesis and its verification step only when
+the displayed result justifies them. A caption, semantic tag, or generic label
+does not replace either the pre-figure introduction or this post-figure analysis.
 
 ## Traceable narrative and calculation chain
 

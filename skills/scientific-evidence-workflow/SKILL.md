@@ -207,7 +207,7 @@ display and number the equation, define its symbols and units, apply it, and
 refer to its number in the later sentence that transforms or interprets it.
 Preserve stable internal equation identifiers beneath human-readable numbering
 so that renumbering does not break the calculation chain.
-
+Use complete scientific sentences throughout every notebook and companion Markdown report; exclude telegraphic result fragments and implication arrows. Introduce each material figure with its quantities, conditions, and purpose, then separate observation, interpretation, bounded inference, any justified next check, and limitations.
 Require a traceable narrative at both scales. Within one notebook, every
 material operation must follow from an identified input, premise, or preceding
 result and must expose the observable output that supports the next bounded

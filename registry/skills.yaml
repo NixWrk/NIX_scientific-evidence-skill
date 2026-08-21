@@ -12,8 +12,8 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.20"
-    skill_sha256: bbefa26435223da94e338cd368df6376a536fb4b0e5f0aa652cbcc86b4d3df40
+    version: "0.21"
+    skill_sha256: f3dd52c957c762277e4b61e0525228664185190f9146dc275a0a39c95deb3b0d
     task: [qa, literature_review, manuscript, qualification_work, notebook]
     license: not_declared
     spec_subset: pass
