@@ -2137,3 +2137,16 @@ def test_russian_style_auditor_ignores_code_and_machine_values() -> None:
 
     assert report["valid"] is True
     assert report["counts"]["issues"] == 0
+
+
+def test_notebook_language_profile_flags_canned_labels_and_working_jargon() -> None:
+    report = STYLE_AUDITOR.audit_text(
+        "Результаты и умозаключения. Это прокси для следующего расчёта. ",
+        ["genre-notebook"],
+    )
+
+    codes = {issue["code"] for issue in report["issues"]}
+    assert {
+        "canned_result_label",
+        "unexplained_working_jargon",
+    } <= codes

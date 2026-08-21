@@ -1,5 +1,5 @@
 schema_version: 1
-updated: 2026-08-19
+updated: 2026-08-21
 
 policy:
   input_scope: supplied_corpus_only
@@ -12,9 +12,9 @@ policy:
 verdicts:
   - id: scientific-evidence-workflow
     source: local:skills/scientific-evidence-workflow
-    version: "0.17"
-    skill_sha256: 8c37941d80867ffe560f56ac6db4e93d98f79599a5a4baf5ff676fa097fccb1f
-    task: [qa, literature_review, manuscript, qualification_work]
+    version: "0.18"
+    skill_sha256: 2a12755140fc90f154e791dd083457b55962a763c90f7245ad3690412a39b8e2
+    task: [qa, literature_review, manuscript, qualification_work, notebook]
     license: not_declared
     spec_subset: pass
     portability: current_agent_pass_local_llm_partial_two_pass_host_gate_required
@@ -67,7 +67,12 @@ verdicts:
       - skill_owned_technical_editorial_and_evidential_critic_layers
       - evidence_verification_is_conditional_not_universal
       - exp_0031_raw_findings_expert_adjudicated_not_gold
-      - notebook_narrative_is_a_bounded_executable_calculation_report
+      - notebook_narrative_is_a_self_contained_executable_technical_report
+      - notebook_calculation_chain_is_traceable_within_and_between_notebooks
+      - notebook_result_status_and_artifact_handoff_are_explicit
+      - notebook_identifiability_stop_rule_and_model_checks_are_required_when_applicable
+      - notebook_input_identity_supports_duplicate_detection
+      - russian_notebook_gate_covers_static_and_rendered_narrative
       - reproducibility_contract_separates_working_and_frozen_snapshots
       - notebook_static_lint_does_not_claim_clean_kernel_execution
       - notebook_split_gate_is_semantic_not_cell_count_based

@@ -72,9 +72,15 @@ reference:
   `references/genres/procedure-record.md`, mode `record`.
 - `decision-log`: why a choice was made, against what was known then —
   `references/genres/decision-log.md`, mode `record`.
-- `notebook-narrative`: one bounded research question expressed as a small
-  executable calculation report — `references/genres/notebook-narrative.md`,
-  mode `record`; also load `references/reproducibility-contract.md`.
+- `notebook-narrative`: one bounded computational chain expressed as a
+  self-contained executable technical report, with an explicit applied role,
+  current upstream state, traceable calculation logic, calculated prose, and
+  bounded conclusions —
+  `references/genres/notebook-narrative.md`, mode `record`; also load
+  `references/reproducibility-contract.md`. For Russian notebooks, also load
+  `references/russian-scientific-style.md` and
+  `references/russian/genre-notebook.md`; this language route is mandatory for
+  static Markdown and programmatically rendered narrative alike.
 - `stage-presentation`: what a stage produced, shown and spoken over —
   `references/genres/stage-presentation.md`, mode `record`, figure control
   applies as it does to a manuscript.
@@ -160,12 +166,23 @@ hash before project-relative synthesis. Use its objective and question IDs for
 routing only. Never cite the project context, an annotation, or routing state
 as evidence.
 
-For a notebook, identify one principal research question, its scope, completion
-criterion, inputs, method, observable outputs, limitations, and final
-artifacts. Do not impose fixed headings or a cell-count threshold. Split by
-independent questions, data or execution boundaries, reusable intermediate
-artifacts, or independently changing preparation, computation, and
-interpretation stages.
+For a notebook, identify its applied role, one principal research question or
+bounded computational chain, scope, completion criterion, inputs, inherited
+facts/numbers/hypotheses, method, observable outputs, limitations, and final
+artifacts. Treat every notebook as an executable technical report even when its
+applied role is model validation, data analysis, choice justification,
+experiment analysis, planning, or engineering transfer. Do not infer the role
+from the `.ipynb` extension, impose fixed headings, or use a cell-count
+threshold. Split by independent questions, data or execution boundaries,
+reusable intermediate artifacts, or independently changing preparation,
+computation, and interpretation stages.
+
+Require a traceable narrative at both scales. Within one notebook, every
+material operation must follow from an identified input, premise, or preceding
+result and must expose the observable output that supports the next bounded
+statement. Across a notebook sequence, pass accepted facts, numbers, hypotheses,
+and artifacts through versioned handoff records so that the complete path from
+source data to downstream conclusion can be reproduced and audited.
 
 For a manuscript, separate literature sources from research records. Literature
 may support context and interpretation. Only approved protocol and result

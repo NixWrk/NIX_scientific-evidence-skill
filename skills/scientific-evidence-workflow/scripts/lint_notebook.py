@@ -1,4 +1,4 @@
-"""Lint research notebooks as small executable calculation reports.
+"""Lint research notebooks as self-contained executable technical reports.
 
 The lint is deliberately static and dependency-free.  It checks the saved
 notebook structure and selected reproducibility signals; it never claims that a
@@ -15,15 +15,21 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
+ROLE_RE = re.compile(
+    r"(?i)\b(?:прикладн\w+\s+роль|назначение\s+отч[её]та|report\s+role|applied\s+role)\b"
+)
 QUESTION_RE = re.compile(
     r"(?im)^\s*(?:#{1,4}\s*)?(?:\*\*)?"
-    r"(?:исследовательский\s+вопрос|задача|research\s+question|task)\b"
+    r"(?:исследовательский\s+вопрос|главный\s+вопрос|вопрос|задача|research\s+question|task)\b"
 )
 SCOPE_RE = re.compile(r"(?i)\b(?:границ\w*|scope|не\s+проверяется|out\s+of\s+scope)\b")
 COMPLETION_RE = re.compile(
     r"(?i)\b(?:критерий\s+завершения|completion\s+criterion|готово,?\s+когда)\b"
 )
-INPUT_RE = re.compile(r"(?i)\b(?:входные\s+данные|inputs?)\b")
+INPUT_RE = re.compile(
+    r"(?im)(?:^\s*(?:#{1,4}\s*)?(?:данные|inputs?)\b|"
+    r"\b(?:входные\s+данные|исходные\s+данные|inputs?)\b)"
+)
 METHOD_RE = re.compile(r"(?i)\b(?:метод\w*|method|допущен\w*|assumptions?)\b")
 SUMMARY_RE = re.compile(r"(?im)^\s*#{1,4}\s*(?:итог|выводы?|summary|conclusions?)\b")
 LIMIT_RE = re.compile(
@@ -56,16 +62,15 @@ DIMENSIONLESS_RE = re.compile(
     r"(?i)(?:\b[pnr]\s*=|R[²2]\s*=|безразмерн\w*|dimensionless)"
 )
 
-REPORT_TAGS = {
-    "research-question",
-    "method-and-assumptions",
-    "observable-output",
-    "report-summary",
-}
-FROZEN_FIELDS = ("run_id", "executed_at", "code_version", "environment")
+DYNAMIC_MARKDOWN_RE = re.compile(
+    r"(?is)\b(?:Markdown|display_markdown|render_markdown)\s*\(\s*(?:f[\"']|[A-Za-z_]\w*)"
+)
+FROZEN_TEXT_FIELDS = ("run_id", "executed_at", "code_version", "environment")
+RUSSIAN_RE = re.compile(r"[А-Яа-яЁё]")
 VALID_ARTIFACT_STATUSES = {"working", "frozen"}
 VALID_EXECUTION_STATUSES = {"not_run", "partial", "clean_kernel_pass", "failed"}
 VALID_STUDY_TYPES = {"computational", "empirical", "mixed"}
+VALID_LANGUAGE_AUDIT_STATUSES = {"not_run", "passed", "failed"}
 EXPERIMENT_TAG_REQUIREMENTS = {
     "experiment-context": (
         "NB-EXP-001",
@@ -171,9 +176,20 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
 
     markdown_cells: list[tuple[int, dict[str, Any], str]] = []
     code_cells: list[tuple[int, dict[str, Any], str]] = []
-    question_cells: set[int] = set()
-    summary_cells: set[int] = set()
-    observable_cells: set[int] = set()
+    function_cells: dict[str, set[int]] = {
+        "notebook-role": set(),
+        "research-question": set(),
+        "notebook-scope": set(),
+        "completion-criterion": set(),
+        "material-inputs": set(),
+        "method-and-assumptions": set(),
+        "observable-output": set(),
+        "calculation-chain": set(),
+        "result-status": set(),
+        "interpretation-and-limits": set(),
+        "report-summary": set(),
+        "computed-narrative": set(),
+    }
     all_tags: set[str] = set()
 
     for index, cell in enumerate(cells):
@@ -186,14 +202,17 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
         text = _source_text(cell)
         tags = _tags(cell)
         all_tags.update(tags)
+        for tag, target in function_cells.items():
+            if tag in tags:
+                target.add(index)
         if cell_type == "markdown":
             markdown_cells.append((index, cell, text))
-            if "research-question" in tags or QUESTION_RE.search(text):
-                question_cells.add(index)
-            if "report-summary" in tags or SUMMARY_RE.search(text):
-                summary_cells.add(index)
-            if "observable-output" in tags:
-                observable_cells.add(index)
+            if ROLE_RE.search(text):
+                function_cells["notebook-role"].add(index)
+            if QUESTION_RE.search(text):
+                function_cells["research-question"].add(index)
+            if SUMMARY_RE.search(text):
+                function_cells["report-summary"].add(index)
         elif cell_type == "code":
             code_cells.append((index, cell, text))
             outputs = cell.get("outputs", [])
@@ -268,30 +287,89 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             )
 
     markdown = "\n".join(text for _, _, text in markdown_cells)
+    role_cells = function_cells["notebook-role"]
+    question_cells = function_cells["research-question"]
+    scope_cells = function_cells["notebook-scope"]
+    completion_cells = function_cells["completion-criterion"]
+    input_cells = function_cells["material-inputs"]
+    method_cells = function_cells["method-and-assumptions"]
+    observable_cells = function_cells["observable-output"]
+    calculation_cells = function_cells["calculation-chain"]
+    result_status_cells = function_cells["result-status"]
+    limit_cells = function_cells["interpretation-and-limits"]
+    summary_cells = function_cells["report-summary"]
+    computed_narrative_cells = function_cells["computed-narrative"]
+
     required_markers = (
+        (role_cells, "NB-NARR-008", "The notebook's applied role is not identifiable."),
         (question_cells, "NB-NARR-001", "Research question or task is not identifiable."),
-        (SCOPE_RE.search(markdown), "NB-NARR-002", "Scope and excluded checks are not stated."),
         (
-            COMPLETION_RE.search(markdown),
+            scope_cells or SCOPE_RE.search(markdown),
+            "NB-NARR-002",
+            "Scope and excluded checks are not stated.",
+        ),
+        (
+            completion_cells or COMPLETION_RE.search(markdown),
             "NB-NARR-003",
             "Completion criterion is not stated.",
         ),
-        (INPUT_RE.search(markdown), "NB-NARR-004", "Material inputs are not identified."),
         (
-            METHOD_RE.search(markdown),
+            input_cells or INPUT_RE.search(markdown),
+            "NB-NARR-004",
+            "Material inputs are not identified.",
+        ),
+        (
+            method_cells or METHOD_RE.search(markdown),
             "NB-NARR-005",
             "Method or material assumptions are not stated before interpretation.",
         ),
+        (
+            calculation_cells,
+            "NB-NARR-011",
+            "Traceable calculation-chain logic is not identified.",
+        ),
+        (
+            result_status_cells,
+            "NB-NARR-012",
+            "No scientific status is attached to a material result.",
+        ),
+        (
+            observable_cells,
+            "NB-NARR-010",
+            "No post-calculation observation or bounded result is identifiable.",
+        ),
         (summary_cells, "NB-NARR-006", "Bounded final summary is not identifiable."),
         (
-            LIMIT_RE.search(markdown),
+            limit_cells or LIMIT_RE.search(markdown),
             "NB-NARR-007",
             "Limitations or what was not established are not stated.",
+        ),
+        (
+            computed_narrative_cells,
+            "NB-NARR-009",
+            "No computed-narrative cell renders result prose from current variables.",
         ),
     )
     for observed, rule_id, message in required_markers:
         if not observed:
             findings.append(_finding(rule_id, "error", message))
+
+    ordered_stage_sets = (
+        input_cells,
+        method_cells | calculation_cells,
+        observable_cells,
+        summary_cells,
+    )
+    if all(ordered_stage_sets):
+        positions = [min(stage) for stage in ordered_stage_sets]
+        if not (positions[0] < positions[1] < positions[2] <= positions[3]):
+            findings.append(
+                _finding(
+                    "NB-NARR-013",
+                    "error",
+                    "Calculation stages are not in traceable narrative order.",
+                )
+            )
 
     if len(question_cells) > 1:
         findings.append(
@@ -301,6 +379,28 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 "Multiple marked research questions or tasks were found; inspect whether they are independent before recommending a split.",
             )
         )
+
+    for index in computed_narrative_cells:
+        cell = cells[index]
+        text = _source_text(cell)
+        if cell.get("cell_type") != "code":
+            findings.append(
+                _finding(
+                    "NB-NUMBER-003",
+                    "error",
+                    "The computed-narrative tag must be attached to a code cell.",
+                    cell_index=index,
+                )
+            )
+        elif not DYNAMIC_MARKDOWN_RE.search(text):
+            findings.append(
+                _finding(
+                    "NB-NUMBER-003",
+                    "error",
+                    "A computed-narrative cell must render Markdown from a variable or formatted expression.",
+                    cell_index=index,
+                )
+            )
 
     execution_counts = [
         cell.get("execution_count")
@@ -330,17 +430,23 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
         if not _has_plot_output(cell):
             continue
         following = cells[index + 1] if index + 1 < len(cells) else None
-        if not isinstance(following, dict) or following.get("cell_type") != "markdown":
-            has_account = False
-        else:
-            following_text = _source_text(following)
-            has_account = "observable-output" in _tags(following) or bool(
+        following_tags = _tags(following) if isinstance(following, dict) else set()
+        following_text = _source_text(following) if isinstance(following, dict) else ""
+        current_tags = _tags(cell)
+        has_account = (
+            "observable-output" in current_tags
+            or "observable-output" in following_tags
+            or bool(
                 re.search(
                     r"(?i)\b(?:наблюден\w*|интерпретац\w*|ограничен\w*|"
                     r"observation|interpretation|limitation|figure|рисунок)\b",
                     following_text,
                 )
             )
+        )
+        has_caption = (
+            "figure-caption" in current_tags or "figure-caption" in following_tags
+        )
         if not has_account:
             findings.append(
                 _finding(
@@ -350,10 +456,28 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                     cell_index=index,
                 )
             )
+        if not has_caption:
+            findings.append(
+                _finding(
+                    "NB-FIGURE-001",
+                    "error",
+                    "Plot output has no semantically marked figure caption.",
+                    cell_index=index,
+                )
+            )
 
     for index, _, text in markdown_cells:
         if index not in summary_cells | observable_cells:
             continue
+        if NUMBER_RE.search(text):
+            findings.append(
+                _finding(
+                    "NB-NUMBER-002",
+                    "error",
+                    "A material result number is stored in static Markdown; render it from the result variable.",
+                    cell_index=index,
+                )
+            )
         lines = list(_numeric_lines_without_units(text))
         if lines:
             findings.append(
@@ -366,6 +490,9 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             )
 
     metadata = data.get("metadata", {})
+    narrative_text = "\n".join(text for _, _, text in markdown_cells + code_cells)
+    russian_narrative = bool(RUSSIAN_RE.search(narrative_text))
+
     report_metadata = metadata.get("scientific_report") if isinstance(metadata, dict) else None
     if not isinstance(report_metadata, dict):
         findings.append(
@@ -409,6 +536,51 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             )
 
         empirical_tags = set(EXPERIMENT_TAG_REQUIREMENTS)
+        if russian_narrative:
+            narrative_language = report_metadata.get("narrative_language")
+            language_profile = report_metadata.get("language_profile")
+            language_audit_status = report_metadata.get("language_audit_status")
+            if narrative_language != "ru":
+                findings.append(
+                    _finding(
+                        "NB-LANG-001",
+                        "error",
+                        "Russian notebook narrative requires narrative_language 'ru'.",
+                    )
+                )
+            if language_profile != "genre-notebook":
+                findings.append(
+                    _finding(
+                        "NB-LANG-002",
+                        "error",
+                        "Russian notebook narrative requires language_profile 'genre-notebook'.",
+                    )
+                )
+            if language_audit_status not in VALID_LANGUAGE_AUDIT_STATUSES:
+                findings.append(
+                    _finding(
+                        "NB-LANG-003",
+                        "error",
+                        "Russian notebook narrative requires a valid language_audit_status.",
+                    )
+                )
+            elif language_audit_status == "failed":
+                findings.append(
+                    _finding(
+                        "NB-LANG-004",
+                        "error",
+                        "Russian language audit has unresolved errors.",
+                    )
+                )
+            elif artifact_status == "frozen" and language_audit_status != "passed":
+                findings.append(
+                    _finding(
+                        "NB-LANG-004",
+                        "error",
+                        "Frozen Russian notebook requires a passed language audit.",
+                    )
+                )
+
         empirical_account = study_type in {"empirical", "mixed"} or bool(
             empirical_tags & all_tags
         )
@@ -418,7 +590,7 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                     findings.append(_finding(rule_id, "error", message))
 
         if artifact_status == "frozen":
-            for field in FROZEN_FIELDS:
+            for field in FROZEN_TEXT_FIELDS:
                 value = report_metadata.get(field)
                 if not isinstance(value, str) or not value.strip():
                     findings.append(
@@ -428,6 +600,15 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                             f"Frozen snapshot requires non-empty {field}.",
                         )
                     )
+            inputs = report_metadata.get("significant_inputs")
+            if not isinstance(inputs, list) or not inputs:
+                findings.append(
+                    _finding(
+                        "NB-REPRO-002",
+                        "error",
+                        "Frozen snapshot requires a non-empty significant_inputs list.",
+                    )
+                )
             outputs = report_metadata.get("significant_outputs")
             if not isinstance(outputs, list) or not outputs:
                 findings.append(
@@ -467,6 +648,9 @@ def _report(path: str, findings: list[dict[str, Any]], cell_count: int) -> dict[
             "scientific_method_validity",
             "scientific_interpretation_truth",
             "complete_hidden_state_detection",
+            "current_upstream_resolution",
+            "cross_notebook_chain_truth",
+            "russian_language_quality_beyond_heuristics",
         ],
     }
 

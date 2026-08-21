@@ -79,6 +79,9 @@ def test_template_is_valid_notebook_with_working_report_metadata():
     assert report == {
         "artifact_status": "working",
         "execution_status": "not_run",
+        "language_audit_status": "not_run",
+        "language_profile": "genre-notebook",
+        "narrative_language": "ru",
         "schema_version": "1.0",
         "study_type": "computational",
     }
@@ -87,7 +90,22 @@ def test_template_is_valid_notebook_with_working_report_metadata():
         for cell in notebook["cells"]
         for tag in cell.get("metadata", {}).get("tags", [])
     }
-    assert {"research-question", "observable-output", "report-summary"} <= tags
+    assert {
+        "notebook-role",
+        "research-question",
+        "notebook-scope",
+        "completion-criterion",
+        "material-inputs",
+        "calculation-chain",
+        "verification-checks",
+        "computed-narrative",
+        "observable-output",
+        "result-status",
+        "figure-caption",
+        "interpretation-and-limits",
+        "report-summary",
+        "artifact-handoff",
+    } <= tags
 
 
 def test_frozen_snapshot_requires_release_identity_fields():
@@ -103,6 +121,9 @@ def test_lint_report_states_what_static_analysis_does_not_assess():
     report = lint("clean-single-task.ipynb")
     assert "actual_clean_kernel_execution" in report["not_assessed"]
     assert "scientific_method_validity" in report["not_assessed"]
+    assert "current_upstream_resolution" in report["not_assessed"]
+    assert "cross_notebook_chain_truth" in report["not_assessed"]
+    assert "russian_language_quality_beyond_heuristics" in report["not_assessed"]
 
 
 def test_notebook_evidence_bundle_accepts_its_canonical_shape():
@@ -173,9 +194,8 @@ def empirical_notebook(*, complete_arc: bool = True) -> dict:
     notebook["metadata"]["scientific_report"]["study_type"] = "empirical"
     if complete_arc:
         notebook["cells"][3]["source"] = [
-            "**Наблюдение:** базовый импеданс составил 42,043 Ом.\n",
-            "**Интерпретация:** результат относится только к EXP-001.\n",
-            "**Ограничение:** повторяемость не установлена.",
+            "impedance_ohm = 42.043\n",
+            "display(Markdown(f\"\"\"**Наблюдение.** Базовый импеданс составил {impedance_ohm:.3f} Ом. **Интерпретация.** Результат относится только к EXP-001. **Ограничение.** Повторяемость не установлена.\"\"\"))",
         ]
         notebook["cells"][0]["metadata"]["tags"].append("experiment-context")
         notebook["cells"][1]["metadata"]["tags"].append("experiment-procedure")
@@ -205,11 +225,111 @@ def test_unknown_study_type_is_rejected():
 
 
 def test_impedance_units_ohm_and_ohm_meter_are_recognized():
+    text = "Z = 42,043 " + "\u041e\u043c" + "; rho = 6,934304 " + "\u041e\u043c\u00b7\u043c."
+    assert list(LINTER._numeric_lines_without_units(text)) == []
+
+
+def test_static_result_number_in_markdown_is_rejected():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
-    notebook["cells"][3]["source"] = [
-        "**Observation:** Z = 42,043 " + "\u041e\u043c" + "; rho = 6,934304 " + "\u041e\u043c\u00b7\u043c.\n",
-        "**Limitation:** one measurement.",
-    ]
+    cell = notebook["cells"][3]
+    cell["cell_type"] = "markdown"
+    cell.pop("execution_count")
+    cell.pop("outputs")
+    cell["metadata"]["tags"] = ["observable-output", "interpretation-and-limits"]
+    cell["source"] = ["**Наблюдение.** Среднее время составило 2,0 мс."]
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NUMBER-002" in rule_ids(report)
+
+
+def test_semantic_tags_allow_natural_russian_headings():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][0]["source"] = ["# Паспорт вычисления\n", "Краткое описание отчёта."]
+    notebook["cells"][1]["source"] = ["## Схема вычисления\n", "Описание принятой процедуры."]
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "pass"
-    assert "NB-NUMBER-001" not in rule_ids(report)
+
+
+def test_computed_narrative_must_render_dynamic_markdown():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][3]["source"] = ["display(Markdown('ручной текст'))"]
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NUMBER-003" in rule_ids(report)
+
+
+def test_plot_requires_semantically_marked_caption():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][3]["metadata"]["tags"].remove("figure-caption")
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-FIGURE-001" in rule_ids(report)
+
+
+def test_traceable_calculation_chain_is_required():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["metadata"]["tags"].remove("calculation-chain")
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NARR-011" in rule_ids(report)
+
+
+def test_calculation_chain_must_follow_material_inputs():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][0]["metadata"]["tags"].remove("material-inputs")
+    notebook["cells"][3]["metadata"]["tags"].append("material-inputs")
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NARR-013" in rule_ids(report)
+
+
+def test_material_result_requires_scientific_status():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][3]["metadata"]["tags"].remove("result-status")
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-NARR-012" in rule_ids(report)
+
+
+def test_russian_notebook_requires_notebook_language_profile():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["metadata"]["scientific_report"].pop("language_profile")
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-LANG-002" in rule_ids(report)
+
+
+def test_frozen_russian_notebook_requires_passed_language_audit():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["metadata"]["scientific_report"]["language_audit_status"] = "not_run"
+    report = LINTER.lint_notebook(notebook)
+    assert report["status"] == "fail"
+    assert "NB-LANG-004" in rule_ids(report)
+
+
+def test_notebook_rules_make_russian_language_gate_mandatory():
+    skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
+    genre = (SKILL / "references" / "genres" / "notebook-narrative.md").read_text(
+        encoding="utf-8"
+    )
+    language = (SKILL / "references" / "russian" / "genre-notebook.md").read_text(
+        encoding="utf-8"
+    )
+    assert "references/russian-scientific-style.md" in skill
+    assert "references/russian/genre-notebook.md" in skill
+    assert "programmatically rendered narrative" in skill
+    assert "language check is a release gate" in genre
+    assert "extract both static Markdown" in genre
+    assert "rendered narrative text" in genre
+    assert "Профиль обязателен" in language
+    assert "сформированные программой подписи" in language
+
+
+def test_notebook_rules_require_logic_within_and_between_notebooks():
+    genre = (SKILL / "references" / "genres" / "notebook-narrative.md").read_text(
+        encoding="utf-8"
+    )
+    assert "Make the logic reproducible and evidential" in genre
+    assert "Across a sequence of notebooks" in genre
+    assert "artifact-handoff" in genre
+    assert "identifiability and confounding stop rule" in genre
