@@ -17,7 +17,7 @@
     "consumers"
   ],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"enum": ["1.0", "1.1"]},
     "handoff_id": {"$ref": "#/$defs/identifier"},
     "record_version": {"$ref": "#/$defs/version"},
     "supersedes": {
@@ -28,6 +28,7 @@
     },
     "artifact": {"$ref": "#/$defs/artifact"},
     "producer": {"$ref": "#/$defs/producer"},
+    "reasoning_context": {"$ref": "#/$defs/reasoning_context"},
     "validation": {"$ref": "#/$defs/validation"},
     "selection_policy": {
       "oneOf": [
@@ -43,6 +44,15 @@
     }
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {"schema_version": {"const": "1.1"}},
+        "required": ["schema_version"]
+      },
+      "then": {
+        "required": ["reasoning_context"]
+      }
+    },
     {
       "if": {
         "properties": {
@@ -173,6 +183,37 @@
         "notebook_id": {"$ref": "#/$defs/identifier"},
         "run_id": {"$ref": "#/$defs/identifier"},
         "code_version": {"$ref": "#/$defs/hash"}
+      }
+    },
+    "reasoning_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "basis_refs",
+        "established",
+        "unresolved_question",
+        "decision_rationale",
+        "next_task",
+        "expected_observations",
+        "evaluation_criterion"
+      ],
+      "properties": {
+        "basis_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonempty"}
+        },
+        "established": {"$ref": "#/$defs/nonempty"},
+        "unresolved_question": {"$ref": "#/$defs/nonempty"},
+        "decision_rationale": {"$ref": "#/$defs/nonempty"},
+        "next_task": {"$ref": "#/$defs/nonempty"},
+        "expected_observations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/nonempty"}
+        },
+        "evaluation_criterion": {"$ref": "#/$defs/nonempty"}
       }
     },
     "validation": {

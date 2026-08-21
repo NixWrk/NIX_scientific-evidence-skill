@@ -11,6 +11,12 @@ Across all profiles, introduce each material equation at the first calculation
 stage that uses it. Keep definitions in the background if needed, but do not
 front-load equations in a formula catalogue or term glossary.
 
+Across all profiles, connect material stages with a forward reasoning bridge.
+Name the result and limitation that motivate the next task, state the expected
+observable or decision criterion, and verify that the following stage performs
+that task. When several results jointly motivate a choice, preserve every basis
+and its distinct role.
+
 ## `model-derivation`
 
 Use for deriving, explaining, or extending a mathematical or physical model.

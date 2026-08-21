@@ -133,6 +133,19 @@ operation. The same trace must continue across notebook boundaries through the
 resolved input and artifact handoff records. A fresh run must be able to rebuild
 the chain without chat history or undeclared interactive state.
 
+For every nonterminal stage, retain a reasoning bridge that identifies its
+material basis, the unresolved limitation or question, the rationale for the
+next task, and the expected observable alternatives or decision criterion. The
+next stage must resolve the declared task; chronology alone is not a dependency
+trace. When several results motivate one task, retain all of their identifiers
+and distinct roles.
+
+Use `reasoning_context` in schema-version `1.1` artifact handoffs to carry this
+bridge between notebooks: `basis_refs`, `established`, `unresolved_question`,
+`decision_rationale`, `next_task`, `expected_observations`, and
+`evaluation_criterion`. These are provenance and planning state, not evidence
+that the expected result has already occurred.
+
 When internal checks or identifiability tests apply, retain their outputs and
 effect on the conclusion. A failed check or a completely confounded design
 blocks the unsupported conclusion and requires a changed acquisition or model
@@ -218,6 +231,9 @@ index, not a substitute for the described inputs, method, outputs, and limits.
 - Local links, equation references, citations, and bibliography entries resolve.
 - The calculation trace is reproducible within the notebook and across every
   declared upstream or downstream notebook boundary.
+- Each declared next task is linked to named results and limitations, and the
+  following material stage performs it or records an explicit blocker.
+- Schema-version `1.1` cross-notebook handoffs carry a complete reasoning context.
 - Every released numerical conclusion preserves its unit or dimensionless
   status and its context.
 - Every material result number in Markdown is generated from the corresponding

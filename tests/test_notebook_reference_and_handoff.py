@@ -76,6 +76,31 @@ def test_versioned_handoff_template_passes_contract():
     assert report == {"valid": True, "errors": []}
 
 
+def test_handoff_11_requires_complete_reasoning_context():
+    handoff = handoff_template()
+    handoff.pop("reasoning_context")
+    report = HANDOFF.validate_handoff(handoff)
+    assert report["valid"] is False
+    assert any("forward reasoning bridge" in error for error in report["errors"])
+
+
+def test_handoff_10_remains_readable_without_reasoning_context():
+    handoff = handoff_template()
+    handoff["schema_version"] = "1.0"
+    handoff.pop("reasoning_context")
+    assert HANDOFF.validate_handoff(handoff) == {"valid": True, "errors": []}
+
+
+def test_reasoning_context_preserves_all_material_bases_and_expected_observations():
+    handoff = handoff_template()
+    handoff["reasoning_context"]["basis_refs"] = ["NB-001#figure-1", "NB-001#figure-1"]
+    handoff["reasoning_context"]["expected_observations"] = []
+    report = HANDOFF.validate_handoff(handoff)
+    assert report["valid"] is False
+    assert any("duplicate references" in error for error in report["errors"])
+    assert any("expected a non-empty list" in error for error in report["errors"])
+
+
 def test_handoff_schema_matches_automation_conflict_gate():
     jsonschema = pytest.importorskip("jsonschema")
     schema = json.loads(

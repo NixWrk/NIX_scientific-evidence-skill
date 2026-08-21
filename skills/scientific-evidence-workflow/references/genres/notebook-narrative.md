@@ -119,6 +119,12 @@ the applicable limitation. Add a hypothesis and its verification step only when
 the displayed result justifies them. A caption, semantic tag, or generic label
 does not replace either the pre-figure introduction or this post-figure analysis.
 
+When a figure changes the direction of the work, finish its analysis with the
+reason for the next operation and the observation or decision criterion expected
+from that operation. The following material block must perform the declared task.
+Do not leave a proposed check as decorative closing prose and then begin an
+unrelated calculation.
+
 ## Traceable narrative and calculation chain
 
 Make the logic reproducible and evidential, not merely chronological. Within a
@@ -143,6 +149,39 @@ interactive-kernel memory.
 Use the semantic function `calculation-chain` to mark where this dependency
 logic is stated. The marker is not proof of coherence; inspect whether the
 declared links match actual variables, artifacts, outputs, and execution order.
+
+## Forward reasoning bridges
+
+Use a reasoning bridge between every pair of material stages. A bridge is a
+connected paragraph, not a checklist, and contains all applicable moves:
+
+1. identify the preceding result or results by an equation, figure, table,
+   section, result identifier, or versioned artifact;
+2. state what those results establish and which limitation, ambiguity, or open
+   question prevents the argument from stopping there;
+3. explain why the next calculation, comparison, or check is the appropriate
+   response to that specific gap;
+4. state the expected observable alternatives, value, trend, or decision
+   criterion without reporting an unperformed result as fact;
+5. open the next stage by resolving the declared task and naming the inherited
+   results it actually uses.
+
+When several earlier results jointly motivate a step, name each result and its
+distinct role. For example, one figure may establish a sensitivity trend while
+another establishes an admissible range; the next optimisation is justified by
+their intersection, not by the vague phrase “based on the preceding analysis”.
+
+Mark the closing paragraph `reasoning-bridge` and the opening paragraph of the
+declared next material stage `forward-task`. The tags expose the seam for static
+review but do not prove that the scientific relation is valid. A bridge may end
+with a blocked task when required data or an authoritative selection rule is
+absent; state the blocker instead of inventing the next result.
+
+Across notebook boundaries, store the same moves in the `reasoning_context` of
+a schema-version `1.1` artifact handoff. The downstream introduction renders
+the established result, unresolved question, decision rationale, next task,
+expected observations, and evaluation criterion as ordinary scientific prose.
+Do not reproduce the machine field names as reader-facing headings.
 
 ## Equation narrative and reference integrity
 
@@ -269,8 +308,9 @@ another clear arrangement appropriate to the notebook:
    artifacts, and a next action only when a decision was actually made.
 
 Use the local arc `purpose/input → concepts/method/assumptions → calculation or
-visualisation → observable output → interpretation/limit → next justified
-question` for a logical calculation stage. Do not create headings around
+visualisation → observable output → interpretation/limit → reasoning bridge →
+declared next task` for a logical calculation stage. At the next stage, show
+that this declared task is the operation actually performed. Do not create headings around
 imports, display settings, or trivial helper cells.
 
 ## Empirical and mixed notebooks
@@ -329,13 +369,15 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
 10. Render material result numbers in Markdown from variables or result objects;
     never maintain a second manually typed copy.
 11. Caption every material figure and interpret it in the following report block.
-12. Preserve negative and uncertain results. Attribute a new hypothesis and state
+12. Close every nonterminal material stage with a `reasoning-bridge`, and mark
+    the opening that performs its declared operation `forward-task`.
+13. Preserve negative and uncertain results. Attribute a new hypothesis and state
     how it could be checked; never convert it into the current conclusion.
-13. Record and validate every downstream artifact handoff and its acceptance
-    criterion. Block automation while selection rules are conflicted.
-14. Validate local links, equation references, citations, and the bibliography.
-15. Record technical, computational, and scientific validation separately.
-16. Complete the reproducibility account, run the notebook lint, extract all
+14. Record and validate every downstream artifact handoff, its reasoning
+    context, and its acceptance criterion. Block automation while selection rules are conflicted.
+15. Validate local links, equation references, citations, and the bibliography.
+16. Record technical, computational, and scientific validation separately.
+17. Complete the reproducibility account, run the notebook lint, extract all
     Russian narrative including rendered Markdown, and pass the mandatory core
     and `genre-notebook` Russian language gate.
 
@@ -373,6 +415,11 @@ generic preferences. Report:
 - hidden state, stale/error output, missing randomness control, or an undeclared
   manual step;
 - a negative result, problem, or limitation hidden by a positive summary;
+- a nonterminal stage that ends without naming the result, unresolved question,
+  reason for the next operation, and expected observation or decision criterion;
+- a declared next task that the following material stage does not perform;
+- a multi-result decision that cites only a generic “preceding analysis” instead
+  of identifying the contributing results and their distinct roles;
 - an applicable verification check omitted, failed, or hidden;
 - a point estimate reported where confounding or rank deficiency makes the
   target non-identifiable;
@@ -414,6 +461,9 @@ Cell or line count is only a prompt to inspect these boundaries.
 - Every supported numerical claim points to an evidence value or result record.
 - The declared calculation chain connects material inputs, operations,
   observable outputs, bounded statements, and downstream handoffs.
+- Every nonterminal material stage has a reasoning bridge, and the next material
+  stage performs the declared task or records an explicit blocker.
+- Every multi-result decision identifies all material bases and their roles.
 - Every material result preserves its scientific status; a status change is
   supported by new evidence.
 - Every material numerical statement in a result, caption, or summary is

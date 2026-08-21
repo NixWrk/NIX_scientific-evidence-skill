@@ -61,7 +61,7 @@ TELEGRAPHIC_RESULT_RE = re.compile(
     r"^\s*(?:[rubf]*[\"']{0,3})?\s*[-*]\s+\*\*(?:сильнее|слабее|больше|меньше|главн\w*|итог\w*|вывод\w*)[^*\n]*[—–][^*\n]*\*\*|"
     r"^\s*(?:сильнее|слабее|больше|меньше|главн\w*|итог\w*|вывод\w*)"
     r"[^.\n]{0,100}\s+[—–]\s+\S|"
-    r"[А-Яа-яЁё][^\n]{0,120}[⟹⇒→][^\n]{0,120}[А-Яа-яЁё])"
+    r"[А-Яа-яЁё][^\n]{0,120}[⟹⇒][^\n]{0,120}[А-Яа-яЁё])"
 )
 FIGURE_INTRO_RE = re.compile(
     r"(?i)(?:на\s+рисунке\s*\d*\s+(?:представлен|показан|привед[её]н)|"
@@ -72,6 +72,25 @@ FIGURE_ANALYSIS_RE = re.compile(
     r"(?i)(?:наблюден\w*|как\s+видно\s+на\s+рисунке|анализ\w*\s+(?:графика|рисунка|крив\w*)|"
     r"полученн\w+\s+зависимост\w*|результат\w+\s+(?:графика|рисунка|расч[её]та)|"
     r"из\s+(?:графика|рисунка)\s+следует|интерпретац\w*)"
+)
+BRIDGE_BASIS_RE = re.compile(
+    r"(?i)\b(?:по\s+(?:результатам|данным)|§\s*\d+(?:\.\d+)*|на\s+рисун\w*|рисун\w*\s*\d+|"
+    r"таблиц\w*\s*\d+|формул\w*\s*\(?\d+|результат\w*|расч[её]т\w*|раздел\w*|"
+    r"выражен\w*|производн\w*|согласован\w*|коэффициент\w*|показател\w*|границ\w*|"
+    r"матриц\w*\s+Фишера|профил\w*|облак\w*|подгонк\w*|инверси\w*|сегментац\w*|"
+    r"(?:показал|дал|составил|подтвердил|установил|выявил|выделил|получен|выполнен)\w*)\b"
+)
+BRIDGE_GAP_RE = re.compile(
+    r"(?i)\b(?:однако|но|ещ[её]|пока|требуется|недостаточн\w*|не\s+\w+|ограничен\w*|"
+    r"оста[её]тся|неоднозначн\w*|неопредел[её]н\w*|нереш[её]н\w*|границ\w*)\b"
+)
+BRIDGE_DECISION_RE = re.compile(
+    r"(?i)\b(?:поэтому|далее|в\s+связи\s+с\s+этим|для\s+проверки|следующ\w*\s+(?:этап|раздел|расч[её]т)|"
+    r"в\s+§\s*\d+(?:\.\d+)*|будет\s+(?:выполнен|построен|проверен|оценен|оценён)|требуется\s+\w+)\b"
+)
+BRIDGE_EXPECTATION_RE = re.compile(
+    r"(?i)\b(?:ожида\w*|планируется\s+получить|позволит\s+(?:установить|определить|проверить)|"
+    r"критери\w*|признак\w*|аргумент\w*|подтвержд\w*|при\s+подтверждении|если|должн\w*|считается|принимается|означает|недопустим\w*|блокиру\w*|запрет\w*)\b"
 )
 
 RANDOM_RE = re.compile(
@@ -184,6 +203,22 @@ def _tags(cell: dict[str, Any]) -> set[str]:
     return {item for item in raw if isinstance(item, str)} if isinstance(raw, list) else set()
 
 
+def _narrative_payload(cell: dict[str, Any]) -> str:
+    parts = [_source_text(cell)]
+    outputs = cell.get("outputs", [])
+    if isinstance(outputs, list):
+        for output in outputs:
+            if not isinstance(output, dict):
+                continue
+            data = output.get("data", {})
+            value = data.get("text/markdown") if isinstance(data, dict) else None
+            if isinstance(value, list):
+                parts.append("".join(item for item in value if isinstance(item, str)))
+            elif isinstance(value, str):
+                parts.append(value)
+    return "\n".join(parts)
+
+
 def _finding(
     rule_id: str,
     severity: str,
@@ -284,6 +319,8 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
         "interpretation-and-limits": set(),
         "report-summary": set(),
         "computed-narrative": set(),
+        "reasoning-bridge": set(),
+        "forward-task": set(),
     }
     all_tags: set[str] = set()
 
@@ -395,6 +432,8 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
     limit_cells = function_cells["interpretation-and-limits"]
     summary_cells = function_cells["report-summary"]
     computed_narrative_cells = function_cells["computed-narrative"]
+    bridge_cells = function_cells["reasoning-bridge"]
+    forward_task_cells = function_cells["forward-task"]
 
     required_markers = (
         (role_cells, "NB-NARR-008", "The notebook's applied role is not identifiable."),
@@ -549,6 +588,66 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 )
             )
 
+    ordered_bridges = sorted(bridge_cells)
+    ordered_forward_tasks = sorted(forward_task_cells)
+    for bridge_index in ordered_bridges:
+        next_tasks = [index for index in ordered_forward_tasks if index > bridge_index]
+        if not next_tasks:
+            findings.append(
+                _finding(
+                    "NB-NARR-021",
+                    "error",
+                    "A reasoning bridge declares a next operation, but no following forward-task stage is marked.",
+                    cell_index=bridge_index,
+                )
+            )
+            continue
+        next_task = next_tasks[0]
+        if any(bridge_index < other < next_task for other in ordered_bridges):
+            findings.append(
+                _finding(
+                    "NB-NARR-022",
+                    "error",
+                    "Consecutive reasoning bridges occur before the declared next task begins.",
+                    cell_index=bridge_index,
+                )
+            )
+
+        bridge_text = _narrative_payload(cells[bridge_index])
+        bridge_checks = (
+            (BRIDGE_BASIS_RE, "NB-NARR-024", "The reasoning bridge does not identify the result or results that motivate the transition."),
+            (BRIDGE_GAP_RE, "NB-NARR-025", "The reasoning bridge does not state the remaining limitation, ambiguity, or open question."),
+            (BRIDGE_DECISION_RE, "NB-NARR-026", "The reasoning bridge does not explain why the next operation was selected."),
+            (BRIDGE_EXPECTATION_RE, "NB-NARR-027", "The reasoning bridge does not state an expected observation or decision criterion."),
+        )
+        for pattern, rule_id, message in bridge_checks:
+            if not pattern.search(bridge_text):
+                findings.append(
+                    _finding(rule_id, "error", message, cell_index=bridge_index)
+                )
+
+    for previous_task, next_task in zip(ordered_forward_tasks, ordered_forward_tasks[1:]):
+        between = [index for index in ordered_bridges if previous_task < index < next_task]
+        if not between:
+            findings.append(
+                _finding(
+                    "NB-NARR-023",
+                    "error",
+                    "A material forward-task stage begins without a reasoning bridge from the preceding stage.",
+                    cell_index=next_task,
+                )
+            )
+        next_text = _narrative_payload(cells[next_task])
+        if not BRIDGE_BASIS_RE.search(next_text):
+            findings.append(
+                _finding(
+                    "NB-NARR-028",
+                    "error",
+                    "The forward-task stage does not identify the preceding result it resolves.",
+                    cell_index=next_task,
+                )
+            )
+
     if len(question_cells) > 1:
         findings.append(
             _finding(
@@ -607,16 +706,23 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
     for index, cell, current_text in code_cells:
         if not _has_plot_output(cell):
             continue
-        previous_markdown = next(
-            (_source_text(cells[position]) for position in range(index - 1, -1, -1)
-             if cells[position].get("cell_type") == "markdown"),
-            "",
+        previous_markdown_cell = next(
+            (
+                cells[position]
+                for position in range(index - 1, -1, -1)
+                if cells[position].get("cell_type") == "markdown"
+            ),
+            None,
         )
+        previous_markdown = _source_text(previous_markdown_cell) if previous_markdown_cell else ""
+        previous_tags = _tags(previous_markdown_cell) if previous_markdown_cell else set()
         following = cells[index + 1] if index + 1 < len(cells) else None
         following_tags = _tags(following) if isinstance(following, dict) else set()
         following_text = _source_text(following) if isinstance(following, dict) else ""
         current_tags = _tags(cell)
-        has_introduction = bool(FIGURE_INTRO_RE.search(previous_markdown))
+        has_introduction = "figure-introduction" in previous_tags or bool(
+            FIGURE_INTRO_RE.search(previous_markdown)
+        )
         has_analysis = bool(
             FIGURE_ANALYSIS_RE.search(current_text)
             or FIGURE_ANALYSIS_RE.search(following_text)
@@ -999,6 +1105,7 @@ def _report(path: str, findings: list[dict[str, Any]], cell_count: int) -> dict[
             "complete_hidden_state_detection",
             "current_upstream_resolution",
             "cross_notebook_chain_truth",
+            "semantic_truth_of_reasoning_bridges",
             "russian_language_quality_beyond_heuristics",
             "bibliographic_semantic_correctness",
             "selection_policy_truth",

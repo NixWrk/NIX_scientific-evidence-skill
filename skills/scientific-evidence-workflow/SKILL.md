@@ -208,12 +208,10 @@ refer to its number in the later sentence that transforms or interprets it.
 Preserve stable internal equation identifiers beneath human-readable numbering
 so that renumbering does not break the calculation chain.
 Use complete scientific sentences throughout every notebook and companion Markdown report; exclude telegraphic result fragments and implication arrows. Introduce each material figure with its quantities, conditions, and purpose, then separate observation, interpretation, bounded inference, any justified next check, and limitations.
-Require a traceable narrative at both scales. Within one notebook, every
-material operation must follow from an identified input, premise, or preceding
-result and must expose the observable output that supports the next bounded
-statement. Across a notebook sequence, pass accepted facts, numbers, hypotheses,
-and artifacts through versioned handoff records so that the complete path from
-source data to downstream conclusion can be reproduced and audited.
+Require a traceable, forward-linked narrative rather than a chronology of actions. Every material operation must follow from named inputs, premises, or preceding results and expose the observable that supports the next bounded statement.
+Close each nonterminal stage with its established result, remaining limitation or question, reason for the next operation, and expected observation or decision criterion; the following stage must resolve that declared task.
+When several results motivate a step, cite each and explain its role. Carry the same bridge across notebooks through versioned handoffs so the path from source data to downstream conclusion remains auditable.
+File order or a generic phrase such as “the next calculation” is insufficient.
 
 For a manuscript, separate literature sources from research records. Literature
 may support context and interpretation. Only approved protocol and result
@@ -344,7 +342,7 @@ Before release, verify:
     bibliography entry resolves under the selected reference contract;
 13. every cross-notebook artifact has a versioned handoff record;
 14. automation is blocked while data-selection rules or canonical-input
-    decisions remain conflicted.
+    decisions remain conflicted; every declared next task is performed by the following material stage or remains explicitly blocked, with its basis in named results and limitations.
 
 When a bundle is available, run:
 

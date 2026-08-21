@@ -17,6 +17,7 @@ TOP_FIELDS = {
     "supersedes",
     "artifact",
     "producer",
+    "reasoning_context",
     "validation",
     "selection_policy",
     "automation_status",
@@ -34,6 +35,15 @@ ARTIFACT_FIELDS = {
     "applicability_limits",
 }
 PRODUCER_FIELDS = {"notebook_id", "run_id", "code_version"}
+REASONING_FIELDS = {
+    "basis_refs",
+    "established",
+    "unresolved_question",
+    "decision_rationale",
+    "next_task",
+    "expected_observations",
+    "evaluation_criterion",
+}
 VALIDATION_FIELDS = {"technical", "computational", "scientific"}
 SELECTION_FIELDS = {
     "policy_id",
@@ -77,13 +87,15 @@ def _object(
     path: str,
     fields: set[str],
     errors: list[str],
+    optional_fields: set[str] | None = None,
 ) -> dict[str, Any] | None:
     if not isinstance(value, dict):
         errors.append(f"{path}: expected an object")
         return None
     for field in sorted(set(value) - fields):
         errors.append(f"{path}: unexpected field {field!r}")
-    for field in sorted(fields - set(value)):
+    required_fields = fields - (optional_fields or set())
+    for field in sorted(required_fields - set(value)):
         errors.append(f"{path}: missing field {field!r}")
     return value
 
@@ -112,12 +124,19 @@ def _nonempty_list(value: Any, path: str, errors: list[str]) -> list[Any]:
 
 def validate_handoff(data: Any) -> dict[str, Any]:
     errors: list[str] = []
-    root = _object(data, path="handoff", fields=TOP_FIELDS, errors=errors)
+    root = _object(
+        data,
+        path="handoff",
+        fields=TOP_FIELDS,
+        errors=errors,
+        optional_fields={"reasoning_context"},
+    )
     if root is None:
         return {"valid": False, "errors": errors}
 
-    if root.get("schema_version") != "1.0":
-        errors.append("schema_version: expected '1.0'")
+    schema_version = root.get("schema_version")
+    if schema_version not in {"1.0", "1.1"}:
+        errors.append("schema_version: expected '1.0' or '1.1'")
     _identifier(root.get("handoff_id"), "handoff_id", errors)
     record_version = root.get("record_version")
     _version(record_version, "record_version", errors)
@@ -163,6 +182,35 @@ def validate_handoff(data: Any) -> dict[str, Any]:
         _identifier(producer.get("notebook_id"), "producer.notebook_id", errors)
         _identifier(producer.get("run_id"), "producer.run_id", errors)
         _hash(producer.get("code_version"), "producer.code_version", errors)
+
+    reasoning = root.get("reasoning_context")
+    if schema_version == "1.1" and reasoning is None:
+        errors.append("reasoning_context: schema version 1.1 requires a forward reasoning bridge")
+    if reasoning is not None:
+        reasoning = _object(
+            reasoning,
+            path="reasoning_context",
+            fields=REASONING_FIELDS,
+            errors=errors,
+        )
+        if reasoning is not None:
+            basis_refs = _nonempty_list(
+                reasoning.get("basis_refs"), "reasoning_context.basis_refs", errors
+            )
+            if any(not _nonempty(item) for item in basis_refs):
+                errors.append("reasoning_context.basis_refs: entries must be non-empty strings")
+            if len(set(basis_refs)) != len(basis_refs):
+                errors.append("reasoning_context.basis_refs: duplicate references are not allowed")
+            observations = _nonempty_list(
+                reasoning.get("expected_observations"),
+                "reasoning_context.expected_observations",
+                errors,
+            )
+            if any(not _nonempty(item) for item in observations):
+                errors.append("reasoning_context.expected_observations: entries must be non-empty strings")
+            for field in REASONING_FIELDS - {"basis_refs", "expected_observations"}:
+                if not _nonempty(reasoning.get(field)):
+                    errors.append(f"reasoning_context.{field}: expected a non-empty string")
 
     validation = _object(
         root.get("validation"), path="validation", fields=VALIDATION_FIELDS, errors=errors

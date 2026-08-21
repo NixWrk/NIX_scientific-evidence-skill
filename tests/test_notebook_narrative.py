@@ -119,6 +119,8 @@ def test_template_is_valid_notebook_with_working_report_metadata():
         "interpretation-and-limits",
         "report-summary",
         "artifact-handoff",
+        "reasoning-bridge",
+        "forward-task",
     } <= tags
     formula_cells = [
         index
