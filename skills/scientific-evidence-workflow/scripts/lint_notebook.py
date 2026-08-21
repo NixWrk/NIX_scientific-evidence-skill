@@ -40,6 +40,15 @@ PASSPORT_HEADING_RE = re.compile(r"(?im)^\s*#{1,4}\s*паспорт(?:\s|$)")
 READER_METADATA_RE = re.compile(
     r"(?im)^\s*(?:#{1,4}\s*)?(?:\*\*)?(?:среда(?:\s+выполнения)?|"
     r"наследуемое\s+состояние|манифест\s+запуска)(?:\*\*)?\s*:?")
+FORMULA_CATALOG_HEADING_RE = re.compile(
+    r"(?im)^\s*#{1,4}\s*(?:формул\w*|уравнен\w*|математическ\w*\s+аппарат)\b"
+)
+TERM_GLOSSARY_HEADING_RE = re.compile(
+    r"(?im)^\s*#{1,4}[^\n]*\bсловар[ья]\s+термин\w*\b"
+)
+MATERIAL_EQUATION_RE = re.compile(r"\\tag\{[^}]+\}")
+DISPLAY_EQUATION_RE = re.compile(r"\$\$.*?\$\$|\\\[.*?\\\]", re.DOTALL)
+FORMULA_TABLE_ROW_RE = re.compile(r"(?m)^\s*\|[^|\n]*\$[^|\n]*\$")
 METHOD_RE = re.compile(r"(?i)\b(?:метод\w*|method|допущен\w*|assumptions?)\b")
 SUMMARY_RE = re.compile(r"(?im)^\s*#{1,4}\s*(?:итог|выводы?|summary|conclusions?)\b")
 LIMIT_RE = re.compile(
@@ -428,6 +437,23 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             findings.append(_finding(rule_id, "error", message))
 
     for index, _, text in markdown_cells:
+        equation_count = max(
+            len(MATERIAL_EQUATION_RE.findall(text)),
+            len(DISPLAY_EQUATION_RE.findall(text)),
+            len(FORMULA_TABLE_ROW_RE.findall(text)),
+        )
+        formula_catalog = bool(FORMULA_CATALOG_HEADING_RE.search(text))
+        glossary_bundle = bool(TERM_GLOSSARY_HEADING_RE.search(text)) and equation_count >= 2
+        if (formula_catalog and equation_count >= 2) or glossary_bundle:
+            findings.append(
+                _finding(
+                    "NB-NARR-018",
+                    "error",
+                    "Material equations are front-loaded as a catalogue or glossary. "
+                    "Introduce each equation at the calculation stage where it first becomes necessary.",
+                    cell_index=index,
+                )
+            )
         if PASSPORT_HEADING_RE.search(text):
             findings.append(
                 _finding(

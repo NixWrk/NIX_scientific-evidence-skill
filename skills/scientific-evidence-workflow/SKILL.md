@@ -193,17 +193,20 @@ which subset is analysed. Keep filenames, paths, hashes, software versions,
 and upstream identifiers in technical metadata or loader code unless one of
 them materially affects scientific interpretation.
 
-Before calculation, explain the investigated object, measurement or
+Before each calculation stage, explain the investigated object, measurement or
 computational model, necessary terms, geometry or causal relations, variables
-and units, equations, boundary or initial conditions, assumptions, expected
-limiting behaviour, and applicability limits. Do not satisfy the genre by
-prepending generic narrative cells to an otherwise unexplained notebook.
+and units, boundary or initial conditions, assumptions, expected limiting
+behaviour, and applicability limits needed for that stage. Do not satisfy the
+genre by prepending generic narrative cells to an otherwise unexplained
+notebook.
 
-When equations carry the reasoning, introduce the relationship in prose,
-number the material equation, define its symbols and units, and refer to that
-number in the later sentence that applies or transforms it. Preserve stable
-internal equation identifiers beneath human-readable numbering so that
-renumbering does not break the calculation chain.
+Introduce each material equation only when the narrative first needs it for a
+calculation, transformation, check, or interpretation. Do not collect equations
+in an opening formula catalogue or term glossary. State the need in prose,
+display and number the equation, define its symbols and units, apply it, and
+refer to its number in the later sentence that transforms or interprets it.
+Preserve stable internal equation identifiers beneath human-readable numbering
+so that renumbering does not break the calculation chain.
 
 Require a traceable narrative at both scales. Within one notebook, every
 material operation must follow from an identified input, premise, or preceding

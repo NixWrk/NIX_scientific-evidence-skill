@@ -7,16 +7,20 @@ role. Do not combine profiles merely because several methods appear in one
 file. Split the notebook when the roles lead to independent questions or
 conclusions.
 
+Across all profiles, introduce each material equation at the first calculation
+stage that uses it. Keep definitions in the background if needed, but do not
+front-load equations in a formula catalogue or term glossary.
+
 ## `model-derivation`
 
 Use for deriving, explaining, or extending a mathematical or physical model.
 
-- Introduce the object, quantities, assumptions, and applicability domain
-  before the first equation.
+- Introduce the object, quantities, assumptions, and applicability domain needed
+  for the current derivation immediately before its first equation.
 - Number material equations and refer to those numbers in the prose that uses
   them. Define symbols and units at first use.
-- Explain what each equation adds to the chain; do not present an isolated
-  formula catalogue.
+- Explain what each equation adds to the chain; distribute equations through
+  the derivation instead of presenting an opening formula catalogue.
 - Mark the equation account `equation-narrative` and report dimensional,
   limiting-case, analytic-versus-numeric, or other applicable checks under
   `verification-checks`.

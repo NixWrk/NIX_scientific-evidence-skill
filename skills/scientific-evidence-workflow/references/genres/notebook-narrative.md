@@ -135,13 +135,19 @@ declared links match actual variables, artifacts, outputs, and execution order.
 
 ## Equation narrative and reference integrity
 
-When equations carry the argument, introduce the physical or mathematical
-relationship in a sentence before displaying the equation. Number each
-material equation, define its symbols and units, and then cite the equation
-number in the prose that applies, transforms, or compares it. Keep the prose
-between equations: explain what the previous relation establishes and why the
-next relation is needed. This connected pattern is preferable to an isolated
-formula catalogue or a generic wrapper around code.
+When equations carry the argument, introduce each physical or mathematical
+relationship at the first calculation stage where it becomes necessary. Never
+front-load material equations in an opening formula catalogue, background
+section, or term glossary. Definitions may be introduced early, but an equation
+belongs immediately before the calculation, transformation, check, or
+interpretation that uses it.
+
+State the local need in prose before displaying the equation. Number each
+material equation, define its symbols and units, apply it, and then cite its
+number in the prose that transforms, compares, or interprets the result. Keep
+prose between successive equations: explain what the previous relation
+establishes and why the next relation is now needed. Later stages refer to the
+first numbered occurrence instead of repeating the equation.
 
 Every relative link must resolve in the frozen corpus. Every equation reference
 must resolve to one equation label. Every in-text citation must resolve to one
@@ -290,10 +296,11 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
    upstream artifacts and retain their versions.
 5. Put reusable algorithms in modules when they are no longer part of the
    report's explanatory path.
-6. Describe the object and model, then terms, formulae, method, comparison
-   basis, assumptions, applicability limits, and decision rule before
-   interpreting outputs. Introduce and number material equations, define their
-   symbols and units, and cite their numbers in the prose that uses them.
+6. Describe the object and model, then introduce only the terms, assumptions,
+   and conditions needed to begin the first calculation stage. Introduce and
+   number each material equation at its first actual use, define its symbols
+   and units, apply it, and cite it in the prose that interprets or transforms
+   the result. Do not place a formula catalogue in the opening sections.
 7. State the traceable calculation chain and run every applicable model,
    identifiability, data-identity, and consistency check.
 8. Keep observations, interpretations, hypotheses, decisions, and limitations
@@ -340,6 +347,8 @@ generic preferences. Report:
 - interpretation presented as direct observation;
 - an unexplained formula, metric, decision rule, or comparison made under
   unequal conditions;
+- a formula catalogue or equation bundle placed before the calculation stages
+  that actually use the equations;
 - an uncaptioned figure or a caption that omits axes, units, encodings, source,
   or evidential role;
 - hidden state, stale/error output, missing randomness control, or an undeclared

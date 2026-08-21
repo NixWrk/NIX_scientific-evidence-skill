@@ -120,6 +120,13 @@ def test_template_is_valid_notebook_with_working_report_metadata():
         "report-summary",
         "artifact-handoff",
     } <= tags
+    formula_cells = [
+        index
+        for index, cell in enumerate(notebook["cells"])
+        if "\\tag{" in "".join(cell.get("source", []))
+    ]
+    assert formula_cells == [3]
+    assert "equation-narrative" in notebook["cells"][formula_cells[0]]["metadata"]["tags"]
 
 
 def test_output_size_ignores_binary_figures_but_counts_text() -> None:
@@ -355,6 +362,30 @@ def test_reader_facing_environment_and_inherited_state_are_rejected():
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "fail"
     assert "NB-NARR-017" in rule_ids(report)
+
+
+def test_opening_formula_catalogue_is_rejected():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["source"] = [
+        "## Модель и словарь терминов\n",
+        "### Формулы\n",
+        "$$ y=x \\tag{1} $$\n",
+        "$$ z=y^2 \\tag{2} $$\n",
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-018" in rule_ids(report)
+
+
+def test_equation_bundle_inside_term_glossary_is_rejected():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["source"] = [
+        "## Методика и словарь терминов\n",
+        "Связи перечислены заранее.\n",
+        "$$ y=x \\tag{1} $$\n",
+        "$$ z=y^2 \\tag{2} $$\n",
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-018" in rule_ids(report)
 
 
 def test_file_identifier_alone_is_not_a_material_input_description():
