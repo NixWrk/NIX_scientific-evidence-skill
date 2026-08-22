@@ -2027,6 +2027,19 @@ def test_domain_vocabulary_applies_only_when_its_profile_is_requested() -> None:
     assert with_domain["profiles"] == ["core", "domain-biomedical-ultrasound"]
 
 
+def test_neuroimaging_profile_allows_only_declared_proper_terms() -> None:
+    text = (
+        "Модель deepRetinotopy оценивает параметры pRF; пакет neuropythy "
+        "обрабатывает поверхность, а режим volumetric требует перевода."
+    )
+
+    report = STYLE_AUDITOR.audit_text(text, ["domain-neuroimaging"])
+    latin = {issue["match"] for issue in report["issues"] if issue["code"] == "latin_prose"}
+
+    assert latin == {"volumetric"}
+    assert report["profiles"] == ["core", "domain-neuroimaging"]
+
+
 def test_micro_report_profile_flags_a_softened_state() -> None:
     text = "Модуль почти готов. Обнаружено незначительное расхождение. Есть сложности."
 

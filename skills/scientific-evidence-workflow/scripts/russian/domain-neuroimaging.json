@@ -1,0 +1,10 @@
+{
+  "profile_id": "domain-neuroimaging",
+  "description": "Предметная лексика нейровизуализации, ретинотопического картирования и обработки корковых поверхностей.",
+  "latin_allow": [
+    "deepretinotopy",
+    "neuropythy",
+    "prf"
+  ],
+  "rules": []
+}
