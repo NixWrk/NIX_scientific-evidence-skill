@@ -1,3 +1,4 @@
+import copy
 import importlib.util
 import json
 from pathlib import Path
@@ -69,7 +70,7 @@ def test_reasoning_bridge_must_be_a_dedicated_concluding_paragraph():
     assert "NB-NARR-029" in rule_ids(report)
 
 
-def test_reasoning_bridge_requires_an_explicit_synthesis():
+def test_reasoning_bridge_accepts_subject_specific_synthesis_without_connector():
     notebook = template()
     bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
     bridge["source"] = [
@@ -77,7 +78,7 @@ def test_reasoning_bridge_requires_an_explicit_synthesis():
         "Поэтому в §2 будет выполнен расчёт; критерием считается достижение заданного порога."
     ]
     report = LINTER.lint_notebook(notebook)
-    assert "NB-NARR-030" in rule_ids(report)
+    assert "NB-NARR-030" not in rule_ids(report)
 
 def test_reasoning_bridge_rejects_unattributed_expected_phrase():
     notebook = template()
@@ -115,3 +116,26 @@ def test_reasoning_bridge_accepts_attributed_model_prediction():
     report = LINTER.lint_notebook(notebook)
     assert "NB-NARR-027" not in rule_ids(report)
     assert "NB-NARR-031" not in rule_ids(report)
+
+
+def test_repeated_reasoning_bridge_openings_are_rejected():
+    notebook = template()
+    bridge_index = tagged_index(notebook, "reasoning-bridge")
+    forward_index = tagged_index(notebook, "forward-task")
+    summary_index = tagged_index(notebook, "report-summary")
+    notebook["cells"][bridge_index]["source"] = [
+        "Таким образом, результаты §1 устанавливают исходное положение, однако сохраняют ограничение. "
+        "Поэтому в §2 будет выполнен расчёт; критерием считается заданный порог."
+    ]
+    extra_cells = []
+    for section in (2, 3):
+        bridge = copy.deepcopy(notebook["cells"][bridge_index])
+        bridge["source"] = [
+            f"Таким образом, результаты §{section} устанавливают новое положение, однако сохраняют ограничение. "
+            f"Поэтому в §{section + 1} будет выполнен расчёт; критерием считается заданный порог."
+        ]
+        forward = copy.deepcopy(notebook["cells"][forward_index])
+        extra_cells.extend((bridge, forward))
+    notebook["cells"][summary_index:summary_index] = extra_cells
+
+    report = LINTER.lint_notebook(notebook)

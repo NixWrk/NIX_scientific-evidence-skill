@@ -97,9 +97,17 @@ UNATTRIBUTED_EXPECTATION_RE = re.compile(
 )
 
 BRIDGE_SYNTHESIS_RE = re.compile(
-    r"(?i)\b(?:таким\s+образом|итак|по\s+результатам\s+(?:раздела|этапа|расч[её]та|анализа)|"
-    r"совокупность\s+(?:полученных\s+)?результат\w*|thus|taken\s+together|in\s+summary)\b"
+    r"(?is)^\s*(?:"
+    r"(?:таким\s+образом|итак|по\s+результатам\s+(?:раздела|этапа|расч[её]та|анализа)|"
+    r"совокупность\s+(?:полученных\s+)?результат\w*|thus|taken\s+together|in\s+summary)\b|"
+    r"(?:рисун\w*|таблиц\w*|формул\w*|раздел\w*|результат\w*|расч[её]т\w*|"
+    r"сопоставлен\w*|сравнен\w*|анализ\w*|проверк\w*|оценк\w*|профил\w*|"
+    r"матриц\w*|модел\w*|эксперимент\w*|инверси\w*|сегментац\w*|аудит\w*|"
+    r"инвентаризац\w*|загрузк\w*|обзор\w*|ансамбл\w*|отключен\w*|"
+    r"figure|table|equation|section|result|calculation|comparison|analysis|test)\b|"
+    r"(?:в|по|для)\s+(?:§\s*\d+|раздел\w*|рисунк\w*|формул\w*|результат\w*|расч[её]т\w*)\b)"
 )
+BRIDGE_OPENING_TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЁё0-9§]+")
 BRIDGE_NONCONCLUSION_TAGS = {
     "technical-background",
     "method-and-assumptions",
@@ -235,6 +243,13 @@ def _narrative_payload(cell: dict[str, Any]) -> str:
             elif isinstance(value, str):
                 parts.append(value)
     return "\n".join(parts)
+
+def _bridge_opening_signature(text: str, *, width: int = 2) -> str:
+    """Return a compact lexical opening used to detect repeated transition templates."""
+    tokens = BRIDGE_OPENING_TOKEN_RE.findall(text)
+    if len(tokens) < width:
+        return ""
+    return " ".join(tokens[:width]).casefold()
 
 
 def _finding(
@@ -649,7 +664,7 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 _finding(
                     "NB-NARR-030",
                     "error",
-                    "A reasoning bridge must begin as an explicit synthesis of the completed stage.",
+                    "A reasoning bridge must begin with a subject-specific synthesis of the completed stage; a stock introductory connector is not required.",
                     cell_index=bridge_index,
                 )
             )
@@ -675,6 +690,26 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 findings.append(
                     _finding(rule_id, "error", message, cell_index=bridge_index)
                 )
+
+    opening_cells: dict[str, list[int]] = {}
+    for bridge_index in ordered_bridges:
+        signature = _bridge_opening_signature(_narrative_payload(cells[bridge_index]))
+        if signature:
+            opening_cells.setdefault(signature, []).append(bridge_index)
+    for signature, indices in sorted(opening_cells.items()):
+        if len(indices) < 3:
+            continue
+        findings.append(
+            _finding(
+                "NB-NARR-032",
+                "error",
+                (
+                    f"The opening '{signature}' is reused in {len(indices)} reasoning bridges; "
+                    "rewrite the sentences from their subject-specific results instead of rotating stock connectors."
+                ),
+                cell_index=indices[2],
+            )
+        )
 
     for previous_task, next_task in zip(ordered_forward_tasks, ordered_forward_tasks[1:]):
         between = [index for index in ordered_bridges if previous_task < index < next_task]

@@ -155,9 +155,12 @@ declared links match actual variables, artifacts, outputs, and execution order.
 Use a reasoning bridge between every pair of material stages. A bridge is a
 standalone concluding paragraph, not a checklist or a continuation of the
 figure analysis. Separate it from the observation and interpretation block and
-open it with an explicit synthesis that reads as the conclusion of the completed
-section. Vary the wording according to the argument instead of repeating one
-stock opening. The paragraph contains all
+Let the first sentence itself synthesise the completed section, preferably by
+naming the specific calculation, figure, comparison, or result. An introductory
+connector such as `Таким образом` is optional and must not become a template.
+Audit repeated first two or three lexical words across the document and rewrite
+frequent openings through subject-specific sentence structure; cycling through
+synonyms for the same stock phrase does not create narrative variety. The paragraph contains all
 applicable moves:
 
 1. identify the preceding result or results by an equation, figure, table,
@@ -380,8 +383,8 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
 10. Render material result numbers in Markdown from variables or result objects;
     never maintain a second manually typed copy.
 11. Caption every material figure and interpret it in the following report block.
-12. Close every nonterminal material stage with a standalone, explicitly
-    synthesising `reasoning-bridge` paragraph, and mark
+12. Close every nonterminal material stage with a standalone, subject-specific
+    synthesising `reasoning-bridge` paragraph, audit repeated openings, and mark
     the opening that performs its declared operation `forward-task`.
 13. Preserve negative and uncertain results. Attribute a new hypothesis and state
     how it could be checked; never convert it into the current conclusion.
@@ -431,8 +434,9 @@ generic preferences. Report:
   reason for the next operation, and an attributed prediction, observable
   alternative, or decision criterion;
 - a `reasoning-bridge` embedded in the result analysis instead of a separate
-  concluding paragraph with an explicit synthesis;
-- an unattributed `Ожидается ...` / `Ожидаются ...` or a repeated stock transition used in place of a subject-specific argument;
+  concluding paragraph with a subject-specific synthesis;
+- an unattributed `Ожидается ...` / `Ожидаются ...`, a repeated opening, or a
+  rotation of stock synonyms used in place of a subject-specific argument;
 - a declared next task that the following material stage does not perform;
 - a multi-result decision that cites only a generic “preceding analysis” instead
   of identifying the contributing results and their distinct roles;
