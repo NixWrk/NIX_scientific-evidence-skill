@@ -27,23 +27,54 @@ def template() -> dict:
 def rule_ids(report: dict) -> set[str]:
     return {finding["rule_id"] for finding in report["findings"]}
 
+def tagged_index(notebook: dict, tag: str) -> int:
+    for index, cell in enumerate(notebook["cells"]):
+        if tag in cell.get("metadata", {}).get("tags", []):
+            return index
+    raise AssertionError(f"Missing tag: {tag}")
+
+
 
 def test_reasoning_bridge_must_lead_to_a_marked_forward_task():
     notebook = template()
-    notebook["cells"][3]["metadata"]["tags"].remove("forward-task")
+    notebook["cells"][tagged_index(notebook, "forward-task")]["metadata"]["tags"].remove("forward-task")
     report = LINTER.lint_notebook(notebook)
     assert "NB-NARR-021" in rule_ids(report)
 
 
 def test_reasoning_bridge_requires_basis_gap_decision_and_expectation():
     notebook = template()
-    notebook["cells"][1]["source"] = ["No bridge signals are present."]
+    notebook["cells"][tagged_index(notebook, "reasoning-bridge")]["source"] = ["No bridge signals are present."]
     report = LINTER.lint_notebook(notebook)
     assert {"NB-NARR-025", "NB-NARR-027"} <= rule_ids(report)
 
 
 def test_second_forward_task_requires_an_intervening_reasoning_bridge():
     notebook = template()
-    notebook["cells"][6]["metadata"]["tags"].append("forward-task")
+    first_forward = tagged_index(notebook, "forward-task")
+    next_markdown = next(
+        index for index in range(first_forward + 1, len(notebook["cells"]))
+        if notebook["cells"][index].get("cell_type") == "markdown"
+    )
+    notebook["cells"][next_markdown]["metadata"]["tags"].append("forward-task")
     report = LINTER.lint_notebook(notebook)
     assert "NB-NARR-023" in rule_ids(report)
+
+
+def test_reasoning_bridge_must_be_a_dedicated_concluding_paragraph():
+    notebook = template()
+    bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
+    bridge["metadata"]["tags"].append("interpretation-and-limits")
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-029" in rule_ids(report)
+
+
+def test_reasoning_bridge_requires_an_explicit_synthesis():
+    notebook = template()
+    bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
+    bridge["source"] = [
+        "Результаты §1 устанавливают исходное положение, однако сохраняют ограничение. "
+        "Поэтому в §2 будет выполнен расчёт; критерием считается достижение заданного порога."
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-030" in rule_ids(report)

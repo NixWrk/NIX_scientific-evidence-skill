@@ -127,7 +127,7 @@ def test_template_is_valid_notebook_with_working_report_metadata():
         for index, cell in enumerate(notebook["cells"])
         if "\\tag{" in "".join(cell.get("source", []))
     ]
-    assert formula_cells == [3]
+    assert len(formula_cells) == 1
     assert "equation-narrative" in notebook["cells"][formula_cells[0]]["metadata"]["tags"]
 
 

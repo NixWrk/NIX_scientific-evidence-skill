@@ -209,7 +209,7 @@ Preserve stable internal equation identifiers beneath human-readable numbering
 so that renumbering does not break the calculation chain.
 Use complete scientific sentences throughout every notebook and companion Markdown report; exclude telegraphic result fragments and implication arrows. Introduce each material figure with its quantities, conditions, and purpose, then separate observation, interpretation, bounded inference, any justified next check, and limitations.
 Require a traceable, forward-linked narrative rather than a chronology of actions. Every material operation must follow from named inputs, premises, or preceding results and expose the observable that supports the next bounded statement.
-Close each nonterminal stage with its established result, remaining limitation or question, reason for the next operation, and expected observation or decision criterion; the following stage must resolve that declared task.
+Close each nonterminal stage with a standalone concluding paragraph, separated from the result analysis and beginning with an explicit synthesis such as “Таким образом”. In that paragraph state the established result, remaining limitation or question, reason for the next operation, and expected observation or decision criterion; the following stage must resolve that declared task.
 When several results motivate a step, cite each and explain its role. Carry the same bridge across notebooks through versioned handoffs so the path from source data to downstream conclusion remains auditable.
 File order or a generic phrase such as “the next calculation” is insufficient.
 

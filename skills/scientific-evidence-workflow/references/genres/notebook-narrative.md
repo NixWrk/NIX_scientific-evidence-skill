@@ -153,7 +153,11 @@ declared links match actual variables, artifacts, outputs, and execution order.
 ## Forward reasoning bridges
 
 Use a reasoning bridge between every pair of material stages. A bridge is a
-connected paragraph, not a checklist, and contains all applicable moves:
+standalone concluding paragraph, not a checklist or a continuation of the
+figure analysis. Separate it from the observation and interpretation block,
+open it with an explicit synthesis such as `Таким образом, ...`, and make it
+read as the conclusion of the completed section. The paragraph contains all
+applicable moves:
 
 1. identify the preceding result or results by an equation, figure, table,
    section, result identifier, or versioned artifact;
@@ -171,7 +175,9 @@ distinct role. For example, one figure may establish a sensitivity trend while
 another establishes an admissible range; the next optimisation is justified by
 their intersection, not by the vague phrase “based on the preceding analysis”.
 
-Mark the closing paragraph `reasoning-bridge` and the opening paragraph of the
+Mark only this standalone closing paragraph `reasoning-bridge`; do not combine
+that tag with the figure, observable-output, interpretation, method, or next-stage
+paragraph. Mark the opening paragraph of the
 declared next material stage `forward-task`. The tags expose the seam for static
 review but do not prove that the scientific relation is valid. A bridge may end
 with a blocked task when required data or an authoritative selection rule is
@@ -369,7 +375,8 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
 10. Render material result numbers in Markdown from variables or result objects;
     never maintain a second manually typed copy.
 11. Caption every material figure and interpret it in the following report block.
-12. Close every nonterminal material stage with a `reasoning-bridge`, and mark
+12. Close every nonterminal material stage with a standalone, explicitly
+    synthesising `reasoning-bridge` paragraph, and mark
     the opening that performs its declared operation `forward-task`.
 13. Preserve negative and uncertain results. Attribute a new hypothesis and state
     how it could be checked; never convert it into the current conclusion.
@@ -417,6 +424,8 @@ generic preferences. Report:
 - a negative result, problem, or limitation hidden by a positive summary;
 - a nonterminal stage that ends without naming the result, unresolved question,
   reason for the next operation, and expected observation or decision criterion;
+- a `reasoning-bridge` embedded in the result analysis instead of a separate
+  concluding paragraph with an explicit synthesis;
 - a declared next task that the following material stage does not perform;
 - a multi-result decision that cites only a generic “preceding analysis” instead
   of identifying the contributing results and their distinct roles;

@@ -93,6 +93,21 @@ BRIDGE_EXPECTATION_RE = re.compile(
     r"критери\w*|признак\w*|аргумент\w*|подтвержд\w*|при\s+подтверждении|если|должн\w*|считается|принимается|означает|недопустим\w*|блокиру\w*|запрет\w*)\b"
 )
 
+BRIDGE_SYNTHESIS_RE = re.compile(
+    r"(?i)\b(?:таким\s+образом|итак|по\s+результатам\s+(?:раздела|этапа|расч[её]та|анализа)|"
+    r"совокупность\s+(?:полученных\s+)?результат\w*|thus|taken\s+together|in\s+summary)\b"
+)
+BRIDGE_NONCONCLUSION_TAGS = {
+    "technical-background",
+    "method-and-assumptions",
+    "verification-checks",
+    "observable-output",
+    "interpretation-and-limits",
+    "forward-task",
+    "figure-introduction",
+    "experimental-observation",
+    "experimental-analysis",
+}
 RANDOM_RE = re.compile(
     r"(?i)\b(?:np\.random|numpy\.random|random\.|torch\.(?:rand|randn|normal)|"
     r"sklearn\.utils\.shuffle)"
@@ -614,6 +629,28 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             )
 
         bridge_text = _narrative_payload(cells[bridge_index])
+        bridge_tags = _tags(cells[bridge_index])
+        embedded_tags = sorted(bridge_tags & BRIDGE_NONCONCLUSION_TAGS)
+        if embedded_tags or _has_plot_output(cells[bridge_index]):
+            findings.append(
+                _finding(
+                    "NB-NARR-029",
+                    "error",
+                    "A reasoning bridge must be a dedicated concluding paragraph, separate from result analysis and the next stage.",
+                    cell_index=bridge_index,
+                )
+            )
+
+        if not BRIDGE_SYNTHESIS_RE.search(bridge_text):
+            findings.append(
+                _finding(
+                    "NB-NARR-030",
+                    "error",
+                    "A reasoning bridge must begin as an explicit synthesis of the completed stage.",
+                    cell_index=bridge_index,
+                )
+            )
+
         bridge_checks = (
             (BRIDGE_BASIS_RE, "NB-NARR-024", "The reasoning bridge does not identify the result or results that motivate the transition."),
             (BRIDGE_GAP_RE, "NB-NARR-025", "The reasoning bridge does not state the remaining limitation, ambiguity, or open question."),
