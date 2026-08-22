@@ -154,9 +154,10 @@ declared links match actual variables, artifacts, outputs, and execution order.
 
 Use a reasoning bridge between every pair of material stages. A bridge is a
 standalone concluding paragraph, not a checklist or a continuation of the
-figure analysis. Separate it from the observation and interpretation block,
-open it with an explicit synthesis such as `Таким образом, ...`, and make it
-read as the conclusion of the completed section. The paragraph contains all
+figure analysis. Separate it from the observation and interpretation block and
+open it with an explicit synthesis that reads as the conclusion of the completed
+section. Vary the wording according to the argument instead of repeating one
+stock opening. The paragraph contains all
 applicable moves:
 
 1. identify the preceding result or results by an equation, figure, table,
@@ -165,8 +166,11 @@ applicable moves:
    question prevents the argument from stopping there;
 3. explain why the next calculation, comparison, or check is the appropriate
    response to that specific gap;
-4. state the expected observable alternatives, value, trend, or decision
-   criterion without reporting an unperformed result as fact;
+4. state an explicit decision criterion or attribute the forecast to the model,
+   hypothesis, equation, protocol, or comparison that licenses it; when useful,
+   give the alternative observations and the conclusion permitted by each;
+   never use an unattributed `Ожидается ...` or report an unperformed result as
+   fact;
 5. open the next stage by resolving the declared task and naming the inherited
    results it actually uses.
 
@@ -186,8 +190,9 @@ absent; state the blocker instead of inventing the next result.
 Across notebook boundaries, store the same moves in the `reasoning_context` of
 a schema-version `1.1` artifact handoff. The downstream introduction renders
 the established result, unresolved question, decision rationale, next task,
-expected observations, and evaluation criterion as ordinary scientific prose.
-Do not reproduce the machine field names as reader-facing headings.
+attributed prediction or observable alternatives, and evaluation criterion as
+ordinary scientific prose. Do not reproduce the machine field names as
+reader-facing headings.
 
 ## Equation narrative and reference integrity
 
@@ -423,9 +428,11 @@ generic preferences. Report:
   manual step;
 - a negative result, problem, or limitation hidden by a positive summary;
 - a nonterminal stage that ends without naming the result, unresolved question,
-  reason for the next operation, and expected observation or decision criterion;
+  reason for the next operation, and an attributed prediction, observable
+  alternative, or decision criterion;
 - a `reasoning-bridge` embedded in the result analysis instead of a separate
   concluding paragraph with an explicit synthesis;
+- an unattributed `Ожидается ...` or a repeated stock transition used in place of a subject-specific argument;
 - a declared next task that the following material stage does not perform;
 - a multi-result decision that cites only a generic “preceding analysis” instead
   of identifying the contributing results and their distinct roles;

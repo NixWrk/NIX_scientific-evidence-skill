@@ -78,3 +78,14 @@ def test_reasoning_bridge_requires_an_explicit_synthesis():
     ]
     report = LINTER.lint_notebook(notebook)
     assert "NB-NARR-030" in rule_ids(report)
+
+def test_reasoning_bridge_rejects_unattributed_expected_phrase():
+    notebook = template()
+    bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
+    bridge["source"] = [
+        "Таким образом, результаты §1 устанавливают исходное положение, однако сохраняют ограничение. "
+        "Поэтому в §2 будет выполнен расчёт. Ожидается получить положительное значение; "
+        "критерием считается достижение заданного порога."
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-031" in rule_ids(report)

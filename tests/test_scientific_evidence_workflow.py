@@ -2183,7 +2183,7 @@ def test_russian_style_auditor_ignores_code_and_machine_values() -> None:
 
 def test_notebook_language_profile_flags_canned_labels_and_working_jargon() -> None:
     report = STYLE_AUDITOR.audit_text(
-        "Результаты и умозаключения. Это прокси для следующего расчёта. ",
+        "Результаты и умозаключения. Это прокси для следующего расчёта. Ожидается получить улучшение. ",
         ["genre-notebook"],
     )
 
@@ -2191,4 +2191,5 @@ def test_notebook_language_profile_flags_canned_labels_and_working_jargon() -> N
     assert {
         "canned_result_label",
         "unexplained_working_jargon",
+        "unattributed_expectation",
     } <= codes

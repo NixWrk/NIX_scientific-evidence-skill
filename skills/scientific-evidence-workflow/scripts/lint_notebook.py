@@ -89,8 +89,11 @@ BRIDGE_DECISION_RE = re.compile(
     r"в\s+§\s*\d+(?:\.\d+)*|будет\s+(?:выполнен|построен|проверен|оценен|оценён)|требуется\s+\w+)\b"
 )
 BRIDGE_EXPECTATION_RE = re.compile(
-    r"(?i)\b(?:ожида\w*|планируется\s+получить|позволит\s+(?:установить|определить|проверить)|"
+    r"(?i)\b(?:позволит\s+(?:установить|определить|проверить)|"
     r"критери\w*|признак\w*|аргумент\w*|подтвержд\w*|при\s+подтверждении|если|должн\w*|считается|принимается|означает|недопустим\w*|блокиру\w*|запрет\w*)\b"
+)
+UNATTRIBUTED_EXPECTATION_RE = re.compile(
+    r"(?i)\b(?:ожидается|планируется\s+получить)\b"
 )
 
 BRIDGE_SYNTHESIS_RE = re.compile(
@@ -655,8 +658,18 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             (BRIDGE_BASIS_RE, "NB-NARR-024", "The reasoning bridge does not identify the result or results that motivate the transition."),
             (BRIDGE_GAP_RE, "NB-NARR-025", "The reasoning bridge does not state the remaining limitation, ambiguity, or open question."),
             (BRIDGE_DECISION_RE, "NB-NARR-026", "The reasoning bridge does not explain why the next operation was selected."),
-            (BRIDGE_EXPECTATION_RE, "NB-NARR-027", "The reasoning bridge does not state an expected observation or decision criterion."),
+            (BRIDGE_EXPECTATION_RE, "NB-NARR-027", "The reasoning bridge does not state an attributed prediction, observable alternative, or decision criterion."),
         )
+        if UNATTRIBUTED_EXPECTATION_RE.search(bridge_text):
+            findings.append(
+                _finding(
+                    "NB-NARR-031",
+                    "error",
+                    "A reasoning bridge must attribute a forecast to a model, hypothesis, equation, protocol, or comparison instead of using an impersonal expected-result phrase.",
+                    cell_index=bridge_index,
+                )
+            )
+
         for pattern, rule_id, message in bridge_checks:
             if not pattern.search(bridge_text):
                 findings.append(
