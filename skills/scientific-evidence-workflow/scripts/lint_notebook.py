@@ -96,16 +96,9 @@ UNATTRIBUTED_EXPECTATION_RE = re.compile(
     r"(?i)\b(?:ожида(?:ется|ются)|планируется\s+получить)\b"
 )
 
-BRIDGE_SYNTHESIS_RE = re.compile(
-    r"(?is)^\s*(?:"
-    r"(?:таким\s+образом|итак|по\s+результатам\s+(?:раздела|этапа|расч[её]та|анализа)|"
-    r"совокупность\s+(?:полученных\s+)?результат\w*|thus|taken\s+together|in\s+summary)\b|"
-    r"(?:рисун\w*|таблиц\w*|формул\w*|раздел\w*|результат\w*|расч[её]т\w*|"
-    r"сопоставлен\w*|сравнен\w*|анализ\w*|проверк\w*|оценк\w*|профил\w*|"
-    r"матриц\w*|модел\w*|эксперимент\w*|инверси\w*|сегментац\w*|аудит\w*|"
-    r"инвентаризац\w*|загрузк\w*|обзор\w*|ансамбл\w*|отключен\w*|"
-    r"figure|table|equation|section|result|calculation|comparison|analysis|test)\b|"
-    r"(?:в|по|для)\s+(?:§\s*\d+|раздел\w*|рисунк\w*|формул\w*|результат\w*|расч[её]т\w*)\b)"
+BRIDGE_NEXT_TASK_OPENING_RE = re.compile(
+    r"(?is)^\s*(?:поэтому|далее|затем|в\s+связи\s+с\s+этим|"
+    r"следующ\w*\s+(?:раздел|этап|расч[её]т|проверк|операци))\b"
 )
 BRIDGE_OPENING_TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЁё0-9§]+")
 BRIDGE_NONCONCLUSION_TAGS = {
@@ -659,7 +652,7 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 )
             )
 
-        if not BRIDGE_SYNTHESIS_RE.search(bridge_text):
+        if BRIDGE_NEXT_TASK_OPENING_RE.search(bridge_text):
             findings.append(
                 _finding(
                     "NB-NARR-030",

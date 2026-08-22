@@ -80,6 +80,17 @@ def test_reasoning_bridge_accepts_subject_specific_synthesis_without_connector()
     report = LINTER.lint_notebook(notebook)
     assert "NB-NARR-030" not in rule_ids(report)
 
+
+def test_reasoning_bridge_rejects_next_task_as_the_opening():
+    notebook = template()
+    bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
+    bridge["source"] = [
+        "Поэтому в §2 будет выполнен расчёт. Результаты §1 устанавливают исходное положение, "
+        "однако сохраняют ограничение; критерием считается достижение заданного порога."
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-030" in rule_ids(report)
+
 def test_reasoning_bridge_rejects_unattributed_expected_phrase():
     notebook = template()
     bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
