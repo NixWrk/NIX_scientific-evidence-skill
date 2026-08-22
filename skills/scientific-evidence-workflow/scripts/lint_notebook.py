@@ -168,7 +168,7 @@ RUSSIAN_RE = re.compile(r"[А-Яа-яЁё]")
 VALID_ARTIFACT_STATUSES = {"working", "frozen"}
 VALID_EXECUTION_STATUSES = {"not_run", "partial", "clean_kernel_pass", "failed"}
 VALID_STUDY_TYPES = {"computational", "empirical", "mixed"}
-VALID_LANGUAGE_AUDIT_STATUSES = {"not_run", "passed", "failed"}
+VALID_LANGUAGE_AUDIT_STATUSES = {"not_run", "partial", "passed", "failed"}
 VALID_GENRE_PROFILES = {
     "model-derivation",
     "computational-verification",

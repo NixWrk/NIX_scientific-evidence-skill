@@ -1935,6 +1935,32 @@ def test_translationese_pass_applies_to_every_russian_fragment() -> None:
     assert "От X к Y" in reference
 
 
+def test_language_gate_requires_manual_warning_adjudication() -> None:
+    skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+    reference = (
+        SKILL_DIR / "references" / "russian-scientific-style.md"
+    ).read_text(encoding="utf-8")
+
+    assert "mandatory warning" in skill
+    assert "статус `partial`" in reference
+    assert "Автоматический отчёт" in reference
+    assert "Статус `passed`" in reference
+
+
+def test_automated_russian_audit_never_attests_release_pass() -> None:
+    clean = STYLE_AUDITOR.audit_text("Измерение выполнено при комнатной температуре.")
+    warning = STYLE_AUDITOR.audit_text("Следует отметить полученный результат.")
+    error = STYLE_AUDITOR.audit_text("Создана Zotero-подколлекция.")
+
+    assert clean["valid"] is True
+    assert clean["language_gate_status"] == "partial"
+    assert clean["manual_full_text_review_required"] is True
+    assert clean["manual_warning_review_required"] is False
+    assert warning["language_gate_status"] == "partial"
+    assert warning["manual_warning_review_required"] is True
+    assert error["language_gate_status"] == "failed"
+
+
 def test_russian_style_profiles_emit_russian_diagnostics() -> None:
     cyrillic = set(
         "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"

@@ -473,6 +473,21 @@ def test_frozen_russian_notebook_requires_passed_language_audit():
     assert "NB-LANG-004" in rule_ids(report)
 
 
+def test_partial_language_audit_is_allowed_only_for_working_notebook():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    report_metadata = notebook["metadata"]["scientific_report"]
+    report_metadata["language_audit_status"] = "partial"
+    report_metadata["artifact_status"] = "working"
+
+    working_report = LINTER.lint_notebook(notebook)
+    assert "NB-LANG-003" not in rule_ids(working_report)
+    assert "NB-LANG-004" not in rule_ids(working_report)
+
+    report_metadata["artifact_status"] = "frozen"
+    frozen_report = LINTER.lint_notebook(notebook)
+    assert "NB-LANG-004" in rule_ids(frozen_report)
+
+
 def test_notebook_rules_make_russian_language_gate_mandatory():
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
     genre = (SKILL / "references" / "genres" / "notebook-narrative.md").read_text(

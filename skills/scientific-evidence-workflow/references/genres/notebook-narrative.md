@@ -541,8 +541,9 @@ Cell or line count is only a prompt to inspect these boundaries.
 - An `empirical` or `mixed` notebook covers all four experiment tags and links
   its observed result to the supplied experiment or data source.
 - Every Russian static or rendered narrative fragment passes the common Russian
-  scientific-language rules and the `genre-notebook` profile without unresolved
-  errors; warnings are reviewed manually.
+  scientific-language rules and the `genre-notebook` profile; every warning is
+  corrected or receives a recorded contextual adjudication. Unreviewed warnings
+  require `language_audit_status: partial`.
 
 ## Technical lint
 
@@ -574,3 +575,7 @@ python scripts/audit_russian_style.py extracted-notebook-text.md --json --profil
 Resolve every error and review every warning. Apply the same rules manually to
 headings, captions, programmatically formatted observations, summaries, and
 research comments that the heuristic auditor cannot reliably reconstruct.
+The auditor's `valid: true` and `language_gate_status: partial` mean only that
+no error-level surface pattern was found. Keep the notebook language status
+`partial` until every warning has been adjudicated and the complete static and
+rendered narrative has been read manually; only then attest `passed`.

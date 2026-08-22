@@ -208,6 +208,9 @@ def audit_text(text: str, profile_ids: Sequence[str] = (), directory: Path = PRO
     warnings = sum(issue["severity"] == "warning" for issue in issues)
     return {
         "valid": errors == 0,
+        "language_gate_status": "failed" if errors else "partial",
+        "manual_full_text_review_required": True,
+        "manual_warning_review_required": warnings > 0,
         "profiles": ruleset.profiles,
         "counts": {"errors": errors, "warnings": warnings, "issues": len(issues)},
         "issues": issues,
@@ -265,7 +268,8 @@ def main() -> int:
         counts = report["counts"]
         print(
             f"profiles={','.join(report['profiles'])} errors={counts['errors']} "
-            f"warnings={counts['warnings']} issues={counts['issues']}"
+            f"warnings={counts['warnings']} issues={counts['issues']} "
+            f"language_gate_status={report['language_gate_status']}"
         )
 
     if args.fail_on == "error" and report["counts"]["errors"]:
