@@ -52,7 +52,8 @@ def notebook_with_references() -> dict:
                 "metadata": {"tags": ["bibliography"]},
                 "source": [
                     "## Список литературы\n\n",
-                    "[1] Author A. Exact source title. Journal. 2024. Vol. 1. P. 1–5.",
+                    "[1] Author A. Exact source title. Journal. 2024. Vol. 1. P. 1–5. "
+                    "[DOI](https://doi.org/10.1000/example).",
                 ],
             },
         ],
@@ -252,6 +253,29 @@ def test_frozen_notebook_cannot_ship_incomplete_bibliography(tmp_path):
         notebook, path=tmp_path / "report.ipynb"
     )
     assert "NB-REF-BIB-007" in rule_ids(report)
+
+
+def test_scientific_bibliography_entry_requires_clickable_link(tmp_path):
+    notebook = notebook_with_references()
+    notebook["cells"][1]["source"][1] = (
+        "[1] Author A. Exact source title. Journal. 2024. Vol. 1. P. 1–5."
+    )
+    (tmp_path / "input.md").write_text("fixture", encoding="utf-8")
+    report = REFERENCES.validate_notebook_references(
+        notebook, path=tmp_path / "report.ipynb"
+    )
+    assert "NB-REF-BIB-009" in rule_ids(report)
+
+
+def test_companion_markdown_bibliography_requires_clickable_link(tmp_path):
+    path = tmp_path / "report.md"
+    path.write_text(
+        "# Отчёт\n\n## Список литературы\n\n"
+        "[1] Author A. Exact source title. Journal. 2024.",
+        encoding="utf-8",
+    )
+    report = REFERENCES.lint_path(path)
+    assert "DOC-REF-BIB-001" in rule_ids(report)
 
 
 def test_reference_audit_discloses_semantic_and_gost_limits():

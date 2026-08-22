@@ -29,7 +29,8 @@ arrows do not constitute a narrative. It does not prescribe a fixed set of
 headings and does not rewrite executable code for style.
 
 Also load `references/notebook-genre-profiles.md` and
-`references/reproducibility-contract.md`. When external publications are cited,
+`references/reproducibility-contract.md` and `references/reader-html.md`.
+When external publications are cited,
 load `references/bibliography-gost.md` for Russian output. For Russian text,
 load both `references/russian-scientific-style.md` and
 `references/russian/genre-notebook.md`. The Russian language gate is mandatory
@@ -231,8 +232,28 @@ Validate relative links in companion Markdown reports as well as notebooks, and
 exclude generated checkpoint copies from the canonical corpus. Every relative
 link must resolve in the frozen corpus. Every equation reference
 must resolve to one equation label. Every in-text citation must resolve to one
-bibliography entry, and exact publication titles must remain in the source
-language. Use stable machine identifiers beneath reader-facing numbering.
+bibliography entry, every scientific bibliography entry must contain an
+explicit clickable publication link, and exact publication titles must remain
+in the source language. Add or repair the link in the regenerated `.ipynb` or
+companion `.md` before HTML export; an HTML-only correction is invalid. Use
+stable machine identifiers beneath reader-facing numbering.
+
+## Reader HTML release
+
+Publish a sibling `.html` for every released notebook. Treat the `.ipynb` as
+the executable source and the HTML as its reader-facing scientific report.
+Exclude code inputs, input prompts, and output prompts from HTML while retaining
+the narrative, formulae, tables, numerical results, figures, images, captions,
+and interpretation. Preserve all internal and external links as clickable
+anchors and require local targets to travel with the release or be embedded.
+
+Build the reader artifact with `scripts/export_reader_html.py` or an equivalent
+exporter configured to hide inputs. Validate it with
+`scripts/validate_reader_html.py`. A frozen release fails if the reader HTML is
+missing, exposes a code-input area, has an unresolved internal anchor, or
+refers to an absent local link or image. Record remote URL availability and
+scientific support as separate validation axes because static HTML inspection
+does not establish them.
 
 ## Scientific status, checks, and stop rules
 

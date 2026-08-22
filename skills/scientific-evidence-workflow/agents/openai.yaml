@@ -1,4 +1,4 @@
 interface:
   display_name: "Scientific Evidence Workflow"
-  short_description: "Evidence-bound scientific writing and notebooks"
-  default_prompt: "Use $scientific-evidence-workflow to generate or criticise source-traceable scientific text or a bounded research notebook from only the supplied materials; load the owning genre and reproducibility rules, and state what deterministic checks do not assess."
+  short_description: "Evidence-bound writing, notebooks, and HTML"
+  default_prompt: "Use $scientific-evidence-workflow to rebuild a source-traceable scientific notebook and publish its code-free linked reader HTML from only the supplied materials."

@@ -22,12 +22,17 @@ EQUATION_REF_RE = re.compile(
 )
 EQUATION_LABEL_RE = re.compile(r"\(([^()]+)\)")
 MARKDOWN_LINK_RE = re.compile(r"(!?)\[[^\]]*\]\(([^)]+)\)")
+HTML_LINK_RE = re.compile(r"(?i)<a\s+[^>]*href=[\"']([^\"']+)[\"'][^>]*>")
+AUTOLINK_RE = re.compile(r"(?i)<(https?://[^>]+)>")
 EXTERNAL_URL_RE = re.compile(r"(?i)https?://[^\s)>]+")
 CITATION_RE = re.compile(r"(?<!\!)\[((?:\d+\s*;\s*)*\d+)\]")
 BIBLIOGRAPHY_HEADING_RE = re.compile(
     r"(?im)^\s*#{1,4}\s*(?:литература|список\s+литературы|библиография|references)\s*$"
 )
 BIBLIOGRAPHY_ENTRY_RE = re.compile(r"(?m)^\s*(?:[-*]\s*)?\[(\d+)\]\s+\S.+$")
+BIBLIOGRAPHY_ENTRY_LINE_RE = re.compile(
+    r"(?m)^\s*(?:[-*]\s*)?\[(\d+)\]\s+(.+?)\s*$"
+)
 HEADING_RE = re.compile(r"(?m)^\s*#{1,6}\s+(.+?)\s*#*\s*$")
 EXPLICIT_ANCHOR_RE = re.compile(r"(?i)<a\s+(?:id|name)=[\"']([^\"']+)[\"']")
 VALID_BIBLIOGRAPHY_STATUSES = {"not_applicable", "incomplete", "complete"}
@@ -195,6 +200,13 @@ def _is_external(target: str) -> bool:
     return lowered.startswith(("http://", "https://", "mailto:", "doi:"))
 
 
+def _has_clickable_publication_link(text: str) -> bool:
+    targets = [match.group(2) for match in MARKDOWN_LINK_RE.finditer(text)]
+    targets.extend(HTML_LINK_RE.findall(text))
+    targets.extend(AUTOLINK_RE.findall(text))
+    return any(_is_external(_link_target(target)) for target in targets)
+
+
 def _heading_anchor(text: str) -> str:
     text = re.sub(r"[`*_~]", "", text).strip().lower()
     text = re.sub(r"[^\w\- ]", "", text, flags=re.UNICODE)
@@ -284,8 +296,18 @@ def validate_notebook_references(
             for url in EXTERNAL_URL_RE.findall(scrubbed):
                 external_links.append((url, index))
         else:
-            for label in BIBLIOGRAPHY_ENTRY_RE.findall(text):
+            for match in BIBLIOGRAPHY_ENTRY_LINE_RE.finditer(text):
+                label = match.group(1)
                 bibliography_entries.setdefault(label, []).append(index)
+                if not _has_clickable_publication_link(match.group(0)):
+                    findings.append(
+                        _finding(
+                            "NB-REF-BIB-009",
+                            "error",
+                            "A scientific bibliography entry must contain an explicit clickable external link.",
+                            cell_index=index,
+                        )
+                    )
 
     for label, cells in sorted(equation_tags.items()):
         if len(cells) > 1:
@@ -472,6 +494,21 @@ def validate_markdown_references(text: str, *, path: str | Path) -> dict[str, An
         if anchor
     }
     findings.extend(_equation_narrative_findings(text, prefix="DOC-REF"))
+    bibliography_heading = BIBLIOGRAPHY_HEADING_RE.search(text)
+    if bibliography_heading:
+        bibliography_text = text[bibliography_heading.end() :]
+        for match in BIBLIOGRAPHY_ENTRY_LINE_RE.finditer(bibliography_text):
+            if not _has_clickable_publication_link(match.group(0)):
+                findings.append(
+                    _finding(
+                        "DOC-REF-BIB-001",
+                        "error",
+                        "A scientific bibliography entry must contain an explicit clickable external link.",
+                        line_number=text.count(
+                            "\n", 0, bibliography_heading.end() + match.start()
+                        ) + 1,
+                    )
+                )
     for match in MARKDOWN_LINK_RE.finditer(text):
         target = _link_target(match.group(2))
         line_number = text.count("\n", 0, match.start()) + 1

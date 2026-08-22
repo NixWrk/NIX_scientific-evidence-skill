@@ -1,6 +1,6 @@
 ---
 name: scientific-evidence-workflow
-description: Process only user-supplied scientific publications, research records, and notebooks into source-traceable Q&A, literature reviews, manuscript text, critic reports, and the scientific genres of a Russian candidate dissertation, including outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, and synopsis. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, analyse defended dissertations for writing patterns, or generate or criticise a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
+description: Process only user-supplied scientific publications, research records, and notebooks into source-traceable Q&A, literature reviews, manuscript text, critic reports, code-free linked reader HTML, and the scientific genres of a Russian candidate dissertation, including outline, introduction, review, methods, results, synthesis, conclusion, defense propositions, novelty, approbation, and synopsis. Use when an instruction-following agent or local model must answer questions, synthesize a fixed corpus, audit or revise scientific prose with a traceable correction ledger, rebuild or publish scientific notebooks, analyse defended dissertations for writing patterns, or generate or criticise a paper or qualification-work section without retrieving new sources, calling model APIs, inventing data, or losing claim-level locators.
 ---
 
 # Scientific Evidence Workflow
@@ -80,7 +80,7 @@ reference:
   bounded conclusions —
   `references/genres/notebook-narrative.md`, mode `record`; also load
   `references/notebook-genre-profiles.md` and
-  `references/reproducibility-contract.md`. When the notebook cites external
+  `references/reproducibility-contract.md` and `references/reader-html.md`. When the notebook cites external
   publications, also load `references/bibliography-gost.md` for Russian output.
   For Russian notebooks, also load
   `references/russian-scientific-style.md` and
@@ -453,6 +453,8 @@ Stop and request input instead of guessing when:
   hidden state.
 - `scripts/validate_notebook_references.py`: local-link, equation-reference,
   citation-label, and bibliography integrity audit.
+- `references/reader-html.md` with `scripts/export_reader_html.py` and
+  `scripts/validate_reader_html.py`: code-free linked HTML release contract.
 - `assets/artifact-handoff.template.json` and
   `assets/artifact-handoff.schema.json`: versioned cross-notebook artifact
   contract.
