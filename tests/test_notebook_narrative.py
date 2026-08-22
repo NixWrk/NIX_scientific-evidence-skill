@@ -516,6 +516,19 @@ def test_plot_requires_explicit_pre_figure_introduction():
     assert "NB-FIGURE-002" in rule_ids(report)
 
 
+def test_plot_accepts_varied_scientific_pre_figure_introduction():
+    variants = (
+        "Робастность выбранного набора оценивается по зависимости неопределённости от толщины.",
+        "Влияние дрейфа на остаток проверяется в двух согласованных представлениях.",
+        "Сопоставление кривых позволяет отделить геометрический эффект от временного.",
+    )
+    for source in variants:
+        notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+        notebook["cells"][tagged_index(notebook, "figure-introduction")]["source"] = [source]
+        report = LINTER.lint_notebook(notebook)
+        assert "NB-FIGURE-002" not in rule_ids(report)
+
+
 def test_plot_requires_connected_post_figure_analysis():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
     analysis = notebook["cells"][tagged_index(notebook, "figure-analysis")]
@@ -523,6 +536,17 @@ def test_plot_requires_connected_post_figure_analysis():
     analysis["outputs"] = []
     report = LINTER.lint_notebook(notebook)
     assert "NB-FIGURE-003" in rule_ids(report)
+
+
+def test_plot_accepts_varied_connected_post_figure_analysis():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    analysis = notebook["cells"][tagged_index(notebook, "figure-analysis")]
+    analysis["source"] = [
+        "display(Markdown(f\"Разности на рисунке 1 характеризуют нелинейность; постоянный коэффициент применять нельзя.\"))"
+    ]
+    analysis["outputs"] = []
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-FIGURE-003" not in rule_ids(report)
 
 
 def test_figure_caption_must_be_standalone_after_plot():
