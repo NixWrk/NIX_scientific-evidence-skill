@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "working_language": "ru",
+  "status": "passed",
+  "artifacts": [
+    {
+      "artifact_path": "../output.md",
+      "artifact_sha256": "<sha256-final-artifact>",
+      "text_path": "russian-text/output.md",
+      "text_sha256": "<sha256-extracted-text>",
+      "audit_report": "russian/output.json",
+      "profiles": ["core", "genre-review"],
+      "manual_review": {
+        "status": "passed",
+        "reviewed_text_sha256": "<sha256-extracted-text>",
+        "checks": {
+          "full_text": "passed",
+          "terminology": "passed",
+          "syntax": "passed",
+          "cohesion": "passed",
+          "translation_calques": "passed",
+          "genre_profile": "passed"
+        }
+      }
+    }
+  ]
+}

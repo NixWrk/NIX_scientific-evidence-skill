@@ -541,9 +541,9 @@ Cell or line count is only a prompt to inspect these boundaries.
 - An `empirical` or `mixed` notebook covers all four experiment tags and links
   its observed result to the supplied experiment or data source.
 - Every Russian static or rendered narrative fragment passes the common Russian
-  scientific-language rules and the `genre-notebook` profile; every warning is
-  corrected or receives a recorded contextual adjudication. Unreviewed warnings
-  require `language_audit_status: partial`.
+  scientific-language rules and the `genre-notebook` profile. The final raw
+  audit has zero findings, the complete text has been read manually, and the
+  hash-bound language-release validator passes.
 
 ## Technical lint
 
@@ -572,10 +572,18 @@ and rendered narrative text, and run:
 python scripts/audit_russian_style.py extracted-notebook-text.md --json --profile genre-notebook
 ```
 
-Resolve every error and review every warning. Apply the same rules manually to
+Resolve every error and warning. Apply the same rules manually to
 headings, captions, programmatically formatted observations, summaries, and
 research comments that the heuristic auditor cannot reliably reconstruct.
 The auditor's `valid: true` and `language_gate_status: partial` mean only that
 no error-level surface pattern was found. Keep the notebook language status
-`partial` until every warning has been adjudicated and the complete static and
-rendered narrative has been read manually; only then attest `passed`.
+`partial` until the raw audit has zero findings and the complete static and
+rendered narrative has been read manually. Record every released `.ipynb` and
+`.html`, their extracted reader-facing text, audit report, profiles, and manual
+check in `assets/language-release.template.json`, then run:
+
+```text
+python scripts/validate_language_release.py checks/language-release.json --json
+```
+
+Only `status: passed` with `release_ready: true` permits release wording.

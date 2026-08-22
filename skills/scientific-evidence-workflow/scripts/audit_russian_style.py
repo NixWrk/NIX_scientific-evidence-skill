@@ -8,8 +8,10 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Iterable, NamedTuple, Sequence
 
@@ -249,6 +251,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     args = parse_args()
     if args.list_profiles:
         for path in sorted(PROFILE_DIR.glob("*.json")):
@@ -256,7 +260,12 @@ def main() -> int:
             print(f"{profile['profile_id']}: {profile['description']}")
         return 0
 
-    report = audit_text(args.path.read_text(encoding="utf-8"), args.profile)
+    raw = args.path.read_bytes()
+    report = audit_text(raw.decode("utf-8"), args.profile)
+    report["artifact"] = {
+        "path": str(args.path),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:

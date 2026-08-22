@@ -389,10 +389,16 @@ When Python is available, run the audit with the same profiles:
 python scripts/audit_russian_style.py output.md --json --profile genre-review
 ```
 
-Use `--list-profiles` to see what exists. The script detects selected surface
-patterns only. Resolve its findings, then
-perform the manual checks in the reference. Do not report a clean automated
-audit as proof of linguistic or scientific quality.
+Use `--list-profiles` to see what exists. The audit detects selected surface
+patterns only and never replaces the manual checks in the reference.
+
+For every persisted Russian artifact, copy `assets/language-release.template.json` and
+after the last text mutation run `python scripts/validate_language_release.py checks/language-release.json --json`. The fail-closed gate requires zero raw
+findings, a full-text manual pass, matching profiles, and current hashes;
+warning adjudication cannot promote a warning-bearing final audit. Unless it
+returns `status: passed` and `release_ready: true`, report `partial` or `failed`
+and never call the work ready, complete, released, or overall passed. No other
+validation status can override this blocker.
 
 ### 8. Return a transparent result
 
@@ -404,7 +410,7 @@ compact claim–evidence ledger when the output format permits. Always report:
 - assumptions introduced only for formatting;
 - sections not assessed;
 - formulation corrections made, rejected, or still proposed;
-- whether any deterministic validator was run and, for Russian work, its language status and adjudicated warning counts.
+- for Russian work, the raw error and warning counts and the final language-release validator status.
 
 ## Stop conditions
 
@@ -433,12 +439,13 @@ Stop and request input instead of guessing when:
 - the requested action would create research plans or publication strategy
   rather than process the supplied material.
 
+Do not close a Russian persisted-artifact task while its final language-release
+validator is absent or does not pass.
+
 ## Bundled resources
 
 - `assets/evidence-bundle.template.json`: neutral machine-readable bundle.
-- `assets/evidence-bundle.schema.json`: structural declaration of the bundle for
-  a host that cannot run Python. `scripts/validate_bundle.py` enforces the same
-  structure plus the semantic rules and stays authoritative for release.
+- `assets/evidence-bundle.schema.json`: bundle declaration; `scripts/validate_bundle.py` remains authoritative.
 - `assets/qa-output.template.md`: Q&A output scaffold.
 - `references/genres/`: genre references with their required parts and gates.
 - `references/reproducibility-contract.md`: shared working-versus-frozen
@@ -454,11 +461,7 @@ Stop and request input instead of guessing when:
   citation-label, and bibliography integrity audit.
 - `references/reader-html.md` with `scripts/export_reader_html.py` and
   `scripts/validate_reader_html.py`: code-free linked HTML release contract.
-- `assets/artifact-handoff.template.json` and
-  `assets/artifact-handoff.schema.json`: versioned cross-notebook artifact
-  contract.
-- `scripts/validate_artifact_handoff.py`: handoff validator that blocks
-  automated use of unresolved selection conflicts.
+- `assets/artifact-handoff.template.json`, `assets/artifact-handoff.schema.json`, and `scripts/validate_artifact_handoff.py`: versioned handoffs and conflict blocking.
 - `assets/<genre>.template.md`: genre output scaffolds.
 - `assets/literature-review-output.template.md`: review scaffold.
 - `references/literature-review-patterns.md`: review-profile selection,
@@ -483,16 +486,12 @@ Stop and request input instead of guessing when:
   the name of whoever stated it.
 - `assets/work-pattern.template.json`: work-card scaffold.
 - `assets/work-aggregate.template.json`: scaffold for a pattern across works.
-- `scripts/validate_work_card.py`: dependency-free work and aggregate
-  validator; refuses obligation in keys and in prose, and refuses a claim
-  resting on a work too weak to bear it.
+- `scripts/validate_work_card.py`: work and aggregate validator.
 - `references/russian-scientific-style.md`: Russian language core.
 - `references/russian/`: genre language profiles.
 - `scripts/audit_russian_style.py`: dependency-free heuristic style audit.
+- `assets/language-release.template.json` and `scripts/validate_language_release.py`: hash-bound final Russian release gate.
 - `scripts/russian/`: machine-readable core, genre, and domain rule profiles.
-- `references/critic-workflow.md`: lightweight technical, editorial, and
-  evidential critic workflow.
-- `references/critic-verification-protocol.md`: conditional verification for
-  source-, number-, absence-, citation-, and authority-dependent findings.
-- `references/scientific-judgment-calibration.md`: optional calibration for
-  inference, sample roles, units of analysis, hierarchy, and severity.
+- `references/critic-workflow.md`: layered scientific criticism.
+- `references/critic-verification-protocol.md`: conditional evidence verification.
+- `references/scientific-judgment-calibration.md`: optional inference calibration.
