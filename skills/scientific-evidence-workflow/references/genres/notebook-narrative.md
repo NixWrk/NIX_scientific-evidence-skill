@@ -105,25 +105,33 @@ Do not create empty labels for parts that do not apply. Keep the transition to
 the next block explicit when the previous result supplies its input, premise,
 or question.
 
-Introduce every material figure before it is displayed. State which graph or
-scheme follows, which quantities it relates, the relevant conditions, and the
-question it is intended to answer. Give the figure a caption that identifies
-what is shown, the data and selection represented, axes and units, encodings
-such as colour or line type, and the evidential role of the visualisation.
-Distinguish a data figure from a computed geometry, explanatory illustration,
-simulation, or external validation.
+Before every material figure, state why the relation, comparison, or assessment
+must be examined and which scientific question it resolves. Name the related
+quantities, relevant conditions, selection, and encodings, but do not open the
+paragraph with a deictic announcement such as `Ниже представлен рисунок` or
+`На рисунке показан`. The prose must lead the argument to the visualisation,
+rather than merely announce a display operation.
 
-After the figure, write a connected account that separates the direct
-observation from its interpretation, states the bounded conclusion, and records
-the applicable limitation. Add a hypothesis and its verification step only when
-the displayed result justifies them. A caption, semantic tag, or generic label
-does not replace either the pre-figure introduction or this post-figure analysis.
+Place a standalone caption immediately after the displayed figure in the form
+`Рисунок N. <предметное название>`. The caption identifies the relation or
+object, data and selection, conditions, axes and units, and material encodings.
+It also distinguishes observed data from computed geometry, an explanatory
+illustration, simulation, or external validation. Do not combine this caption
+with the analysis or a result-status block.
 
-When a figure changes the direction of the work, finish its analysis with the
-reason for the next operation and the observation or decision criterion expected
-from that operation. The following material block must perform the declared task.
-Do not leave a proposed check as decorative closing prose and then begin an
-unrelated calculation.
+After the caption, write unlabelled connected prose that explicitly refers to
+the numbered figure and separates direct observation from interpretation. Do
+not create a heading or bold label such as `Анализ рисунка`, `Наблюдение`, or
+`Интерпретация`. State the bounded conclusion and applicable limitation; add a
+hypothesis and its verification step only when the displayed result justifies
+them. Neither a caption nor a semantic tag replaces this analysis.
+
+Close the material stage with a separate concluding paragraph. This paragraph
+names the established dependence, numerical result, limitation, and reason for
+the next operation without repeating a citation to the figure number. The
+following material block must perform the declared task and use the stated
+decision criterion. Do not leave a proposed check as decorative closing prose
+and then begin an unrelated calculation.
 
 ## Traceable narrative and calculation chain
 
@@ -153,18 +161,19 @@ declared links match actual variables, artifacts, outputs, and execution order.
 ## Forward reasoning bridges
 
 Use a reasoning bridge between every pair of material stages. A bridge is a
-standalone concluding paragraph, not a checklist or a continuation of the
-figure analysis. Separate it from the observation and interpretation block and
-Let the first sentence itself synthesise the completed section, preferably by
-naming the specific calculation, figure, comparison, or result. An introductory
-connector such as `Таким образом` is optional and must not become a template.
+standalone concluding paragraph, not a checklist or continuation of the figure
+analysis. Separate it from the observation and interpretation block. Let the
+first sentence itself synthesise the completed section by naming the established
+dependence, comparison, calculation, or result rather than the figure that
+displayed it. An introductory connector such as `Таким образом` is optional and
+must not become a template.
 Audit repeated first two or three lexical words across the document and rewrite
 frequent openings through subject-specific sentence structure; cycling through
 synonyms for the same stock phrase does not create narrative variety. The paragraph contains all
 applicable moves:
 
-1. identify the preceding result or results by an equation, figure, table,
-   section, result identifier, or versioned artifact;
+1. identify the preceding result or results by their scientific content, equation,
+   table, section, result identifier, or versioned artifact; do not use a figure
 2. state what those results establish and which limitation, ambiguity, or open
    question prevents the argument from stopping there;
 3. explain why the next calculation, comparison, or check is the appropriate
@@ -382,7 +391,9 @@ Keep these states linguistically distinct: `planned`, `performed`, `observed`,
    inheritance or handoff.
 10. Render material result numbers in Markdown from variables or result objects;
     never maintain a second manually typed copy.
-11. Caption every material figure and interpret it in the following report block.
+11. Motivate every material figure, place a standalone `Рисунок N. ...` caption
+    immediately after it, then interpret it in unlabelled prose with a numbered
+    reference; keep the stage conclusion free of repeated figure references.
 12. Close every nonterminal material stage with a standalone, subject-specific
     synthesising `reasoning-bridge` paragraph, audit repeated openings, and mark
     the opening that performs its declared operation `forward-task`.
@@ -436,6 +447,12 @@ generic preferences. Report:
 - a `reasoning-bridge` embedded in the result analysis instead of a separate
   concluding paragraph with a subject-specific synthesis;
 - an unattributed `Ожидается ...` / `Ожидаются ...`, a repeated opening, or a
+- a figure introduced by `Ниже представлен ...` instead of the scientific need
+  for the relation or assessment;
+- a figure caption combined with its numerical result or interpretation;
+- a post-figure analysis that has its own heading, omits the numbered reference,
+  or is not followed by a separate stage conclusion;
+- a stage conclusion that cites the figure instead of naming the established result;
   rotation of stock synonyms used in place of a subject-specific argument;
 - a declared next task that the following material stage does not perform;
 - a multi-result decision that cites only a generic “preceding analysis” instead

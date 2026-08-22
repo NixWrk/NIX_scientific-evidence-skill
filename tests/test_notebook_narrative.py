@@ -30,6 +30,14 @@ def rule_ids(report: dict) -> set[str]:
     return {finding["rule_id"] for finding in report["findings"]}
 
 
+def tagged_index(notebook: dict, tag: str) -> int:
+    return next(
+        index
+        for index, cell in enumerate(notebook["cells"])
+        if tag in cell.get("metadata", {}).get("tags", [])
+    )
+
+
 def test_scenario_1_clean_single_task_passes():
     report = lint("clean-single-task.ipynb")
     assert report["status"] == "pass"
@@ -236,13 +244,15 @@ def empirical_notebook(*, complete_arc: bool = True) -> dict:
     report["selection_policy_status"] = "clear"
     notebook["cells"][0]["metadata"]["tags"].append("selection-policy")
     if complete_arc:
-        notebook["cells"][3]["source"] = [
+        analysis_index = tagged_index(notebook, "figure-analysis")
+        notebook["cells"][analysis_index]["source"] = [
             "impedance_ohm = 42.043\n",
-            "display(Markdown(f\"\"\"**Наблюдение.** Базовый импеданс составил {impedance_ohm:.3f} Ом. **Интерпретация.** Результат относится только к EXP-001. **Ограничение.** Повторяемость не установлена.\"\"\"))",
+            "display(Markdown(f\"По данным на рисунке 1 базовый импеданс составил {impedance_ohm:.3f} Ом. Результат относится только к EXP-001; повторяемость не установлена.\"))",
         ]
+        notebook["cells"][analysis_index]["outputs"] = []
         notebook["cells"][0]["metadata"]["tags"].append("experiment-context")
         notebook["cells"][1]["metadata"]["tags"].append("experiment-procedure")
-        notebook["cells"][3]["metadata"]["tags"].extend(
+        notebook["cells"][analysis_index]["metadata"]["tags"].extend(
             ["experimental-observation", "experimental-analysis"]
         )
     return notebook
@@ -320,7 +330,7 @@ def test_impedance_units_ohm_and_ohm_meter_are_recognized():
 
 def test_static_result_number_in_markdown_is_rejected():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
-    cell = notebook["cells"][3]
+    cell = notebook["cells"][tagged_index(notebook, "figure-analysis")]
     cell["cell_type"] = "markdown"
     cell.pop("execution_count")
     cell.pop("outputs")
@@ -339,7 +349,7 @@ def test_semantic_tags_allow_natural_russian_headings():
     ]
     notebook["cells"][1]["source"] = [
         "## Длительность операции и расчётная модель\n",
-        "Описание объекта, величины, единицы и принятой процедуры. Ниже представлен график зависимости длительности операции от её номера; он используется для проверки порядка наблюдений.",
+        "Описание объекта, величины, единицы и принятой процедуры. Для проверки порядка наблюдений необходимо рассмотреть зависимость длительности операции от её номера.",
     ]
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "pass"
@@ -408,7 +418,7 @@ def test_technical_background_is_required():
 
 def test_computed_narrative_must_render_dynamic_markdown():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
-    notebook["cells"][3]["source"] = ["display(Markdown('ручной текст'))"]
+    notebook["cells"][tagged_index(notebook, "figure-analysis")]["source"] = ["display(Markdown('ручной текст'))"]
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "fail"
     assert "NB-NUMBER-003" in rule_ids(report)
@@ -416,7 +426,7 @@ def test_computed_narrative_must_render_dynamic_markdown():
 
 def test_plot_requires_semantically_marked_caption():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
-    notebook["cells"][3]["metadata"]["tags"].remove("figure-caption")
+    notebook["cells"][tagged_index(notebook, "figure-caption")]["metadata"]["tags"].remove("figure-caption")
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "fail"
     assert "NB-FIGURE-001" in rule_ids(report)
@@ -433,7 +443,7 @@ def test_traceable_calculation_chain_is_required():
 def test_calculation_chain_must_follow_material_inputs():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
     notebook["cells"][0]["metadata"]["tags"].remove("material-inputs")
-    notebook["cells"][3]["metadata"]["tags"].append("material-inputs")
+    notebook["cells"][tagged_index(notebook, "figure-analysis")]["metadata"]["tags"].append("material-inputs")
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "fail"
     assert "NB-NARR-013" in rule_ids(report)
@@ -441,7 +451,7 @@ def test_calculation_chain_must_follow_material_inputs():
 
 def test_material_result_requires_scientific_status():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
-    notebook["cells"][3]["metadata"]["tags"].remove("result-status")
+    notebook["cells"][tagged_index(notebook, "figure-analysis")]["metadata"]["tags"].remove("result-status")
     report = LINTER.lint_notebook(notebook)
     assert report["status"] == "fail"
     assert "NB-NARR-012" in rule_ids(report)
@@ -508,12 +518,54 @@ def test_plot_requires_explicit_pre_figure_introduction():
 
 def test_plot_requires_connected_post_figure_analysis():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
-    notebook["cells"][3]["source"] = [
-        "from IPython.display import Markdown, display\n",
-        "display(Markdown(f\"**Рисунок 1.** Значение {mean_ms:.1f} мс.\"))",
-    ]
+    analysis = notebook["cells"][tagged_index(notebook, "figure-analysis")]
+    analysis["source"] = ["display(Markdown(f\"Значение {mean_ms:.1f} мс.\"))"]
+    analysis["outputs"] = []
     report = LINTER.lint_notebook(notebook)
     assert "NB-FIGURE-003" in rule_ids(report)
+
+
+def test_figure_caption_must_be_standalone_after_plot():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    caption = notebook["cells"][tagged_index(notebook, "figure-caption")]
+    caption["metadata"]["tags"].append("figure-analysis")
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-FIGURE-004" in rule_ids(report)
+
+
+def test_figure_caption_uses_canonical_numbered_form():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][tagged_index(notebook, "figure-caption")]["source"] = [
+        "**Рисунок 1.** Длительность операций."
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-FIGURE-005" in rule_ids(report)
+
+
+def test_post_figure_analysis_refers_to_numbered_figure_without_label():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    analysis = notebook["cells"][tagged_index(notebook, "figure-analysis")]
+    analysis["source"] = ["display(Markdown(f\"Длительность возрастает до {mean_ms:.1f} мс.\"))"]
+    analysis["outputs"] = []
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-FIGURE-006" in rule_ids(report)
+
+    analysis["outputs"] = [{
+        "data": {"text/markdown": "**Анализ рисунка 1.** Длительность возрастает."},
+        "metadata": {},
+        "output_type": "display_data",
+    }]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-FIGURE-007" in rule_ids(report)
+
+
+def test_figure_introduction_must_not_announce_the_figure_deictically():
+    notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))
+    notebook["cells"][1]["source"] = [
+        "## Оценка порядка\n\nНиже представлен рисунок зависимости длительности от номера. Для оценки порядка необходимо рассмотреть эту зависимость."
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-FIGURE-008" in rule_ids(report)
 
 def test_control_character_corrupting_latex_is_rejected():
     notebook = json.loads((FIXTURES / "clean-single-task.ipynb").read_text(encoding="utf-8"))

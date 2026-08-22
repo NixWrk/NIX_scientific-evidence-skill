@@ -80,6 +80,18 @@ def test_reasoning_bridge_accepts_subject_specific_synthesis_without_connector()
     report = LINTER.lint_notebook(notebook)
     assert "NB-NARR-030" not in rule_ids(report)
 
+def test_reasoning_bridge_names_result_instead_of_figure_number():
+    notebook = template()
+    bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
+    bridge["source"] = [
+        "Рисунок 1 показывает рост показателя, однако причина различия остаётся не установлена. "
+        "Поэтому в §2 будет выполнен контрольный расчёт; критерием считается сохранение знака зависимости."
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-033" in rule_ids(report)
+
+
+
 
 def test_reasoning_bridge_rejects_next_task_as_the_opening():
     notebook = template()

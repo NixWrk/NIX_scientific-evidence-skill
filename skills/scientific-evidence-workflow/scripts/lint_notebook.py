@@ -64,15 +64,32 @@ TELEGRAPHIC_RESULT_RE = re.compile(
     r"[А-Яа-яЁё][^\n]{0,120}[⟹⇒][^\n]{0,120}[А-Яа-яЁё])"
 )
 FIGURE_INTRO_RE = re.compile(
-    r"(?i)(?:на\s+рисунке\s*\d*\s+(?:представлен|показан|привед[её]н)|"
-    r"ниже\s+(?:представлен|показан|привед[её]н|будет\s+представлен)[^.\n]*(?:график|рисунок|схема)|"
-    r"далее\s+(?:представлен|показан|привед[её]н|будет\s+построен)[^.\n]*(?:график|рисунок|схема))"
+    r"(?i)(?:для\s+(?:оценк\w*|проверки|сопоставления|выявления|определения|анализа)\b|"
+    r"(?:необходим\w*|целесообразно)\s+(?:рассмотреть|сопоставить|оценить|проверить)\b|"
+    r"(?:зависимост\w*|сопоставлен\w*|распределен\w*|профил\w*|крив\w*|карт\w*)"
+    r"[^.\n]{0,180}\b(?:позвол\w*|необходим\w*|использу\w*)\b)"
+)
+FIGURE_DEICTIC_OPENING_RE = re.compile(
+    r"(?is)^\s*(?:#{1,6}[^\n]*\n+)?\s*(?:ниже|далее|"
+    r"на\s+рисунке\s*\d+\s+(?:представлен\w*|показан\w*|привед[её]н\w*))\b"
+)
+FIGURE_CAPTION_TEXT_RE = re.compile(r"(?i)(?<!\*)\bрисунок\s+\d+\.\s+\S")
+FIGURE_REFERENCE_RE = re.compile(
+    r"(?i)(?:\b(?:на|по|в)\s+рисун\w*\s+\d+\b|\bрисун\w*\s+\d+\b)"
 )
 FIGURE_ANALYSIS_RE = re.compile(
-    r"(?i)(?:наблюден\w*|как\s+видно\s+на\s+рисунке|анализ\w*\s+(?:графика|рисунка|крив\w*)|"
-    r"полученн\w+\s+зависимост\w*|результат\w+\s+(?:графика|рисунка|расч[её]та)|"
-    r"из\s+(?:графика|рисунка)\s+следует|интерпретац\w*)"
+    r"(?i)(?:показыва\w*|видно|наблюда\w*|составил\w*|возраста\w*|снижа\w*|"
+    r"зависимост\w*|различи\w*|свидетельству\w*|подтвержда\w*|ограничен\w*|"
+    r"интерпретир\w*)"
 )
+FIGURE_ANALYSIS_LABEL_RE = re.compile(
+    r"(?im)^\s*(?:#{1,6}\s*)?(?:\*\*)?\s*(?:анализ(?:\s+(?:рисунка|графика))?|"
+    r"наблюдение|интерпретация)\s*\d*(?:\.|:|\*\*)"
+)
+FIGURE_CAPTION_CONFLICT_TAGS = {
+    "observable-output", "result-status", "interpretation-and-limits",
+    "figure-analysis", "reasoning-bridge", "forward-task",
+}
 BRIDGE_BASIS_RE = re.compile(
     r"(?i)\b(?:по\s+(?:результатам|данным)|§\s*\d+(?:\.\d+)*|на\s+рисун\w*|рисун\w*\s*\d+|"
     r"таблиц\w*\s*\d+|формул\w*\s*\(?\d+|результат\w*|расч[её]т\w*|раздел\w*|"
@@ -678,6 +695,15 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 )
             )
 
+        if FIGURE_REFERENCE_RE.search(bridge_text):
+            findings.append(
+                _finding(
+                    "NB-NARR-033",
+                    "error",
+                    "A reasoning bridge must name the established scientific result instead of citing the figure that displayed it.",
+                    cell_index=bridge_index,
+                )
+            )
         for pattern, rule_id, message in bridge_checks:
             if not pattern.search(bridge_text):
                 findings.append(
@@ -781,55 +807,57 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
             )
         )
 
-    for index, cell, current_text in code_cells:
+    for index, cell, _ in code_cells:
         if not _has_plot_output(cell):
             continue
-        previous_markdown_cell = next(
-            (
-                cells[position]
-                for position in range(index - 1, -1, -1)
-                if cells[position].get("cell_type") == "markdown"
-            ),
-            None,
+
+        previous = cells[index - 1] if index > 0 else None
+        previous_is_markdown = (
+            isinstance(previous, dict) and previous.get("cell_type") == "markdown"
         )
-        previous_markdown = _source_text(previous_markdown_cell) if previous_markdown_cell else ""
-        previous_tags = _tags(previous_markdown_cell) if previous_markdown_cell else set()
-        following = cells[index + 1] if index + 1 < len(cells) else None
-        following_tags = _tags(following) if isinstance(following, dict) else set()
-        following_text = _source_text(following) if isinstance(following, dict) else ""
+        previous_text = _narrative_payload(previous) if previous_is_markdown else ""
+        previous_tags = _tags(previous) if previous_is_markdown else set()
+
+        caption = cells[index + 1] if index + 1 < len(cells) else None
+        caption_tags = _tags(caption) if isinstance(caption, dict) else set()
+        caption_text = _narrative_payload(caption) if isinstance(caption, dict) else ""
+
+        analysis = cells[index + 2] if index + 2 < len(cells) else None
+        analysis_tags = _tags(analysis) if isinstance(analysis, dict) else set()
+        analysis_text = _narrative_payload(analysis) if isinstance(analysis, dict) else ""
         current_tags = _tags(cell)
-        has_introduction = "figure-introduction" in previous_tags or bool(
-            FIGURE_INTRO_RE.search(previous_markdown)
+
+        has_introduction = (
+            "figure-introduction" in previous_tags
+            and bool(FIGURE_INTRO_RE.search(previous_text))
         )
-        has_analysis = bool(
-            FIGURE_ANALYSIS_RE.search(current_text)
-            or FIGURE_ANALYSIS_RE.search(following_text)
+        caption_tag_anywhere = "figure-caption" in (
+            current_tags | caption_tags | analysis_tags
         )
-        has_account = (
-            has_analysis
-            or "observable-output" in current_tags
-            or "observable-output" in following_tags
-            or bool(
-                re.search(
-                    r"(?i)\b(?:наблюден\w*|интерпретац\w*|ограничен\w*|"
-                    r"observation|interpretation|limitation|figure|рисунок)\b",
-                    following_text,
-                )
-            )
+        caption_is_immediate = "figure-caption" in caption_tags
+        caption_is_standalone = (
+            caption_is_immediate
+            and not (caption_tags & FIGURE_CAPTION_CONFLICT_TAGS)
         )
-        has_caption = (
-            "figure-caption" in current_tags or "figure-caption" in following_tags
+        caption_text_is_valid = bool(FIGURE_CAPTION_TEXT_RE.search(caption_text))
+        analysis_is_tagged = "figure-analysis" in analysis_tags
+        has_analysis = (
+            analysis_is_tagged
+            and bool(FIGURE_ANALYSIS_RE.search(analysis_text))
         )
-        if not has_account:
+        has_figure_reference = bool(FIGURE_REFERENCE_RE.search(analysis_text))
+        analysis_has_label = bool(FIGURE_ANALYSIS_LABEL_RE.search(analysis_text))
+
+        if not has_analysis:
             findings.append(
                 _finding(
                     "NB-OUTPUT-002",
                     "warning",
-                    "Plot output is not followed by an observation or bounded interpretation.",
+                    "Plot output is not followed by a connected observation and bounded interpretation.",
                     cell_index=index,
                 )
             )
-        if not has_caption:
+        if not caption_tag_anywhere:
             findings.append(
                 _finding(
                     "NB-FIGURE-001",
@@ -843,7 +871,7 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 _finding(
                     "NB-FIGURE-002",
                     "error",
-                    "Plot output is not introduced beforehand with its quantities, conditions, and purpose.",
+                    "Plot output is not immediately preceded by a purpose-led figure introduction.",
                     cell_index=index,
                 )
             )
@@ -852,8 +880,53 @@ def lint_notebook(data: Any, *, path: str = "<memory>") -> dict[str, Any]:
                 _finding(
                     "NB-FIGURE-003",
                     "error",
-                    "Plot output has no connected post-figure observation and bounded interpretation.",
+                    "Plot output has no separate connected post-figure analysis.",
                     cell_index=index,
+                )
+            )
+        if caption_tag_anywhere and not caption_is_standalone:
+            findings.append(
+                _finding(
+                    "NB-FIGURE-004",
+                    "error",
+                    "The figure caption must be a standalone cell immediately after the plot.",
+                    cell_index=index,
+                )
+            )
+        if caption_is_immediate and not caption_text_is_valid:
+            findings.append(
+                _finding(
+                    "NB-FIGURE-005",
+                    "error",
+                    "The caption must use the form 'Рисунок N. Предметное название'.",
+                    cell_index=index + 1,
+                )
+            )
+        if analysis_is_tagged and not has_figure_reference:
+            findings.append(
+                _finding(
+                    "NB-FIGURE-006",
+                    "error",
+                    "The post-figure analysis must explicitly refer to the numbered figure.",
+                    cell_index=index + 2,
+                )
+            )
+        if analysis_is_tagged and analysis_has_label:
+            findings.append(
+                _finding(
+                    "NB-FIGURE-007",
+                    "error",
+                    "Continue the analysis as unlabelled prose; do not add an analysis, observation, or interpretation heading.",
+                    cell_index=index + 2,
+                )
+            )
+        if "figure-introduction" in previous_tags and FIGURE_DEICTIC_OPENING_RE.search(previous_text):
+            findings.append(
+                _finding(
+                    "NB-FIGURE-008",
+                    "error",
+                    "Lead into the scientific need for the visualisation instead of announcing that a figure appears below.",
+                    cell_index=index - 1,
                 )
             )
 
