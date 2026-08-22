@@ -169,7 +169,7 @@ applicable moves:
 4. state an explicit decision criterion or attribute the forecast to the model,
    hypothesis, equation, protocol, or comparison that licenses it; when useful,
    give the alternative observations and the conclusion permitted by each;
-   never use an unattributed `Ожидается ...` or report an unperformed result as
+   never use an unattributed `Ожидается ...` / `Ожидаются ...` or report an unperformed result as
    fact;
 5. open the next stage by resolving the declared task and naming the inherited
    results it actually uses.
@@ -432,7 +432,7 @@ generic preferences. Report:
   alternative, or decision criterion;
 - a `reasoning-bridge` embedded in the result analysis instead of a separate
   concluding paragraph with an explicit synthesis;
-- an unattributed `Ожидается ...` or a repeated stock transition used in place of a subject-specific argument;
+- an unattributed `Ожидается ...` / `Ожидаются ...` or a repeated stock transition used in place of a subject-specific argument;
 - a declared next task that the following material stage does not perform;
 - a multi-result decision that cites only a generic “preceding analysis” instead
   of identifying the contributing results and their distinct roles;

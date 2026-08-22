@@ -89,3 +89,29 @@ def test_reasoning_bridge_rejects_unattributed_expected_phrase():
     ]
     report = LINTER.lint_notebook(notebook)
     assert "NB-NARR-031" in rule_ids(report)
+
+
+def test_reasoning_bridge_rejects_plural_unattributed_expected_phrase():
+    notebook = template()
+    bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
+    bridge["source"] = [
+        "Таким образом, результаты §1 устанавливают исходное положение, однако сохраняют ограничение. "
+        "Поэтому в §2 будет выполнен расчёт. Ожидаются положительные значения; "
+        "критерием считается достижение заданного порога."
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-031" in rule_ids(report)
+
+
+def test_reasoning_bridge_accepts_attributed_model_prediction():
+    notebook = template()
+    bridge = notebook["cells"][tagged_index(notebook, "reasoning-bridge")]
+    bridge["source"] = [
+        "Совокупность результатов §1 устанавливает исходное положение, однако сохраняет ограничение. "
+        "Поэтому в §2 будет выполнен расчёт. Согласно модели, увеличение L предсказывает "
+        "снижение показателя; результат выше порога поддержит гипотезу, а результат ниже "
+        "порога ограничит вывод."
+    ]
+    report = LINTER.lint_notebook(notebook)
+    assert "NB-NARR-027" not in rule_ids(report)
+    assert "NB-NARR-031" not in rule_ids(report)
