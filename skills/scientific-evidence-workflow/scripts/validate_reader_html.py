@@ -30,6 +30,7 @@ class ReaderHTMLParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.ids: set[str] = set()
         self.links: list[tuple[str | None, int]] = []
+        self.empty_anchors: list[int] = []
         self.images: list[tuple[str | None, int]] = []
         self.code_inputs: list[tuple[str, int]] = []
         self.class_stack: list[set[str]] = []
@@ -42,7 +43,11 @@ class ReaderHTMLParser(HTMLParser):
                 self.ids.add(unquote(value))
 
         if tag.lower() == "a":
-            self.links.append((values.get("href"), self.getpos()[0]))
+            href = values.get("href")
+            if href is not None:
+                self.links.append((href, self.getpos()[0]))
+            elif not values.get("id") and not values.get("name"):
+                self.empty_anchors.append(self.getpos()[0])
         if tag.lower() == "img":
             self.images.append((values.get("src"), self.getpos()[0]))
 
@@ -60,7 +65,7 @@ class ReaderHTMLParser(HTMLParser):
             "jp-inputarea" in classes and inside_code_cell
         ):
             self.code_inputs.append(("class=" + " ".join(sorted(classes)), self.getpos()[0]))
-        elif mime.startswith("text/x-") or "jupyter.widget-state" in script_type:
+        elif mime.startswith("text/x-"):
             self.code_inputs.append((f"mime={mime or script_type}", self.getpos()[0]))
         self.class_stack.append(classes)
 
@@ -108,6 +113,9 @@ def validate_reader_html(text: str, *, path: str | Path = "<memory>") -> dict[st
                 line=line,
             )
         )
+
+    for line in parser.empty_anchors:
+        findings.append(_finding("HTML-LINK-001", "Anchor has no href, id, or name.", line=line))
 
     for href, line in parser.links:
         if not href or not href.strip():

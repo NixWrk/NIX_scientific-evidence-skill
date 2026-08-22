@@ -29,6 +29,8 @@ def test_reader_html_accepts_prose_formula_image_and_clickable_links(tmp_path):
     html = """
     <html><body>
       <h1 id="result">Результат</h1>
+      <a id="equation"></a>
+      <script type="application/vnd.jupyter.widget-state+json">{}</script>
       <p>По формуле <span class="math">y=ax</span> получена оценка.</p>
       <img src="data:image/png;base64,AA==" alt="График">
       <p><a href="#result">К результату</a></p>
@@ -38,6 +40,14 @@ def test_reader_html_accepts_prose_formula_image_and_clickable_links(tmp_path):
     report = VALIDATOR.validate_reader_html(html, path=tmp_path / "report.html")
     assert report["status"] == "pass"
     assert report["metrics"]["code_input_areas"] == 0
+
+
+def test_reader_html_rejects_anchor_without_target_or_link(tmp_path):
+    report = VALIDATOR.validate_reader_html(
+        "<html><body><a>пустой якорь</a></body></html>",
+        path=tmp_path / "report.html",
+    )
+    assert "HTML-LINK-001" in rule_ids(report)
 
 
 def test_reader_html_rejects_visible_code_and_broken_anchor(tmp_path):
